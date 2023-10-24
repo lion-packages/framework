@@ -1,0 +1,53 @@
+version: "3.8"
+services:
+    app:
+        container_name: framework-app
+        build:
+            context: .
+            dockerfile: Dockerfile
+        env_file:
+            - .env
+        ports:
+            - "8000:8000"
+            - "5173:5173"
+        volumes:
+            - ./:/var/www/html
+            - ./supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+        depends_on:
+            - db
+            - phpmyadmin
+        networks:
+            - lion
+    db:
+        image: mysql
+        container_name: framework-mysql
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_NAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+        networks:
+            - lion
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: framework-phpmyadmin
+        restart: unless-stopped
+        links:
+            - db:db
+        ports:
+            - 8080:80
+        environment:
+            MYSQL_USER: ${DB_USER}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        networks:
+            - lion
+volumes:
+    mysql_data:
+networks:
+    lion:
+        driver: bridge

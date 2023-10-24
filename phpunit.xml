@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    cacheResult="false"
+    colors="true"
+    columns="100"
+    backupGlobals="false"
+    processIsolation="false"
+    stopOnFailure="true"
+    bootstrap="vendor/autoload.php"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd"
+    backupStaticProperties="false"
+>
+    <testsuites>
+        <testsuite name="All-Testing">
+            <directory>tests/</directory>
+        </testsuite>
+
+        <testsuite name="Framework">
+            <directory>tests/Framework/</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <env name="APP_ENV" value="testing"/>
+    </php>
+</phpunit>
