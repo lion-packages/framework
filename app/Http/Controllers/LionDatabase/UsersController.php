@@ -15,6 +15,7 @@ class UsersController
 
 	public function __construct()
 	{
+		// nuevo cambio
 		$this->usersModel = new UsersModel();
 	}
 
