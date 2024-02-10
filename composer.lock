@@ -904,16 +904,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v16.0.1",
+            "version": "v16.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "29776ed220ee2d5b27f3945e690e71c3d20df948"
+                "reference": "1a29fc213508b33dfbc2f32f66ca919ac5762571"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/29776ed220ee2d5b27f3945e690e71c3d20df948",
-                "reference": "29776ed220ee2d5b27f3945e690e71c3d20df948",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/1a29fc213508b33dfbc2f32f66ca919ac5762571",
+                "reference": "1a29fc213508b33dfbc2f32f66ca919ac5762571",
                 "shasum": ""
             },
             "require": {
@@ -983,7 +983,7 @@
                 "issues": "https://github.com/lion-packages/framework/issues",
                 "source": "https://github.com/lion-packages/framework"
             },
-            "time": "2024-02-09T19:47:50+00:00"
+            "time": "2024-02-11T19:27:56+00:00"
         },
         {
             "name": "lion/command",
@@ -1026,16 +1026,16 @@
         },
         {
             "name": "lion/database",
-            "version": "v9.1.0",
+            "version": "v9.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/database.git",
-                "reference": "a930f1b7e4dd10726d337f91d7eb5e459b4502f5"
+                "reference": "f5157c64b6a3a598219c355122c3065286b6a166"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/database/zipball/a930f1b7e4dd10726d337f91d7eb5e459b4502f5",
-                "reference": "a930f1b7e4dd10726d337f91d7eb5e459b4502f5",
+                "url": "https://api.github.com/repos/lion-packages/database/zipball/f5157c64b6a3a598219c355122c3065286b6a166",
+                "reference": "f5157c64b6a3a598219c355122c3065286b6a166",
                 "shasum": ""
             },
             "require": {
@@ -1059,9 +1059,9 @@
             "description": "package in charge of the generation and execution of processes with databases",
             "support": {
                 "issues": "https://github.com/lion-packages/database/issues",
-                "source": "https://github.com/lion-packages/database/tree/v9.1.0"
+                "source": "https://github.com/lion-packages/database/tree/v9.1.1"
             },
-            "time": "2024-01-15T16:17:15+00:00"
+            "time": "2024-02-10T20:31:59+00:00"
         },
         {
             "name": "lion/dependency-injection",
@@ -5205,16 +5205,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.0.2",
+            "version": "11.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "2f281e7e6776aea920cab5fc5a48d0fefbe1f39e"
+                "reference": "de24e7e7c67fbf437f7b6cd7bc919f2dc6fd89d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2f281e7e6776aea920cab5fc5a48d0fefbe1f39e",
-                "reference": "2f281e7e6776aea920cab5fc5a48d0fefbe1f39e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/de24e7e7c67fbf437f7b6cd7bc919f2dc6fd89d4",
+                "reference": "de24e7e7c67fbf437f7b6cd7bc919f2dc6fd89d4",
                 "shasum": ""
             },
             "require": {
@@ -5285,7 +5285,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.0.2"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.0.3"
             },
             "funding": [
                 {
@@ -5301,7 +5301,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-04T09:09:14+00:00"
+            "time": "2024-02-10T06:31:16+00:00"
         },
         {
             "name": "sebastian/cli-parser",
