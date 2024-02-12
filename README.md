@@ -17,10 +17,10 @@
 
 ## Install
 
-```shell
+```bash
 composer create-project lion/framework
 ```
 
 ## License
 
-The <strong>framework</strong> is open-sourced software licensed under the [MIT License](https://github.com/Lion-Packages/framework/blob/main/LICENSE).
+The <strong>framework</strong> is open-sourced software licensed under the [MIT License](https://github.com/lion-packages/framework/blob/main/LICENSE).
