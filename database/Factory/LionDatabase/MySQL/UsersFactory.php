@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factory\LionDatabase\MySQL;
 
+use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
 use Lion\Security\Validation;
 
@@ -19,6 +20,7 @@ class UsersFactory
 		return [
             [
                 RolesEnum::ADMINISTRATOR->value,
+                DocumentTypesEnum::CITIZENSHIP_CARD->value,
                 'root',
                 'lion',
                 'root@dev.com',
@@ -27,6 +29,7 @@ class UsersFactory
             ],
             [
                 RolesEnum::MANAGER->value,
+                DocumentTypesEnum::CITIZENSHIP_CARD->value,
                 'root',
                 'manager',
                 'manager@dev.com',

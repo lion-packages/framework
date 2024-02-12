@@ -9,7 +9,7 @@ use Lion\Database\Drivers\MySQL as DB;
 
 class UsersSeed
 {
-    const COLUMNS = ['idroles', 'users_name', 'users_last_name', 'users_email', 'users_password', 'users_code'];
+    const COLUMNS = ['idroles', 'iddocument_types', 'users_name', 'users_last_name', 'users_email', 'users_password', 'users_code'];
 
 	/**
 	 * Seed the application's database

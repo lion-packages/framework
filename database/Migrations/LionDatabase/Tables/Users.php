@@ -21,6 +21,7 @@ return new class implements MigrationUpInterface
 			->createTable('users', function() {
 				DB::int('idusers')->notNull()->autoIncrement()->primaryKey();
                 DB::int('idroles')->notNull()->foreign('roles', 'idroles');
+                DB::int('iddocument_types')->notNull()->foreign('document_types', 'iddocument_types');
                 DB::varchar('users_name', 25)->notNull();
                 DB::varchar('users_last_name', 25)->notNull();
                 DB::varchar('users_email', 255)->notNull()->unique();
