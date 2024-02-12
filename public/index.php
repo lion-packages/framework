@@ -16,6 +16,7 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 
 use App\Http\HttpKernel;
 use Dotenv\Dotenv;
+use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Database\Driver;
 use Lion\Request\Request;
 use Lion\Route\Route;
@@ -91,7 +92,8 @@ if (isError($responseDatabase)) {
  * -----------------------------------------------------------------------------
  **/
 
-$allRules = require_once(__DIR__ . '/../routes/rules.php');
+require_once(__DIR__ . '/../routes/rules.php');
+$allRules = Routes::getRules();
 
 if (isset($allRules[$_SERVER['REQUEST_METHOD']])) {
     $httpKernel = new HttpKernel();
@@ -117,11 +119,10 @@ if (isset($allRules[$_SERVER['REQUEST_METHOD']])) {
  **/
 
 date_default_timezone_set(env->SERVER_DATE_TIMEZONE);
-
-$middleware = require_once(__DIR__ . '/../routes/middleware.php');
+require_once(__DIR__ . '/../routes/middleware.php');
 
 Route::init();
-Route::addMiddleware($middleware['app']);
+Route::addMiddleware(Routes::getMiddleware());
 include_once(__DIR__ . '/../routes/web.php');
 Route::get('route-list', fn() => Route::getFullRoutes());
 Route::dispatch();
