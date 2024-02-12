@@ -9,7 +9,6 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Security\Validation;
 use Lion\Test\Test;
 use Tests\Providers\ConnectionProviderTrait;
 
@@ -24,7 +23,6 @@ class UsersModelTest extends Test
 	{
         $this->initConnections();
 
-        $validation = new Validation();
         $this->usersModel = new UsersModel();
 
         $this->users = (new Users())
@@ -34,7 +32,7 @@ class UsersModelTest extends Test
             ->setUsersName('Sergio')
             ->setUsersLastName('Leon')
             ->setUsersEmail(fake()->email())
-            ->setUsersPassword($validation->sha256('lion'))
+            ->setUsersPassword('cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481')
             ->setUsersCode(uniqid('code-'));
 	}
 

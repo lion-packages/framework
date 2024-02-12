@@ -34,7 +34,13 @@ Routes::setRules([
         //
     ],
     'PUT' => [
-        //
+        'api/users/{idusers}' => [
+            IdrolesRule::class,
+            IddocumentTypesRule::class,
+            UsersNameRule::class,
+            UsersLastNameRule::class,
+            UsersEmailRule::class,
+        ]
     ],
     'DELETE' => [
         //
