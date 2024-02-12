@@ -23,12 +23,12 @@ echo -e "\033[0;36m\t>>  Suite Class \033[0m"
 php vendor/bin/phpunit --testsuite Class
 echo -e "\n\033[0;31m>> -------------------------------------------------------------------------------------- << \n\033[0m";
 
+echo -e "\033[0;36m\t>>  Suite Models \033[0m"
+php vendor/bin/phpunit --testsuite Models
+echo -e "\n\033[0;31m>> -------------------------------------------------------------------------------------- << \n\033[0m";
+
 # echo -e "\033[0;36m\t>>  Suite Controllers \033[0m"
 # php vendor/bin/phpunit --testsuite Controllers
-# echo -e "\n\033[0;31m>> -------------------------------------------------------------------------------------- << \n\033[0m";
-
-# echo -e "\033[0;36m\t>>  Suite Models \033[0m"
-# php vendor/bin/phpunit --testsuite Models
 # echo -e "\n\033[0;31m>> -------------------------------------------------------------------------------------- << \n\033[0m";
 
 end_time=$(date +"%Y-%m-%d %H:%M:%S")

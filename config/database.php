@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use Lion\Database\Driver;
+
 /**
  * -----------------------------------------------------------------------------
  * Start database service
@@ -8,7 +12,7 @@
  * -----------------------------------------------------------------------------
  **/
 
-return [
+Driver::run([
     'default' => env->DB_NAME,
     'connections' => [
         env->DB_NAME => [
@@ -20,4 +24,4 @@ return [
             'password' => env->DB_PASSWORD
         ],
     ]
-];
+]);

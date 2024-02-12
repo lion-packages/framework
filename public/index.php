@@ -17,7 +17,6 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 use App\Http\HttpKernel;
 use Dotenv\Dotenv;
 use Lion\Bundle\Helpers\Http\Routes;
-use Lion\Database\Driver;
 use Lion\Request\Request;
 use Lion\Route\Route;
 use Lion\Security\RSA;
@@ -67,12 +66,7 @@ foreach (require_once(__DIR__ . '/../config/cors.php') as $header => $value) {
  **/
 
 
-$responseDatabase = Driver::run(require_once(__DIR__ . '/../config/database.php'));
-
-if (isError($responseDatabase)) {
-    logger($responseDatabase->message, 'error', (array) $responseDatabase);
-    finish(error($responseDatabase->message));
-}
+include_once(__DIR__ . '/../config/database.php');
 
 /**
  * -----------------------------------------------------------------------------
