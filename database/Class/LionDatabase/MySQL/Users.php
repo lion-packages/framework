@@ -11,6 +11,7 @@ class Users implements CapsuleInterface, JsonSerializable
 {
 	private ?int $idusers = null;
 	private ?int $idroles = null;
+	private ?int $iddocumentTypes = null;
 	private ?string $usersName = null;
 	private ?string $usersLastName = null;
 	private ?string $usersEmail = null;
@@ -30,6 +31,7 @@ class Users implements CapsuleInterface, JsonSerializable
 		$this
 			->setIdusers(request->idusers ?? null)
 			->setIdroles(request->idroles ?? null)
+			->setIddocumentTypes(request->iddocumentTypes ?? null)
 			->setUsersName(request->usersName ?? null)
 			->setUsersLastName(request->usersLastName ?? null)
 			->setUsersEmail(request->usersEmail ?? null)
@@ -59,6 +61,18 @@ class Users implements CapsuleInterface, JsonSerializable
 	public function setIdroles(?int $idroles): Users
 	{
 		$this->idroles = $idroles;
+
+		return $this;
+	}
+
+	public function getIddocumentTypes(): ?int
+	{
+		return $this->iddocumentTypes;
+	}
+
+	public function setIddocumentTypes(?int $iddocumentTypes): Users
+	{
+		$this->iddocumentTypes = $iddocumentTypes;
 
 		return $this;
 	}

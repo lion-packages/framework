@@ -9,7 +9,7 @@ use Valitron\Validator;
 
 class IddocumentTypesRule extends Rules 
 {
-	public string $field = 'iddocument_types';
+	public string $field = 'iddocumentTypes';
 	public string $desc = '';
 	public string $value = '';
 	public bool $disabled = false;

@@ -9,7 +9,7 @@ use Valitron\Validator;
 
 class UsersEmailRule extends Rules 
 {
-	public string $field = 'users_email';
+	public string $field = 'usersEmail';
 	public string $desc = '';
 	public string $value = '';
 	public bool $disabled = false;

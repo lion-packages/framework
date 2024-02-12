@@ -13,9 +13,9 @@ class UsersController
 	public function createUsers(Users $users, UsersModel $usersModel, Validation $validation): object
 	{
         $users = $users->capsule();
-        $password = $validation->passwordHash($validation->sha256($users->getUsersPassword()));
+        $password = $validation->passwordHash($users->getUsersPassword());
 
-		return $usersModel->createUsersDB($users->setUsersPassword($password));
+		return $usersModel->createUsersDB($users->setUsersPassword($password)->setUsersCode(uniqid('code-')));
 	}
 
 	public function readUsers(UsersModel $usersModel): array|object

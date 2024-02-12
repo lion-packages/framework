@@ -33,5 +33,17 @@
         <testsuite name="All-Test">
             <directory>tests/</directory>
         </testsuite>
+
+        <testsuite name="Class">
+            <directory>tests/Class/</directory>
+        </testsuite>
+
+        <testsuite name="Controllers">
+            <directory>tests/Controllers/</directory>
+        </testsuite>
+
+        <testsuite name="Models">
+            <directory>tests/Models/</directory>
+        </testsuite>
     </testsuites>
 </phpunit>

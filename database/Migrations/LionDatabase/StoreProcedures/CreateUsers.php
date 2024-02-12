@@ -19,6 +19,7 @@ return new class implements MigrationUpInterface
 		return Schema::connection('lion_database')
 			->createStoreProcedure('create_users', function() {
                 Schema::in()->int('_idroles');
+                Schema::in()->int('_iddocument_types');
 				Schema::in()->varchar('_users_name', 25);
                 Schema::in()->varchar('_users_last_name', 25);
                 Schema::in()->varchar('_users_email', 255);
@@ -29,6 +30,7 @@ return new class implements MigrationUpInterface
                     ->table('users')
                     ->insert([
                         'idroles' => '_idroles',
+                        'iddocument_types' => '_iddocument_types',
                         'users_name' => '_users_name',
                         'users_last_name' => '_users_last_name',
                         'users_email' => '_users_email',

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LionDatabase\MySQL\UsersController;
 use Lion\Route\Route;
 
 /**
@@ -11,3 +12,10 @@ use Lion\Route\Route;
  **/
 
 Route::get('/', fn() => info('[index]'));
+
+Route::prefix('api', function() {
+    Route::post('users', [UsersController::class, 'createUsers']);
+    Route::get('users', [UsersController::class, 'readUsers']);
+    Route::put('users/{idusers}', [UsersController::class, 'updateUsers']);
+    Route::delete('users/{idusers}', [UsersController::class, 'deleteUsers']);
+});

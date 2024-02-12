@@ -1,5 +1,11 @@
 <?php
 
+use App\Rules\LionDatabase\MySQL\DocumentTypes\IddocumentTypesRule;
+use App\Rules\LionDatabase\MySQL\Roles\IdrolesRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersNameRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Lion\Bundle\Helpers\Http\Routes;
 
 /**
@@ -15,7 +21,14 @@ Routes::setRules([
         //
     ],
     'POST' => [
-        //
+        '/api/users' => [
+            IdrolesRule::class,
+            IddocumentTypesRule::class,
+            UsersNameRule::class,
+            UsersLastNameRule::class,
+            UsersEmailRule::class,
+            UsersPasswordRule::class
+        ]
     ],
     'GET' => [
         //

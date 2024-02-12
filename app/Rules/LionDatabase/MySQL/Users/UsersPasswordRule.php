@@ -9,7 +9,7 @@ use Valitron\Validator;
 
 class UsersPasswordRule extends Rules 
 {
-	public string $field = 'users_password';
+	public string $field = 'usersPassword';
 	public string $desc = '';
 	public string $value = '';
 	public bool $disabled = false;

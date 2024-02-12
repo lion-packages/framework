@@ -4,17 +4,140 @@ declare(strict_types=1);
 
 namespace Tests\Class\LionDatabase\MySQL;
 
-use Lion\Test\Test;
+use Database\Class\LionDatabase\MySQL\Users;
+use Tests\Providers\CapsuleProvider;
 
-class UsersTest extends Test
+class UsersTest extends CapsuleProvider
 {
-	protected function setUp(): void 
-	{
+    const IDUSERS = 1;
+    const IDROLES = 1;
+    const IDDOCUMENT_TYPES = 1;
+    const USERS_NAME = 'Sergio';
+    const USERS_LAST_NAME = 'Leon';
+    const USERS_EMAIL = 'sleon@dev.com';
+    const USERS_PASSWORD = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
+    const USERS_CODE = 'code-65ca2d74ed1e1';
 
+    private Users $users;
+
+	protected function setUp(): void
+	{
+        $this->users = new Users();
 	}
 
-	protected function tearDown(): void 
-	{
+    public function testJsonSerialize(): void
+    {
+        $this->assertJsonSerialize($this->users, [
+            'idusers' => null,
+            'idroles' => null,
+            'iddocumentTypes' => null,
+            'usersName' => null,
+            'usersLastName' => null,
+            'usersEmail' => null,
+            'usersPassword' => null,
+            'usersCode' => null
+        ]);
+    }
 
-	}
+    public function testCapsule(): void
+    {
+        $this->assertCapsule($this->users, Users::class);
+    }
+
+    public function testGetIdusers(): void
+    {
+        $this->assertSame(self::IDUSERS, $this->users->setIdusers(self::IDUSERS)->getIdusers());
+    }
+
+    public function testSetIdusers(): void
+    {
+        $this->assertInstanceOf(Users::class, $this->users->setIdusers(self::IDUSERS));
+        $this->assertSame(self::IDUSERS, $this->users->getIdusers());
+    }
+
+    public function testGetIdroles(): void
+    {
+        $this->assertSame(self::IDROLES, $this->users->setIdroles(self::IDROLES)->getIdroles());
+    }
+
+    public function testSetIdroles(): void
+    {
+        $this->assertInstanceOf(Users::class, $this->users->setIdroles(self::IDROLES));
+        $this->assertSame(self::IDROLES, $this->users->getIdroles());
+    }
+
+    public function testGetIddocumentTypes(): void
+    {
+        $this->assertSame(
+            self::IDDOCUMENT_TYPES,
+            $this->users->setIddocumentTypes(self::IDDOCUMENT_TYPES)->getIddocumentTypes()
+        );
+    }
+
+    public function testSetIddocumentTypes(): void
+    {
+        $this->assertInstanceOf(Users::class, $this->users->setIddocumentTypes(self::IDDOCUMENT_TYPES));
+        $this->assertSame(self::IDDOCUMENT_TYPES, $this->users->getIddocumentTypes());
+    }
+
+    public function testGetUsersName(): void
+    {
+        $this->assertSame(self::USERS_NAME, $this->users->setUsersName(self::USERS_NAME)->getUsersName());
+    }
+
+    public function testSetUsersName(): void
+    {
+        $this->assertInstanceOf(Users::class, $this->users->setUsersName(self::USERS_NAME));
+        $this->assertSame(self::USERS_NAME, $this->users->getUsersName());
+    }
+
+    public function testGetUsersLastName(): void
+    {
+        $this->assertSame(
+            self::USERS_LAST_NAME,
+            $this->users->setUsersLastName(self::USERS_LAST_NAME)->getUsersLastName()
+        );
+    }
+
+    public function testSetUsersLastName(): void
+    {
+        $this->assertInstanceOf(Users::class, $this->users->setUsersLastName(self::USERS_LAST_NAME));
+        $this->assertSame(self::USERS_LAST_NAME, $this->users->getUsersLastName());
+    }
+
+    public function testGetUsersEmail(): void
+    {
+        $this->assertSame(self::USERS_EMAIL, $this->users->setUsersEmail(self::USERS_EMAIL)->getUsersEmail());
+    }
+
+    public function testSetUsersEmail(): void
+    {
+        $this->assertInstanceOf(Users::class, $this->users->setUsersEmail(self::USERS_EMAIL));
+        $this->assertSame(self::USERS_EMAIL, $this->users->getUsersEmail());
+    }
+
+    public function testGetUsersPassword(): void
+    {
+        $this->assertSame(
+            self::USERS_PASSWORD,
+            $this->users->setUsersPassword(self::USERS_PASSWORD)->getUsersPassword()
+        );
+    }
+
+    public function testSetUsersPassword(): void
+    {
+        $this->assertInstanceOf(Users::class, $this->users->setUsersPassword(self::USERS_PASSWORD));
+        $this->assertSame(self::USERS_PASSWORD, $this->users->getUsersPassword());
+    }
+
+    public function testGetUsersCode(): void
+    {
+        $this->assertSame(self::USERS_CODE, $this->users->setUsersCode(self::USERS_CODE)->getUsersCode());
+    }
+
+    public function testSetUsersCode(): void
+    {
+        $this->assertInstanceOf(Users::class, $this->users->setUsersCode(self::USERS_CODE));
+        $this->assertSame(self::USERS_CODE, $this->users->getUsersCode());
+    }
 }

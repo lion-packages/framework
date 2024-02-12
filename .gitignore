@@ -9,3 +9,4 @@
 .rnd
 .env
 supervisord.pid
+.phpunit.result.cache
