@@ -8,28 +8,26 @@ use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Route\Route;
 use Lion\Test\Test;
 use Tests\Providers\ConnectionProviderTrait;
-use Tests\Providers\JsonProviderTrait;
 
 class UsersControllerTest extends Test
 {
     use ConnectionProviderTrait;
-    use JsonProviderTrait;
 
     const API_URL = 'http://127.0.0.1:8000/api/users';
     const JSON_CREATE_USERS = [
         'idroles' => 1,
-        'iddocumentTypes' => 1,
-        'usersName' => 'Sergio',
-        'usersLastName' => 'Leon',
-        'usersEmail' => 'sleon@dev.com',
-        'usersPassword' => 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481'
+        'iddocument_types' => 1,
+        'users_name' => 'Sergio',
+        'users_last_name' => 'Leon',
+        'users_email' => 'sleon@dev.com',
+        'users_password' => 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481'
     ];
     const JSON_UPDATE_USERS = [
         'idroles' => 1,
-        'iddocumentTypes' => 1,
-        'usersName' => 'Sergio D',
-        'usersLastName' => 'Leon G',
-        'usersEmail' => 'sleon@dev.com'
+        'iddocument_types' => 1,
+        'users_name' => 'Sergio D',
+        'users_last_name' => 'Leon G',
+        'users_email' => 'sleon@dev.com'
     ];
 
 	protected function setUp(): void 
@@ -46,7 +44,7 @@ class UsersControllerTest extends Test
     {
         $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_CREATE_USERS])->getBody()->getContents();
 
-        $this->assertFetchJson($this, $response, [
+        $this->assertJsonContent($response, [
             'status' => 'success',
             'message' => 'Procedure executed successfully'
         ]);
@@ -56,7 +54,7 @@ class UsersControllerTest extends Test
     {
         $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_CREATE_USERS])->getBody()->getContents();
 
-        $this->assertFetchJson($this, $response, [
+        $this->assertJsonContent($response, [
             'status' => 'success',
             'message' => 'Procedure executed successfully'
         ]);
@@ -71,7 +69,7 @@ class UsersControllerTest extends Test
     {
         $users = fetch(Route::GET, self::API_URL)->getBody()->getContents();
 
-        $this->assertFetchJson($this, $users, [
+        $this->assertJsonContent($users, [
             'status' => 'success',
             'message' => 'No data available'
         ]);
@@ -81,7 +79,7 @@ class UsersControllerTest extends Test
     {
         $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_CREATE_USERS])->getBody()->getContents();
 
-        $this->assertFetchJson($this, $response, [
+        $this->assertJsonContent($response, [
             'status' => 'success',
             'message' => 'Procedure executed successfully'
         ]);
@@ -97,7 +95,7 @@ class UsersControllerTest extends Test
             ->getBody()
             ->getContents();
 
-        $this->assertFetchJson($this, $response, [
+        $this->assertJsonContent($response, [
             'status' => 'success',
             'message' => 'Procedure executed successfully'
         ]);
@@ -109,15 +107,15 @@ class UsersControllerTest extends Test
 
         $firstUser = (object) reset($users);
 
-        $this->assertSame(self::JSON_UPDATE_USERS['usersName'], $firstUser->users_name);
-        $this->assertSame(self::JSON_UPDATE_USERS['usersLastName'], $firstUser->users_last_name);
+        $this->assertSame(self::JSON_UPDATE_USERS['users_name'], $firstUser->users_name);
+        $this->assertSame(self::JSON_UPDATE_USERS['users_last_name'], $firstUser->users_last_name);
     }
 
     public function testDeleteUsers(): void
     {
         $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_CREATE_USERS])->getBody()->getContents();
 
-        $this->assertFetchJson($this, $response, [
+        $this->assertJsonContent($response, [
             'status' => 'success',
             'message' => 'Procedure executed successfully'
         ]);
@@ -130,14 +128,14 @@ class UsersControllerTest extends Test
         $firstUser = (object) reset($users);
         $response = fetch(Route::DELETE, self::API_URL . '/' . $firstUser->idusers)->getBody()->getContents();
 
-        $this->assertFetchJson($this, $response, [
+        $this->assertJsonContent($response, [
             'status' => 'success',
             'message' => 'Procedure executed successfully'
         ]);
 
         $users = fetch(Route::GET, self::API_URL)->getBody()->getContents();
 
-        $this->assertFetchJson($this, $users, [
+        $this->assertJsonContent($users, [
             'status' => 'success',
             'message' => 'No data available'
         ]);

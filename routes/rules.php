@@ -34,7 +34,7 @@ Routes::setRules([
         //
     ],
     'PUT' => [
-        'api/users/{idusers}' => [
+        '/api/users/{idusers}' => [
             IdrolesRule::class,
             IddocumentTypesRule::class,
             UsersNameRule::class,
