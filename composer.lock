@@ -904,16 +904,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v16.0.4",
+            "version": "v16.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "f1e9963a01865a76f5fb152950a9de464083375b"
+                "reference": "25dd577b63ebaaf272965e8638f2b3d57bb8fec8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/f1e9963a01865a76f5fb152950a9de464083375b",
-                "reference": "f1e9963a01865a76f5fb152950a9de464083375b",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/25dd577b63ebaaf272965e8638f2b3d57bb8fec8",
+                "reference": "25dd577b63ebaaf272965e8638f2b3d57bb8fec8",
                 "shasum": ""
             },
             "require": {
@@ -957,6 +957,8 @@
             "type": "library",
             "autoload": {
                 "files": [
+                    "routes/rules.php",
+                    "routes/middleware.php",
                     "src/LionBundle/Helpers/Bundle/constans.php",
                     "src/LionBundle/Helpers/Bundle/helpers.php"
                 ],
@@ -983,7 +985,7 @@
                 "issues": "https://github.com/lion-packages/framework/issues",
                 "source": "https://github.com/lion-packages/framework"
             },
-            "time": "2024-02-16T01:37:10+00:00"
+            "time": "2024-02-17T00:27:55+00:00"
         },
         {
             "name": "lion/command",

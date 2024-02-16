@@ -6,6 +6,11 @@
     "keywords": ["lion", "framework", "lion-framework"],
     "license": "MIT",
     "autoload": {
+        "files": [
+            "config/database.php",
+            "routes/rules.php",
+            "routes/middleware.php"
+        ],
         "psr-4": {
             "App\\": "app/",
             "Database\\Class\\": "database/Class/",

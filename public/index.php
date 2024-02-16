@@ -59,17 +59,6 @@ foreach (require_once(__DIR__ . '/../config/cors.php') as $header => $value) {
 
 /**
  * -----------------------------------------------------------------------------
- * Start database service
- * -----------------------------------------------------------------------------
- * Upload data to establish a connection
- * -----------------------------------------------------------------------------
- **/
-
-
-include_once(__DIR__ . '/../config/database.php');
-
-/**
- * -----------------------------------------------------------------------------
  * Start email sending service
  * -----------------------------------------------------------------------------
  * enter account access credentials
@@ -113,7 +102,6 @@ if (isset($allRules[$_SERVER['REQUEST_METHOD']])) {
  **/
 
 date_default_timezone_set(env->SERVER_DATE_TIMEZONE);
-require_once(__DIR__ . '/../routes/middleware.php');
 
 Route::init();
 Route::addMiddleware(Routes::getMiddleware());
