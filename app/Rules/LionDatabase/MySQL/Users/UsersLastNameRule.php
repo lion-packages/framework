@@ -9,7 +9,7 @@ use Valitron\Validator;
 
 class UsersLastNameRule extends Rules 
 {
-	public string $field = 'usersLastName';
+	public string $field = 'users_last_name';
 	public string $desc = '';
 	public string $value = '';
 	public bool $disabled = false;
