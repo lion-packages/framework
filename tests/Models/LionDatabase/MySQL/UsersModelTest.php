@@ -10,19 +10,14 @@ use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Test\Test;
-use Tests\Providers\ConnectionProviderTrait;
 
 class UsersModelTest extends Test
 {
-    use ConnectionProviderTrait;
-
     private UsersModel $usersModel;
     private Users $users;
 
 	protected function setUp(): void 
 	{
-        $this->initConnections();
-
         $this->usersModel = new UsersModel();
 
         $this->users = (new Users())

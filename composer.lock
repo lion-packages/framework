@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86bdb1cf4a380eedbbe55bd06383b796",
+    "content-hash": "d4ee6f8ad74f33115b8103deb53ed795",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -904,16 +904,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v16.0.5",
+            "version": "v16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "25dd577b63ebaaf272965e8638f2b3d57bb8fec8"
+                "reference": "18ddb95bd68d1aa362af5a0490693ca6e87bd4ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/25dd577b63ebaaf272965e8638f2b3d57bb8fec8",
-                "reference": "25dd577b63ebaaf272965e8638f2b3d57bb8fec8",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/18ddb95bd68d1aa362af5a0490693ca6e87bd4ce",
+                "reference": "18ddb95bd68d1aa362af5a0490693ca6e87bd4ce",
                 "shasum": ""
             },
             "require": {
@@ -985,7 +985,7 @@
                 "issues": "https://github.com/lion-packages/framework/issues",
                 "source": "https://github.com/lion-packages/framework"
             },
-            "time": "2024-02-17T00:27:55+00:00"
+            "time": "2024-02-17T17:07:35+00:00"
         },
         {
             "name": "lion/command",
@@ -1263,16 +1263,16 @@
         },
         {
             "name": "lion/route",
-            "version": "v10.0.0",
+            "version": "v10.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/route.git",
-                "reference": "458a1cfcf4b376f7bbb154ff66386cd4c386d971"
+                "reference": "7c214ff1d105cc9373f539b1eac4a03dda80bfe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/route/zipball/458a1cfcf4b376f7bbb154ff66386cd4c386d971",
-                "reference": "458a1cfcf4b376f7bbb154ff66386cd4c386d971",
+                "url": "https://api.github.com/repos/lion-packages/route/zipball/7c214ff1d105cc9373f539b1eac4a03dda80bfe2",
+                "reference": "7c214ff1d105cc9373f539b1eac4a03dda80bfe2",
                 "shasum": ""
             },
             "require": {
@@ -1299,9 +1299,9 @@
             "description": "This library has quick router usage with regular expressions.",
             "support": {
                 "issues": "https://github.com/lion-packages/route/issues",
-                "source": "https://github.com/lion-packages/route/tree/v10.0.0"
+                "source": "https://github.com/lion-packages/route/tree/v10.1.0"
             },
-            "time": "2024-01-20T00:15:43+00:00"
+            "time": "2024-02-17T16:31:48+00:00"
         },
         {
             "name": "lion/security",

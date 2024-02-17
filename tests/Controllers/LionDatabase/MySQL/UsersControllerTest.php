@@ -7,12 +7,9 @@ namespace Tests\Controllers\LionDatabase\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Route\Route;
 use Lion\Test\Test;
-use Tests\Providers\ConnectionProviderTrait;
 
 class UsersControllerTest extends Test
 {
-    use ConnectionProviderTrait;
-
     const API_URL = 'http://127.0.0.1:8000/api/users';
     const JSON_CREATE_USERS = [
         'idroles' => 1,
@@ -29,11 +26,6 @@ class UsersControllerTest extends Test
         'users_last_name' => 'Leon G',
         'users_email' => 'sleon@dev.com'
     ];
-
-	protected function setUp(): void 
-	{
-        $this->initConnections();
-	}
 
     protected function tearDown(): void
     {

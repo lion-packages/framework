@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\JWTMiddleware;
 use Lion\Bundle\Helpers\Http\Routes;
+use Lion\Route\Middleware;
 
 /**
  * -----------------------------------------------------------------------------
@@ -12,10 +13,8 @@ use Lion\Bundle\Helpers\Http\Routes;
  **/
 
 Routes::setMiddleware([
-    JWTMiddleware::class => [
-        ['name' => 'jwt-existence', 'method' => 'existence'],
-        ['name' => 'jwt-authorize', 'method' => 'authorize'],
-        ['name' => 'jwt-not-authorize', 'method' => 'notAuthorize'],
-        ['name' => 'jwt-without-signature', 'method' => 'authorizeWithoutSignature']
-    ]
+    new Middleware('jwt-existence', JWTMiddleware::class, 'existence'),
+    new Middleware('jwt-authorize', JWTMiddleware::class, 'authorize'),
+    new Middleware('jwt-not-authorize', JWTMiddleware::class, 'notAuthorize'),
+    new Middleware('jwt-without-signature', JWTMiddleware::class, 'authorizeWithoutSignature')
 ]);
