@@ -7,6 +7,7 @@ use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersNameRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Lion\Bundle\Helpers\Http\Routes;
+use Lion\Route\Route;
 
 /**
  * -----------------------------------------------------------------------------
@@ -17,10 +18,10 @@ use Lion\Bundle\Helpers\Http\Routes;
  **/
 
 Routes::setRules([
-    'ANY' => [
+    Route::ANY => [
         //
     ],
-    'POST' => [
+    Route::POST => [
         '/api/users' => [
             IdrolesRule::class,
             IddocumentTypesRule::class,
@@ -30,11 +31,11 @@ Routes::setRules([
             UsersPasswordRule::class
         ]
     ],
-    'GET' => [
+    Route::GET => [
         //
     ],
-    'PUT' => [
-        'api/users/{idusers}' => [
+    Route::PUT => [
+        '/api/users/{idusers}' => [
             IdrolesRule::class,
             IddocumentTypesRule::class,
             UsersNameRule::class,
@@ -42,7 +43,7 @@ Routes::setRules([
             UsersEmailRule::class,
         ]
     ],
-    'DELETE' => [
+    Route::DELETE => [
         //
     ],
 ]);

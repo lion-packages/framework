@@ -11,12 +11,12 @@ class Users implements CapsuleInterface, JsonSerializable
 {
 	private ?int $idusers = null;
 	private ?int $idroles = null;
-	private ?int $iddocumentTypes = null;
-	private ?string $usersName = null;
-	private ?string $usersLastName = null;
-	private ?string $usersEmail = null;
-	private ?string $usersPassword = null;
-	private ?string $usersCode = null;
+	private ?int $iddocument_types = null;
+	private ?string $users_name = null;
+	private ?string $users_last_name = null;
+	private ?string $users_email = null;
+	private ?string $users_password = null;
+	private ?string $users_code = null;
 
 	public function jsonSerialize(): array
 	{
@@ -31,12 +31,12 @@ class Users implements CapsuleInterface, JsonSerializable
 		$this
 			->setIdusers(request->idusers ?? null)
 			->setIdroles(request->idroles ?? null)
-			->setIddocumentTypes(request->iddocumentTypes ?? null)
-			->setUsersName(request->usersName ?? null)
-			->setUsersLastName(request->usersLastName ?? null)
-			->setUsersEmail(request->usersEmail ?? null)
-			->setUsersPassword(request->usersPassword ?? null)
-			->setUsersCode(request->usersCode ?? null);
+			->setIddocumentTypes(request->iddocument_types ?? null)
+			->setUsersName(request->users_name ?? null)
+			->setUsersLastName(request->users_last_name ?? null)
+			->setUsersEmail(request->users_email ?? null)
+			->setUsersPassword(request->users_password ?? null)
+			->setUsersCode(request->users_code ?? null);
 
 		return $this;
 	}
@@ -67,72 +67,72 @@ class Users implements CapsuleInterface, JsonSerializable
 
 	public function getIddocumentTypes(): ?int
 	{
-		return $this->iddocumentTypes;
+		return $this->iddocument_types;
 	}
 
-	public function setIddocumentTypes(?int $iddocumentTypes): Users
+	public function setIddocumentTypes(?int $iddocument_types): Users
 	{
-		$this->iddocumentTypes = $iddocumentTypes;
+		$this->iddocument_types = $iddocument_types;
 
 		return $this;
 	}
 
 	public function getUsersName(): ?string
 	{
-		return $this->usersName;
+		return $this->users_name;
 	}
 
-	public function setUsersName(?string $usersName): Users
+	public function setUsersName(?string $users_name): Users
 	{
-		$this->usersName = $usersName;
+		$this->users_name = $users_name;
 
 		return $this;
 	}
 
 	public function getUsersLastName(): ?string
 	{
-		return $this->usersLastName;
+		return $this->users_last_name;
 	}
 
-	public function setUsersLastName(?string $usersLastName): Users
+	public function setUsersLastName(?string $users_last_name): Users
 	{
-		$this->usersLastName = $usersLastName;
+		$this->users_last_name = $users_last_name;
 
 		return $this;
 	}
 
 	public function getUsersEmail(): ?string
 	{
-		return $this->usersEmail;
+		return $this->users_email;
 	}
 
-	public function setUsersEmail(?string $usersEmail): Users
+	public function setUsersEmail(?string $users_email): Users
 	{
-		$this->usersEmail = $usersEmail;
+		$this->users_email = $users_email;
 
 		return $this;
 	}
 
 	public function getUsersPassword(): ?string
 	{
-		return $this->usersPassword;
+		return $this->users_password;
 	}
 
-	public function setUsersPassword(?string $usersPassword): Users
+	public function setUsersPassword(?string $users_password): Users
 	{
-		$this->usersPassword = $usersPassword;
+		$this->users_password = $users_password;
 
 		return $this;
 	}
 
 	public function getUsersCode(): ?string
 	{
-		return $this->usersCode;
+		return $this->users_code;
 	}
 
-	public function setUsersCode(?string $usersCode): Users
+	public function setUsersCode(?string $users_code): Users
 	{
-		$this->usersCode = $usersCode;
+		$this->users_code = $users_code;
 
 		return $this;
 	}

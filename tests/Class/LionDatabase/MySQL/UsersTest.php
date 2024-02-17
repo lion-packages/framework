@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tests\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Users;
-use Tests\Providers\CapsuleProvider;
+use JsonSerializable;
+use Lion\Bundle\Interface\CapsuleInterface;
+use Lion\Test\Test;
 
-class UsersTest extends CapsuleProvider
+class UsersTest extends Test
 {
     const IDUSERS = 1;
     const IDROLES = 1;
@@ -25,25 +27,6 @@ class UsersTest extends CapsuleProvider
         $this->users = new Users();
 	}
 
-    public function testJsonSerialize(): void
-    {
-        $this->assertJsonSerialize($this->users, [
-            'idusers' => null,
-            'idroles' => null,
-            'iddocumentTypes' => null,
-            'usersName' => null,
-            'usersLastName' => null,
-            'usersEmail' => null,
-            'usersPassword' => null,
-            'usersCode' => null
-        ]);
-    }
-
-    public function testCapsule(): void
-    {
-        $this->assertCapsule($this->users, Users::class);
-    }
-
     public function testGetIdusers(): void
     {
         $this->assertSame(self::IDUSERS, $this->users->setIdusers(self::IDUSERS)->getIdusers());
@@ -51,7 +34,12 @@ class UsersTest extends CapsuleProvider
 
     public function testSetIdusers(): void
     {
-        $this->assertInstanceOf(Users::class, $this->users->setIdusers(self::IDUSERS));
+        $this->assertInstances($this->users->setIdusers(self::IDUSERS), [
+            Users::class,
+            CapsuleInterface::class,
+            JsonSerializable::class
+        ]);
+
         $this->assertSame(self::IDUSERS, $this->users->getIdusers());
     }
 
@@ -62,7 +50,12 @@ class UsersTest extends CapsuleProvider
 
     public function testSetIdroles(): void
     {
-        $this->assertInstanceOf(Users::class, $this->users->setIdroles(self::IDROLES));
+        $this->assertInstances($this->users->setIdroles(self::IDROLES), [
+            Users::class,
+            CapsuleInterface::class,
+            JsonSerializable::class
+        ]);
+
         $this->assertSame(self::IDROLES, $this->users->getIdroles());
     }
 
@@ -76,7 +69,12 @@ class UsersTest extends CapsuleProvider
 
     public function testSetIddocumentTypes(): void
     {
-        $this->assertInstanceOf(Users::class, $this->users->setIddocumentTypes(self::IDDOCUMENT_TYPES));
+        $this->assertInstances($this->users->setIddocumentTypes(self::IDDOCUMENT_TYPES), [
+            Users::class,
+            CapsuleInterface::class,
+            JsonSerializable::class
+        ]);
+
         $this->assertSame(self::IDDOCUMENT_TYPES, $this->users->getIddocumentTypes());
     }
 
@@ -87,7 +85,12 @@ class UsersTest extends CapsuleProvider
 
     public function testSetUsersName(): void
     {
-        $this->assertInstanceOf(Users::class, $this->users->setUsersName(self::USERS_NAME));
+        $this->assertInstances($this->users->setUsersName(self::USERS_NAME), [
+            Users::class,
+            CapsuleInterface::class,
+            JsonSerializable::class
+        ]);
+
         $this->assertSame(self::USERS_NAME, $this->users->getUsersName());
     }
 
@@ -101,7 +104,12 @@ class UsersTest extends CapsuleProvider
 
     public function testSetUsersLastName(): void
     {
-        $this->assertInstanceOf(Users::class, $this->users->setUsersLastName(self::USERS_LAST_NAME));
+        $this->assertInstances($this->users->setUsersLastName(self::USERS_LAST_NAME), [
+            Users::class,
+            CapsuleInterface::class,
+            JsonSerializable::class
+        ]);
+
         $this->assertSame(self::USERS_LAST_NAME, $this->users->getUsersLastName());
     }
 
@@ -112,7 +120,12 @@ class UsersTest extends CapsuleProvider
 
     public function testSetUsersEmail(): void
     {
-        $this->assertInstanceOf(Users::class, $this->users->setUsersEmail(self::USERS_EMAIL));
+        $this->assertInstances($this->users->setUsersEmail(self::USERS_EMAIL), [
+            Users::class,
+            CapsuleInterface::class,
+            JsonSerializable::class
+        ]);
+
         $this->assertSame(self::USERS_EMAIL, $this->users->getUsersEmail());
     }
 
@@ -126,7 +139,12 @@ class UsersTest extends CapsuleProvider
 
     public function testSetUsersPassword(): void
     {
-        $this->assertInstanceOf(Users::class, $this->users->setUsersPassword(self::USERS_PASSWORD));
+        $this->assertInstances($this->users->setUsersPassword(self::USERS_PASSWORD), [
+            Users::class,
+            CapsuleInterface::class,
+            JsonSerializable::class
+        ]);
+
         $this->assertSame(self::USERS_PASSWORD, $this->users->getUsersPassword());
     }
 
@@ -137,7 +155,12 @@ class UsersTest extends CapsuleProvider
 
     public function testSetUsersCode(): void
     {
-        $this->assertInstanceOf(Users::class, $this->users->setUsersCode(self::USERS_CODE));
+        $this->assertInstances($this->users->setUsersCode(self::USERS_CODE), [
+            Users::class,
+            CapsuleInterface::class,
+            JsonSerializable::class
+        ]);
+
         $this->assertSame(self::USERS_CODE, $this->users->getUsersCode());
     }
 }

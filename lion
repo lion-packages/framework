@@ -17,7 +17,6 @@ require_once('./vendor/autoload.php');
 
 use Dotenv\Dotenv;
 use Lion\Bundle\Commands\CommandHandler;
-use Lion\Database\Driver;
 
 /**
  * -----------------------------------------------------------------------------
@@ -28,35 +27,6 @@ use Lion\Database\Driver;
  **/
 
 Dotenv::createImmutable(__DIR__)->load();
-
-/**
- * -----------------------------------------------------------------------------
- * Database initialization
- * -----------------------------------------------------------------------------
- * */
-
-Driver::run([
-    'default' => env->DB_NAME,
-    'connections' => [
-        env->DB_NAME => [
-            'type' => env->DB_TYPE,
-            'host' => env->DB_HOST,
-            'port' => env->DB_PORT,
-            'dbname' => env->DB_NAME,
-            'user' => env->DB_USER,
-            'password' => env->DB_PASSWORD
-        ]
-    ]
-]);
-
-/**
- * -----------------------------------------------------------------------------
- * Initialize Http parameters (Middleware/Rules)
- * -----------------------------------------------------------------------------
- * */
-
-include_once('./routes/rules.php');
-include_once('./routes/middleware.php');
 
 /**
  * -----------------------------------------------------------------------------
