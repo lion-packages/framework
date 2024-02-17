@@ -1,5 +1,7 @@
 <?php
 
+use Lion\Mailer\Mailer;
+
 /**
  * -----------------------------------------------------------------------------
  * Start mail service
@@ -8,28 +10,25 @@
  * -----------------------------------------------------------------------------
  **/
 
-return [
-    'default' => env->MAIL_NAME,
-    'accounts' => [
-        env->MAIL_NAME => [
-            'services' => explode('-', env->MAIL_SERVICES),
-            'debug' => (int) env->MAIL_DEBUG,
-            'host' => env->MAIL_HOST,
-            'encryption' => env->MAIL_ENCRYPTION,
-            'port' => (int) env->MAIL_PORT,
-            'name' => env->MAIL_NAME,
-            'account' => env->MAIL_ACCOUNT,
-            'password' => env->MAIL_PASSWORD
-        ],
-        env->MAIL_NAME_SUPP => [
-            'services' => explode('-', env->MAIL_SERVICES_SUPP),
-            'debug' => (int) env->MAIL_DEBUG_SUPP,
-            'host' => env->MAIL_HOST_SUPP,
-            'encryption' => env->MAIL_ENCRYPTION_SUPP,
-            'port' => (int) env->MAIL_PORT_SUPP,
-            'name' => env->MAIL_NAME_SUPP,
-            'account' => env->MAIL_ACCOUNT_SUPP,
-            'password' => env->MAIL_PASSWORD_SUPP
-        ]
+Mailer::initialize([
+    env->MAIL_NAME => [
+        'name' => env->MAIL_NAME,
+        'type' => env->MAIL_TYPE,
+        'host' => env->MAIL_HOST,
+        'username' => env->MAIL_USER_NAME,
+        'password' => env->MAIL_PASSWORD,
+        'port' => (int) env->MAIL_PORT,
+        'encryption' => env->MAIL_ENCRYPTION,
+        'debug' => (bool) env->MAIL_DEBUG
     ],
-];
+    env->MAIL_NAME_SUPP => [
+        'name' => env->MAIL_NAME_SUPP,
+        'type' => env->MAIL_TYPE_SUPP,
+        'host' => env->MAIL_HOST_SUPP,
+        'username' => env->MAIL_USER_NAME_SUPP,
+        'password' => env->MAIL_PASSWORD_SUPP,
+        'port' => (int) env->MAIL_PORT_SUPP,
+        'encryption' => env->MAIL_ENCRYPTION_SUPP,
+        'debug' => (bool) env->MAIL_DEBUG_SUPP
+    ]
+], env->MAIL_NAME);
