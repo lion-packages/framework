@@ -14,9 +14,9 @@ define('LION_START', microtime(true));
 
 require_once(__DIR__ . '/../vendor/autoload.php');
 
-use App\Http\HttpKernel;
 use Dotenv\Dotenv;
 use Lion\Bundle\Helpers\Http\Routes;
+use Lion\Bundle\HttpKernel;
 use Lion\Request\Request;
 use Lion\Route\Route;
 use Lion\Security\RSA;
@@ -75,23 +75,7 @@ foreach (require_once(__DIR__ . '/../config/cors.php') as $header => $value) {
  * -----------------------------------------------------------------------------
  **/
 
-require_once(__DIR__ . '/../routes/rules.php');
-$allRules = Routes::getRules();
-
-if (isset($allRules[$_SERVER['REQUEST_METHOD']])) {
-    $httpKernel = new HttpKernel();
-
-    foreach ($allRules[$_SERVER['REQUEST_METHOD']] as $uri => $rules) {
-        if ($httpKernel->checkUrl($uri)) {
-            foreach ($rules as $key => $rule) {
-                $ruleClass = new $rule();
-
-                $ruleClass->passes();
-                $ruleClass->display();
-            }
-        }
-    }
-}
+(new HttpKernel)->validateRules();
 
 /**
  * -----------------------------------------------------------------------------
