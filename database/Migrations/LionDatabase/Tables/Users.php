@@ -3,13 +3,10 @@
 declare(strict_types=1);
 
 use Lion\Bundle\Interface\MigrationUpInterface;
-use Lion\Bundle\Traits\Migration;
 use Lion\Database\Drivers\Schema\MySQL as DB;
 
 return new class implements MigrationUpInterface
 {
-	use Migration;
-
 	const INDEX = 2;
 
 	/**
