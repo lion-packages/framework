@@ -15,6 +15,11 @@ class JWTMiddleware
 
     private array $headers;
 
+    public function __construct()
+    {
+        $this->headers = apache_request_headers();
+    }
+
     /**
      * @required
      * */
