@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use Lion\Bundle\Enums\StatusResponseEnum;
 use Lion\Files\Store;
 use Lion\Security\RSA;
 
@@ -14,29 +15,37 @@ class JWTMiddleware
 
     private array $headers;
 
-    public function __construct()
+    /**
+     * @required
+     * */
+    public function setRSA(RSA $rsa): void
     {
-        $this->store = new Store();
-        $this->rsa = new RSA();
+        $this->rsa = $rsa;
+    }
 
-        $this->headers = apache_request_headers();
+    /**
+     * @required
+     * */
+    public function setStore(Store $store): void
+    {
+        $this->store = $store;
     }
 
     private function validateSession($jwt): void
     {
         if (isError($jwt)) {
-            finish(response->code(401)->response('session-error', $jwt->message));
+            finish(response(StatusResponseEnum::SESSION_ERROR->value, $jwt->message, 401));
         }
 
         if (!isset($jwt->data->jwt->data->session)) {
-            finish(response->code(403)->response('session-error', 'undefined session'));
+            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'undefined session', 403));
         }
     }
 
     public function existence(): void
     {
         if (!isset($this->headers['Authorization'])) {
-            finish(response->code(401)->response('session-error', 'the JWT does not exist'));
+            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'the JWT does not exist', 401));
         }
     }
 
@@ -46,19 +55,19 @@ class JWTMiddleware
         $jwt = explode('.', jwt());
 
         if (arr->of($jwt)->length() != 3) {
-            finish(response->code(401)->response('session-error', 'invalid JWT [AWS-1]'));
+            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'invalid JWT [AWS-1]', 401));
         }
 
         $data = (object) ((object) json_decode(base64_decode($jwt[1]), true))->data;
 
         if (!isset($data->users_code)) {
-            finish(response->code(403)->response('session-error', 'invalid JWT [AWS-2]'));
+            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'invalid JWT [AWS-2]', 403));
         }
 
         $path = storage_path("keys/{$data->users_code}/");
 
         if (isError($this->store->exist($path))) {
-            finish(response->code(403)->response('session-error', 'invalid JWT [AWS-3]'));
+            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'invalid JWT [AWS-3]', 403));
         }
 
         $this->rsa->setUrlPath(storage_path($path));
@@ -71,7 +80,7 @@ class JWTMiddleware
         $this->validateSession($jwt);
 
         if (!$jwt->data->jwt->data->session) {
-            finish(response->code(401)->response('session-error', 'user not logged in, you must log in'));
+            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'user not logged in, you must log in', 401));
         }
     }
 
@@ -82,7 +91,7 @@ class JWTMiddleware
         $this->validateSession($jwt);
 
         if ($jwt->data->jwt->data->session) {
-            finish(response->code(401)->response('session-error', 'user in session, you must close the session'));
+            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'user in session, you must close the session', 401));
         }
     }
 }
