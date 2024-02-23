@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use Lion\Bundle\Enums\StatusResponseEnum;
 use Lion\Files\Store;
+use Lion\Request\Request;
+use Lion\Request\Response;
 use Lion\Security\RSA;
 
+/**
+ * Responsible for filtering and validating the JWT sent through an HTTP request
+ *
+ * @package App\Http\Middleware
+ */
 class JWTMiddleware
 {
     private Store $store;
@@ -36,48 +42,70 @@ class JWTMiddleware
         $this->store = $store;
     }
 
-    private function validateSession($jwt): void
+    /**
+     * Validate the session defined in the JWT
+     *
+     * @param  object $jwt [JWT object]
+     *
+     * @return void
+     */
+    private function validateSession(object $jwt): void
     {
         if (isError($jwt)) {
-            finish(response(StatusResponseEnum::SESSION_ERROR->value, $jwt->message, 401));
+            finish(response(Response::SESSION_ERROR, $jwt->message, Request::HTTP_UNAUTHORIZED));
         }
 
         if (!isset($jwt->data->jwt->data->session)) {
-            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'undefined session', 403));
+            finish(response(Response::SESSION_ERROR, 'undefined session', Request::HTTP_FORBIDDEN));
         }
     }
 
+    /**
+     * Validate if a JWT exists in the headers
+     *
+     * @return void
+     */
     public function existence(): void
     {
         if (!isset($this->headers['Authorization'])) {
-            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'the JWT does not exist', 401));
+            finish(response(Response::SESSION_ERROR, 'the JWT does not exist', Request::HTTP_UNAUTHORIZED));
         }
     }
 
+    /**
+     * Validate a JWT in headers even though the signature is not validated
+     *
+     * @return void
+     */
     public function authorizeWithoutSignature(): void
     {
         $this->existence();
         $jwt = explode('.', jwt());
 
         if (arr->of($jwt)->length() != 3) {
-            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'invalid JWT [AWS-1]', 401));
+            finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-1]', Request::HTTP_UNAUTHORIZED));
         }
 
         $data = (object) ((object) json_decode(base64_decode($jwt[1]), true))->data;
 
         if (!isset($data->users_code)) {
-            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'invalid JWT [AWS-2]', 403));
+            finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-2]', Request::HTTP_FORBIDDEN));
         }
 
         $path = storage_path("keys/{$data->users_code}/");
 
         if (isError($this->store->exist($path))) {
-            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'invalid JWT [AWS-3]', 403));
+            finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-3]', Request::HTTP_FORBIDDEN));
         }
 
         $this->rsa->setUrlPath(storage_path($path));
     }
 
+    /**
+     * Validate a JWT to check if it is still valid and the session is true
+     *
+     * @return void
+     */
     public function authorize(): void
     {
         $this->existence();
@@ -85,10 +113,17 @@ class JWTMiddleware
         $this->validateSession($jwt);
 
         if (!$jwt->data->jwt->data->session) {
-            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'user not logged in, you must log in', 401));
+            finish(
+                response(Response::SESSION_ERROR, 'user not logged in, you must log in', Request::HTTP_UNAUTHORIZED)
+            );
         }
     }
 
+    /**
+     * Validate a JWT to check if it is still valid and the session is false
+     *
+     * @return void
+     */
     public function notAuthorize(): void
     {
         $this->existence();
@@ -96,7 +131,13 @@ class JWTMiddleware
         $this->validateSession($jwt);
 
         if ($jwt->data->jwt->data->session) {
-            finish(response(StatusResponseEnum::SESSION_ERROR->value, 'user in session, you must close the session', 401));
+            finish(
+                response(
+                    Response::SESSION_ERROR,
+                    'user in session, you must close the session',
+                    Request::HTTP_UNAUTHORIZED
+                )
+            );
         }
     }
 }

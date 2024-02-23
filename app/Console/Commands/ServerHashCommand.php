@@ -32,9 +32,7 @@ class ServerHashCommand extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
-		$output->writeln(
-            $this->successOutput("\t>>  HASH: {$this->validation->sha256(uniqid())}")
-        );
+		$output->writeln($this->successOutput("\t>>  HASH: {$this->validation->sha256(uniqid())}"));
 
 		return Command::SUCCESS;
 	}
