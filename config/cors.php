@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * -----------------------------------------------------------------------------
  * Cross-Origin Resource Sharing (CORS) Configuration
