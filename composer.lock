@@ -904,16 +904,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v16.1.2",
+            "version": "v16.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "9bddc882eea8d193954d4e69eaa6aa0a53252d0b"
+                "reference": "4b116f73aca87d3a5b863cc7a44325369f74bf55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/9bddc882eea8d193954d4e69eaa6aa0a53252d0b",
-                "reference": "9bddc882eea8d193954d4e69eaa6aa0a53252d0b",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/4b116f73aca87d3a5b863cc7a44325369f74bf55",
+                "reference": "4b116f73aca87d3a5b863cc7a44325369f74bf55",
                 "shasum": ""
             },
             "require": {
@@ -985,7 +985,7 @@
                 "issues": "https://github.com/lion-packages/framework/issues",
                 "source": "https://github.com/lion-packages/framework"
             },
-            "time": "2024-02-23T18:14:13+00:00"
+            "time": "2024-02-24T19:27:47+00:00"
         },
         {
             "name": "lion/command",
