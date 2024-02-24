@@ -92,5 +92,5 @@ date_default_timezone_set($_ENV['SERVER_DATE_TIMEZONE']);
 Route::init();
 Route::addMiddleware(Routes::getMiddleware());
 include_once(__DIR__ . '/../routes/web.php');
-Route::get('route-list', fn() => Route::getFullRoutes());
+Route::get('route-list', fn() => Route::getFullRoutes(), ['protect-route-list']);
 Route::dispatch();
