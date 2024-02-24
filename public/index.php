@@ -1,6 +1,5 @@
 <?php
 
-session_start();
 define('LION_START', microtime(true));
 
 /**
@@ -11,7 +10,6 @@ define('LION_START', microtime(true));
  * this application
  * -----------------------------------------------------------------------------
  **/
-
 require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Dotenv\Dotenv;
@@ -28,7 +26,6 @@ use Lion\Security\RSA;
  * .dotenv provides an easy way to access environment variables with $_ENV
  * -----------------------------------------------------------------------------
  **/
-
 Dotenv::createImmutable(__DIR__ . '/../')->load();
 
 /**
@@ -38,9 +35,8 @@ Dotenv::createImmutable(__DIR__ . '/../')->load();
  * Load default route for RSA
  * -----------------------------------------------------------------------------
  **/
-
-if ('' != env->RSA_URL_PATH) {
-    (new RSA)->setUrlPath(storage_path(env->RSA_URL_PATH));
+if ('' != $_ENV['RSA_URL_PATH']) {
+    (new RSA)->setUrlPath(storage_path($_ENV['RSA_URL_PATH']));
 }
 
 /**
@@ -52,9 +48,8 @@ if ('' != env->RSA_URL_PATH) {
  * can be executed in web browsers.
  * -----------------------------------------------------------------------------
  **/
-
 foreach (require_once(__DIR__ . '/../config/cors.php') as $header => $value) {
-    (new Request)->header($header, $value);
+    Request::header($header, $value);
 }
 
 /**
@@ -64,8 +59,28 @@ foreach (require_once(__DIR__ . '/../config/cors.php') as $header => $value) {
  * use whatever rules you want to validate input data
  * -----------------------------------------------------------------------------
  **/
-
 (new HttpKernel)->validateRules();
+
+/**
+ * -----------------------------------------------------------------------------
+ * Database initialization
+ * -----------------------------------------------------------------------------
+ * */
+include_once(__DIR__ . '/../config/database.php');
+
+/**
+ * -----------------------------------------------------------------------------
+ * Email initialization
+ * -----------------------------------------------------------------------------
+ * */
+include_once(__DIR__ . '/../config/email.php');
+
+/**
+ * -----------------------------------------------------------------------------
+ * Local zone configuration
+ * -----------------------------------------------------------------------------
+ */
+date_default_timezone_set($_ENV['SERVER_DATE_TIMEZONE']);
 
 /**
  * -----------------------------------------------------------------------------
@@ -74,11 +89,8 @@ foreach (require_once(__DIR__ . '/../config/cors.php') as $header => $value) {
  * Here is where you can register web routes for your application
  * -----------------------------------------------------------------------------
  **/
-
-date_default_timezone_set(env->SERVER_DATE_TIMEZONE);
-
 Route::init();
 Route::addMiddleware(Routes::getMiddleware());
 include_once(__DIR__ . '/../routes/web.php');
-Route::get('route-list', fn() => Route::getFullRoutes());
+Route::get('route-list', fn() => Route::getFullRoutes(), ['protect-route-list']);
 Route::dispatch();

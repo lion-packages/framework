@@ -7,8 +7,6 @@
     "license": "MIT",
     "autoload": {
         "files": [
-            "config/database.php",
-            "config/email.php",
             "routes/rules.php",
             "routes/middleware.php"
         ],
@@ -21,8 +19,6 @@
     },
     "autoload-dev": {
         "files": [
-            "config/database.php",
-            "config/email.php",
             "routes/rules.php",
             "routes/middleware.php"
         ],

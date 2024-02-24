@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Lion\Mailer\Mailer;
 
 /**
@@ -11,14 +13,14 @@ use Lion\Mailer\Mailer;
  **/
 
 Mailer::initialize([
-    env->MAIL_NAME => [
-        'name' => env->MAIL_NAME,
-        'type' => env->MAIL_TYPE,
-        'host' => env->MAIL_HOST,
-        'username' => env->MAIL_USER_NAME,
-        'password' => env->MAIL_PASSWORD,
-        'port' => (int) env->MAIL_PORT,
-        'encryption' => env->MAIL_ENCRYPTION,
-        'debug' => (bool) env->MAIL_DEBUG
+    $_ENV['MAIL_NAME'] => [
+        'name' => $_ENV['MAIL_NAME'],
+        'type' => $_ENV['MAIL_TYPE'],
+        'host' => $_ENV['MAIL_HOST'],
+        'username' => $_ENV['MAIL_USER_NAME'],
+        'password' => $_ENV['MAIL_PASSWORD'],
+        'port' => (int) $_ENV['MAIL_PORT'],
+        'encryption' => $_ENV['MAIL_ENCRYPTION'],
+        'debug' => (bool) $_ENV['MAIL_DEBUG']
     ]
-], env->MAIL_NAME);
+], $_ENV['MAIL_NAME']);

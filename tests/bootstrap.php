@@ -12,11 +12,9 @@ define('LION_START', microtime(true));
  * this application
  * -----------------------------------------------------------------------------
  **/
-
-require_once(__DIR__ . '/vendor/autoload.php');
+require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Dotenv\Dotenv;
-use Lion\Bundle\Commands\CommandHandler;
 
 /**
  * -----------------------------------------------------------------------------
@@ -25,21 +23,21 @@ use Lion\Bundle\Commands\CommandHandler;
  * .dotenv provides an easy way to access environment variables with $_ENV
  * -----------------------------------------------------------------------------
  **/
-Dotenv::createImmutable(__DIR__)->load();
+Dotenv::createImmutable(__DIR__ . '/../')->load();
 
 /**
  * -----------------------------------------------------------------------------
  * Database initialization
  * -----------------------------------------------------------------------------
  * */
-include_once(__DIR__ . '/config/database.php');
+include_once(__DIR__ . '/../config/database.php');
 
 /**
  * -----------------------------------------------------------------------------
  * Email initialization
  * -----------------------------------------------------------------------------
  * */
-include_once(__DIR__ . '/config/email.php');
+include_once(__DIR__ . '/../config/email.php');
 
 /**
  * -----------------------------------------------------------------------------
@@ -47,20 +45,3 @@ include_once(__DIR__ . '/config/email.php');
  * -----------------------------------------------------------------------------
  */
 date_default_timezone_set($_ENV['SERVER_DATE_TIMEZONE']);
-
-/**
- * -----------------------------------------------------------------------------
- * Run The lion Application
- * -----------------------------------------------------------------------------
- * This is where the commands for your application are executed
- * -----------------------------------------------------------------------------
- **/
-(new CommandHandler)
-    ->registerCommands(
-        './vendor/lion/bundle/src/LionBundle/Commands/Npm/',
-        'Lion\\Bundle\\Commands\\Npm\\',
-        'Commands/Npm/'
-    )
-    ->registerCommands('./app/Console/Commands/', 'App\\Console\\Commands\\', 'Console/Commands/')
-    ->getApplication()
-    ->run();
