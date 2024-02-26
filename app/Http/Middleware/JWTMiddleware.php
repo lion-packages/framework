@@ -16,11 +16,30 @@ use Lion\Security\RSA;
  */
 class JWTMiddleware
 {
+    /**
+     * [Object of class Store]
+     *
+     * @var Store $store
+     */
     private Store $store;
+
+    /**
+     * [Object of class RSA]
+     *
+     * @var RSA $rsa
+     */
     private RSA $rsa;
 
+    /**
+     * [List of all available headers]
+     *
+     * @var array $headers
+     */
     private array $headers;
 
+    /**
+     * Class constructor
+     */
     public function __construct()
     {
         $this->headers = apache_request_headers();

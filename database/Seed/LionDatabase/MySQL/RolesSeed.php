@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Database\Seed\LionDatabase\MySQL;
 
 use Database\Factory\LionDatabase\MySQL\RolesFactory;
+use Lion\Bundle\Interface\SeedInterface;
 use Lion\Database\Drivers\MySQL as DB;
 
-class RolesSeed
+class RolesSeed implements SeedInterface
 {
     const COLUMNS = ['roles_name', 'roles_description'];
 
 	/**
-	 * Seed the application's database
+	 * {@inheritdoc}
 	 **/
 	public function run(): object
 	{
-        return DB::table('roles')
+		return DB::table('roles')
             ->bulk(self::COLUMNS, RolesFactory::definition())
             ->execute();
 	}

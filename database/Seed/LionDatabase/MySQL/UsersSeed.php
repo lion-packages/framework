@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Database\Seed\LionDatabase\MySQL;
 
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Lion\Bundle\Interface\SeedInterface;
 use Lion\Database\Drivers\MySQL as DB;
 
-class UsersSeed
+class UsersSeed implements SeedInterface
 {
     const COLUMNS = [
         'idroles',
@@ -20,7 +21,7 @@ class UsersSeed
     ];
 
 	/**
-	 * Seed the application's database
+	 * {@inheritdoc}
 	 **/
 	public function run(): object
 	{

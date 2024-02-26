@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Database\Factory\LionDatabase\MySQL;
 
-class DocumentTypesFactory
+use Lion\Bundle\Interface\FactoryInterface;
+
+class DocumentTypesFactory implements FactoryInterface
 {
 	/**
-	 * Define the model's default state
+	 * {@inheritdoc}
 	 **/
 	public static function definition(): array
 	{
