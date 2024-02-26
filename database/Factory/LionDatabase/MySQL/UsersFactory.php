@@ -11,6 +11,8 @@ use Lion\Security\Validation;
 
 class UsersFactory implements FactoryInterface
 {
+    const USERS_PASSWORD = 'lion';
+
 	/**
 	 * {@inheritdoc}
 	 **/
@@ -25,7 +27,7 @@ class UsersFactory implements FactoryInterface
                 'root',
                 'lion',
                 'root@dev.com',
-                $validation->passwordHash($validation->sha256('lion')),
+                $validation->passwordHash($validation->sha256(self::USERS_PASSWORD)),
                 uniqid('code-')
             ],
             [
@@ -34,7 +36,7 @@ class UsersFactory implements FactoryInterface
                 'root',
                 'manager',
                 'manager@dev.com',
-                $validation->passwordHash($validation->sha256('lion')),
+                $validation->passwordHash($validation->sha256(self::USERS_PASSWORD)),
                 uniqid('code-')
             ]
         ];

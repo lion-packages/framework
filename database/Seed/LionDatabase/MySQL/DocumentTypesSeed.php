@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Database\Seed\LionDatabase\MySQL;
 
 use Database\Factory\LionDatabase\MySQL\DocumentTypesFactory;
+use Lion\Bundle\Interface\SeedInterface;
 use Lion\Database\Drivers\MySQL as DB;
 
-class DocumentTypesSeed
+class DocumentTypesSeed implements SeedInterface
 {
     const COLUMNS = ['document_types_name'];
 
 	/**
-	 * Seed the application's database
+	 * {@inheritdoc}
 	 **/
 	public function run(): object
 	{
