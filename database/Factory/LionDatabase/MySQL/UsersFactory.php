@@ -6,18 +6,19 @@ namespace Database\Factory\LionDatabase\MySQL;
 
 use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
+use Lion\Bundle\Interface\FactoryInterface;
 use Lion\Security\Validation;
 
-class UsersFactory
+class UsersFactory implements FactoryInterface
 {
 	/**
-	 * Define the model's default state
+	 * {@inheritdoc}
 	 **/
 	public static function definition(): array
 	{
-        $validation = new Validation();
+		$validation = new Validation();
 
-		return [
+        return [
             [
                 RolesEnum::ADMINISTRATOR->value,
                 DocumentTypesEnum::CITIZENSHIP_CARD->value,
