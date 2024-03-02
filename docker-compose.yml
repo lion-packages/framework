@@ -5,16 +5,26 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        environment:
+            - DISPLAY=${DISPLAY}
+            - DBUS_SESSION_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
+        devices:
+            - /dev/dri:/dev/dri
         ports:
             - "8000:8000"
             - "9000:9000"
             - "5173:5173"
         volumes:
             - ./:/var/www/html
+            - /var/run/dbus:/var/run/dbus
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - /dev/dri:/dev/dri
         depends_on:
             - mysql
             - phpmyadmin
             - redis
+        cap_add:
+            - SYS_ADMIN
         networks:
             - lion
     redis:
