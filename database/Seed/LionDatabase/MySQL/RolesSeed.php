@@ -10,6 +10,7 @@ use Lion\Database\Drivers\MySQL as DB;
 
 class RolesSeed implements SeedInterface
 {
+    const INDEX = 2;
     const COLUMNS = ['roles_name', 'roles_description'];
 
 	/**
