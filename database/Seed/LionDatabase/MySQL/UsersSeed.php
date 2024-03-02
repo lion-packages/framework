@@ -10,6 +10,7 @@ use Lion\Database\Drivers\MySQL as DB;
 
 class UsersSeed implements SeedInterface
 {
+    const INDEX = 3;
     const COLUMNS = [
         'idroles',
         'iddocument_types',

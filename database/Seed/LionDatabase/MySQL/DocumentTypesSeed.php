@@ -10,6 +10,7 @@ use Lion\Database\Drivers\MySQL as DB;
 
 class DocumentTypesSeed implements SeedInterface
 {
+    const INDEX = 1;
     const COLUMNS = ['document_types_name'];
 
 	/**
