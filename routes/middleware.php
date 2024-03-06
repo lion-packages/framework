@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Middleware\JWTMiddleware;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Bundle\Middleware\RouteMiddleware;

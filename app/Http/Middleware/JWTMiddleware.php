@@ -99,6 +99,7 @@ class JWTMiddleware
     public function authorizeWithoutSignature(): void
     {
         $this->existence();
+
         $jwt = explode('.', jwt());
 
         if (arr->of($jwt)->length() != 3) {
@@ -128,7 +129,9 @@ class JWTMiddleware
     public function authorize(): void
     {
         $this->existence();
+
         $jwt = jwt();
+
         $this->validateSession($jwt);
 
         if (!$jwt->data->jwt->data->session) {
@@ -146,7 +149,9 @@ class JWTMiddleware
     public function notAuthorize(): void
     {
         $this->existence();
+
         $jwt = jwt();
+
         $this->validateSession($jwt);
 
         if ($jwt->data->jwt->data->session) {

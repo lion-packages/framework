@@ -12,12 +12,12 @@ namespace App\Enums;
 enum DocumentTypesEnum: int
 {
     /**
-     * Identification document
+     * [Identification document]
      */
 	case CITIZENSHIP_CARD = 1;
 
     /**
-     * Passport
+     * [Passport]
      */
     case PASSPORT = 2;
 

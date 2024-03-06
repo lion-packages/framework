@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Rules\LionDatabase\MySQL\DocumentTypes\IddocumentTypesRule;
 use App\Rules\LionDatabase\MySQL\Roles\IdrolesRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;

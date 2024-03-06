@@ -26,10 +26,12 @@ class UsersController
      */
 	public function createUsers(Users $users, UsersModel $usersModel, Validation $validation): object
 	{
-        $users = $users->capsule();
-        $password = $validation->passwordHash($users->getUsersPassword());
-
-		return $usersModel->createUsersDB($users->setUsersPassword($password)->setUsersCode(uniqid('code-')));
+		return $usersModel->createUsersDB(
+            $users
+                ->capsule()
+                ->setUsersPassword($validation->passwordHash($users->getUsersPassword()))
+                ->setUsersCode(uniqid('code-'))
+        );
 	}
 
     /**
@@ -55,7 +57,11 @@ class UsersController
      */
 	public function updateUsers(Users $users, UsersModel $usersModel, string $idusers): object
 	{
-		return $usersModel->updateUsersDB($users->capsule()->setIdusers((int) $idusers));
+		return $usersModel->updateUsersDB(
+            $users
+                ->capsule()
+                ->setIdusers((int) $idusers)
+        );
 	}
 
     /**
@@ -69,6 +75,10 @@ class UsersController
      */
 	public function deleteUsers(Users $users, UsersModel $usersModel, string $idusers): object
 	{
-		return $usersModel->deleteUsersDB($users->capsule()->setIdusers((int) $idusers));
+		return $usersModel->deleteUsersDB(
+            $users
+                ->capsule()
+                ->setIdusers((int) $idusers)
+        );
 	}
 }
