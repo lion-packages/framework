@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\LionDatabase\MySQL\UsersController;
 use Lion\Route\Route;
 
