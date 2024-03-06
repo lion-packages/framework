@@ -15,6 +15,7 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 use Dotenv\Dotenv;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Bundle\HttpKernel;
+use Lion\DependencyInjection\Container;
 use Lion\Request\Request;
 use Lion\Route\Route;
 use Lion\Security\RSA;
@@ -59,7 +60,7 @@ foreach (require_once(__DIR__ . '/../config/cors.php') as $header => $value) {
  * use whatever rules you want to validate input data
  * -----------------------------------------------------------------------------
  **/
-(new HttpKernel)->validateRules();
+(new Container)->injectDependencies((new HttpKernel))->validateRules();
 
 /**
  * -----------------------------------------------------------------------------
