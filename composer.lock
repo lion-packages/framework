@@ -904,16 +904,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v16.3.0",
+            "version": "v16.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "dcb197b2fa805ac595d54b07b1d15e6498277e14"
+                "reference": "fad18e9e60a2fd72bdfcbf33b5f3e6f86bf30a98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/dcb197b2fa805ac595d54b07b1d15e6498277e14",
-                "reference": "dcb197b2fa805ac595d54b07b1d15e6498277e14",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/fad18e9e60a2fd72bdfcbf33b5f3e6f86bf30a98",
+                "reference": "fad18e9e60a2fd72bdfcbf33b5f3e6f86bf30a98",
                 "shasum": ""
             },
             "require": {
@@ -933,7 +933,7 @@
                 "lion/helpers": "^3.0",
                 "lion/mailer": "^6.0",
                 "lion/request": "^6.0",
-                "lion/route": "^10.0",
+                "lion/route": "^10.3",
                 "lion/security": "^9.0",
                 "monolog/monolog": "^3.3",
                 "nesbot/carbon": "^2.66",
@@ -985,7 +985,7 @@
                 "issues": "https://github.com/lion-packages/framework/issues",
                 "source": "https://github.com/lion-packages/framework"
             },
-            "time": "2024-03-02T20:58:30+00:00"
+            "time": "2024-03-06T01:17:37+00:00"
         },
         {
             "name": "lion/command",
@@ -1067,16 +1067,16 @@
         },
         {
             "name": "lion/dependency-injection",
-            "version": "v1.3.1",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Sleon4/dependency-injection.git",
-                "reference": "72a0aca3e249b515d3dd8e56e180f858bb9ebcb9"
+                "url": "https://github.com/lion-packages/dependency-injection.git",
+                "reference": "1b98612551c5a4ed2dc0392c3f7f9a1e162715fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sleon4/dependency-injection/zipball/72a0aca3e249b515d3dd8e56e180f858bb9ebcb9",
-                "reference": "72a0aca3e249b515d3dd8e56e180f858bb9ebcb9",
+                "url": "https://api.github.com/repos/lion-packages/dependency-injection/zipball/1b98612551c5a4ed2dc0392c3f7f9a1e162715fe",
+                "reference": "1b98612551c5a4ed2dc0392c3f7f9a1e162715fe",
                 "shasum": ""
             },
             "require": {
@@ -1100,10 +1100,10 @@
             ],
             "description": "Container for dependency injection with DI-PHP",
             "support": {
-                "issues": "https://github.com/Sleon4/dependency-injection/issues",
-                "source": "https://github.com/Sleon4/dependency-injection/tree/v1.3.1"
+                "issues": "https://github.com/lion-packages/dependency-injection/issues",
+                "source": "https://github.com/lion-packages/dependency-injection/tree/v1.4.1"
             },
-            "time": "2024-02-25T23:46:02+00:00"
+            "time": "2024-03-03T22:27:28+00:00"
         },
         {
             "name": "lion/files",
@@ -1183,28 +1183,27 @@
         },
         {
             "name": "lion/mailer",
-            "version": "v6.1.0",
+            "version": "v6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/mailer.git",
-                "reference": "a113378836c41165ba89f4683d5bf898ac28fee4"
+                "reference": "bf66e85ea02c0b2728aa95a1054e3c1f3e9ba7b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/mailer/zipball/a113378836c41165ba89f4683d5bf898ac28fee4",
-                "reference": "a113378836c41165ba89f4683d5bf898ac28fee4",
+                "url": "https://api.github.com/repos/lion-packages/mailer/zipball/bf66e85ea02c0b2728aa95a1054e3c1f3e9ba7b9",
+                "reference": "bf66e85ea02c0b2728aa95a1054e3c1f3e9ba7b9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "phpmailer/phpmailer": "^6.6",
-                "symfony/mailer": "^6.3",
+                "phpmailer/phpmailer": "^6.9",
+                "symfony/mailer": "^7.0",
                 "symfony/mime": "^6.3"
             },
             "require-dev": {
                 "lion/test": "^1.4",
-                "phpunit/phpunit": "^10.0.",
-                "vlucas/phpdotenv": "*"
+                "phpunit/phpunit": "^10.0."
             },
             "type": "library",
             "autoload": {
@@ -1219,9 +1218,9 @@
             "description": "Library created to facilitate sending email based on different services",
             "support": {
                 "issues": "https://github.com/lion-packages/mailer/issues",
-                "source": "https://github.com/lion-packages/mailer/tree/v6.1.0"
+                "source": "https://github.com/lion-packages/mailer/tree/v6.2.0"
             },
-            "time": "2024-01-10T20:04:05+00:00"
+            "time": "2024-03-03T21:47:02+00:00"
         },
         {
             "name": "lion/request",
@@ -1263,16 +1262,16 @@
         },
         {
             "name": "lion/route",
-            "version": "v10.2.0",
+            "version": "v10.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/route.git",
-                "reference": "ca1b3709426f0cca2062c0787df73e3f65007c6d"
+                "reference": "43ceafdcebdd51d08c6076bfa4dbb8294b19bc73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/route/zipball/ca1b3709426f0cca2062c0787df73e3f65007c6d",
-                "reference": "ca1b3709426f0cca2062c0787df73e3f65007c6d",
+                "url": "https://api.github.com/repos/lion-packages/route/zipball/43ceafdcebdd51d08c6076bfa4dbb8294b19bc73",
+                "reference": "43ceafdcebdd51d08c6076bfa4dbb8294b19bc73",
                 "shasum": ""
             },
             "require": {
@@ -1299,9 +1298,9 @@
             "description": "This library has quick router usage with regular expressions.",
             "support": {
                 "issues": "https://github.com/lion-packages/route/issues",
-                "source": "https://github.com/lion-packages/route/tree/v10.2.0"
+                "source": "https://github.com/lion-packages/route/tree/v10.3.0"
             },
-            "time": "2024-02-26T00:29:15+00:00"
+            "time": "2024-03-03T22:38:17+00:00"
         },
         {
             "name": "lion/security",
@@ -3254,39 +3253,39 @@
         },
         {
             "name": "symfony/mailer",
-            "version": "v6.4.4",
+            "version": "v7.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mailer.git",
-                "reference": "791c5d31a8204cf3db0c66faab70282307f4376b"
+                "reference": "72e16d87bf50a3ce195b9470c06bb9d7b816ea85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mailer/zipball/791c5d31a8204cf3db0c66faab70282307f4376b",
-                "reference": "791c5d31a8204cf3db0c66faab70282307f4376b",
+                "url": "https://api.github.com/repos/symfony/mailer/zipball/72e16d87bf50a3ce195b9470c06bb9d7b816ea85",
+                "reference": "72e16d87bf50a3ce195b9470c06bb9d7b816ea85",
                 "shasum": ""
             },
             "require": {
                 "egulias/email-validator": "^2.1.10|^3|^4",
-                "php": ">=8.1",
+                "php": ">=8.2",
                 "psr/event-dispatcher": "^1",
                 "psr/log": "^1|^2|^3",
-                "symfony/event-dispatcher": "^5.4|^6.0|^7.0",
-                "symfony/mime": "^6.2|^7.0",
+                "symfony/event-dispatcher": "^6.4|^7.0",
+                "symfony/mime": "^6.4|^7.0",
                 "symfony/service-contracts": "^2.5|^3"
             },
             "conflict": {
                 "symfony/http-client-contracts": "<2.5",
-                "symfony/http-kernel": "<5.4",
-                "symfony/messenger": "<6.2",
-                "symfony/mime": "<6.2",
-                "symfony/twig-bridge": "<6.2.1"
+                "symfony/http-kernel": "<6.4",
+                "symfony/messenger": "<6.4",
+                "symfony/mime": "<6.4",
+                "symfony/twig-bridge": "<6.4"
             },
             "require-dev": {
-                "symfony/console": "^5.4|^6.0|^7.0",
-                "symfony/http-client": "^5.4|^6.0|^7.0",
-                "symfony/messenger": "^6.2|^7.0",
-                "symfony/twig-bridge": "^6.2|^7.0"
+                "symfony/console": "^6.4|^7.0",
+                "symfony/http-client": "^6.4|^7.0",
+                "symfony/messenger": "^6.4|^7.0",
+                "symfony/twig-bridge": "^6.4|^7.0"
             },
             "type": "library",
             "autoload": {
@@ -3314,7 +3313,7 @@
             "description": "Helps sending emails",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/mailer/tree/v6.4.4"
+                "source": "https://github.com/symfony/mailer/tree/v7.0.4"
             },
             "funding": [
                 {
@@ -3330,7 +3329,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-03T21:33:47+00:00"
+            "time": "2024-02-03T21:34:19+00:00"
         },
         {
             "name": "symfony/mime",
@@ -4050,16 +4049,16 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v6.4.3",
+            "version": "v6.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "3b2957ad54902f0f544df83e3d58b38d7e8e5842"
+                "reference": "7fe30068e207d9c31c0138501ab40358eb2d49a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/3b2957ad54902f0f544df83e3d58b38d7e8e5842",
-                "reference": "3b2957ad54902f0f544df83e3d58b38d7e8e5842",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/7fe30068e207d9c31c0138501ab40358eb2d49a4",
+                "reference": "7fe30068e207d9c31c0138501ab40358eb2d49a4",
                 "shasum": ""
             },
             "require": {
@@ -4113,7 +4112,7 @@
                 "url"
             ],
             "support": {
-                "source": "https://github.com/symfony/routing/tree/v6.4.3"
+                "source": "https://github.com/symfony/routing/tree/v6.4.5"
             },
             "funding": [
                 {
@@ -4129,7 +4128,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-30T13:55:02+00:00"
+            "time": "2024-02-27T12:33:30+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -4715,16 +4714,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.0.1",
+            "version": "v5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69"
+                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2218c2252c874a4624ab2f613d86ac32d227bc69",
-                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/139676794dc1e9231bf7bcd123cfc0c99182cb13",
+                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13",
                 "shasum": ""
             },
             "require": {
@@ -4767,26 +4766,27 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.1"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.2"
             },
-            "time": "2024-02-21T19:24:10+00:00"
+            "time": "2024-03-05T20:51:40+00:00"
         },
         {
             "name": "phar-io/manifest",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phar-io/manifest.git",
-                "reference": "97803eca37d319dfa7826cc2437fc020857acb53"
+                "reference": "54750ef60c58e43759730615a392c31c80e23176"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/manifest/zipball/97803eca37d319dfa7826cc2437fc020857acb53",
-                "reference": "97803eca37d319dfa7826cc2437fc020857acb53",
+                "url": "https://api.github.com/repos/phar-io/manifest/zipball/54750ef60c58e43759730615a392c31c80e23176",
+                "reference": "54750ef60c58e43759730615a392c31c80e23176",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
+                "ext-libxml": "*",
                 "ext-phar": "*",
                 "ext-xmlwriter": "*",
                 "phar-io/version": "^3.0.1",
@@ -4827,9 +4827,15 @@
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
             "support": {
                 "issues": "https://github.com/phar-io/manifest/issues",
-                "source": "https://github.com/phar-io/manifest/tree/2.0.3"
+                "source": "https://github.com/phar-io/manifest/tree/2.0.4"
             },
-            "time": "2021-07-20T11:28:43+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/theseer",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-03T12:33:53+00:00"
         },
         {
             "name": "phar-io/version",
@@ -6230,16 +6236,16 @@
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "b2ad5003ca10d4ee50a12da31de12a5774ba6b96"
+                "reference": "737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/b2ad5003ca10d4ee50a12da31de12a5774ba6b96",
-                "reference": "b2ad5003ca10d4ee50a12da31de12a5774ba6b96",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2",
+                "reference": "737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2",
                 "shasum": ""
             },
             "require": {
@@ -6268,7 +6274,7 @@
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "support": {
                 "issues": "https://github.com/theseer/tokenizer/issues",
-                "source": "https://github.com/theseer/tokenizer/tree/1.2.2"
+                "source": "https://github.com/theseer/tokenizer/tree/1.2.3"
             },
             "funding": [
                 {
@@ -6276,7 +6282,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-20T00:12:19+00:00"
+            "time": "2024-03-03T12:36:25+00:00"
         }
     ],
     "aliases": [],
