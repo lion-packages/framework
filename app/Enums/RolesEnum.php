@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace App\Enums;
 
 /**
- * Defines the available roles.
+ * Defines the available roles
  *
  * @package App\Enums
  */
 enum RolesEnum: int
 {
     /**
-     * Administrator role
+     * [Administrator role]
      */
 	case ADMINISTRATOR = 1;
 
     /**
-     * Manager role
+     * [Manager role]
      */
     case MANAGER = 2;
 
     /**
-     * Customer role
+     * [Customer role]
      */
     case CUSTOMER = 3;
 
