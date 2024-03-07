@@ -12,6 +12,7 @@ define('LION_START', microtime(true));
  * this application
  * -----------------------------------------------------------------------------
  **/
+
 require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Dotenv\Dotenv;
@@ -23,6 +24,7 @@ use Dotenv\Dotenv;
  * .dotenv provides an easy way to access environment variables with $_ENV
  * -----------------------------------------------------------------------------
  **/
+
 Dotenv::createImmutable(__DIR__ . '/../')->load();
 
 /**
@@ -30,6 +32,7 @@ Dotenv::createImmutable(__DIR__ . '/../')->load();
  * Database initialization
  * -----------------------------------------------------------------------------
  * */
+
 include_once(__DIR__ . '/../config/database.php');
 
 /**
@@ -37,6 +40,7 @@ include_once(__DIR__ . '/../config/database.php');
  * Email initialization
  * -----------------------------------------------------------------------------
  * */
+
 include_once(__DIR__ . '/../config/email.php');
 
 /**
@@ -44,4 +48,5 @@ include_once(__DIR__ . '/../config/email.php');
  * Local zone configuration
  * -----------------------------------------------------------------------------
  */
-date_default_timezone_set($_ENV['SERVER_DATE_TIMEZONE']);
+
+date_default_timezone_set(env('SERVER_DATE_TIMEZONE', 'America/Bogota'));

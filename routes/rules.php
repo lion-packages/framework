@@ -20,9 +20,19 @@ use Lion\Route\Route;
  **/
 
 Routes::setRules([
+
+    /**
+     * [Routes for any HTTP protocol]
+     */
+
     Route::ANY => [
         //
     ],
+
+    /**
+     * [Routes for the HTTP POST protocol]
+     */
+
     Route::POST => [
         '/api/users' => [
             IdrolesRule::class,
@@ -33,9 +43,19 @@ Routes::setRules([
             UsersPasswordRule::class
         ]
     ],
+
+    /**
+     * [Routes for the HTTP GET protocol]
+     */
+
     Route::GET => [
         //
     ],
+
+    /**
+     * [Routes for the HTTP PUT protocol]
+     */
+
     Route::PUT => [
         '/api/users/{idusers}' => [
             IdrolesRule::class,
@@ -45,7 +65,13 @@ Routes::setRules([
             UsersEmailRule::class,
         ]
     ],
+
+    /**
+     * [Routes for the HTTP DELETE protocol]
+     */
+
     Route::DELETE => [
         //
     ],
+
 ]);

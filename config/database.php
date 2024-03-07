@@ -13,15 +13,15 @@ use Lion\Database\Driver;
  **/
 
 Driver::run([
-    'default' => $_ENV['DB_NAME'],
+    'default' => env('DB_NAME', 'lion_database'),
     'connections' => [
-        $_ENV['DB_NAME'] => [
-            'type' => $_ENV['DB_TYPE'],
-            'host' => $_ENV['DB_HOST'],
-            'port' => $_ENV['DB_PORT'],
-            'dbname' => $_ENV['DB_NAME'],
-            'user' => $_ENV['DB_USER'],
-            'password' => $_ENV['DB_PASSWORD']
+        env('DB_NAME', 'lion_database') => [
+            'type' => env('DB_TYPE', 'mysql'),
+            'host' => env('DB_HOST', 'mysql'),
+            'port' => env('DB_PORT', 3306),
+            'dbname' => env('DB_NAME', 'lion_database'),
+            'user' => env('DB_USER', 'root'),
+            'password' => env('DB_PASSWORD', 'lion')
         ]
     ]
 ]);
