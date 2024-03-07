@@ -16,9 +16,20 @@ use Lion\Route\Middleware;
  **/
 
 Routes::setMiddleware([
+
+    /**
+     * [Protects the route which provides the list of available routes]
+     */
+
     new Middleware('protect-route-list', RouteMiddleware::class, 'protectRouteList'),
+
+    /**
+     * [Filters to validate different states with JWT]
+     */
+
     new Middleware('jwt-existence', JWTMiddleware::class, 'existence'),
     new Middleware('jwt-authorize', JWTMiddleware::class, 'authorize'),
     new Middleware('jwt-not-authorize', JWTMiddleware::class, 'notAuthorize'),
-    new Middleware('jwt-without-signature', JWTMiddleware::class, 'authorizeWithoutSignature')
+    new Middleware('jwt-without-signature', JWTMiddleware::class, 'authorizeWithoutSignature'),
+
 ]);

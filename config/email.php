@@ -13,14 +13,14 @@ use Lion\Mailer\Mailer;
  **/
 
 Mailer::initialize([
-    $_ENV['MAIL_NAME'] => [
-        'name' => $_ENV['MAIL_NAME'],
-        'type' => $_ENV['MAIL_TYPE'],
-        'host' => $_ENV['MAIL_HOST'],
-        'username' => $_ENV['MAIL_USER_NAME'],
-        'password' => $_ENV['MAIL_PASSWORD'],
-        'port' => (int) $_ENV['MAIL_PORT'],
-        'encryption' => $_ENV['MAIL_ENCRYPTION'],
-        'debug' => (bool) $_ENV['MAIL_DEBUG']
+    env('MAIL_NAME', 'lion-app') => [
+        'name' => env('MAIL_NAME', 'lion-app'),
+        'type' => env('MAIL_TYPE', 'symfony'),
+        'host' => env('MAIL_HOST', 'mailhog'),
+        'username' => env('MAIL_USER_NAME', 'lion-app'),
+        'password' => env('MAIL_PASSWORD', 'lion'),
+        'port' => (int) env('MAIL_PORT', 1025),
+        'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+        'debug' => env('MAIL_DEBUG', false)
     ]
-], $_ENV['MAIL_NAME']);
+], env('MAIL_NAME', 'lion-app'));
