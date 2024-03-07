@@ -7,6 +7,11 @@ namespace Database\Class\LionDatabase\MySQL;
 use JsonSerializable;
 use Lion\Bundle\Interface\CapsuleInterface;
 
+/**
+ * Capsule for the 'Users' entity
+ *
+ * @package Database\Class\LionDatabase\MySQL
+ */
 class Users implements CapsuleInterface, JsonSerializable
 {
 	/**
