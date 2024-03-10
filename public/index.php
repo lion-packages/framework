@@ -33,16 +33,6 @@ Dotenv::createImmutable(__DIR__ . '/../')->load();
 
 /**
  * -----------------------------------------------------------------------------
- * Import route for RSA
- * -----------------------------------------------------------------------------
- * Load default route for RSA
- * -----------------------------------------------------------------------------
- **/
-
-(new RSA)->setUrlPath(storage_path(env('RSA_URL_PATH', 'keys/')));
-
-/**
- * -----------------------------------------------------------------------------
  * Cross-Origin Resource Sharing (CORS) Configuration
  * -----------------------------------------------------------------------------
  * Here you can configure your settings for cross-origin resource

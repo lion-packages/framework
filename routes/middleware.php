@@ -28,8 +28,11 @@ Routes::setMiddleware([
      */
 
     new Middleware('jwt-existence', JWTMiddleware::class, 'existence'),
+
     new Middleware('jwt-authorize', JWTMiddleware::class, 'authorize'),
+
     new Middleware('jwt-not-authorize', JWTMiddleware::class, 'notAuthorize'),
+
     new Middleware('jwt-without-signature', JWTMiddleware::class, 'authorizeWithoutSignature'),
 
 ]);
