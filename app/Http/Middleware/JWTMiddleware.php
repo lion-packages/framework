@@ -7,6 +7,7 @@ namespace App\Http\Middleware;
 use Lion\Files\Store;
 use Lion\Request\Request;
 use Lion\Request\Response;
+use Lion\Security\JWT;
 use Lion\Security\RSA;
 
 /**
@@ -31,6 +32,13 @@ class JWTMiddleware
     private RSA $rsa;
 
     /**
+     * [Object of class JWT]
+     *
+     * @var JWT $jwt
+     */
+    private JWT $jwt;
+
+    /**
      * [List of all available headers]
      *
      * @var array $headers
@@ -48,6 +56,14 @@ class JWTMiddleware
     /**
      * @required
      * */
+    public function setStore(Store $store): void
+    {
+        $this->store = $store;
+    }
+
+    /**
+     * @required
+     * */
     public function setRSA(RSA $rsa): void
     {
         $this->rsa = $rsa;
@@ -56,9 +72,16 @@ class JWTMiddleware
     /**
      * @required
      * */
-    public function setStore(Store $store): void
+    public function setJWT(JWT $jwt): void
     {
-        $this->store = $store;
+        $this->jwt = $jwt;
+    }
+
+    private function initRSA(string $path = 'keys/'): void
+    {
+        $this->rsa
+            ->setUrlPath(storage_path($path))
+            ->init();
     }
 
     /**
@@ -74,7 +97,7 @@ class JWTMiddleware
             finish(response(Response::SESSION_ERROR, $jwt->message, Request::HTTP_UNAUTHORIZED));
         }
 
-        if (!isset($jwt->data->jwt->data->session)) {
+        if (!isset($jwt->data->session)) {
             finish(response(Response::SESSION_ERROR, 'undefined session', Request::HTTP_FORBIDDEN));
         }
     }
@@ -100,25 +123,38 @@ class JWTMiddleware
     {
         $this->existence();
 
-        $jwt = explode('.', jwt());
+        $splitToken = explode('.', $this->jwt->getJWT());
 
-        if (arr->of($jwt)->length() != 3) {
+        if (arr->of($splitToken)->length() != 3) {
             finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-1]', Request::HTTP_UNAUTHORIZED));
         }
 
-        $data = (object) ((object) json_decode(base64_decode($jwt[1]), true))->data;
+        $data = (object) ((object) json_decode(base64_decode($splitToken[1]), true))->data;
 
         if (!isset($data->users_code)) {
             finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-2]', Request::HTTP_FORBIDDEN));
         }
 
-        $path = storage_path("keys/{$data->users_code}/");
+        $path = "keys/{$data->users_code}/";
 
-        if (isError($this->store->exist($path))) {
+        if (isError($this->store->exist(storage_path($path)))) {
             finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-3]', Request::HTTP_FORBIDDEN));
         }
 
-        $this->rsa->setUrlPath(storage_path($path));
+        $this->initRSA($path);
+
+        $token = $this->jwt
+            ->config(['publicKey' => $this->rsa->getPublicKey()])
+            ->decode($this->jwt->getJWT())
+            ->get();
+
+        $this->validateSession($token);
+
+        if (!$token->data->session || !isset($token->data->session)) {
+            finish(
+                response(Response::SESSION_ERROR, 'user not logged in, you must log in', Request::HTTP_UNAUTHORIZED)
+            );
+        }
     }
 
     /**
@@ -128,13 +164,18 @@ class JWTMiddleware
      */
     public function authorize(): void
     {
+        $this->initRSA();
+
         $this->existence();
 
-        $jwt = jwt();
+        $token = $this->jwt
+            ->config(['publicKey' => $this->rsa->getPublicKey()])
+            ->decode($this->jwt->getJWT())
+            ->get();
 
-        $this->validateSession($jwt);
+        $this->validateSession($token);
 
-        if (!$jwt->data->jwt->data->session) {
+        if (!$token->data->session || !isset($token->data->session)) {
             finish(
                 response(Response::SESSION_ERROR, 'user not logged in, you must log in', Request::HTTP_UNAUTHORIZED)
             );
@@ -148,13 +189,18 @@ class JWTMiddleware
      */
     public function notAuthorize(): void
     {
+        $this->initRSA();
+
         $this->existence();
 
-        $jwt = jwt();
+        $token = $this->jwt
+            ->config(['publicKey' => $this->rsa->getPublicKey()])
+            ->decode($this->jwt->getJWT())
+            ->get();
 
-        $this->validateSession($jwt);
+        $this->validateSession($token);
 
-        if ($jwt->data->jwt->data->session) {
+        if ($token->data->session) {
             finish(
                 response(
                     Response::SESSION_ERROR,
