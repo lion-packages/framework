@@ -14,12 +14,22 @@ define('LION_START', microtime(true));
 require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Dotenv\Dotenv;
+use Lion\Bundle\Helpers\ExceptionCore;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Bundle\HttpKernel;
 use Lion\DependencyInjection\Container;
 use Lion\Request\Request;
 use Lion\Route\Route;
-use Lion\Security\RSA;
+
+/**
+ * -----------------------------------------------------------------------------
+ * Initialize exception handling
+ * -----------------------------------------------------------------------------
+ * Controls and serializes exceptions to JSON format
+ * -----------------------------------------------------------------------------
+ **/
+
+(new ExceptionCore)->exceptionHandler();
 
 /**
  * -----------------------------------------------------------------------------
