@@ -32,7 +32,7 @@ class UsersControllerTest extends Test
         Schema::truncateTable('users')->execute();
     }
 
-    public function testCreateUsers(): void
+    private function assertCreateUsers(): void
     {
         $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_CREATE_USERS])->getBody()->getContents();
 
@@ -42,14 +42,14 @@ class UsersControllerTest extends Test
         ]);
     }
 
+    public function testCreateUsers(): void
+    {
+        $this->assertCreateUsers();
+    }
+
     public function testReadUsers(): void
     {
-        $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_CREATE_USERS])->getBody()->getContents();
-
-        $this->assertJsonContent($response, [
-            'status' => 'success',
-            'message' => 'Procedure executed successfully'
-        ]);
+        $this->assertCreateUsers();
 
         $users = json_decode(fetch(Route::GET, self::API_URL)->getBody()->getContents(), true);
 
@@ -69,12 +69,7 @@ class UsersControllerTest extends Test
 
     public function testUpdateUsers(): void
     {
-        $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_CREATE_USERS])->getBody()->getContents();
-
-        $this->assertJsonContent($response, [
-            'status' => 'success',
-            'message' => 'Procedure executed successfully'
-        ]);
+        $this->assertCreateUsers();
 
         $users = json_decode(fetch(Route::GET, self::API_URL)->getBody()->getContents(), true);
 
@@ -105,12 +100,7 @@ class UsersControllerTest extends Test
 
     public function testDeleteUsers(): void
     {
-        $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_CREATE_USERS])->getBody()->getContents();
-
-        $this->assertJsonContent($response, [
-            'status' => 'success',
-            'message' => 'Procedure executed successfully'
-        ]);
+        $this->assertCreateUsers();
 
         $users = json_decode(fetch(Route::GET, self::API_URL)->getBody()->getContents(), true);
 

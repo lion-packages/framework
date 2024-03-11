@@ -34,13 +34,17 @@ Routes::setRules([
      */
 
     Route::POST => [
+        '/api/auth' => [
+            UsersEmailRule::class,
+            UsersPasswordRule::class,
+        ],
         '/api/users' => [
             IdrolesRule::class,
             IddocumentTypesRule::class,
             UsersNameRule::class,
             UsersLastNameRule::class,
             UsersEmailRule::class,
-            UsersPasswordRule::class
+            UsersPasswordRule::class,
         ]
     ],
 

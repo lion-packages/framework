@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\LionDatabase\MySQL\LoginController;
 use App\Http\Controllers\LionDatabase\MySQL\UsersController;
 use Lion\Route\Route;
 
@@ -16,6 +17,8 @@ use Lion\Route\Route;
 Route::get('/', fn() => info('[index]'));
 
 Route::prefix('api', function() {
+    Route::post('auth', [LoginController::class, 'auth']);
+
     Route::post('users', [UsersController::class, 'createUsers']);
     Route::get('users', [UsersController::class, 'readUsers']);
     Route::put('users/{idusers}', [UsersController::class, 'updateUsers']);
