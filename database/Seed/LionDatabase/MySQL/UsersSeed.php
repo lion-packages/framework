@@ -8,9 +8,25 @@ use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Bundle\Interface\SeedInterface;
 use Lion\Database\Drivers\MySQL as DB;
 
+/**
+ * Seed for users
+ *
+ * @package Database\Seed\LionDatabase\MySQL
+ */
 class UsersSeed implements SeedInterface
 {
+    /**
+     * [Index number for seed execution priority]
+     *
+     * @const INDEX
+     */
     const INDEX = 3;
+
+    /**
+     * [Entity columns]
+     *
+     * @const COLUMNS
+     */
     const COLUMNS = [
         'idroles',
         'iddocument_types',
