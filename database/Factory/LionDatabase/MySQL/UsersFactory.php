@@ -9,8 +9,18 @@ use App\Enums\RolesEnum;
 use Lion\Bundle\Interface\FactoryInterface;
 use Lion\Security\Validation;
 
+/**
+ * Factory to generate user data by default
+ *
+ * @package Database\Factory\LionDatabase\MySQL
+ */
 class UsersFactory implements FactoryInterface
 {
+    /**
+     * [User password]
+     *
+     * @const USERS_PASSWORD
+     */
     const USERS_PASSWORD = 'lion';
 
 	/**
