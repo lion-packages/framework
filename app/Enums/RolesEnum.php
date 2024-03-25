@@ -29,7 +29,7 @@ enum RolesEnum: int
     /**
      * Return a list with the different types of responses available
      *
-     * @return array<string>
+     * @return array<int>
      */
 	public static function values(): array
 	{

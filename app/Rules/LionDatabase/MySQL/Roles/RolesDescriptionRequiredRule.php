@@ -13,7 +13,7 @@ use Valitron\Validator;
  *
  * @package App\Rules\LionDatabase\MySQL\Roles
  */
-class RolesDescriptionRule extends Rules implements RulesInterface
+class RolesDescriptionRequiredRule extends Rules implements RulesInterface
 {
 	/**
 	 * [field for 'roles_description']
@@ -41,8 +41,8 @@ class RolesDescriptionRule extends Rules implements RulesInterface
 	 *
 	 * @var string $value
 	 */
-	public bool $disabled = true;
- 
+	public bool $disabled = false;
+
 	/**
 	 * {@inheritdoc}
 	 * */

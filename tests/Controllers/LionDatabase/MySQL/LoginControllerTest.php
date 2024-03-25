@@ -9,12 +9,9 @@ use Exception;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Route\Route;
 use Lion\Test\Test;
-use Tests\Providers\ResponseProviderTrait;
 
 class LoginControllerTest extends Test
 {
-    use ResponseProviderTrait;
-
     const API_URL = 'http://127.0.0.1:8000/api/auth';
     const API_URL_USERS = 'http://127.0.0.1:8000/api/users';
     const JSON_AUTH = [
@@ -41,15 +38,6 @@ class LoginControllerTest extends Test
 	{
         Schema::truncateTable('users')->execute();
 	}
-
-    private function getExceptionFromApi(Closure $callback): Exception
-    {
-        try {
-            $callback();
-        } catch (Exception $e) {
-            return $e;
-        }
-    }
 
     private function assertCreateUser(): void
     {
@@ -84,7 +72,7 @@ class LoginControllerTest extends Test
             fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH_ERR_1]);
         });
 
-        $this->assertJsonContent($this->getResponse($exception->getMessage()), [
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
             'code' => 500,
             'status' => 'error',
             'message' => 'Email/password is incorrect [AUTH-1]'
@@ -99,7 +87,7 @@ class LoginControllerTest extends Test
             fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH_ERR_2]);
         });
 
-        $this->assertJsonContent($this->getResponse($exception->getMessage()), [
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
             'code' => 500,
             'status' => 'error',
             'message' => 'Email/password is incorrect [AUTH-2]'

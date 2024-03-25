@@ -6,6 +6,11 @@ namespace Database\Factory\LionDatabase\MySQL;
 
 use Lion\Bundle\Interface\FactoryInterface;
 
+/**
+ * Factory to generate default document type data
+ *
+ * @package Database\Factory\LionDatabase\MySQL
+ */
 class DocumentTypesFactory implements FactoryInterface
 {
 	/**

@@ -4,15 +4,23 @@ declare(strict_types=1);
 
 namespace Database\Class\LionDatabase\MySQL;
 
-use JsonSerializable;
 use Lion\Bundle\Interface\CapsuleInterface;
 
 /**
  * Capsule for the 'Users' entity
  *
+ * @property int $idusers [property for idusers]
+ * @property int $idroles [property for idroles]
+ * @property int $iddocument_types [property for iddocument_types]
+ * @property string $users_name [property for users_name]
+ * @property string $users_last_name [property for users_last_name]
+ * @property string $users_email [property for users_email]
+ * @property string $users_password [property for users_password]
+ * @property string $users_code [property for users_code]
+ *
  * @package Database\Class\LionDatabase\MySQL
  */
-class Users implements CapsuleInterface, JsonSerializable
+class Users implements CapsuleInterface
 {
 	/**
 	 * property for idusers

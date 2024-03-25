@@ -18,7 +18,6 @@ use Lion\Bundle\Helpers\ExceptionCore;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Bundle\HttpKernel;
 use Lion\DependencyInjection\Container;
-use Lion\Request\Request;
 use Lion\Route\Route;
 
 /**
@@ -51,9 +50,7 @@ Dotenv::createImmutable(__DIR__ . '/../')->load();
  * -----------------------------------------------------------------------------
  **/
 
-foreach (require_once(__DIR__ . '/../config/cors.php') as $header => $value) {
-    Request::header($header, $value);
-}
+require_once(__DIR__ . '/../config/cors.php');
 
 /**
  * -----------------------------------------------------------------------------

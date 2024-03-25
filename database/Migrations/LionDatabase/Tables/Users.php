@@ -14,7 +14,7 @@ return new class implements MigrationUpInterface
 	 * */
 	public function up(): object
 	{
-		return DB::connection('lion_database')
+		return DB::connection(env('DB_NAME', 'lion_database'))
 			->createTable('users', function() {
 				DB::int('idusers')->notNull()->autoIncrement()->primaryKey();
                 DB::int('idroles')->notNull()->foreign('roles', 'idroles');
