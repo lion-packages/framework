@@ -5,39 +5,23 @@ declare(strict_types=1);
 namespace Tests\App\Models\LionDatabase\MySQL;
 
 use App\Models\LionDatabase\MySQL\LoginModel;
+use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Lion\Bundle\Interface\CapsuleInterface;
+use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Route\Route;
 use Lion\Test\Test;
 
 class LoginModelTest extends Test
 {
-    const API_URL_USERS = 'http://127.0.0.1:8000/api/users';
-    const JSON_AUTH = [
-        'users_email' => 'root-sleon@dev.com',
-        'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'
-    ];
-    const JSON_AUTH_ERR_1 = [
-        'users_email' => 'sleon@dev.com',
-        'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'
-    ];
-    const JSON_CREATE_USERS = [
-        'idroles' => 1,
-        'iddocument_types' => 1,
-        'users_name' => 'Sergio',
-        'users_last_name' => 'Leon',
-        ...self::JSON_AUTH
-    ];
+    const USERS_EMAIL = 'root-sleon@dev.com';
+    const USERS_EMAIL_ERR = 'sleon@dev.com';
 
     private LoginModel $loginModel;
-    private Users $users;
 
     protected function setUp(): void
     {
         $this->loginModel = new LoginModel();
-
-        $this->users = (new Users())
-            ->setUsersEmail(self::JSON_AUTH['users_email']);
     }
 
     protected function tearDown(): void
@@ -47,22 +31,36 @@ class LoginModelTest extends Test
 
     private function assertCreateUser(): void
     {
-        $response = fetch(Route::POST, self::API_URL_USERS, ['json' => self::JSON_CREATE_USERS])
-            ->getBody()
-            ->getContents();
+        $users = (new Users())
+            ->setIdusers(1)
+            ->setIdroles(1)
+            ->setIddocumentTypes(1)
+            ->setUsersName('Sergio')
+            ->setUsersLastName('Leon')
+            ->setUsersEmail(self::USERS_EMAIL)
+            ->setUsersPassword('cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481')
+            ->setUsersCode(uniqid('code-'));
 
-        $this->assertJsonContent($response, [
-            'status' => 'success',
-            'message' => 'Procedure executed successfully'
-        ]);
+        $this->assertTrue(isSuccess((new UsersModel)->createUsersDB($users)));
+
+        $data = DB::table('users')
+            ->select()
+            ->where()->equalTo('users_code', $users->getUsersCode())
+            ->get();
+
+        $this->assertSame($users->getUsersCode(), $data->users_code);
     }
 
     public function testAuthDB(): void
     {
         $this->assertCreateUser();
 
-        $response = $this->loginModel->authDB($this->users);
+        $response = $this->loginModel->authDB(
+            (new Users())
+                ->setUsersEmail(self::USERS_EMAIL)
+        );
 
+        $this->assertIsObject($response);
         $this->assertSame(1, $response->count);
     }
 
@@ -70,7 +68,10 @@ class LoginModelTest extends Test
     {
         $this->assertCreateUser();
 
-        $response = $this->loginModel->authDB($this->users->setUsersEmail(self::JSON_AUTH_ERR_1['users_email']));
+        $response = $this->loginModel->authDB(
+            (new Users())
+                ->setUsersEmail(self::USERS_EMAIL_ERR)
+        );
 
         $this->assertSame(0, $response->count);
     }
@@ -79,9 +80,12 @@ class LoginModelTest extends Test
     {
         $this->assertCreateUser();
 
-        $response = $this->loginModel->sessionDB($this->users);
+        $users = (new Users())
+            ->setUsersEmail(self::USERS_EMAIL);
 
-        $this->assertInstanceOf(Users::class, $response);
-        $this->assertSame($this->users->getUsersEmail(), $response->getUsersEmail());
+        $response = $this->loginModel->sessionDB($users);
+
+        $this->assertInstances($response, [Users::class, CapsuleInterface::class]);
+        $this->assertSame($users->getUsersEmail(), $response->getUsersEmail());
     }
 }

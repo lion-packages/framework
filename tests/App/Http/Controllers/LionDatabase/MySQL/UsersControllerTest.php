@@ -7,9 +7,12 @@ namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Route\Route;
 use Lion\Test\Test;
+use Tests\Providers\AuthJwtProviderTrait;
 
 class UsersControllerTest extends Test
 {
+    use AuthJwtProviderTrait;
+
     const API_URL = 'http://127.0.0.1:8000/api/users';
     const JSON_CREATE_USERS = [
         'idroles' => 1,
@@ -32,9 +35,16 @@ class UsersControllerTest extends Test
         Schema::truncateTable('users')->execute();
     }
 
-    private function assertCreateUsers(): void
+    public function testCreateUsers(): void
     {
-        $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_CREATE_USERS])->getBody()->getContents();
+        $response = fetch(Route::POST, self::API_URL, [
+            'json' => self::JSON_CREATE_USERS,
+            'headers' => [
+                'Authorization' => "Bearer {$this->getJWT()}"
+            ]
+        ])
+            ->getBody()
+            ->getContents();
 
         $this->assertJsonContent($response, [
             'status' => 'success',
@@ -42,24 +52,37 @@ class UsersControllerTest extends Test
         ]);
     }
 
-    public function testCreateUsers(): void
-    {
-        $this->assertCreateUsers();
-    }
-
     public function testReadUsers(): void
     {
-        $this->assertCreateUsers();
+        $users = json_decode(
+            fetch(Route::GET, self::API_URL, [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->getJWT()}"
+                ]
+            ])
+                ->getBody()
+                ->getContents(),
+            true
+        );
 
-        $users = json_decode(fetch(Route::GET, self::API_URL)->getBody()->getContents(), true);
-
+        $this->assertFalse(isSuccess($users));
         $this->assertIsArray($users);
-        $this->assertCount(1, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
     }
 
     public function testReadUsersWithoutData(): void
     {
-        $users = fetch(Route::GET, self::API_URL)->getBody()->getContents();
+        $token = $this->getJWT();
+
+        $this->tearDown();
+
+        $users = fetch(Route::GET, self::API_URL, [
+            'headers' => [
+                'Authorization' => "Bearer {$token}"
+            ]
+        ])
+            ->getBody()
+            ->getContents();
 
         $this->assertJsonContent($users, [
             'status' => 'success',
@@ -69,16 +92,30 @@ class UsersControllerTest extends Test
 
     public function testUpdateUsers(): void
     {
-        $this->assertCreateUsers();
+        $token = $this->getJWT();
 
-        $users = json_decode(fetch(Route::GET, self::API_URL)->getBody()->getContents(), true);
+        $users = json_decode(
+            fetch(Route::GET, self::API_URL, [
+                'headers' => [
+                    'Authorization' => "Bearer {$token}"
+                ]
+            ])
+                ->getBody()
+                ->getContents(),
+            true
+        );
 
         $this->assertIsArray($users);
-        $this->assertCount(1, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $firstUser = (object) reset($users);
 
-        $response = fetch(Route::PUT, self::API_URL . '/' . $firstUser->idusers, ['json' => self::JSON_UPDATE_USERS])
+        $response = fetch(Route::PUT, self::API_URL . '/' . $firstUser->idusers, [
+            'json' => self::JSON_UPDATE_USERS,
+            'headers' => [
+                'Authorization' => "Bearer {$token}"
+            ]
+        ])
             ->getBody()
             ->getContents();
 
@@ -87,10 +124,19 @@ class UsersControllerTest extends Test
             'message' => 'Procedure executed successfully'
         ]);
 
-        $users = json_decode(fetch(Route::GET, self::API_URL)->getBody()->getContents(), true);
+        $users = json_decode(
+            fetch(Route::GET, self::API_URL, [
+                'headers' => [
+                    'Authorization' => "Bearer {$token}"
+                ]
+            ])
+                ->getBody()
+                ->getContents(),
+            true
+        );
 
         $this->assertIsArray($users);
-        $this->assertCount(1, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $firstUser = (object) reset($users);
 
@@ -100,26 +146,48 @@ class UsersControllerTest extends Test
 
     public function testDeleteUsers(): void
     {
-        $this->assertCreateUsers();
+        $token = $this->getJWT();
 
-        $users = json_decode(fetch(Route::GET, self::API_URL)->getBody()->getContents(), true);
+        $users = json_decode(
+            fetch(Route::GET, self::API_URL, [
+                'headers' => [
+                    'Authorization' => "Bearer {$token}"
+                ]
+            ])
+                ->getBody()
+                ->getContents(),
+            true
+        );
 
         $this->assertIsArray($users);
-        $this->assertCount(1, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $firstUser = (object) reset($users);
-        $response = fetch(Route::DELETE, self::API_URL . '/' . $firstUser->idusers)->getBody()->getContents();
+
+        $response = fetch(Route::DELETE, self::API_URL . '/' . $firstUser->idusers, [
+            'headers' => [
+                'Authorization' => "Bearer {$token}"
+            ]
+        ])
+            ->getBody()
+            ->getContents();
 
         $this->assertJsonContent($response, [
             'status' => 'success',
             'message' => 'Procedure executed successfully'
         ]);
 
-        $users = fetch(Route::GET, self::API_URL)->getBody()->getContents();
+        $users = json_decode(
+            fetch(Route::GET, self::API_URL, [
+                'headers' => [
+                    'Authorization' => "Bearer {$token}"
+                ]
+            ])
+                ->getBody()
+                ->getContents()
+        );
 
-        $this->assertJsonContent($users, [
-            'status' => 'success',
-            'message' => 'No data available'
-        ]);
+        $this->assertIsArray($users);
+        $this->assertCount(self::REMAINING_USERS, $users);
     }
 }

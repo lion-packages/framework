@@ -7,7 +7,7 @@ namespace Tests\App\Models\LionDatabase\MySQL;
 use App\Enums\RolesEnum;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Lion\Database\Drivers\MySQL;
+use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Test\Test;
 
@@ -40,7 +40,7 @@ class UsersModelTest extends Test
     {
         $this->assertTrue(isSuccess($this->usersModel->createUsersDB($this->users)));
 
-        $users = MySQL::table('users')
+        $users = DB::table('users')
             ->select()
             ->where()->equalTo('users_code', $this->users->getUsersCode())
             ->get();
@@ -84,6 +84,7 @@ class UsersModelTest extends Test
         $this->assertIsArray($users);
 
         $firstUser = reset($users);
+
         $this->users->setIdusers($firstUser->idusers)->setIdroles(RolesEnum::CUSTOMER->value);
 
         $this->assertTrue(isSuccess($this->usersModel->updateUsersDB($this->users)));
