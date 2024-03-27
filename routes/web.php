@@ -14,13 +14,15 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  **/
 
-Route::get('/', fn() => info('[index]'));
+Route::get('/', fn () => info('[index]'));
 
-Route::prefix('api', function() {
+Route::prefix('api', function () {
     Route::post('auth', [LoginController::class, 'auth']);
 
-    Route::post('users', [UsersController::class, 'createUsers']);
-    Route::get('users', [UsersController::class, 'readUsers']);
-    Route::put('users/{idusers}', [UsersController::class, 'updateUsers']);
-    Route::delete('users/{idusers}', [UsersController::class, 'deleteUsers']);
+    Route::middleware(['jwt-authorize'], function () {
+        Route::post('users', [UsersController::class, 'createUsers']);
+        Route::get('users', [UsersController::class, 'readUsers']);
+        Route::put('users/{idusers}', [UsersController::class, 'updateUsers']);
+        Route::delete('users/{idusers}', [UsersController::class, 'deleteUsers']);
+    });
 });
