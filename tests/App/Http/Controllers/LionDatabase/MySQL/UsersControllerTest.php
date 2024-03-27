@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Controllers\LionDatabase\MySQL;
+namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Route\Route;

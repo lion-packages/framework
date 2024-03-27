@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Tests\Controllers\LionDatabase\MySQL;
+namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
-use Closure;
-use Exception;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Route\Route;
 use Lion\Test\Test;
@@ -34,10 +32,10 @@ class LoginControllerTest extends Test
         ...self::JSON_AUTH
     ];
 
-	protected function tearDown(): void 
-	{
+    protected function tearDown(): void
+    {
         Schema::truncateTable('users')->execute();
-	}
+    }
 
     private function assertCreateUser(): void
     {
@@ -68,7 +66,7 @@ class LoginControllerTest extends Test
     {
         $this->assertCreateUser();
 
-        $exception = $this->getExceptionFromApi(function() {
+        $exception = $this->getExceptionFromApi(function () {
             fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH_ERR_1]);
         });
 
@@ -83,7 +81,7 @@ class LoginControllerTest extends Test
     {
         $this->assertCreateUser();
 
-        $exception = $this->getExceptionFromApi(function() {
+        $exception = $this->getExceptionFromApi(function () {
             fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH_ERR_2]);
         });
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Class\LionDatabase\MySQL;
+namespace Tests\Database\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Users;
 use JsonSerializable;
@@ -22,10 +22,10 @@ class UsersTest extends Test
 
     private Users $users;
 
-	protected function setUp(): void
-	{
+    protected function setUp(): void
+    {
         $this->users = new Users();
-	}
+    }
 
     public function testGetIdusers(): void
     {

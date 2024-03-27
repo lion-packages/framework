@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Models\LionDatabase\MySQL;
+namespace Tests\App\Models\LionDatabase\MySQL;
 
 use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
@@ -32,18 +32,18 @@ class LoginModelTest extends Test
     private LoginModel $loginModel;
     private Users $users;
 
-	protected function setUp(): void 
-	{
+    protected function setUp(): void
+    {
         $this->loginModel = new LoginModel();
 
         $this->users = (new Users())
             ->setUsersEmail(self::JSON_AUTH['users_email']);
-	}
+    }
 
-	protected function tearDown(): void 
-	{
+    protected function tearDown(): void
+    {
         Schema::truncateTable('users')->execute();
-	}
+    }
 
     private function assertCreateUser(): void
     {

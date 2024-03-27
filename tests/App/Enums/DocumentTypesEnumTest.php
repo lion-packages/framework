@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Enums;
+namespace Tests\App\Enums;
 
 use App\Enums\DocumentTypesEnum;
 use Lion\Test\Test;

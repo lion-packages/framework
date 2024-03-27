@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Models\LionDatabase\MySQL;
+namespace Tests\App\Models\LionDatabase\MySQL;
 
 use App\Enums\RolesEnum;
 use App\Models\LionDatabase\MySQL\UsersModel;
@@ -16,8 +16,8 @@ class UsersModelTest extends Test
     private UsersModel $usersModel;
     private Users $users;
 
-	protected function setUp(): void 
-	{
+    protected function setUp(): void
+    {
         $this->usersModel = new UsersModel();
 
         $this->users = (new Users())
@@ -29,12 +29,12 @@ class UsersModelTest extends Test
             ->setUsersEmail(fake()->email())
             ->setUsersPassword('cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481')
             ->setUsersCode(uniqid('code-'));
-	}
+    }
 
-	protected function tearDown(): void 
-	{
+    protected function tearDown(): void
+    {
         Schema::truncateTable('users')->execute();
-	}
+    }
 
     public function testCreateUsersDB(): void
     {
