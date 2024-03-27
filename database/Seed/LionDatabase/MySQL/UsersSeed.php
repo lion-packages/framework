@@ -23,27 +23,12 @@ class UsersSeed implements SeedInterface
     const INDEX = 3;
 
     /**
-     * [Entity columns]
-     *
-     * @const COLUMNS
-     */
-    const COLUMNS = [
-        'idroles',
-        'iddocument_types',
-        'users_name',
-        'users_last_name',
-        'users_email',
-        'users_password',
-        'users_code'
-    ];
-
-	/**
-	 * {@inheritdoc}
-	 **/
-	public function run(): object
-	{
-		return DB::table('users')
-            ->bulk(self::COLUMNS, UsersFactory::definition())
+     * {@inheritdoc}
+     **/
+    public function run(): object
+    {
+        return DB::table('users')
+            ->bulk(UsersFactory::columns(), UsersFactory::definition())
             ->execute();
-	}
+    }
 }

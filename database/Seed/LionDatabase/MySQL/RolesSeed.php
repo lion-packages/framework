@@ -23,19 +23,12 @@ class RolesSeed implements SeedInterface
     const INDEX = 2;
 
     /**
-     * [Entity columns]
-     *
-     * @const COLUMNS
-     */
-    const COLUMNS = ['roles_name', 'roles_description'];
-
-	/**
-	 * {@inheritdoc}
-	 **/
-	public function run(): object
-	{
-		return DB::table('roles')
-            ->bulk(self::COLUMNS, RolesFactory::definition())
+     * {@inheritdoc}
+     **/
+    public function run(): object
+    {
+        return DB::table('roles')
+            ->bulk(RolesFactory::columns(), RolesFactory::definition())
             ->execute();
-	}
+    }
 }

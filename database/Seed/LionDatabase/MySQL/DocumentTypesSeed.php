@@ -23,19 +23,12 @@ class DocumentTypesSeed implements SeedInterface
     const INDEX = 1;
 
     /**
-     * [Entity columns]
-     *
-     * @const COLUMNS
-     */
-    const COLUMNS = ['document_types_name'];
-
-	/**
-	 * {@inheritdoc}
-	 **/
-	public function run(): object
-	{
-		return DB::table('document_types')
-            ->bulk(self::COLUMNS, DocumentTypesFactory::definition())
+     * {@inheritdoc}
+     **/
+    public function run(): object
+    {
+        return DB::table('document_types')
+            ->bulk(DocumentTypesFactory::columns(), DocumentTypesFactory::definition())
             ->execute();
-	}
+    }
 }

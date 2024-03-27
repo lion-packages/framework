@@ -23,12 +23,28 @@ class UsersFactory implements FactoryInterface
      */
     const USERS_PASSWORD = 'lion';
 
-	/**
-	 * {@inheritdoc}
-	 **/
-	public static function definition(): array
-	{
-		$validation = new Validation();
+    /**
+     * {@inheritdoc}
+     **/
+    public static function columns(): array
+    {
+        return [
+            'idroles',
+            'iddocument_types',
+            'users_name',
+            'users_last_name',
+            'users_email',
+            'users_password',
+            'users_code'
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     **/
+    public static function definition(): array
+    {
+        $validation = new Validation();
 
         return [
             [
@@ -50,5 +66,5 @@ class UsersFactory implements FactoryInterface
                 uniqid('code-')
             ]
         ];
-	}
+    }
 }
