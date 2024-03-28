@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Database\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Users;
-use JsonSerializable;
 use Lion\Bundle\Interface\CapsuleInterface;
 use Lion\Test\Test;
 
