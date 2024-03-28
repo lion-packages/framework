@@ -45,6 +45,21 @@ class UsersModel
     }
 
     /**
+     * Read users by id
+     *
+     * @param Users $users [Object of the Users entity]
+     *
+     * @return array|object
+     */
+    public function readUsersByIdDB(Users $users): array|object
+    {
+        return DB::view('read_users_by_id')
+            ->select()
+            ->where()->equalTo('idusers', $users->getIdusers())
+            ->get();
+    }
+
+    /**
      * Update users
      *
      * @param Users $users [Object of the Users entity]

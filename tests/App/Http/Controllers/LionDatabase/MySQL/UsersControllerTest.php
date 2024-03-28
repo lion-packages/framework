@@ -90,6 +90,45 @@ class UsersControllerTest extends Test
         ]);
     }
 
+    public function testReadUsersById(): void
+    {
+        $user = json_decode(
+            fetch(Route::GET, self::API_URL . '/1', [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->getJWT()}"
+                ]
+            ])
+                ->getBody()
+                ->getContents(),
+            true
+        );
+
+        $this->assertFalse(isSuccess($user));
+        $this->assertIsArray($user);
+        $this->assertSame('root', $user['users_name']);
+        $this->assertSame('lion', $user['users_last_name']);
+    }
+
+    public function testReadUsersByIdWithoutData(): void
+    {
+        $token = $this->getJWT();
+
+        $this->tearDown();
+
+        $users = fetch(Route::GET, self::API_URL . '/1', [
+            'headers' => [
+                'Authorization' => "Bearer {$token}"
+            ]
+        ])
+            ->getBody()
+            ->getContents();
+
+        $this->assertJsonContent($users, [
+            'status' => 'success',
+            'message' => 'No data available'
+        ]);
+    }
+
     public function testUpdateUsers(): void
     {
         $token = $this->getJWT();

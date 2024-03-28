@@ -22,7 +22,8 @@ Route::prefix('api', function () {
     Route::middleware(['jwt-authorize'], function () {
         Route::post('users', [UsersController::class, 'createUsers']);
         Route::get('users', [UsersController::class, 'readUsers']);
-        Route::put('users/{idusers}', [UsersController::class, 'updateUsers']);
-        Route::delete('users/{idusers}', [UsersController::class, 'deleteUsers']);
+        Route::get('users/{idusers:i}', [UsersController::class, 'readUsersById']);
+        Route::put('users/{idusers:i}', [UsersController::class, 'updateUsers']);
+        Route::delete('users/{idusers:i}', [UsersController::class, 'deleteUsers']);
     });
 });

@@ -47,6 +47,23 @@ class UsersController
     }
 
     /**
+     * Read users by id
+     *
+     * @param Users $users [Object of the Users entity]
+     * @param UsersModel $usersModel [Model object Users]
+     * @param string $idusers [user id defined in routes]
+     *
+     * @return array|object
+     */
+    public function readUsersById(Users $users, UsersModel $usersModel, string $idusers): array|object
+    {
+        return $usersModel->readUsersByIdDB(
+            $users
+                ->setIdusers((int) $idusers)
+        );
+    }
+
+    /**
      * Update users
      *
      * @param Users $users [Object of the Users entity]
