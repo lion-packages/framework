@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\App\Models\LionDatabase\MySQL;
 
+use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
@@ -22,8 +23,9 @@ class UsersModelTest extends Test
 
         $this->users = (new Users())
             ->setIdusers(1)
-            ->setIdroles(1)
-            ->setIddocumentTypes(1)
+            ->setIdroles(RolesEnum::ADMINISTRATOR->value)
+            ->setIddocumentTypes(DocumentTypesEnum::PASSPORT->value)
+            ->setUsersCitizenIdentification('##########')
             ->setUsersName('Sergio')
             ->setUsersLastName('Leon')
             ->setUsersEmail(fake()->email())
@@ -45,6 +47,13 @@ class UsersModelTest extends Test
             ->where()->equalTo('users_code', $this->users->getUsersCode())
             ->get();
 
+        $this->assertSame($this->users->getIdroles(), $users->idroles);
+        $this->assertSame($this->users->getIddocumentTypes(), $users->iddocument_types);
+        $this->assertSame($this->users->getUsersCitizenIdentification(), $users->users_citizen_identification);
+        $this->assertSame($this->users->getUsersName(), $users->users_name);
+        $this->assertSame($this->users->getUsersLastName(), $users->users_last_name);
+        $this->assertSame($this->users->getUsersEmail(), $users->users_email);
+        $this->assertSame($this->users->getUsersPassword(), $users->users_password);
         $this->assertSame($this->users->getUsersCode(), $users->users_code);
     }
 

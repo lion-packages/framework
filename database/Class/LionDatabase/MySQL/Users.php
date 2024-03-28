@@ -12,6 +12,7 @@ use Lion\Bundle\Interface\CapsuleInterface;
  * @property int $idusers [Property for idusers]
  * @property int $idroles [Property for idroles]
  * @property int $iddocument_types [Property for iddocument_types]
+ * @property string $users_citizen_identification [Property for users_citizen_identification]
  * @property string $users_name [Property for users_name]
  * @property string $users_last_name [Property for users_last_name]
  * @property string $users_email [Property for users_email]
@@ -42,6 +43,13 @@ class Users implements CapsuleInterface
 	 * @var int|null $iddocument_types
 	 */
 	private ?int $iddocument_types = null;
+
+	/**
+	 * [Property for users_citizen_identification]
+	 *
+	 * @var string|null $users_citizen_identification
+	 */
+	private ?string $users_citizen_identification = null;
 
 	/**
 	 * [Property for users_name]
@@ -95,6 +103,7 @@ class Users implements CapsuleInterface
 			->setIdusers(request->idusers ?? null)
 			->setIdroles(request->idroles ?? null)
 			->setIddocumentTypes(request->iddocument_types ?? null)
+			->setUsersCitizenIdentification(request->users_citizen_identification ?? null)
 			->setUsersName(request->users_name ?? null)
 			->setUsersLastName(request->users_last_name ?? null)
 			->setUsersEmail(request->users_email ?? null)
@@ -172,6 +181,30 @@ class Users implements CapsuleInterface
     public function setIddocumentTypes(?int $iddocument_types = null): Users
     {
         $this->iddocument_types = $iddocument_types;
+
+        return $this;
+    }
+
+    /**
+     * Getter method for 'users_citizen_identification'
+     *
+     * @return string|null
+     */
+    public function getUsersCitizenIdentification(): ?string
+    {
+        return $this->users_citizen_identification;
+    }
+
+    /**
+     * Setter method for 'users_citizen_identification'
+     *
+     * @param string|null $users_citizen_identification
+     *
+     * @return Users
+     */
+    public function setUsersCitizenIdentification(?string $users_citizen_identification = null): Users
+    {
+        $this->users_citizen_identification = $users_citizen_identification;
 
         return $this;
     }

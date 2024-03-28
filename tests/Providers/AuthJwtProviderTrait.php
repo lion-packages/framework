@@ -17,7 +17,7 @@ trait AuthJwtProviderTrait
         (new Kernel)->execute('php lion migrate:fresh --seed', false);
 
         $auth = json_decode(
-            fetch(Route::POST, 'http://127.0.0.1:8000/api/auth', [
+            fetch(Route::POST, 'http://127.0.0.1:8000/api/auth/login', [
                 'json' => [
                     'users_email' => 'root@dev.com',
                     'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'

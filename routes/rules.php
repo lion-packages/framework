@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 use App\Rules\LionDatabase\MySQL\DocumentTypes\IddocumentTypesRule;
 use App\Rules\LionDatabase\MySQL\Roles\IdrolesRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersCitizenIdentificationRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
-use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRule;
-use App\Rules\LionDatabase\MySQL\Users\UsersNameRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersNameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Route\Route;
@@ -34,15 +35,20 @@ Routes::setRules([
      */
 
     Route::POST => [
-        '/api/auth' => [
+        '/api/auth/login' => [
+            UsersEmailRule::class,
+            UsersPasswordRule::class,
+        ],
+        '/api/auth/register' => [
             UsersEmailRule::class,
             UsersPasswordRule::class,
         ],
         '/api/users' => [
             IdrolesRule::class,
             IddocumentTypesRule::class,
-            UsersNameRule::class,
-            UsersLastNameRule::class,
+            UsersCitizenIdentificationRequiredRule::class,
+            UsersNameRequiredRule::class,
+            UsersLastNameRequiredRule::class,
             UsersEmailRule::class,
             UsersPasswordRule::class,
         ]
@@ -61,11 +67,12 @@ Routes::setRules([
      */
 
     Route::PUT => [
-        '/api/users/{idusers}' => [
+        '/api/users/{idusers:i}' => [
             IdrolesRule::class,
             IddocumentTypesRule::class,
-            UsersNameRule::class,
-            UsersLastNameRule::class,
+            UsersCitizenIdentificationRequiredRule::class,
+            UsersNameRequiredRule::class,
+            UsersLastNameRequiredRule::class,
             UsersEmailRule::class,
         ]
     ],

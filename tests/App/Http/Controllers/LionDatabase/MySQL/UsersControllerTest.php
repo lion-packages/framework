@@ -17,6 +17,7 @@ class UsersControllerTest extends Test
     const JSON_CREATE_USERS = [
         'idroles' => 1,
         'iddocument_types' => 1,
+        'users_citizen_identification' => '##########',
         'users_name' => 'Sergio',
         'users_last_name' => 'Leon',
         'users_email' => 'sleon@dev.com',
@@ -25,6 +26,7 @@ class UsersControllerTest extends Test
     const JSON_UPDATE_USERS = [
         'idroles' => 1,
         'iddocument_types' => 1,
+        'users_citizen_identification' => '##########',
         'users_name' => 'Sergio D',
         'users_last_name' => 'Leon G',
         'users_email' => 'sleon@dev.com'

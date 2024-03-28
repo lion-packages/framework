@@ -9,34 +9,34 @@ use Lion\Bundle\Interface\RulesInterface;
 use Valitron\Validator;
 
 /**
- * Rule defined for the 'users_email' property
+ * Rule defined for the 'users_name' property
  *
- * @property string $field [field for 'users_email']
- * @property string $desc [description for 'users_email']
- * @property string $value [value for 'users_email']
+ * @property string $field [field for 'users_name']
+ * @property string $desc [description for 'users_name']
+ * @property string $value [value for 'users_name']
  * @property bool $disabled [Defines whether the column is optional for postman
  * collections]
  *
  * @package App\Rules\LionDatabase\MySQL\Users
  */
-class UsersEmailRule extends Rules implements RulesInterface
+class UsersNameOptionalRule extends Rules implements RulesInterface
 {
     /**
-     * [field for 'users_email']
+     * [field for 'users_name']
      *
      * @var string $field
      */
-    public string $field = 'users_email';
+    public string $field = 'users_name';
 
     /**
-     * [description for 'users_email']
+     * [description for 'users_name']
      *
      * @var string $desc
      */
     public string $desc = '';
 
     /**
-     * [value for 'users_email']
+     * [value for 'users_name']
      *
      * @var string $value;
      */
@@ -47,17 +47,17 @@ class UsersEmailRule extends Rules implements RulesInterface
      *
      * @var bool $disabled;
      */
-    public bool $disabled = false;
-
+    public bool $disabled = true;
+ 
     /**
      * {@inheritdoc}
      */
     public function passes(): void
     {
-        $this->validate(function (Validator $validator) {
+        $this->validate(function(Validator $validator) {
             $validator
-                ->rule('required', $this->field)
-                ->message('the "users_email" property is required');
+                ->rule('optional', $this->field)
+                ->message('the "users_name" property is optional');
         });
     }
 }

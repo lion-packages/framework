@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\LionDatabase\MySQL\LoginController;
+use App\Http\Controllers\LionDatabase\MySQL\RegistrationController;
 use App\Http\Controllers\LionDatabase\MySQL\UsersController;
 use Lion\Route\Route;
 
@@ -17,7 +18,10 @@ use Lion\Route\Route;
 Route::get('/', fn () => info('[index]'));
 
 Route::prefix('api', function () {
-    Route::post('auth', [LoginController::class, 'auth']);
+    Route::prefix('auth', function () {
+        Route::post('login', [LoginController::class, 'auth']);
+        Route::post('register', [RegistrationController::class, 'register']);
+    });
 
     Route::middleware(['jwt-authorize'], function () {
         Route::post('users', [UsersController::class, 'createUsers']);

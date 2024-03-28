@@ -21,6 +21,7 @@ return new class implements MigrationUpInterface
                         $db->getColumn('idusers', 'usr'),
                         $db->getColumn('idroles', 'usr'),
                         $db->getColumn('iddocument_types', 'usr'),
+                        $db->getColumn('users_citizen_identification', 'usr'),
                         $db->getColumn('users_name', 'usr'),
                         $db->getColumn('users_last_name', 'usr'),
                         $db->getColumn('users_email', 'usr'),
@@ -28,12 +29,12 @@ return new class implements MigrationUpInterface
                         $db->getColumn('roles_name', 'rl'),
                         $db->getColumn('document_types_name', 'dcmt')
                     )
-                    ->inner()->join(
+                    ->left()->join(
                         $db->as('roles', 'rl'),
                         $db->getColumn('idroles', 'usr'),
                         $db->getColumn('idroles', 'rl')
                     )
-                    ->inner()->join(
+                    ->left()->join(
                         $db->as('document_types', 'dcmt'),
                         $db->getColumn('iddocument_types', 'usr'),
                         $db->getColumn('iddocument_types', 'dcmt')
