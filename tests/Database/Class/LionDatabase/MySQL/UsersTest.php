@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Database\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Users;
-use JsonSerializable;
 use Lion\Bundle\Interface\CapsuleInterface;
 use Lion\Test\Test;
 
@@ -37,7 +36,6 @@ class UsersTest extends Test
         $this->assertInstances($this->users->setIdusers(self::IDUSERS), [
             Users::class,
             CapsuleInterface::class,
-            JsonSerializable::class
         ]);
 
         $this->assertSame(self::IDUSERS, $this->users->getIdusers());
@@ -53,7 +51,6 @@ class UsersTest extends Test
         $this->assertInstances($this->users->setIdroles(self::IDROLES), [
             Users::class,
             CapsuleInterface::class,
-            JsonSerializable::class
         ]);
 
         $this->assertSame(self::IDROLES, $this->users->getIdroles());
@@ -72,7 +69,6 @@ class UsersTest extends Test
         $this->assertInstances($this->users->setIddocumentTypes(self::IDDOCUMENT_TYPES), [
             Users::class,
             CapsuleInterface::class,
-            JsonSerializable::class
         ]);
 
         $this->assertSame(self::IDDOCUMENT_TYPES, $this->users->getIddocumentTypes());
@@ -88,7 +84,6 @@ class UsersTest extends Test
         $this->assertInstances($this->users->setUsersName(self::USERS_NAME), [
             Users::class,
             CapsuleInterface::class,
-            JsonSerializable::class
         ]);
 
         $this->assertSame(self::USERS_NAME, $this->users->getUsersName());
@@ -107,7 +102,6 @@ class UsersTest extends Test
         $this->assertInstances($this->users->setUsersLastName(self::USERS_LAST_NAME), [
             Users::class,
             CapsuleInterface::class,
-            JsonSerializable::class
         ]);
 
         $this->assertSame(self::USERS_LAST_NAME, $this->users->getUsersLastName());
@@ -123,7 +117,6 @@ class UsersTest extends Test
         $this->assertInstances($this->users->setUsersEmail(self::USERS_EMAIL), [
             Users::class,
             CapsuleInterface::class,
-            JsonSerializable::class
         ]);
 
         $this->assertSame(self::USERS_EMAIL, $this->users->getUsersEmail());
@@ -142,7 +135,6 @@ class UsersTest extends Test
         $this->assertInstances($this->users->setUsersPassword(self::USERS_PASSWORD), [
             Users::class,
             CapsuleInterface::class,
-            JsonSerializable::class
         ]);
 
         $this->assertSame(self::USERS_PASSWORD, $this->users->getUsersPassword());
@@ -158,7 +150,6 @@ class UsersTest extends Test
         $this->assertInstances($this->users->setUsersCode(self::USERS_CODE), [
             Users::class,
             CapsuleInterface::class,
-            JsonSerializable::class
         ]);
 
         $this->assertSame(self::USERS_CODE, $this->users->getUsersCode());

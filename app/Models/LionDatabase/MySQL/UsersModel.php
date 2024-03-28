@@ -26,6 +26,7 @@ class UsersModel
         return DB::call('create_users', [
             $users->getIdroles(),
             $users->getIddocumentTypes(),
+            $users->getUsersCitizenIdentification(),
             $users->getUsersName(),
             $users->getUsersLastName(),
             $users->getUsersEmail(),
@@ -71,6 +72,7 @@ class UsersModel
         return DB::call('update_users', [
             $users->getIdroles(),
             $users->getIddocumentTypes(),
+            $users->getUsersCitizenIdentification(),
             $users->getUsersName(),
             $users->getUsersLastName(),
             $users->getUsersEmail(),

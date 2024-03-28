@@ -13,7 +13,7 @@ use Lion\Test\Test;
 
 class LoginControllerTest extends Test
 {
-    const API_URL = 'http://127.0.0.1:8000/api/auth';
+    const API_URL = 'http://127.0.0.1:8000/api/auth/login';
     const API_URL_USERS = 'http://127.0.0.1:8000/api/users';
     const JSON_AUTH = [
         'users_email' => 'root@dev.com',
@@ -41,7 +41,9 @@ class LoginControllerTest extends Test
     public function testAuth(): void
     {
         $auth = json_decode(
-            fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH])->getBody()->getContents()
+            fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH])
+                ->getBody()
+                ->getContents()
         );
 
         $this->assertIsObject($auth);

@@ -20,7 +20,8 @@ class UsersController
      *
      * @param Users $users [Object of the Users entity]
      * @param UsersModel $usersModel [Model object Users]
-     * @param Validation $validation [Object to perform validations]
+     * @param Validation $validation [Allows you to validate form data and
+     * generate encryption safely]
      *
      * @return object
      */

@@ -19,7 +19,7 @@ use Valitron\Validator;
  *
  * @package App\Rules\LionDatabase\MySQL\Users
  */
-class UsersLastNameRule extends Rules implements RulesInterface
+class UsersLastNameRequiredRule extends Rules implements RulesInterface
 {
     /**
      * [field for 'users_last_name']

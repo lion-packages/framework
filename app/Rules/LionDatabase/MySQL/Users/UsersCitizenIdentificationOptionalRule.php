@@ -9,34 +9,34 @@ use Lion\Bundle\Interface\RulesInterface;
 use Valitron\Validator;
 
 /**
- * Rule defined for the 'users_name' property
+ * Rule defined for the 'users_citizen_identification' property
  *
- * @property string $field [field for 'users_name']
- * @property string $desc [description for 'users_name']
- * @property string $value [value for 'users_name']
+ * @property string $field [field for 'users_citizen_identification']
+ * @property string $desc [description for 'users_citizen_identification']
+ * @property string $value [value for 'users_citizen_identification']
  * @property bool $disabled [Defines whether the column is optional for postman
  * collections]
  *
  * @package App\Rules\LionDatabase\MySQL\Users
  */
-class UsersNameRule extends Rules implements RulesInterface
+class UsersCitizenIdentificationOptionalRule extends Rules implements RulesInterface
 {
     /**
-     * [field for 'users_name']
+     * [field for 'users_citizen_identification']
      *
      * @var string $field
      */
-    public string $field = 'users_name';
+    public string $field = 'users_citizen_identification';
 
     /**
-     * [description for 'users_name']
+     * [description for 'users_citizen_identification']
      *
      * @var string $desc
      */
     public string $desc = '';
 
     /**
-     * [value for 'users_name']
+     * [value for 'users_citizen_identification']
      *
      * @var string $value;
      */
@@ -47,8 +47,8 @@ class UsersNameRule extends Rules implements RulesInterface
      *
      * @var bool $disabled;
      */
-    public bool $disabled = false;
-
+    public bool $disabled = true;
+ 
     /**
      * {@inheritdoc}
      */
@@ -56,8 +56,8 @@ class UsersNameRule extends Rules implements RulesInterface
     {
         $this->validate(function(Validator $validator) {
             $validator
-                ->rule('required', $this->field)
-                ->message('the "users_name" property is required');
+                ->rule('optional', $this->field)
+                ->message('the "users_citizen_identification" property is optional');
         });
     }
 }

@@ -31,6 +31,7 @@ class UsersFactory implements FactoryInterface
         return [
             'idroles',
             'iddocument_types',
+            'users_citizen_identification',
             'users_name',
             'users_last_name',
             'users_email',
@@ -50,6 +51,7 @@ class UsersFactory implements FactoryInterface
             [
                 RolesEnum::ADMINISTRATOR->value,
                 DocumentTypesEnum::CITIZENSHIP_CARD->value,
+                null,
                 'root',
                 'lion',
                 'root@dev.com',
@@ -59,6 +61,7 @@ class UsersFactory implements FactoryInterface
             [
                 RolesEnum::MANAGER->value,
                 DocumentTypesEnum::CITIZENSHIP_CARD->value,
+                null,
                 'root',
                 'manager',
                 'manager@dev.com',
