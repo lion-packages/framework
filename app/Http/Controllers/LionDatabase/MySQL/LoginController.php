@@ -6,6 +6,9 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Lion\Request\Request;
+use Lion\Security\JWT;
+use Lion\Security\RSA;
 
 /**
  * Controller for user authentication
@@ -17,14 +20,20 @@ class LoginController
     /**
      * Authentic users
      *
-     * @param  Users $users [Object of the Users entity]
-     * @param  LoginModel $loginModel [Login model object]
+     * @param Users $users [Object of the Users entity]
+     * @param LoginModel $loginModel [Login model object]
+     * @param RSA $rsa [Allows you to generate the required configuration for
+     * public and private keys, has methods that allow you to encrypt and
+     * decrypt data with RSA]
+     * @param JWT $jwt [Allows you to generate the required configuration for
+     * JWT tokens, has methods that allow you to encrypt and decrypt data with
+     * JWT]
      *
      * @return object
      */
-	public function auth(Users $users, LoginModel $loginModel): object
-	{
-		$auth = $loginModel->authDB($users->capsule());
+    public function auth(Users $users, LoginModel $loginModel, RSA $rsa, JWT $jwt): object
+    {
+        $auth = $loginModel->authDB($users->capsule());
 
         if ($auth->count === 0) {
             return error('Email/password is incorrect [AUTH-1]');
@@ -36,6 +45,18 @@ class LoginController
             return error('Email/password is incorrect [AUTH-2]');
         }
 
-        return success('Successfully authenticated user');
-	}
+        return success('Successfully authenticated user', Request::HTTP_OK, [
+            'jwt' => $jwt
+                ->config([
+                    'privateKey' => $rsa->setUrlPath(storage_path('keys/'))->init()->getPrivateKey()
+                ])
+                ->encode([
+                    'session' => true,
+                    'idusers' => $session->getIdusers(),
+                    'idroles' => $session->getIdroles(),
+                    'full_name' => "{$session->getUsersName()} {$session->getUsersLastName()}"
+                ], (int) env('JWT_EXP', 3600))
+                ->get()
+        ]);
+    }
 }

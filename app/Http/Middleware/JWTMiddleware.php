@@ -13,6 +13,10 @@ use Lion\Security\RSA;
 /**
  * Responsible for filtering and validating the JWT sent through an HTTP request
  *
+ * @property Store $store [Store class object]
+ * @property RSA $rsa [RSA class object]
+ * @property JWT $jwt [JWT class object]
+ *
  * @package App\Http\Middleware
  */
 class JWTMiddleware
@@ -39,21 +43,6 @@ class JWTMiddleware
     private JWT $jwt;
 
     /**
-     * [List of all available headers]
-     *
-     * @var array $headers
-     */
-    private array $headers;
-
-    /**
-     * Class constructor
-     */
-    public function __construct()
-    {
-        $this->headers = apache_request_headers();
-    }
-
-    /**
      * @required
      * */
     public function setStore(Store $store): void
@@ -77,6 +66,13 @@ class JWTMiddleware
         $this->jwt = $jwt;
     }
 
+    /**
+     * Initialize RSA keys
+     *
+     * @param string $path [RSA key paths]
+     *
+     * @return void
+     */
     private function initRSA(string $path = 'keys/'): void
     {
         $this->rsa
@@ -87,7 +83,7 @@ class JWTMiddleware
     /**
      * Validate the session defined in the JWT
      *
-     * @param  object $jwt [JWT object]
+     * @param object $jwt [JWT object]
      *
      * @return void
      */
@@ -109,7 +105,7 @@ class JWTMiddleware
      */
     public function existence(): void
     {
-        if (!isset($this->headers['Authorization'])) {
+        if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
             finish(response(Response::SESSION_ERROR, 'the JWT does not exist', Request::HTTP_UNAUTHORIZED));
         }
     }

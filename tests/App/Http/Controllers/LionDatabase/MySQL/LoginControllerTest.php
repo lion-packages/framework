@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Controllers\LionDatabase\MySQL;
+namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
-use Closure;
-use Exception;
+use Lion\Command\Kernel;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
+use Lion\Request\Request;
+use Lion\Request\Response;
 use Lion\Route\Route;
 use Lion\Test\Test;
 
@@ -15,60 +16,48 @@ class LoginControllerTest extends Test
     const API_URL = 'http://127.0.0.1:8000/api/auth';
     const API_URL_USERS = 'http://127.0.0.1:8000/api/users';
     const JSON_AUTH = [
-        'users_email' => 'root-sleon@dev.com',
+        'users_email' => 'root@dev.com',
         'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'
     ];
     const JSON_AUTH_ERR_1 = [
-        'users_email' => 'sleon@dev.com',
+        'users_email' => 'root-dev@dev.com',
         'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'
     ];
     const JSON_AUTH_ERR_2 = [
-        'users_email' => 'root-sleon@dev.com',
+        'users_email' => 'root@dev.com',
         'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464-x'
     ];
-    const JSON_CREATE_USERS = [
-        'idroles' => 1,
-        'iddocument_types' => 1,
-        'users_name' => 'Sergio',
-        'users_last_name' => 'Leon',
-        ...self::JSON_AUTH
-    ];
 
-	protected function tearDown(): void 
-	{
-        Schema::truncateTable('users')->execute();
-	}
-
-    private function assertCreateUser(): void
+    protected function setUp(): void
     {
-        $response = fetch(Route::POST, self::API_URL_USERS, ['json' => self::JSON_CREATE_USERS])
-            ->getBody()
-            ->getContents();
+        (new Kernel)->execute('php lion migrate:fresh --seed', false);
+    }
 
-        $this->assertJsonContent($response, [
-            'status' => 'success',
-            'message' => 'Procedure executed successfully'
-        ]);
+    protected function tearDown(): void
+    {
+        Schema::truncateTable('users')->execute();
     }
 
     public function testAuth(): void
     {
-        $this->assertCreateUser();
+        $auth = json_decode(
+            fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH])->getBody()->getContents()
+        );
 
-        $auth = fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH])->getBody()->getContents();
-
-        $this->assertJsonContent($auth, [
-            'code' => 200,
-            'status' => 'success',
-            'message' => 'Successfully authenticated user'
-        ]);
+        $this->assertIsObject($auth);
+        $this->assertObjectHasProperty('code', $auth);
+        $this->assertObjectHasProperty('status', $auth);
+        $this->assertObjectHasProperty('message', $auth);
+        $this->assertObjectHasProperty('data', $auth);
+        $this->assertObjectHasProperty('jwt', $auth->data);
+        $this->assertSame(Request::HTTP_OK, $auth->code);
+        $this->assertSame(Response::SUCCESS, $auth->status);
+        $this->assertSame('Successfully authenticated user', $auth->message);
     }
 
     public function testAuthIncorrect1(): void
     {
-        $this->assertCreateUser();
-
-        $exception = $this->getExceptionFromApi(function() {
+        $exception = $this->getExceptionFromApi(function () {
             fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH_ERR_1]);
         });
 
@@ -81,9 +70,7 @@ class LoginControllerTest extends Test
 
     public function testAuthIncorrect2(): void
     {
-        $this->assertCreateUser();
-
-        $exception = $this->getExceptionFromApi(function() {
+        $exception = $this->getExceptionFromApi(function () {
             fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH_ERR_2]);
         });
 

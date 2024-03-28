@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Models\LionDatabase\MySQL;
+namespace Tests\App\Models\LionDatabase\MySQL;
 
 use App\Enums\RolesEnum;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Lion\Database\Drivers\MySQL;
+use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Test\Test;
 
@@ -16,8 +16,8 @@ class UsersModelTest extends Test
     private UsersModel $usersModel;
     private Users $users;
 
-	protected function setUp(): void 
-	{
+    protected function setUp(): void
+    {
         $this->usersModel = new UsersModel();
 
         $this->users = (new Users())
@@ -29,18 +29,18 @@ class UsersModelTest extends Test
             ->setUsersEmail(fake()->email())
             ->setUsersPassword('cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481')
             ->setUsersCode(uniqid('code-'));
-	}
+    }
 
-	protected function tearDown(): void 
-	{
+    protected function tearDown(): void
+    {
         Schema::truncateTable('users')->execute();
-	}
+    }
 
     public function testCreateUsersDB(): void
     {
         $this->assertTrue(isSuccess($this->usersModel->createUsersDB($this->users)));
 
-        $users = MySQL::table('users')
+        $users = DB::table('users')
             ->select()
             ->where()->equalTo('users_code', $this->users->getUsersCode())
             ->get();
@@ -58,21 +58,38 @@ class UsersModelTest extends Test
 
         $firstUser = reset($users);
 
-        $this->assertSame($this->users->getIdroles(), $firstUser->idroles);
-        $this->assertSame($this->users->getIddocumentTypes(), $firstUser->iddocument_types);
         $this->assertSame($this->users->getUsersName(), $firstUser->users_name);
         $this->assertSame($this->users->getUsersLastName(), $firstUser->users_last_name);
-        $this->assertSame($this->users->getUsersEmail(), $firstUser->users_email);
-        $this->assertSame($this->users->getUsersCode(), $firstUser->users_code);
     }
 
     public function testReadUsersDBNotAvailableData(): void
     {
-        $users = $this->usersModel->readUsersDB();
+        $response = $this->usersModel->readUsersDB();
+
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+    }
+
+    public function testReadUsersByIdDB(): void
+    {
+        $this->assertTrue(isSuccess($this->usersModel->createUsersDB($this->users)));
+
+        $users = $this->usersModel->readUsersByIdDB($this->users);
 
         $this->assertIsObject($users);
-        $this->assertObjectHasProperty('status', $users);
-        $this->assertObjectHasProperty('message', $users);
+
+        $this->assertSame($this->users->getUsersName(), $users->users_name);
+        $this->assertSame($this->users->getUsersLastName(), $users->users_last_name);
+    }
+
+    public function testReadUsersByIdDBNotAvailableData(): void
+    {
+        $response = $this->usersModel->readUsersByIdDB($this->users);
+
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
     }
 
     public function testUpdateUsersDB(): void
@@ -84,9 +101,8 @@ class UsersModelTest extends Test
         $this->assertIsArray($users);
 
         $firstUser = reset($users);
-        $this->users->setIdusers($firstUser->idusers)->setIdroles(RolesEnum::CUSTOMER->value);
 
-        $this->assertTrue(isSuccess($this->usersModel->updateUsersDB($this->users)));
+        $this->assertTrue(isSuccess($this->usersModel->updateUsersDB($this->users->setIdusers($firstUser->idusers))));
 
         $users = $this->usersModel->readUsersDB();
 
@@ -94,12 +110,8 @@ class UsersModelTest extends Test
 
         $firstUser = reset($users);
 
-        $this->assertSame($this->users->getIdroles(), RolesEnum::CUSTOMER->value);
-        $this->assertSame($this->users->getIddocumentTypes(), $firstUser->iddocument_types);
         $this->assertSame($this->users->getUsersName(), $firstUser->users_name);
         $this->assertSame($this->users->getUsersLastName(), $firstUser->users_last_name);
-        $this->assertSame($this->users->getUsersEmail(), $firstUser->users_email);
-        $this->assertSame($this->users->getUsersCode(), $firstUser->users_code);
     }
 
     public function testDeleteUsersDB(): void

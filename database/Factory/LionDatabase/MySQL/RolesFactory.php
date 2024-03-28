@@ -13,15 +13,35 @@ use Lion\Bundle\Interface\FactoryInterface;
  */
 class RolesFactory implements FactoryInterface
 {
-	/**
-	 * {@inheritdoc}
-	 **/
-	public static function definition(): array
-	{
-		return [
-            ['Administrator', 'Administrator description'],
-            ['Manager', 'Manager description'],
-            ['Customer', 'Customer description']
+    /**
+     * {@inheritdoc}
+     **/
+    public static function columns(): array
+    {
+        return [
+            'roles_name',
+            'roles_description'
         ];
-	}
+    }
+
+    /**
+     * {@inheritdoc}
+     **/
+    public static function definition(): array
+    {
+        return [
+            [
+                'Administrator',
+                'Administrator description'
+            ],
+            [
+                'Manager',
+                'Manager description'
+            ],
+            [
+                'Customer',
+                'Customer description'
+            ]
+        ];
+    }
 }

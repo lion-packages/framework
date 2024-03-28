@@ -97,5 +97,5 @@ date_default_timezone_set(env('SERVER_DATE_TIMEZONE', 'America/Bogota'));
 Route::init();
 Route::addMiddleware(Routes::getMiddleware());
 include_once(__DIR__ . '/../routes/web.php');
-Route::get('route-list', fn() => Route::getFullRoutes(), ['protect-route-list']);
+Route::get('route-list', fn () => Route::getFullRoutes(), ['protect-route-list']);
 Route::dispatch();

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Enums;
+namespace Tests\App\Enums;
 
 use App\Enums\RolesEnum;
 use Lion\Test\Test;

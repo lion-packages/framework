@@ -904,16 +904,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v16.8.0",
+            "version": "v16.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "d5c9bf03645937ef9324c965e74877ba160d3c0e"
+                "reference": "18d9f660a1bd65dd513fcb96185ca887a6f92a5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/d5c9bf03645937ef9324c965e74877ba160d3c0e",
-                "reference": "d5c9bf03645937ef9324c965e74877ba160d3c0e",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/18d9f660a1bd65dd513fcb96185ca887a6f92a5a",
+                "reference": "18d9f660a1bd65dd513fcb96185ca887a6f92a5a",
                 "shasum": ""
             },
             "require": {
@@ -985,7 +985,7 @@
                 "issues": "https://github.com/lion-packages/framework/issues",
                 "source": "https://github.com/lion-packages/framework"
             },
-            "time": "2024-03-22T20:10:07+00:00"
+            "time": "2024-03-27T20:12:02+00:00"
         },
         {
             "name": "lion/command",
@@ -1028,16 +1028,16 @@
         },
         {
             "name": "lion/database",
-            "version": "v9.2.0",
+            "version": "v9.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/database.git",
-                "reference": "a651b0bf714ebbe39e1b6bfe8a6ca6b0c3f50f81"
+                "reference": "aa322b043366a0cb6d31c1ffb92fb0548176baa2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/database/zipball/a651b0bf714ebbe39e1b6bfe8a6ca6b0c3f50f81",
-                "reference": "a651b0bf714ebbe39e1b6bfe8a6ca6b0c3f50f81",
+                "url": "https://api.github.com/repos/lion-packages/database/zipball/aa322b043366a0cb6d31c1ffb92fb0548176baa2",
+                "reference": "aa322b043366a0cb6d31c1ffb92fb0548176baa2",
                 "shasum": ""
             },
             "require": {
@@ -1058,12 +1058,12 @@
             "license": [
                 "MIT"
             ],
-            "description": "package in charge of the generation and execution of processes with databases",
+            "description": "Package in charge of the generation and execution of processes with databases",
             "support": {
                 "issues": "https://github.com/lion-packages/database/issues",
-                "source": "https://github.com/lion-packages/database/tree/v9.2.0"
+                "source": "https://github.com/lion-packages/database/tree/v9.2.1"
             },
-            "time": "2024-03-02T20:36:58+00:00"
+            "time": "2024-03-27T20:02:21+00:00"
         },
         {
             "name": "lion/dependency-injection",

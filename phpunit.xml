@@ -34,16 +34,36 @@
             <directory>tests/</directory>
         </testsuite>
 
-        <testsuite name="Class">
-            <directory>tests/Class/</directory>
+        <testsuite name="Enums">
+            <directory>tests/App/Enums/</directory>
+        </testsuite>
+
+        <testsuite name="Exceptions">
+            <directory>tests/App/Exceptions/</directory>
         </testsuite>
 
         <testsuite name="Controllers">
-            <directory>tests/Controllers/</directory>
+            <directory>tests/App/Http/Controllers/</directory>
+        </testsuite>
+
+        <testsuite name="Middleware">
+            <directory>tests/App/Http/Middleware/</directory>
+        </testsuite>
+
+        <testsuite name="Interfaces">
+            <directory>tests/App/Interfaces/</directory>
         </testsuite>
 
         <testsuite name="Models">
-            <directory>tests/Models/</directory>
+            <directory>tests/App/Models/</directory>
+        </testsuite>
+
+        <testsuite name="Traits">
+            <directory>tests/App/Traits/</directory>
+        </testsuite>
+
+        <testsuite name="Class">
+            <directory>tests/Database/Class/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
