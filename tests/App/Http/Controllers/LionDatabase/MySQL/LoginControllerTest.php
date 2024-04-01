@@ -41,7 +41,9 @@ class LoginControllerTest extends Test
     public function testAuth(): void
     {
         $auth = json_decode(
-            fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH])
+            fetch(Route::POST, self::API_URL, [
+                'json' => self::JSON_AUTH
+            ])
                 ->getBody()
                 ->getContents()
         );
@@ -60,7 +62,9 @@ class LoginControllerTest extends Test
     public function testAuthIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function () {
-            fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH_ERR_1]);
+            fetch(Route::POST, self::API_URL, [
+                'json' => self::JSON_AUTH_ERR_1
+            ]);
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -73,7 +77,9 @@ class LoginControllerTest extends Test
     public function testAuthIncorrect2(): void
     {
         $exception = $this->getExceptionFromApi(function () {
-            fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH_ERR_2]);
+            fetch(Route::POST, self::API_URL, [
+                'json' => self::JSON_AUTH_ERR_2
+            ]);
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [

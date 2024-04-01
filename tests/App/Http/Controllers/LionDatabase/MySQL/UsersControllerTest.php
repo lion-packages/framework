@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Enums\DocumentTypesEnum;
+use App\Enums\RolesEnum;
+use Lion\Command\Kernel;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Route\Route;
 use Lion\Test\Test;
@@ -14,15 +17,6 @@ class UsersControllerTest extends Test
     use AuthJwtProviderTrait;
 
     const API_URL = 'http://127.0.0.1:8000/api/users';
-    const JSON_CREATE_USERS = [
-        'idroles' => 1,
-        'iddocument_types' => 1,
-        'users_citizen_identification' => '##########',
-        'users_name' => 'Sergio',
-        'users_last_name' => 'Leon',
-        'users_email' => 'sleon@dev.com',
-        'users_password' => 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481'
-    ];
     const JSON_UPDATE_USERS = [
         'idroles' => 1,
         'iddocument_types' => 1,
@@ -32,6 +26,11 @@ class UsersControllerTest extends Test
         'users_email' => 'sleon@dev.com'
     ];
 
+    protected function setUp(): void
+    {
+        (new Kernel())->execute('php lion migrate:fresh --seed', false);
+    }
+
     protected function tearDown(): void
     {
         Schema::truncateTable('users')->execute();
@@ -40,10 +39,18 @@ class UsersControllerTest extends Test
     public function testCreateUsers(): void
     {
         $response = fetch(Route::POST, self::API_URL, [
-            'json' => self::JSON_CREATE_USERS,
             'headers' => [
-                'Authorization' => "Bearer {$this->getJWT()}"
-            ]
+                'Authorization' => $this->getAuthorization()
+            ],
+            'json' => [
+                'idroles' => RolesEnum::ADMINISTRATOR->value,
+                'iddocument_types' => DocumentTypesEnum::PASSPORT->value,
+                'users_citizen_identification' => '##########',
+                'users_name' => fake()->name(),
+                'users_last_name' => fake()->lastName(),
+                'users_email' => 'sleon@dev.com',
+                'users_password' => 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481'
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -59,7 +66,7 @@ class UsersControllerTest extends Test
         $users = json_decode(
             fetch(Route::GET, self::API_URL, [
                 'headers' => [
-                    'Authorization' => "Bearer {$this->getJWT()}"
+                    'Authorization' => $this->getAuthorization()
                 ]
             ])
                 ->getBody()
@@ -74,13 +81,11 @@ class UsersControllerTest extends Test
 
     public function testReadUsersWithoutData(): void
     {
-        $token = $this->getJWT();
-
-        $this->tearDown();
+        Schema::truncateTable('users')->execute();
 
         $users = fetch(Route::GET, self::API_URL, [
             'headers' => [
-                'Authorization' => "Bearer {$token}"
+                'Authorization' => $this->getAuthorization()
             ]
         ])
             ->getBody()
@@ -94,10 +99,27 @@ class UsersControllerTest extends Test
 
     public function testReadUsersById(): void
     {
-        $user = json_decode(
-            fetch(Route::GET, self::API_URL . '/1', [
+        $users = json_decode(
+            fetch(Route::GET, self::API_URL, [
                 'headers' => [
-                    'Authorization' => "Bearer {$this->getJWT()}"
+                    'Authorization' => $this->getAuthorization()
+                ]
+            ])
+                ->getBody()
+                ->getContents(),
+            true
+        );
+
+        $this->assertFalse(isSuccess($users));
+        $this->assertIsArray($users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
+
+        $firstUser = (object) reset($users);
+
+        $user = json_decode(
+            fetch(Route::GET, (self::API_URL . '/' . $firstUser->idusers), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization()
                 ]
             ])
                 ->getBody()
@@ -113,13 +135,11 @@ class UsersControllerTest extends Test
 
     public function testReadUsersByIdWithoutData(): void
     {
-        $token = $this->getJWT();
-
-        $this->tearDown();
+        Schema::truncateTable('users')->execute();
 
         $users = fetch(Route::GET, self::API_URL . '/1', [
             'headers' => [
-                'Authorization' => "Bearer {$token}"
+                'Authorization' => $this->getAuthorization()
             ]
         ])
             ->getBody()
@@ -133,12 +153,12 @@ class UsersControllerTest extends Test
 
     public function testUpdateUsers(): void
     {
-        $token = $this->getJWT();
+        $token = $this->getAuthorization();
 
         $users = json_decode(
             fetch(Route::GET, self::API_URL, [
                 'headers' => [
-                    'Authorization' => "Bearer {$token}"
+                    'Authorization' => $token
                 ]
             ])
                 ->getBody()
@@ -154,7 +174,7 @@ class UsersControllerTest extends Test
         $response = fetch(Route::PUT, self::API_URL . '/' . $firstUser->idusers, [
             'json' => self::JSON_UPDATE_USERS,
             'headers' => [
-                'Authorization' => "Bearer {$token}"
+                'Authorization' => $token
             ]
         ])
             ->getBody()
@@ -168,7 +188,7 @@ class UsersControllerTest extends Test
         $users = json_decode(
             fetch(Route::GET, self::API_URL, [
                 'headers' => [
-                    'Authorization' => "Bearer {$token}"
+                    'Authorization' => $token
                 ]
             ])
                 ->getBody()
@@ -187,12 +207,12 @@ class UsersControllerTest extends Test
 
     public function testDeleteUsers(): void
     {
-        $token = $this->getJWT();
+        $token = $this->getAuthorization();
 
         $users = json_decode(
             fetch(Route::GET, self::API_URL, [
                 'headers' => [
-                    'Authorization' => "Bearer {$token}"
+                    'Authorization' => $token
                 ]
             ])
                 ->getBody()
@@ -207,7 +227,7 @@ class UsersControllerTest extends Test
 
         $response = fetch(Route::DELETE, self::API_URL . '/' . $firstUser->idusers, [
             'headers' => [
-                'Authorization' => "Bearer {$token}"
+                'Authorization' => $token
             ]
         ])
             ->getBody()
@@ -221,7 +241,7 @@ class UsersControllerTest extends Test
         $users = json_decode(
             fetch(Route::GET, self::API_URL, [
                 'headers' => [
-                    'Authorization' => "Bearer {$token}"
+                    'Authorization' => $token
                 ]
             ])
                 ->getBody()
