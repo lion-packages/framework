@@ -68,8 +68,8 @@ class LoginControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => 500,
-            'status' => 'error',
+            'code' => Request::HTTP_INTERNAL_SERVER_ERROR,
+            'status' => Response::ERROR,
             'message' => 'Email/password is incorrect [AUTH-1]'
         ]);
     }
@@ -83,8 +83,8 @@ class LoginControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => 500,
-            'status' => 'error',
+            'code' => Request::HTTP_INTERNAL_SERVER_ERROR,
+            'status' => Response::ERROR,
             'message' => 'Email/password is incorrect [AUTH-2]'
         ]);
     }

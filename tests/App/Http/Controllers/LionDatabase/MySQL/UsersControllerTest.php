@@ -45,7 +45,7 @@ class UsersControllerTest extends Test
             'json' => [
                 'idroles' => RolesEnum::ADMINISTRATOR->value,
                 'iddocument_types' => DocumentTypesEnum::PASSPORT->value,
-                'users_citizen_identification' => '##########',
+                'users_citizen_identification' => fake()->numerify('##########'),
                 'users_name' => fake()->name(),
                 'users_last_name' => fake()->lastName(),
                 'users_email' => 'sleon@dev.com',
