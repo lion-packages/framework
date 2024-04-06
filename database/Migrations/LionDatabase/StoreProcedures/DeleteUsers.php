@@ -13,7 +13,7 @@ return new class implements MigrationUpInterface
      * */
     public function up(): object
     {
-        return Schema::connection(env('DB_NAME', 'lion_database'))
+        return Schema::connection('lion_database')
             ->createStoreProcedure('delete_users', function () {
                 Schema::in()->int('_idusers');
             }, function (MySQL $db) {
