@@ -93,7 +93,7 @@ class UsersControllerTest extends Test
 
         $this->assertJsonContent($users, [
             'status' => 'success',
-            'message' => 'No data available'
+            'message' => 'no data available'
         ]);
     }
 
@@ -147,7 +147,7 @@ class UsersControllerTest extends Test
 
         $this->assertJsonContent($users, [
             'status' => 'success',
-            'message' => 'No data available'
+            'message' => 'no data available'
         ]);
     }
 
