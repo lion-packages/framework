@@ -23,7 +23,9 @@ class RegistrationControllerTest extends Test
 
     public function testRegister(): void
     {
-        $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH])
+        $response = fetch(Route::POST, self::API_URL, [
+            'json' => self::JSON_AUTH
+        ])
             ->getBody()
             ->getContents();
 

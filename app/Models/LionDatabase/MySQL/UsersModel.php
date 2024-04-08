@@ -29,6 +29,7 @@ class UsersModel
             $users->getUsersCitizenIdentification(),
             $users->getUsersName(),
             $users->getUsersLastName(),
+            $users->getUsersNickname(),
             $users->getUsersEmail(),
             $users->getUsersPassword(),
             $users->getUsersCode(),
@@ -75,6 +76,7 @@ class UsersModel
             $users->getUsersCitizenIdentification(),
             $users->getUsersName(),
             $users->getUsersLastName(),
+            $users->getUsersNickname(),
             $users->getUsersEmail(),
             $users->getIdusers(),
         ])->execute();

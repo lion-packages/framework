@@ -52,7 +52,7 @@ class UsersFactory implements FactoryInterface
             [
                 RolesEnum::ADMINISTRATOR->value,
                 DocumentTypesEnum::CITIZENSHIP_CARD->value,
-                null,
+                fake()->numerify('##########'),
                 'root',
                 'lion',
                 fake()->userName(),
@@ -63,7 +63,7 @@ class UsersFactory implements FactoryInterface
             [
                 RolesEnum::MANAGER->value,
                 DocumentTypesEnum::CITIZENSHIP_CARD->value,
-                null,
+                fake()->numerify('##########'),
                 'root',
                 'manager',
                 fake()->userName(),

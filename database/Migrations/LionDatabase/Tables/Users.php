@@ -22,7 +22,7 @@ return new class implements MigrationUpInterface
                 DB::varchar('users_citizen_identification', 25)->null()->unique();
                 DB::varchar('users_name', 25)->null();
                 DB::varchar('users_last_name', 25)->null();
-                DB::varchar('users_nickname', 15)->null();
+                DB::varchar('users_nickname', 25)->null();
                 DB::varchar('users_email', 255)->notNull()->unique();
                 DB::blob('users_password')->notNull();
                 DB::varchar('users_code', 45)->notNull()->unique();
