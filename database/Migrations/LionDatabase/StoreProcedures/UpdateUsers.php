@@ -20,6 +20,7 @@ return new class implements MigrationUpInterface
                 Schema::in()->varchar('_users_citizen_identification', 25)->null();
                 Schema::in()->varchar('_users_name', 25)->null();
                 Schema::in()->varchar('_users_last_name', 25)->null();
+                Schema::in()->varchar('_users_nickname', 15)->null();
                 Schema::in()->varchar('_users_email', 255);
                 Schema::in()->int('_idusers');
             }, function (MySQL $db) {
@@ -31,6 +32,7 @@ return new class implements MigrationUpInterface
                         'users_citizen_identification' => '_users_citizen_identification',
                         'users_name' => '_users_name',
                         'users_last_name' => '_users_last_name',
+                        'users_nickname' => '_users_nickname',
                         'users_email' => '_users_email'
                     ])
                     ->where()->equalTo('idusers', '_idusers');
