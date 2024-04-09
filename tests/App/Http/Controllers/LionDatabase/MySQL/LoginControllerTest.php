@@ -14,19 +14,6 @@ use Lion\Test\Test;
 class LoginControllerTest extends Test
 {
     const API_URL = 'http://127.0.0.1:8000/api/auth/login';
-    const API_URL_USERS = 'http://127.0.0.1:8000/api/users';
-    const JSON_AUTH = [
-        'users_email' => 'root@dev.com',
-        'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'
-    ];
-    const JSON_AUTH_ERR_1 = [
-        'users_email' => 'root-dev@dev.com',
-        'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'
-    ];
-    const JSON_AUTH_ERR_2 = [
-        'users_email' => 'root@dev.com',
-        'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464-x'
-    ];
 
     protected function setUp(): void
     {
@@ -42,7 +29,10 @@ class LoginControllerTest extends Test
     {
         $auth = json_decode(
             fetch(Route::POST, self::API_URL, [
-                'json' => self::JSON_AUTH
+                'json' => [
+                    'users_email' => 'root@dev.com',
+                    'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'
+                ]
             ])
                 ->getBody()
                 ->getContents()
@@ -63,7 +53,10 @@ class LoginControllerTest extends Test
     {
         $exception = $this->getExceptionFromApi(function () {
             fetch(Route::POST, self::API_URL, [
-                'json' => self::JSON_AUTH_ERR_1
+                'json' => [
+                    'users_email' => 'root-dev@dev.com',
+                    'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'
+                ]
             ]);
         });
 
@@ -78,7 +71,10 @@ class LoginControllerTest extends Test
     {
         $exception = $this->getExceptionFromApi(function () {
             fetch(Route::POST, self::API_URL, [
-                'json' => self::JSON_AUTH_ERR_2
+                'json' => [
+                    'users_email' => 'root@dev.com',
+                    'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464-x'
+                ]
             ]);
         });
 
