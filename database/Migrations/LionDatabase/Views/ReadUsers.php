@@ -22,6 +22,7 @@ return new class implements MigrationUpInterface
                         $db->getColumn('users_citizen_identification', 'usr'),
                         $db->getColumn('users_name', 'usr'),
                         $db->getColumn('users_last_name', 'usr'),
+                        $db->getColumn('users_nickname', 'usr'),
                     );
             })
             ->execute();

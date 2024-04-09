@@ -7,7 +7,7 @@ use Lion\Database\Drivers\Schema\MySQL as DB;
 
 return new class implements MigrationUpInterface
 {
-    const INDEX = 1;
+    const INDEX = 2;
 
     /**
      * {@inheritdoc}

@@ -11,10 +11,6 @@ use Lion\Test\Test;
 class RegistrationControllerTest extends Test
 {
     const API_URL = 'http://127.0.0.1:8000/api/auth/register';
-    const JSON_AUTH = [
-        'users_email' => 'root@dev.com',
-        'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'
-    ];
 
     protected function tearDown(): void
     {
@@ -23,7 +19,12 @@ class RegistrationControllerTest extends Test
 
     public function testRegister(): void
     {
-        $response = fetch(Route::POST, self::API_URL, ['json' => self::JSON_AUTH])
+        $response = fetch(Route::POST, self::API_URL, [
+            'json' => [
+                'users_email' => 'root@dev.com',
+                'users_password' => 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464'
+            ]
+        ])
             ->getBody()
             ->getContents();
 

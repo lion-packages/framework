@@ -15,6 +15,7 @@ use Lion\Bundle\Interface\CapsuleInterface;
  * @property string $users_citizen_identification [Property for users_citizen_identification]
  * @property string $users_name [Property for users_name]
  * @property string $users_last_name [Property for users_last_name]
+ * @property string $users_nickname [Property for users_nickname]
  * @property string $users_email [Property for users_email]
  * @property string $users_password [Property for users_password]
  * @property string $users_code [Property for users_code]
@@ -66,6 +67,13 @@ class Users implements CapsuleInterface
 	private ?string $users_last_name = null;
 
 	/**
+	 * [Property for users_nickname]
+	 *
+	 * @var string|null $users_nickname
+	 */
+	private ?string $users_nickname = null;
+
+	/**
 	 * [Property for users_email]
 	 *
 	 * @var string|null $users_email
@@ -106,6 +114,7 @@ class Users implements CapsuleInterface
 			->setUsersCitizenIdentification(request->users_citizen_identification ?? null)
 			->setUsersName(request->users_name ?? null)
 			->setUsersLastName(request->users_last_name ?? null)
+			->setUsersNickname(request->users_nickname ?? null)
 			->setUsersEmail(request->users_email ?? null)
 			->setUsersPassword(request->users_password ?? null)
 			->setUsersCode(request->users_code ?? null);
@@ -253,6 +262,30 @@ class Users implements CapsuleInterface
     public function setUsersLastName(?string $users_last_name = null): Users
     {
         $this->users_last_name = $users_last_name;
+
+        return $this;
+    }
+
+    /**
+     * Getter method for 'users_nickname'
+     *
+     * @return string|null
+     */
+    public function getUsersNickname(): ?string
+    {
+        return $this->users_nickname;
+    }
+
+    /**
+     * Setter method for 'users_nickname'
+     *
+     * @param string|null $users_nickname
+     *
+     * @return Users
+     */
+    public function setUsersNickname(?string $users_nickname = null): Users
+    {
+        $this->users_nickname = $users_nickname;
 
         return $this;
     }

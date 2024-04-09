@@ -20,8 +20,8 @@ class LoginController
     /**
      * Authentic users
      *
-     * @param Users $users [Object of the Users entity]
-     * @param LoginModel $loginModel [Login model object]
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param LoginModel $loginModel [Model for user authentication]
      * @param RSA $rsa [Allows you to generate the required configuration for
      * public and private keys, has methods that allow you to encrypt and
      * decrypt data with RSA]

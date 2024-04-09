@@ -8,6 +8,7 @@ use App\Rules\LionDatabase\MySQL\Users\UsersCitizenIdentificationRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersNameRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersNicknameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Route\Route;
@@ -49,6 +50,7 @@ Routes::setRules([
             UsersCitizenIdentificationRequiredRule::class,
             UsersNameRequiredRule::class,
             UsersLastNameRequiredRule::class,
+            UsersNicknameRequiredRule::class,
             UsersEmailRule::class,
             UsersPasswordRule::class,
         ]

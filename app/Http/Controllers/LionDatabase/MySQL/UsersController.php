@@ -18,8 +18,8 @@ class UsersController
     /**
      * Create users
      *
-     * @param Users $users [Object of the Users entity]
-     * @param UsersModel $usersModel [Model object Users]
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param UsersModel $usersModel [Model for the Users entity]
      * @param Validation $validation [Allows you to validate form data and
      * generate encryption safely]
      *
@@ -38,7 +38,7 @@ class UsersController
     /**
      * Read users
      *
-     * @param UsersModel $usersModel [Model object Users]
+     * @param UsersModel $usersModel [Model for the Users entity]
      *
      * @return array|object
      */
@@ -50,8 +50,8 @@ class UsersController
     /**
      * Read users by id
      *
-     * @param Users $users [Object of the Users entity]
-     * @param UsersModel $usersModel [Model object Users]
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param UsersModel $usersModel [Model for the Users entity]
      * @param string $idusers [user id defined in routes]
      *
      * @return array|object
@@ -67,8 +67,8 @@ class UsersController
     /**
      * Update users
      *
-     * @param Users $users [Object of the Users entity]
-     * @param UsersModel $usersModel [Model object Users]
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param UsersModel $usersModel [Model for the Users entity]
      * @param string $idusers [user id defined in routes]
      *
      * @return object
@@ -85,8 +85,8 @@ class UsersController
     /**
      * Delete users
      *
-     * @param Users $users [Object of the Users entity]
-     * @param UsersModel $usersModel [Model object Users]
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param UsersModel $usersModel [Model for the Users entity]
      * @param string $idusers [user id defined in routes]
      *
      * @return object
@@ -95,7 +95,6 @@ class UsersController
     {
         return $usersModel->deleteUsersDB(
             $users
-                ->capsule()
                 ->setIdusers((int) $idusers)
         );
     }

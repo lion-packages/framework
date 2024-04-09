@@ -10,17 +10,13 @@ use Lion\Security\RSA;
 trait AuthJwtProviderTrait
 {
     const AVAILABLE_USERS = 2;
-
     const REMAINING_USERS = 1;
 
     private function getAuthorization(): string
     {
         $token = (new JWT)
             ->config([
-                'privateKey' => (new RSA())
-                    ->setUrlPath(storage_path('keys/', false))
-                    ->init()
-                    ->getPrivateKey()
+                'privateKey' => (new RSA())->setUrlPath(storage_path('keys/', false))->init()->getPrivateKey()
             ])
             ->encode([
                 'session' => true,

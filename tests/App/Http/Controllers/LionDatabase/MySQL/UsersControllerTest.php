@@ -21,8 +21,9 @@ class UsersControllerTest extends Test
         'idroles' => 1,
         'iddocument_types' => 1,
         'users_citizen_identification' => '##########',
-        'users_name' => 'Sergio D',
-        'users_last_name' => 'Leon G',
+        'users_name' => 'Sergio',
+        'users_last_name' => 'Leon',
+        'users_nickname' => 'Sleon',
         'users_email' => 'sleon@dev.com'
     ];
 
@@ -48,7 +49,8 @@ class UsersControllerTest extends Test
                 'users_citizen_identification' => fake()->numerify('##########'),
                 'users_name' => fake()->name(),
                 'users_last_name' => fake()->lastName(),
-                'users_email' => 'sleon@dev.com',
+                'users_nickname' => fake()->userName(),
+                'users_email' => fake()->email(),
                 'users_password' => 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481'
             ],
         ])

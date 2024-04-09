@@ -40,7 +40,15 @@ class LoginModel
     public function sessionDB(Users $users): Users
     {
         return DB::table('users')
-            ->select('idusers', 'idroles', 'users_name', 'users_last_name', 'users_email', 'users_password')
+            ->select(
+                'idusers',
+                'idroles',
+                'users_name',
+                'users_last_name',
+                'users_nickname',
+                'users_email',
+                'users_password'
+            )
             ->where()->equalTo('users_email', $users->getUsersEmail())
             ->fetchMode(PDO::FETCH_CLASS, Users::class)
             ->get();

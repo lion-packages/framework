@@ -34,6 +34,7 @@ class UsersFactory implements FactoryInterface
             'users_citizen_identification',
             'users_name',
             'users_last_name',
+            'users_nickname',
             'users_email',
             'users_password',
             'users_code'
@@ -51,9 +52,10 @@ class UsersFactory implements FactoryInterface
             [
                 RolesEnum::ADMINISTRATOR->value,
                 DocumentTypesEnum::CITIZENSHIP_CARD->value,
-                null,
+                fake()->numerify('##########'),
                 'root',
                 'lion',
+                fake()->userName(),
                 'root@dev.com',
                 $validation->passwordHash($validation->sha256(self::USERS_PASSWORD)),
                 uniqid('code-')
@@ -61,9 +63,10 @@ class UsersFactory implements FactoryInterface
             [
                 RolesEnum::MANAGER->value,
                 DocumentTypesEnum::CITIZENSHIP_CARD->value,
-                null,
+                fake()->numerify('##########'),
                 'root',
                 'manager',
+                fake()->userName(),
                 'manager@dev.com',
                 $validation->passwordHash($validation->sha256(self::USERS_PASSWORD)),
                 uniqid('code-')

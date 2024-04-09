@@ -18,8 +18,8 @@ class RegistrationController
     /**
      * Register users with their basic data to create a user account
      *
-     * @param Users $users [Object of the Users entity]
-     * @param UsersModel $usersModel [Model object Users]
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param UsersModel $usersModel [Model for the Users entity]
      * @param Validation $validation [Allows you to validate form data and
      * generate encryption safely]
      *
