@@ -17,7 +17,7 @@ use Dotenv\Dotenv;
 use Lion\Bundle\Helpers\ExceptionCore;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Bundle\HttpKernel;
-use Lion\DependencyInjection\Container;
+use Lion\Dependency\Injection\Container;
 use Lion\Route\Route;
 
 /**
