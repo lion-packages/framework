@@ -1,7 +1,7 @@
 <p align="center">
   <a href="https://lion-client.vercel.app/" target="_blank">
     <img 
-        src="https://github.com/lion-packages/framework/assets/56183278/90f48105-26a5-49b3-ae37-92933ff595a1"
+        src="https://github.com/lion-packages/framework/assets/56183278/60871c9f-1c93-4481-8c1e-d70282b33254"
         width="450" 
         alt="Lion-Framework Logo"
     >
