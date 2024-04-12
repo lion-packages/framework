@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Request\Request;
-use Lion\Security\JWT;
-use Lion\Security\RSA;
 
 /**
  * Controller for user authentication
@@ -18,45 +17,29 @@ use Lion\Security\RSA;
 class LoginController
 {
     /**
-     * Authentic users
+     * Manage user authentication
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param LoginModel $loginModel [Model for user authentication]
-     * @param RSA $rsa [Allows you to generate the required configuration for
-     * public and private keys, has methods that allow you to encrypt and
-     * decrypt data with RSA]
-     * @param JWT $jwt [Allows you to generate the required configuration for
-     * JWT tokens, has methods that allow you to encrypt and decrypt data with
-     * JWT]
+     * @param LoginService $loginService [Service 'LoginService']
      *
      * @return object
      */
-    public function auth(Users $users, LoginModel $loginModel, RSA $rsa, JWT $jwt): object
+    public function auth(Users $users, LoginModel $loginModel, LoginService $loginService): object
     {
-        $auth = $loginModel->authDB($users->capsule());
-
-        if ($auth->count === 0) {
-            return error('Email/password is incorrect [AUTH-1]');
-        }
+        $loginService->validateSession($loginModel, $users->capsule());
 
         $session = $loginModel->sessionDB($users);
 
-        if (!password_verify($users->getUsersPassword(), $session->getUsersPassword())) {
-            return error('Email/password is incorrect [AUTH-2]');
-        }
+        $loginService->passwordVerify($users->getUsersPassword(), $session->getUsersPassword());
 
         return success('Successfully authenticated user', Request::HTTP_OK, [
-            'jwt' => $jwt
-                ->config([
-                    'privateKey' => $rsa->setUrlPath(storage_path('keys/'))->init()->getPrivateKey()
-                ])
-                ->encode([
-                    'session' => true,
-                    'idusers' => $session->getIdusers(),
-                    'idroles' => $session->getIdroles(),
-                    'full_name' => "{$session->getUsersName()} {$session->getUsersLastName()}"
-                ], (int) env('JWT_EXP', 3600))
-                ->get()
+            'jwt' => $loginService->getToken(storage_path('keys/'), [
+                'session' => true,
+                'idusers' => $session->getIdusers(),
+                'idroles' => $session->getIdroles(),
+                'full_name' => "{$session->getUsersName()} {$session->getUsersLastName()}"
+            ]),
         ]);
     }
 }
