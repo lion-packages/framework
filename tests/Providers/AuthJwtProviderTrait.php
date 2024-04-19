@@ -16,7 +16,10 @@ trait AuthJwtProviderTrait
     {
         $token = (new JWT)
             ->config([
-                'privateKey' => (new RSA())->setUrlPath(storage_path('keys/', false))->init()->getPrivateKey()
+                'privateKey' => (new RSA())
+                    ->setUrlPath(storage_path(env('RSA_URL_PATH'), false))
+                    ->init()
+                    ->getPrivateKey()
             ])
             ->encode([
                 'session' => true,
