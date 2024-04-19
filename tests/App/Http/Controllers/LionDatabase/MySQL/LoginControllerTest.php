@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
-use App\Http\Services\LionDatabase\MySQL\LoginService;
 use Lion\Command\Kernel;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Request;
@@ -63,7 +62,7 @@ class LoginControllerTest extends Test
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
             'code' => Request::HTTP_UNAUTHORIZED,
-            'status' => LoginService::AUTH_ERROR,
+            'status' => Response::SESSION_ERROR,
             'message' => 'email/password is incorrect [AUTH-1]'
         ]);
     }
@@ -81,7 +80,7 @@ class LoginControllerTest extends Test
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
             'code' => Request::HTTP_UNAUTHORIZED,
-            'status' => LoginService::AUTH_ERROR,
+            'status' => Response::SESSION_ERROR,
             'message' => 'email/password is incorrect [AUTH-2]'
         ]);
     }
