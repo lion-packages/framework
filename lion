@@ -12,6 +12,7 @@ define('LION_START', microtime(true));
  * this application
  * -----------------------------------------------------------------------------
  **/
+
 require_once(__DIR__ . '/vendor/autoload.php');
 
 use Dotenv\Dotenv;
@@ -24,6 +25,7 @@ use Lion\Bundle\Commands\CommandHandler;
  * .dotenv provides an easy way to access environment variables with $_ENV
  * -----------------------------------------------------------------------------
  **/
+
 Dotenv::createImmutable(__DIR__)->load();
 
 /**
@@ -31,6 +33,7 @@ Dotenv::createImmutable(__DIR__)->load();
  * Database initialization
  * -----------------------------------------------------------------------------
  * */
+
 include_once(__DIR__ . '/config/database.php');
 
 /**
@@ -38,13 +41,25 @@ include_once(__DIR__ . '/config/database.php');
  * Email initialization
  * -----------------------------------------------------------------------------
  * */
+
 include_once(__DIR__ . '/config/email.php');
+
+/**
+ * -----------------------------------------------------------------------------
+ * Queued Tasks
+ * -----------------------------------------------------------------------------
+ * This is where you can register the processes required for your queued tasks
+ * -----------------------------------------------------------------------------
+ **/
+
+include_once(__DIR__ . '/config/queue.php');
 
 /**
  * -----------------------------------------------------------------------------
  * Local zone configuration
  * -----------------------------------------------------------------------------
  */
+
 date_default_timezone_set($_ENV['SERVER_DATE_TIMEZONE']);
 
 /**
@@ -54,6 +69,7 @@ date_default_timezone_set($_ENV['SERVER_DATE_TIMEZONE']);
  * This is where the commands for your application are executed
  * -----------------------------------------------------------------------------
  **/
+
 (new CommandHandler('Lion-Framework'))
     ->registerCommands(
         './vendor/lion/bundle/src/LionBundle/Commands/Lion/',
