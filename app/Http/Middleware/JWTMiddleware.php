@@ -73,7 +73,7 @@ class JWTMiddleware
      *
      * @return void
      */
-    private function initRSA(string $path = 'keys/'): void
+    private function initRSA(string $path): void
     {
         $this->rsa
             ->setUrlPath(storage_path($path))
@@ -131,7 +131,7 @@ class JWTMiddleware
             finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-2]', Request::HTTP_FORBIDDEN));
         }
 
-        $path = "keys/{$data->users_code}/";
+        $path = env('RSA_URL_PATH') . "{$data->users_code}/";
 
         if (isError($this->store->exist(storage_path($path)))) {
             finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-3]', Request::HTTP_FORBIDDEN));
@@ -160,7 +160,7 @@ class JWTMiddleware
      */
     public function authorize(): void
     {
-        $this->initRSA();
+        $this->initRSA(env('RSA_URL_PATH'));
 
         $this->existence();
 
@@ -185,7 +185,7 @@ class JWTMiddleware
      */
     public function notAuthorize(): void
     {
-        $this->initRSA();
+        $this->initRSA(env('RSA_URL_PATH'));
 
         $this->existence();
 

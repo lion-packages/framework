@@ -34,7 +34,7 @@ class LoginController
         $loginService->passwordVerify($users->getUsersPassword(), $session->getUsersPassword());
 
         return success('Successfully authenticated user', Request::HTTP_OK, [
-            'jwt' => $loginService->getToken(storage_path('keys/'), [
+            'jwt' => $loginService->getToken(storage_path(env('RSA_URL_PATH')), [
                 'session' => true,
                 'idusers' => $session->getIdusers(),
                 'idroles' => $session->getIdroles(),

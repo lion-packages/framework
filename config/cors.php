@@ -21,8 +21,8 @@ Request::header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, 
 
 Request::header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
-if ($_SERVER['REQUEST_METHOD'] === Route::OPTIONS) {
-    http_response_code(200);
+if (Route::OPTIONS === $_SERVER['REQUEST_METHOD']) {
+    http_response_code(Request::HTTP_OK);
 
     exit;
 }
