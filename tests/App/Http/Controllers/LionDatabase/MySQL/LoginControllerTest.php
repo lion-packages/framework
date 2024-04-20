@@ -17,7 +17,7 @@ class LoginControllerTest extends Test
 
     protected function setUp(): void
     {
-        (new Kernel)->execute('php lion migrate:fresh --seed', false);
+        (new Kernel)->execute('php lion migrate:fresh --seed && php lion schedule:schema', false);
     }
 
     protected function tearDown(): void

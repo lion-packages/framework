@@ -18,6 +18,7 @@ use Lion\Bundle\Interface\CapsuleInterface;
  * @property string $users_nickname [Property for users_nickname]
  * @property string $users_email [Property for users_email]
  * @property string $users_password [Property for users_password]
+ * @property string $users_activation_code [Property for users_activation_code]
  * @property string $users_code [Property for users_code]
  *
  * @package Database\Class\LionDatabase\MySQL
@@ -88,6 +89,13 @@ class Users implements CapsuleInterface
 	private ?string $users_password = null;
 
 	/**
+	 * [Property for users_activation_code]
+	 *
+	 * @var string|null $users_activation_code
+	 */
+	private ?string $users_activation_code = null;
+
+	/**
 	 * [Property for users_code]
 	 *
 	 * @var string|null $users_code
@@ -117,6 +125,7 @@ class Users implements CapsuleInterface
 			->setUsersNickname(request->users_nickname ?? null)
 			->setUsersEmail(request->users_email ?? null)
 			->setUsersPassword(request->users_password ?? null)
+			->setUsersActivationCode(request->users_activation_code ?? null)
 			->setUsersCode(request->users_code ?? null);
 
 		return $this;
@@ -334,6 +343,30 @@ class Users implements CapsuleInterface
     public function setUsersPassword(?string $users_password = null): Users
     {
         $this->users_password = $users_password;
+
+        return $this;
+    }
+
+    /**
+     * Getter method for 'users_activation_code'
+     *
+     * @return string|null
+     */
+    public function getUsersActivationCode(): ?string
+    {
+        return $this->users_activation_code;
+    }
+
+    /**
+     * Setter method for 'users_activation_code'
+     *
+     * @param string|null $users_activation_code
+     *
+     * @return Users
+     */
+    public function setUsersActivationCode(?string $users_activation_code = null): Users
+    {
+        $this->users_activation_code = $users_activation_code;
 
         return $this;
     }

@@ -37,6 +37,7 @@ class UsersFactory implements FactoryInterface
             'users_nickname',
             'users_email',
             'users_password',
+            'users_activation_code',
             'users_code'
         ];
     }
@@ -58,6 +59,7 @@ class UsersFactory implements FactoryInterface
                 fake()->userName(),
                 'root@dev.com',
                 $validation->passwordHash($validation->sha256(self::USERS_PASSWORD)),
+                null,
                 uniqid('code-')
             ],
             [
@@ -69,6 +71,7 @@ class UsersFactory implements FactoryInterface
                 fake()->userName(),
                 'manager@dev.com',
                 $validation->passwordHash($validation->sha256(self::USERS_PASSWORD)),
+                null,
                 uniqid('code-')
             ]
         ];

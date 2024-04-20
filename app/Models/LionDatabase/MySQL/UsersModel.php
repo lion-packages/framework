@@ -32,6 +32,7 @@ class UsersModel
             $users->getUsersNickname(),
             $users->getUsersEmail(),
             $users->getUsersPassword(),
+            $users->getUsersActivationCode(),
             $users->getUsersCode(),
         ])->execute();
     }

@@ -25,7 +25,8 @@ return new class implements MigrationUpInterface
                 DB::varchar('users_nickname', 25)->null();
                 DB::varchar('users_email', 255)->notNull()->unique();
                 DB::blob('users_password')->notNull();
-                DB::varchar('users_code', 45)->notNull()->unique();
+                DB::varchar('users_activation_code', 6)->null();
+                DB::varchar('users_code', 18)->notNull()->unique();
             })
             ->execute();
     }
