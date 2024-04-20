@@ -21,7 +21,7 @@ Route::prefix('api', function () {
     Route::prefix('auth', function () {
         Route::post('login', [LoginController::class, 'auth']);
         Route::post('register', [RegistrationController::class, 'register']);
-        Route::post('verify', [RegistrationController::class, 'verify']);
+        Route::post('verify', [RegistrationController::class, 'verifyAccount']);
     });
 
     Route::middleware(['jwt-authorize'], function () {

@@ -84,6 +84,21 @@ class UsersModel
     }
 
     /**
+     * Update an account verification code
+     *
+     * @param Users $users [Object of the Users entity]
+     *
+     * @return object
+     */
+    public function updateVerificationCodeDB(Users $users): object
+    {
+        return DB::call('update_activation_code', [
+            $users->getUsersActivationCode(),
+            $users->getIdusers()
+        ])->execute();
+    }
+
+    /**
      * Delete users
      *
      * @param Users $users [Object of the Users entity]

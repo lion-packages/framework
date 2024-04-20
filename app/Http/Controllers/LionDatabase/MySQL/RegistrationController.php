@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Exceptions\AuthenticationException;
 use App\Http\Services\LionDatabase\MySQL\RegistrationService;
+use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Lion\Request\Request;
 use Lion\Security\Validation;
 
 /**
@@ -47,5 +50,32 @@ class RegistrationController
         }
 
         return $response;
+    }
+
+    /**
+     * Validate if an account validation code is correct
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param RegistrationModel $registrationModel [Validate in the database if
+     * the registration and verification are valid]
+     * @param RegistrationService $registrationService [Service that assists the
+     * user registration process]
+     *
+     * @return object
+     */
+    public function verifyAccount(
+        Users $users,
+        RegistrationModel $registrationModel,
+        RegistrationService $registrationService
+    ): object {
+        $data = $registrationModel->verifyAccountDB(
+            $users
+                ->setUsersEmail(request->users_email)
+                ->setUsersActivationCode(request->users_activation_code)
+        );
+
+        $registrationService->verifyAccount($users, $data);
+
+        return success('user account has been successfully verified');
     }
 }

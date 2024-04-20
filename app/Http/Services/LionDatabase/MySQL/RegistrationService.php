@@ -4,17 +4,37 @@ declare(strict_types=1);
 
 namespace App\Http\Services\LionDatabase\MySQL;
 
+use App\Exceptions\AuthenticationException;
 use App\Html\Email\VerifyAccountHtml;
+use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
+use Lion\Request\Request;
 
 /**
  * Service that assists the user registration process
+ *
+ * @property UsersModel $usersModel [Model for the Users entity]
  *
  * @package App\Http\Services\LionDatabase\MySQL
  */
 class RegistrationService
 {
+    /**
+     * [Model for the Users entity]
+     *
+     * @var UsersModel $usersModel
+     */
+    private UsersModel $usersModel;
+
+    /**
+     * @required
+     */
+    public function setUsersModel(UsersModel $usersModel): void
+    {
+        $this->usersModel = $usersModel;
+    }
+
     /**
      * Send a verification email to the user's account adding the process to the
      * task queue
@@ -30,5 +50,37 @@ class RegistrationService
             'account' => $users->getUsersEmail(),
             'code' => $users->getUsersActivationCode()
         ]));
+    }
+
+    /**
+     * Check and validate if the account verification code is correct
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param object $data [Account verification code]
+     *
+     * @return void
+     *
+     * @throws AuthenticationException [Throws an error if the verification code
+     * has no matches]
+     */
+    public function verifyAccount(Users $users, object $data): void
+    {
+        if (isSuccess($data)) {
+            throw new AuthenticationException('verification code is invalid [ERR-1]', Request::HTTP_FORBIDDEN);
+        }
+
+        if ($data->users_activation_code != $users->getUsersActivationCode()) {
+            throw new AuthenticationException('verification code is invalid [ERR-2]', Request::HTTP_FORBIDDEN);
+        }
+
+        $response = $this->usersModel->updateVerificationCodeDB(
+            $users
+                ->setUsersActivationCode(null)
+                ->setIdusers($data->idusers)
+        );
+
+        if (isError($response)) {
+            throw new AuthenticationException('verification code is invalid [ERR-3]', Request::HTTP_FORBIDDEN);
+        }
     }
 }

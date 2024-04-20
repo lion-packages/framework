@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
-use Lion\Command\Kernel;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Request;
 use Lion\Request\Response;
 use Lion\Route\Route;
 use Lion\Test\Test;
+use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class LoginControllerTest extends Test
 {
+    use SetUpMigrationsAndQueuesProviderTrait;
+
     const API_URL = 'http://127.0.0.1:8000/api/auth/login';
 
     protected function setUp(): void
     {
-        (new Kernel)->execute('php lion migrate:fresh --seed && php lion schedule:schema', false);
+        $this->runMigrationsAndQueues();
     }
 
     protected function tearDown(): void
