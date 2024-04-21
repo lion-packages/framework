@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Html\Email\VerifyAccountHtml;
 use Lion\Bundle\Enums\LogTypeEnum;
 use Lion\Bundle\Enums\TaskStatusEnum;
 use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
+use Lion\Mailer\Mailer;
+use Lion\Mailer\Priority;
 
 /**
  * -----------------------------------------------------------------------------
@@ -15,10 +18,10 @@ use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
  **/
 
 TaskQueue::add(
-    'example',
+    'send:email:account-verifify',
     (
         /**
-         * [Description]
+         * Send emails for account validation
          *
          * @param object $queue [Queued task object]
          *
@@ -30,7 +33,16 @@ TaskQueue::add(
             $data = (object) json_decode($queue->task_queue_data, true);
 
             try {
-                // ...
+                /** @var VerifyAccountHtml $htmlTemplate */
+                $htmlTemplate = new $data->template;
+
+                Mailer::account(env('MAIL_NAME'))
+                    ->subject('Registration Confirmation - Please Verify Your Email')
+                    ->from(env('MAIL_USER_NAME'), 'Lion-Packages')
+                    ->addAddress($data->account)
+                    ->body($htmlTemplate->template()->replace('{{CODE_REPLACE}}', $data->code)->get())
+                    ->priority(Priority::HIGH)
+                    ->send();
             } catch (Exception $e) {
                 TaskQueue::edit($queue, TaskStatusEnum::FAILED);
 
@@ -38,7 +50,7 @@ TaskQueue::add(
                     'idtask_queue' => $queue->idtask_queue,
                     'task_queue_type' => $queue->task_queue_type,
                     'task_queue_data' => $queue->task_queue_data
-                ]);
+                ], false);
             }
         }
     )

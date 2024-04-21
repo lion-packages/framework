@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use App\Http\Services\LionDatabase\MySQL\LoginService;
 use Exception;
 use JsonSerializable;
+use Lion\Request\Response;
 
 /**
  * Exception handling for user authentication
@@ -20,6 +20,6 @@ class AuthenticationException extends Exception implements JsonSerializable
      */
     public function jsonSerialize(): mixed
     {
-        return response(LoginService::AUTH_ERROR, $this->getMessage(), $this->getCode());
+        return response(Response::SESSION_ERROR, $this->getMessage(), $this->getCode());
     }
 }

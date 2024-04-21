@@ -32,6 +32,7 @@ class UsersModel
             $users->getUsersNickname(),
             $users->getUsersEmail(),
             $users->getUsersPassword(),
+            $users->getUsersActivationCode(),
             $users->getUsersCode(),
         ])->execute();
     }
@@ -79,6 +80,21 @@ class UsersModel
             $users->getUsersNickname(),
             $users->getUsersEmail(),
             $users->getIdusers(),
+        ])->execute();
+    }
+
+    /**
+     * Update an account verification code
+     *
+     * @param Users $users [Object of the Users entity]
+     *
+     * @return object
+     */
+    public function updateVerificationCodeDB(Users $users): object
+    {
+        return DB::call('update_activation_code', [
+            $users->getUsersActivationCode(),
+            $users->getIdusers()
         ])->execute();
     }
 

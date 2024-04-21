@@ -25,13 +25,6 @@ use Lion\Security\RSA;
 class LoginService
 {
     /**
-     * [Defines the error state for an unauthorized session]
-     *
-     * @const AUTH_ERROR
-     */
-    const AUTH_ERROR = 'auth-error';
-
-    /**
      * [Allows you to generate the required configuration for public and private
      * keys, has methods that allow you to encrypt and decrypt data with RSA]
      *

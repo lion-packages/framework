@@ -31,6 +31,7 @@ class UsersController
             $users
                 ->capsule()
                 ->setUsersPassword($validation->passwordHash($users->getUsersPassword()))
+                ->setUsersActivationCode(fake()->numerify('######'))
                 ->setUsersCode(uniqid('code-'))
         );
     }

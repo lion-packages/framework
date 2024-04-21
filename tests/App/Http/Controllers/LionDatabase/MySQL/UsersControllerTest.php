@@ -6,15 +6,16 @@ namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
-use Lion\Command\Kernel;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Route\Route;
 use Lion\Test\Test;
 use Tests\Providers\AuthJwtProviderTrait;
+use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class UsersControllerTest extends Test
 {
     use AuthJwtProviderTrait;
+    use SetUpMigrationsAndQueuesProviderTrait;
 
     const API_URL = 'http://127.0.0.1:8000/api/users';
     const JSON_UPDATE_USERS = [
@@ -29,7 +30,7 @@ class UsersControllerTest extends Test
 
     protected function setUp(): void
     {
-        (new Kernel())->execute('php lion migrate:fresh --seed', false);
+        $this->runMigrationsAndQueues();
     }
 
     protected function tearDown(): void

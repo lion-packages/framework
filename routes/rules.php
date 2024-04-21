@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Rules\LionDatabase\MySQL\DocumentTypes\IddocumentTypesRule;
 use App\Rules\LionDatabase\MySQL\Roles\IdrolesRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersActivationCodeRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersCitizenIdentificationRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRequiredRule;
@@ -43,6 +44,10 @@ Routes::setRules([
         '/api/auth/register' => [
             UsersEmailRule::class,
             UsersPasswordRule::class,
+        ],
+        '/api/auth/verify' => [
+            UsersActivationCodeRequiredRule::class,
+            UsersEmailRule::class,
         ],
         '/api/users' => [
             IdrolesRule::class,

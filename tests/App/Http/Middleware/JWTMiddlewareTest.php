@@ -17,7 +17,7 @@ class JWTMiddlewareTest extends Test
     public function testAuthorizeNotExistence(): void
     {
         $exception = $this->getExceptionFromApi(function () {
-            fetch(Route::GET, self::URI)->getBody()->getContents();
+            fetch(Route::GET, self::URI);
         });
 
         $this->assertInstanceOf(Exception::class, $exception);

@@ -25,11 +25,12 @@ class UsersModelTest extends Test
             ->setIdusers(1)
             ->setIdroles(RolesEnum::ADMINISTRATOR->value)
             ->setIddocumentTypes(DocumentTypesEnum::PASSPORT->value)
-            ->setUsersCitizenIdentification('##########')
+            ->setUsersCitizenIdentification(fake()->numerify('##########'))
             ->setUsersName('Sergio')
             ->setUsersLastName('Leon')
             ->setUsersEmail(fake()->email())
             ->setUsersPassword('cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481')
+            ->setUsersActivationCode(fake()->numerify('######'))
             ->setUsersCode(uniqid('code-'));
     }
 
@@ -54,6 +55,7 @@ class UsersModelTest extends Test
         $this->assertSame($this->users->getUsersLastName(), $users->users_last_name);
         $this->assertSame($this->users->getUsersEmail(), $users->users_email);
         $this->assertSame($this->users->getUsersPassword(), $users->users_password);
+        $this->assertSame($this->users->getUsersActivationCode(), $users->users_activation_code);
         $this->assertSame($this->users->getUsersCode(), $users->users_code);
     }
 
