@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
-use App\Exceptions\AuthenticationException;
 use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Lion\Request\Request;
 use Lion\Security\Validation;
 
 /**
