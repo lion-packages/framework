@@ -76,23 +76,6 @@ class LoginService
     }
 
     /**
-     * Verifies a password.
-     *
-     * @param string $usersPassword [The password provided by the user]
-     * @param string $sessionPassword [The password stored in the session]
-     *
-     * @return void
-     *
-     * @throws AuthenticationException [If the passwords do not match]
-     */
-    public function passwordVerify(string $usersPassword, string $sessionPassword): void
-    {
-        if (!password_verify($usersPassword, $sessionPassword)) {
-            throw new AuthenticationException('email/password is incorrect [AUTH-2]', Request::HTTP_UNAUTHORIZED);
-        }
-    }
-
-    /**
      * Generate a JWT token for user authorization
      *
      * @param string $path [Path where RSA public and private keys are defined]
@@ -104,7 +87,10 @@ class LoginService
     {
         return $this->jwt
             ->config([
-                'privateKey' => $this->rsa->setUrlPath($path)->init()->getPrivateKey()
+                'privateKey' => $this->rsa
+                    ->setUrlPath($path)
+                    ->init()
+                    ->getPrivateKey()
             ])
             ->encode($data, (int) env('JWT_EXP', 3600))
             ->get();

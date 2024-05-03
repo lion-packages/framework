@@ -12,7 +12,7 @@ trait AuthJwtProviderTrait
     const AVAILABLE_USERS = 2;
     const REMAINING_USERS = 1;
 
-    private function getAuthorization(): string
+    private function getAuthorization(array $data = []): string
     {
         $token = (new JWT)
             ->config([
@@ -23,6 +23,7 @@ trait AuthJwtProviderTrait
             ])
             ->encode([
                 'session' => true,
+                ...$data
             ], (int) env('JWT_EXP', 3600))
             ->get();
 
