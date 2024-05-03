@@ -45,7 +45,7 @@ class RegistrationService
      */
     public function sendVerifiyEmail(Users $users): void
     {
-        TaskQueue::push('send:email:account-verifify', json([
+        TaskQueue::push('send:email:account-verify', json([
             'template' => VerifyAccountHtml::class,
             'account' => $users->getUsersEmail(),
             'code' => $users->getUsersActivationCode()

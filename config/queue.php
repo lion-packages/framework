@@ -18,7 +18,7 @@ use Lion\Mailer\Priority;
  **/
 
 TaskQueue::add(
-    'send:email:account-verifify',
+    'send:email:account-verify',
     (
         /**
          * Send emails for account validation
