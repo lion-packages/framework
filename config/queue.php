@@ -17,6 +17,9 @@ use Lion\Mailer\Priority;
  * -----------------------------------------------------------------------------
  **/
 
+TaskQueue::add('send:email:account-recovery', function () {
+});
+
 TaskQueue::add(
     'send:email:account-verify',
     (
@@ -40,7 +43,12 @@ TaskQueue::add(
                     ->subject('Registration Confirmation - Please Verify Your Email')
                     ->from(env('MAIL_USER_NAME'), 'Lion-Packages')
                     ->addAddress($data->account)
-                    ->body($htmlTemplate->template()->replace('{{CODE_REPLACE}}', $data->code)->get())
+                    ->body(
+                        $htmlTemplate
+                            ->template()
+                            ->replace('{{ CODE_REPLACE }}', $data->code)
+                            ->get()
+                    )
                     ->priority(Priority::HIGH)
                     ->send();
             } catch (Exception $e) {

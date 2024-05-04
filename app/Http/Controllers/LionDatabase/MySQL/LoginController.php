@@ -33,7 +33,7 @@ class LoginController
         LoginService $loginService,
         PasswordManagerService $passwordManagerService
     ): object {
-        $loginService->validateSession($loginModel, $users->capsule());
+        $loginService->validateSession($users->capsule());
 
         $session = $loginModel->sessionDB($users);
 
@@ -43,7 +43,7 @@ class LoginController
             'email/password is incorrect [AUTH-2]'
         );
 
-        return success('Successfully authenticated user', Request::HTTP_OK, [
+        return success('successfully authenticated user', Request::HTTP_OK, [
             'jwt' => $loginService->getToken(storage_path(env('RSA_URL_PATH')), [
                 'session' => true,
                 'idusers' => $session->getIdusers(),

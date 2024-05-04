@@ -48,7 +48,7 @@ class RegistrationService
         TaskQueue::push('send:email:account-verify', json([
             'template' => VerifyAccountHtml::class,
             'account' => $users->getUsersEmail(),
-            'code' => $users->getUsersActivationCode()
+            'code' => $users->getUsersActivationCode(),
         ]));
     }
 
@@ -71,16 +71,6 @@ class RegistrationService
 
         if ($data->users_activation_code != $users->getUsersActivationCode()) {
             throw new AuthenticationException('verification code is invalid [ERR-2]', Request::HTTP_FORBIDDEN);
-        }
-
-        $response = $this->usersModel->updateVerificationCodeDB(
-            $users
-                ->setUsersActivationCode(null)
-                ->setIdusers($data->idusers)
-        );
-
-        if (isError($response)) {
-            throw new AuthenticationException('verification code is invalid [ERR-3]', Request::HTTP_FORBIDDEN);
         }
     }
 }

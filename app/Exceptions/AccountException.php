@@ -19,9 +19,6 @@ class AccountException extends Exception implements JsonSerializable
      */
     public function jsonSerialize(): mixed
     {
-        return error($this->getMessage(), $this->getCode(), [
-            'file' => $this->getFile(),
-            'line' => $this->getLine(),
-        ]);
+        return error($this->getMessage(), $this->getCode());
     }
 }

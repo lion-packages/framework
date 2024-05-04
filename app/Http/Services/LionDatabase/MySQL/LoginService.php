@@ -19,6 +19,7 @@ use Lion\Security\RSA;
  * data with RSA]
  * @property JWT $jwt [Allows you to generate the required configuration for JWT
  * tokens, has methods that allow you to encrypt and decrypt data with JWT]
+ * @property LoginModel $loginModel [Model for user authentication]
  *
  * @package App\Http\Services\LionDatabase\MySQL
  */
@@ -41,6 +42,13 @@ class LoginService
     private JWT $jwt;
 
     /**
+     * [Model for user authentication]
+     *
+     * @var LoginModel $loginModel
+     */
+    private LoginModel $loginModel;
+
+    /**
      * @required
      */
     public function setRSA(RSA $rsa): void
@@ -57,20 +65,27 @@ class LoginService
     }
 
     /**
+     * @required
+     */
+    public function setLoginModel(LoginModel $loginModel): void
+    {
+        $this->loginModel = $loginModel;
+    }
+
+    /**
      * Validates the user session
      *
-     * @param LoginModel $loginModel [Model for user authentication]
      * @param Users $users [Capsule for the 'Users' entity]
      *
      * @return void
      *
      * @throws AuthenticationException [If the authentication fails]
      */
-    public function validateSession(LoginModel $loginModel, Users $users): void
+    public function validateSession(Users $users): void
     {
-        $auth = $loginModel->authDB($users);
+        $auth = $this->loginModel->authDB($users);
 
-        if ($auth->count === 0) {
+        if ($auth->count === 0 || $auth->count === "0") {
             throw new AuthenticationException('email/password is incorrect [AUTH-1]', Request::HTTP_UNAUTHORIZED);
         }
     }

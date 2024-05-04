@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Http\Services\JWTService;
+use App\Http\Services\LionDatabase\MySQL\AccountService;
+use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\PasswordManagerModel;
+use App\Models\LionDatabase\MySQL\UsersModel;
+use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
 use Lion\Security\Validation;
 
@@ -18,6 +22,39 @@ use Lion\Security\Validation;
 class PasswordManagerController
 {
     /**
+     * Manage user password recovery by sending a verification email
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param PasswordManagerService $passwordManagerService [Manage different
+     * processes for strong password verifications]
+     *
+     * @return object
+     */
+    public function recoveryPassword(
+        Users $users,
+        UsersModel $usersModel,
+        AccountService $accountService,
+        PasswordManagerService $passwordManagerService,
+        LoginService $loginService
+    ): object {
+        $loginService->validateSession($users->setUsersEmail(request->users_email));
+
+        $user = $usersModel->readUsersByEmailDB($users);
+
+        $code = fake()->numerify('######');
+
+        $users
+            ->setIdusers($user->idusers)
+            ->setUsersRecoveryCode($code);
+
+        $accountService->updateVerificationCode($users);
+
+        $accountService->sendRecoveryCode($users);
+
+        return success('confirmation code sent, check your email inbox to see your verification code');
+    }
+
+    /**
      * Manage system password recovery
      *
      * @param PasswordManager $passwordManager [Capsule for the
@@ -27,6 +64,8 @@ class PasswordManagerController
      * @param PasswordManagerService $passwordManagerService [Manage different
      * processes for strong password verifications]
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
+     * @param Validation $validation [Allows you to validate form data and
+     * generate encryption safely]
      *
      * @return object
      */
@@ -39,18 +78,20 @@ class PasswordManagerController
     ): object {
         $data = $jWTService->getTokenData(storage_path(env('RSA_URL_PATH')));
 
-        $users = $passwordManagerModel->getPasswordDB($passwordManager->capsule()->setIdusers($data->idusers));
+        $users = $passwordManagerModel->getPasswordDB(
+            $passwordManager
+                ->capsule()
+                ->setIdusers($data->idusers)
+        );
 
         $passwordManagerService->verifyPasswords(
             $users->users_password,
-            $passwordManager->getUsersPassword(),
-            "the user's password is not valid [ERR-1]"
+            $passwordManager->getUsersPassword()
         );
 
         $passwordManagerService->comparePasswords(
             $passwordManager->getUsersPasswordNew(),
-            $passwordManager->getUsersPasswordConfirm(),
-            "the user's password is not valid [ERR-2]"
+            $passwordManager->getUsersPasswordConfirm()
         );
 
         $passwordManagerModel->updatePasswordDB(

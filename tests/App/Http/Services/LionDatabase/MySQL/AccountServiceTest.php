@@ -113,4 +113,24 @@ class AccountServiceTest extends Test
 
         $this->assertSame($code, $user->users_recovery_code);
     }
+
+    public function testUpdateActivationCode(): void
+    {
+        $users = (new Users())
+            ->setUsersEmail(self::USERS_EMAIL);
+
+        $user = (new UsersModel())->readUsersByEmailDB($users);
+
+        $code = fake()->numerify('######');
+
+        $users
+            ->setIdusers($user->idusers)
+            ->setUsersActivationCode($code);
+
+        $this->accountService->updateActivationCode($users);
+
+        $user = (new UsersModel())->readUsersByEmailDB($users);
+
+        $this->assertSame($code, $user->users_activation_code);
+    }
 }

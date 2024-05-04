@@ -113,4 +113,22 @@ class AccountService
             throw new AccountException('verification code is invalid [ERR-3]', Request::HTTP_UNAUTHORIZED);
         }
     }
+
+    /**
+     * Update the activation code for a user's account
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
+     * @return void
+     *
+     * @throws AccountException [If the code does not update]
+     */
+    public function updateActivationCode(Users $users): void
+    {
+        $response = $this->usersModel->updateActivationCodeDB($users);
+
+        if (isError($response)) {
+            throw new AccountException('verification code is invalid [ERR-3]', Request::HTTP_FORBIDDEN);
+        }
+    }
 }

@@ -29,18 +29,7 @@ class LoginServiceTest extends Test
         $this->expectException(AuthenticationException::class);
 
         $this->loginService->validateSession(
-            new LoginModel(),
             (new Users())->setUsersEmail(fake()->email())
-        );
-    }
-
-    public function testPasswordVerify(): void
-    {
-        $this->expectException(AuthenticationException::class);
-
-        $this->loginService->passwordVerify(
-            $this->validation->sha256('lion'),
-            $this->validation->passwordHash($this->validation->sha256('test'))
         );
     }
 

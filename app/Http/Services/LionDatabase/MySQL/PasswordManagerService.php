@@ -19,15 +19,19 @@ class PasswordManagerService
      *
      * @param string $usersPassword [The password provided by the user]
      * @param string $passwordEntered [The password stored in the session]
+     * @param string $message [Exception message]
      *
      * @return void
      *
      * @throws PasswordException [If the passwords do not match]
      */
-    public function verifyPasswords(string $usersPassword, string $passwordEntered): void
-    {
+    public function verifyPasswords(
+        string $usersPassword,
+        string $passwordEntered,
+        string $message = 'password is incorrect [ERR-1]'
+    ): void {
         if (!password_verify($passwordEntered, $usersPassword)) {
-            throw new PasswordException('password is incorrect [ERR-1]', Request::HTTP_UNAUTHORIZED);
+            throw new PasswordException($message, Request::HTTP_UNAUTHORIZED);
         }
     }
 

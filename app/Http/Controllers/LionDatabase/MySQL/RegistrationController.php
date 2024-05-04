@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
@@ -64,7 +65,8 @@ class RegistrationController
     public function verifyAccount(
         Users $users,
         RegistrationModel $registrationModel,
-        RegistrationService $registrationService
+        RegistrationService $registrationService,
+        AccountService $accountService,
     ): object {
         $data = $registrationModel->verifyAccountDB(
             $users
@@ -73,6 +75,12 @@ class RegistrationController
         );
 
         $registrationService->verifyAccount($users, $data);
+
+        $accountService->updateActivationCode(
+            $users
+                ->setUsersActivationCode(null)
+                ->setIdusers($data->idusers)
+        );
 
         return success('user account has been successfully verified');
     }

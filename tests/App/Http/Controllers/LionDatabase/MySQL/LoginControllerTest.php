@@ -48,7 +48,7 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('jwt', $auth->data);
         $this->assertSame(Request::HTTP_OK, $auth->code);
         $this->assertSame(Response::SUCCESS, $auth->status);
-        $this->assertSame('Successfully authenticated user', $auth->message);
+        $this->assertSame('successfully authenticated user', $auth->message);
     }
 
     public function testAuthIncorrect1(): void
@@ -82,7 +82,7 @@ class LoginControllerTest extends Test
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
             'code' => Request::HTTP_UNAUTHORIZED,
-            'status' => Response::SESSION_ERROR,
+            'status' => Response::ERROR,
             'message' => 'email/password is incorrect [AUTH-2]'
         ]);
     }
