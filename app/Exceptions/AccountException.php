@@ -8,11 +8,11 @@ use Exception;
 use JsonSerializable;
 
 /**
- * Exception handling for user passwords
+ * Exception handling for user accounts
  *
  * @package App\Exceptions
  */
-class PasswordException extends Exception implements JsonSerializable
+class AccountException extends Exception implements JsonSerializable
 {
     /**
      * {@inheritdoc}
