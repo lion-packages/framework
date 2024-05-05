@@ -31,7 +31,7 @@ class DocumentTypesTest extends Test
     {
         $this->assertInstances($this->documentTypes->setIddocumentTypes(self::IDDOCUMENT_TYPES), [
             DocumentTypes::class,
-            CapsuleInterface::class
+            CapsuleInterface::class,
         ]);
 
         $this->assertSame(self::IDDOCUMENT_TYPES, $this->documentTypes->getIddocumentTypes());
@@ -48,7 +48,7 @@ class DocumentTypesTest extends Test
     {
         $this->assertInstances($this->documentTypes->setDocumentTypesName(self::DOCUMENT_TYPES_NAME), [
             DocumentTypes::class,
-            CapsuleInterface::class
+            CapsuleInterface::class,
         ]);
 
         $this->assertSame(self::DOCUMENT_TYPES_NAME, $this->documentTypes->getDocumentTypesName());
