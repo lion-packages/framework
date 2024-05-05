@@ -17,6 +17,9 @@ class PasswordManagerModel
     /**
      * Query a user's password in the database
      *
+     * @param PasswordManager $passwordManager [Capsule for the
+     * 'PasswordManager' entity]
+     *
      * @return array|object
      */
     public function getPasswordDB(PasswordManager $passwordManager): array|object
@@ -39,7 +42,7 @@ class PasswordManagerModel
     {
         return DB::call('update_password', [
             $passwordManager->getUsersPasswordConfirm(),
-            $passwordManager->getIdusers()
+            $passwordManager->getIdusers(),
         ])->execute();
     }
 }
