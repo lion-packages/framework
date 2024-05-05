@@ -31,6 +31,7 @@ class UsersModelTest extends Test
             ->setUsersEmail(fake()->email())
             ->setUsersPassword('cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481')
             ->setUsersActivationCode(fake()->numerify('######'))
+            ->setUsersRecoveryCode(null)
             ->setUsersCode(uniqid('code-'));
     }
 
@@ -103,6 +104,27 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
     }
 
+    public function testReadUsersByEmailDB(): void
+    {
+        $this->assertTrue(isSuccess($this->usersModel->createUsersDB($this->users)));
+
+        $users = $this->usersModel->readUsersByEmailDB($this->users);
+
+        $this->assertIsObject($users);
+
+        $this->assertSame($this->users->getUsersName(), $users->users_name);
+        $this->assertSame($this->users->getUsersLastName(), $users->users_last_name);
+    }
+
+    public function testReadUsersByEmailDBNotAvailableData(): void
+    {
+        $response = $this->usersModel->readUsersByEmailDB($this->users);
+
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+    }
+
     public function testUpdateUsersDB(): void
     {
         $this->assertTrue(isSuccess($this->usersModel->createUsersDB($this->users)));
@@ -123,6 +145,64 @@ class UsersModelTest extends Test
 
         $this->assertSame($this->users->getUsersName(), $firstUser->users_name);
         $this->assertSame($this->users->getUsersLastName(), $firstUser->users_last_name);
+    }
+
+    public function testUpdateActivationCodeDB(): void
+    {
+        $this->assertTrue(isSuccess($this->usersModel->createUsersDB($this->users)));
+
+        $user = $this->usersModel->readUsersByEmailDB($this->users);
+
+        $this->assertIsObject($user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $code = fake()->numerify('######');
+
+        $response = $this->usersModel->updateActivationCodeDB(
+            $this->users
+                ->setIdusers($user->idusers)
+                ->setUsersActivationCode($code)
+        );
+
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+
+        $user = $this->usersModel->readUsersByEmailDB($this->users);
+
+        $this->assertIsObject($user);
+        $this->assertObjectHasProperty('idusers', $user);
+        $this->assertObjectHasProperty('users_activation_code', $user);
+        $this->assertSame($code, $user->users_activation_code);
+    }
+
+    public function testUpdateRecoveryCodeDB(): void
+    {
+        $this->assertTrue(isSuccess($this->usersModel->createUsersDB($this->users)));
+
+        $user = $this->usersModel->readUsersByEmailDB($this->users);
+
+        $this->assertIsObject($user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $code = fake()->numerify('######');
+
+        $response = $this->usersModel->updateRecoveryCodeDB(
+            $this->users
+                ->setIdusers($user->idusers)
+                ->setUsersRecoveryCode($code)
+        );
+
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+
+        $user = $this->usersModel->readUsersByEmailDB($this->users);
+
+        $this->assertIsObject($user);
+        $this->assertObjectHasProperty('idusers', $user);
+        $this->assertObjectHasProperty('users_recovery_code', $user);
+        $this->assertSame($code, $user->users_recovery_code);
     }
 
     public function testDeleteUsersDB(): void
