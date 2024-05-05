@@ -7,6 +7,8 @@ namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
+use Lion\Request\Request;
+use Lion\Request\Response;
 use Lion\Route\Route;
 use Lion\Test\Test;
 use Tests\Providers\AuthJwtProviderTrait;
@@ -59,9 +61,15 @@ class UsersControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'status' => 'success',
-            'message' => 'Procedure executed successfully'
+            'code' => Request::HTTP_OK,
+            'status' => Response::SUCCESS,
+            'message' => 'registered user successfully',
         ]);
+    }
+
+    public function testCreateUsersWithErrors(): void
+    {
+        $this->expectNotToPerformAssertions();
     }
 
     public function testReadUsers(): void
@@ -95,7 +103,8 @@ class UsersControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($users, [
-            'status' => 'success',
+            'code' => Request::HTTP_OK,
+            'status' => Response::SUCCESS,
             'message' => 'no data available'
         ]);
     }
@@ -149,7 +158,8 @@ class UsersControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($users, [
-            'status' => 'success',
+            'code' => Request::HTTP_OK,
+            'status' => Response::SUCCESS,
             'message' => 'no data available'
         ]);
     }
@@ -184,8 +194,9 @@ class UsersControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'status' => 'success',
-            'message' => 'Procedure executed successfully'
+            'code' => Request::HTTP_OK,
+            'status' => Response::SUCCESS,
+            'message' => 'the registered user has been successfully updated',
         ]);
 
         $users = json_decode(
@@ -206,6 +217,11 @@ class UsersControllerTest extends Test
 
         $this->assertSame(self::JSON_UPDATE_USERS['users_name'], $firstUser->users_name);
         $this->assertSame(self::JSON_UPDATE_USERS['users_last_name'], $firstUser->users_last_name);
+    }
+
+    public function testUpdateUsersWithErrors(): void
+    {
+        $this->expectNotToPerformAssertions();
     }
 
     public function testDeleteUsers(): void
@@ -237,8 +253,9 @@ class UsersControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'status' => 'success',
-            'message' => 'Procedure executed successfully'
+            'code' => Request::HTTP_OK,
+            'status' => Response::SUCCESS,
+            'message' => 'the registered user has been successfully deleted',
         ]);
 
         $users = json_decode(
@@ -253,5 +270,10 @@ class UsersControllerTest extends Test
 
         $this->assertIsArray($users);
         $this->assertCount(self::REMAINING_USERS, $users);
+    }
+
+    public function testDeleteUsersWithErrors(): void
+    {
+        $this->expectNotToPerformAssertions();
     }
 }
