@@ -44,6 +44,23 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
+    public function testRecoveryPasswordIncorrect1(): void
+    {
+        $exception = $this->getExceptionFromApi(function () {
+            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/recovery'), [
+                'json' => [
+                    'users_email' => fake()->email()
+                ]
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Request::HTTP_UNAUTHORIZED,
+            'status' => Response::SESSION_ERROR,
+            'message' => 'email/password is incorrect [AUTH-1]',
+        ]);
+    }
+
     public function testUpdatePassword(): void
     {
         $users = (new UsersModel())->readUsersDB();
@@ -74,6 +91,72 @@ class PasswordManagerControllerTest extends Test
             'code' => Request::HTTP_OK,
             'status' => Response::SUCCESS,
             'message' => 'password updated successfully',
+        ]);
+    }
+
+    public function testUpdatePasswordIncorrect1(): void
+    {
+        $users = (new UsersModel())->readUsersDB();
+
+        $this->assertIsArray($users);
+
+        $user = reset($users);
+
+        $this->assertIsObject($user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $exception = $this->getExceptionFromApi(function () use ($user) {
+            $validation = new Validation();
+
+            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/update'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
+                ],
+                'json' => [
+                    'users_password' => $validation->sha256(self::USERS_PASSWORD),
+                    'users_password_new' => $validation->sha256(self::USERS_PASSWORD),
+                    'users_password_confirm' => $validation->sha256(self::USERS_PASSWORD),
+                ]
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Request::HTTP_UNAUTHORIZED,
+            'status' => Response::ERROR,
+            'message' => 'password is incorrect [ERR-1]',
+        ]);
+    }
+
+    public function testUpdatePasswordIncorrect2(): void
+    {
+        $users = (new UsersModel())->readUsersDB();
+
+        $this->assertIsArray($users);
+
+        $user = reset($users);
+
+        $this->assertIsObject($user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $exception = $this->getExceptionFromApi(function () use ($user) {
+            $validation = new Validation();
+
+            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/update'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
+                ],
+                'json' => [
+                    'users_password' => $validation->sha256(UsersFactory::USERS_PASSWORD),
+                    'users_password_new' => $validation->sha256(UsersFactory::USERS_PASSWORD),
+                    'users_password_confirm' => $validation->sha256(self::USERS_PASSWORD),
+                ]
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Request::HTTP_UNAUTHORIZED,
+            'status' => Response::ERROR,
+            'message' => 'password is incorrect [ERR-2]',
         ]);
     }
 }

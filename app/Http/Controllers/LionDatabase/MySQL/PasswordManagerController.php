@@ -12,7 +12,6 @@ use App\Models\LionDatabase\MySQL\PasswordManagerModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
-use Lion\Security\Validation;
 
 /**
  * Driver to manage passwords
@@ -63,8 +62,6 @@ class PasswordManagerController
      * @param PasswordManagerService $passwordManagerService [Manage different
      * processes for strong password verifications]
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
-     * @param Validation $validation [Allows you to validate form data and
-     * generate encryption safely]
      *
      * @return object
      */
@@ -72,31 +69,22 @@ class PasswordManagerController
         PasswordManager $passwordManager,
         PasswordManagerModel $passwordManagerModel,
         PasswordManagerService $passwordManagerService,
-        JWTService $jWTService,
-        Validation $validation
+        JWTService $jWTService
     ): object {
-        $data = $jWTService->getTokenData(storage_path(env('RSA_URL_PATH')));
-
         $users = $passwordManagerModel->getPasswordDB(
             $passwordManager
                 ->capsule()
-                ->setIdusers($data->idusers)
+                ->setIdusers($jWTService->getTokenData(storage_path(env('RSA_URL_PATH')))->idusers)
         );
 
-        $passwordManagerService->verifyPasswords(
-            $users->users_password,
-            $passwordManager->getUsersPassword()
-        );
+        $passwordManagerService->verifyPasswords($users->users_password, $passwordManager->getUsersPassword());
 
         $passwordManagerService->comparePasswords(
             $passwordManager->getUsersPasswordNew(),
             $passwordManager->getUsersPasswordConfirm()
         );
 
-        $passwordManagerModel->updatePasswordDB(
-            $passwordManager
-                ->setUsersPasswordConfirm($validation->passwordHash($passwordManager->getUsersPasswordConfirm()))
-        );
+        $passwordManagerService->updatePassword($passwordManagerModel, $passwordManager);
 
         return success('password updated successfully');
     }
