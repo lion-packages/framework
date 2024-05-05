@@ -128,7 +128,7 @@ class AccountService
         $response = $this->usersModel->updateActivationCodeDB($users);
 
         if (isError($response)) {
-            throw new AccountException('verification code is invalid [ERR-3]', Request::HTTP_FORBIDDEN);
+            throw new AccountException('verification code is invalid [ERR-3]', Request::HTTP_UNAUTHORIZED);
         }
     }
 }

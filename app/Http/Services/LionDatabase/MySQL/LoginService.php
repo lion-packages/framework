@@ -12,7 +12,7 @@ use Lion\Security\JWT;
 use Lion\Security\RSA;
 
 /**
- * Service 'LoginService'
+ * Allows you to manage the user authentication process
  *
  * @property RSA $rsa [Allows you to generate the required configuration for
  * public and private keys, has methods that allow you to encrypt and decrypt

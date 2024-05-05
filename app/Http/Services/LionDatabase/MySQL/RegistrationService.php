@@ -6,7 +6,6 @@ namespace App\Http\Services\LionDatabase\MySQL;
 
 use App\Exceptions\AuthenticationException;
 use App\Html\Email\VerifyAccountHtml;
-use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
 use Lion\Request\Request;
@@ -14,27 +13,10 @@ use Lion\Request\Request;
 /**
  * Service that assists the user registration process
  *
- * @property UsersModel $usersModel [Model for the Users entity]
- *
  * @package App\Http\Services\LionDatabase\MySQL
  */
 class RegistrationService
 {
-    /**
-     * [Model for the Users entity]
-     *
-     * @var UsersModel $usersModel
-     */
-    private UsersModel $usersModel;
-
-    /**
-     * @required
-     */
-    public function setUsersModel(UsersModel $usersModel): void
-    {
-        $this->usersModel = $usersModel;
-    }
-
     /**
      * Send a verification email to the user's account adding the process to the
      * task queue

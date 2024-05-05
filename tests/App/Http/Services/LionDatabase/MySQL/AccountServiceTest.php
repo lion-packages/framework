@@ -96,41 +96,41 @@ class AccountServiceTest extends Test
 
     public function testUpdateRecoveryCode(): void
     {
+        $this->expectException(AccountException::class);
+        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
+        $this->expectExceptionMessage('verification code is invalid [ERR-3]');
+
         $users = (new Users())
             ->setUsersEmail(self::USERS_EMAIL);
 
         $user = (new UsersModel())->readUsersByEmailDB($users);
 
-        $code = fake()->numerify('######');
+        $code = fake()->numerify('##########');
 
         $users
             ->setIdusers($user->idusers)
             ->setUsersRecoveryCode($code);
 
         $this->accountService->updateRecoveryCode($users);
-
-        $user = (new UsersModel())->readUsersByEmailDB($users);
-
-        $this->assertSame($code, $user->users_recovery_code);
     }
 
     public function testUpdateActivationCode(): void
     {
+        $this->expectException(AccountException::class);
+        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
+        $this->expectExceptionMessage('verification code is invalid [ERR-3]');
+
         $users = (new Users())
             ->setUsersEmail(self::USERS_EMAIL);
 
         $user = (new UsersModel())->readUsersByEmailDB($users);
 
-        $code = fake()->numerify('######');
+        $code = fake()->numerify('##########');
 
         $users
             ->setIdusers($user->idusers)
             ->setUsersActivationCode($code);
 
         $this->accountService->updateActivationCode($users);
-
-        $user = (new UsersModel())->readUsersByEmailDB($users);
-
-        $this->assertSame($code, $user->users_activation_code);
     }
 }

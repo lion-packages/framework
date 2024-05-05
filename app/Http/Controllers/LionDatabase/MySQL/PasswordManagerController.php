@@ -25,8 +25,10 @@ class PasswordManagerController
      * Manage user password recovery by sending a verification email
      *
      * @param Users $users [Capsule for the 'Users' entity]
-     * @param PasswordManagerService $passwordManagerService [Manage different
-     * processes for strong password verifications]
+     * @param UsersModel $usersModel [Model for the Users entity]
+     * @param AccountService $accountService [Manage user account processes]
+     * @param LoginService $loginService [Allows you to manage the user
+     * authentication process]
      *
      * @return object
      */
@@ -34,20 +36,17 @@ class PasswordManagerController
         Users $users,
         UsersModel $usersModel,
         AccountService $accountService,
-        PasswordManagerService $passwordManagerService,
         LoginService $loginService
     ): object {
         $loginService->validateSession($users->setUsersEmail(request->users_email));
 
         $user = $usersModel->readUsersByEmailDB($users);
 
-        $code = fake()->numerify('######');
-
         $users
             ->setIdusers($user->idusers)
-            ->setUsersRecoveryCode($code);
+            ->setUsersRecoveryCode(fake()->numerify('######'));
 
-        $accountService->updateVerificationCode($users);
+        $accountService->updateRecoveryCode($users);
 
         $accountService->sendRecoveryCode($users);
 

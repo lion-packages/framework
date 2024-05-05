@@ -26,6 +26,7 @@ Route::prefix('api', function () {
 
         Route::prefix('password', function () {
             Route::post('recovery', [PasswordManagerController::class, 'recoveryPassword']);
+            Route::post('recovery-code', [PasswordManagerController::class, '']);
             Route::post('update', [PasswordManagerController::class, 'updatePassword'], ['jwt-authorize']);
         });
     });
