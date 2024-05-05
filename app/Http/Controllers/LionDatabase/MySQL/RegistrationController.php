@@ -44,7 +44,7 @@ class RegistrationController
         );
 
         if (isSuccess($response)) {
-            $accountService->sendVerifiyEmail($users);
+            $accountService->sendVerifiyCodeEmail($users);
         }
 
         return success('registered user successfully');

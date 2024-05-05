@@ -47,7 +47,7 @@ class PasswordManagerController
 
         $accountService->updateRecoveryCode($users);
 
-        $accountService->sendRecoveryCode($users);
+        $accountService->sendRecoveryCodeEmail($users);
 
         return success('confirmation code sent, check your email inbox to see your verification code');
     }

@@ -44,7 +44,7 @@ class AccountService
      *
      * @return void
      */
-    public function sendVerifiyEmail(Users $users): void
+    public function sendVerifiyCodeEmail(Users $users): void
     {
         TaskQueue::push('send:email:account-verify', json([
             'template' => VerifyAccountHtml::class,
@@ -61,7 +61,7 @@ class AccountService
      *
      * @return void
      */
-    public function sendRecoveryCode(Users $users): void
+    public function sendRecoveryCodeEmail(Users $users): void
     {
         TaskQueue::push('send:email:account-recovery', json([
             'template' => RecoveryAccountHtml::class,

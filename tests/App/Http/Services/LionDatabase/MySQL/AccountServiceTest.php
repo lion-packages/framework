@@ -44,13 +44,13 @@ class AccountServiceTest extends Test
         Schema::truncateTable('task_queue')->execute();
     }
 
-    public function testSendVerifiyEmail(): void
+    public function testSendVerifiyCodeEmail(): void
     {
         $account = fake()->email();
 
         $code = fake()->numerify('######');
 
-        $this->accountService->sendVerifiyEmail(
+        $this->accountService->sendVerifiyCodeEmail(
             (new Users())
                 ->setUsersEmail($account)
                 ->setUsersActivationCode($code)
@@ -75,13 +75,13 @@ class AccountServiceTest extends Test
         ]);
     }
 
-    public function testSendVerificationCode(): void
+    public function testSendRecoveryCodeEmail(): void
     {
         $account = fake()->email();
 
         $code = fake()->numerify('######');
 
-        $this->accountService->sendRecoveryCode(
+        $this->accountService->sendRecoveryCodeEmail(
             (new Users())
                 ->setUsersEmail($account)
                 ->setUsersRecoveryCode($code)
