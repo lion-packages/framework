@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Services\LionDatabase\MySQL;
 
 use App\Exceptions\AuthenticationException;
-use App\Html\Email\VerifyAccountHtml;
 use Database\Class\LionDatabase\MySQL\Users;
-use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
 use Lion\Request\Request;
 
 /**
@@ -17,23 +15,6 @@ use Lion\Request\Request;
  */
 class RegistrationService
 {
-    /**
-     * Send a verification email to the user's account adding the process to the
-     * task queue
-     *
-     * @param Users $users [Capsule for the 'Users' entity]
-     *
-     * @return void
-     */
-    public function sendVerifiyEmail(Users $users): void
-    {
-        TaskQueue::push('send:email:account-verify', json([
-            'template' => VerifyAccountHtml::class,
-            'account' => $users->getUsersEmail(),
-            'code' => $users->getUsersActivationCode(),
-        ]));
-    }
-
     /**
      * Check and validate if the account verification code is correct
      *

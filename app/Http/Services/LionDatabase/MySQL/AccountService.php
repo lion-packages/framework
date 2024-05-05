@@ -6,6 +6,7 @@ namespace App\Http\Services\LionDatabase\MySQL;
 
 use App\Exceptions\AccountException;
 use App\Html\Email\RecoveryAccountHtml;
+use App\Html\Email\VerifyAccountHtml;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
@@ -33,6 +34,23 @@ class AccountService
     public function setUsersModel(UsersModel $usersModel): void
     {
         $this->usersModel = $usersModel;
+    }
+
+    /**
+     * Send a verification email to the user's account adding the process to the
+     * task queue
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
+     * @return void
+     */
+    public function sendVerifiyEmail(Users $users): void
+    {
+        TaskQueue::push('send:email:account-verify', json([
+            'template' => VerifyAccountHtml::class,
+            'account' => $users->getUsersEmail(),
+            'code' => $users->getUsersActivationCode(),
+        ]));
     }
 
     /**

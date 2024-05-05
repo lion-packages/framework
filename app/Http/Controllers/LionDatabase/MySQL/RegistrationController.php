@@ -23,8 +23,7 @@ class RegistrationController
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
-     * @param RegistrationService $registrationService [Service that assists the
-     * user registration process]
+     * @param AccountService $accountService [Manage user account processes]
      * @param Validation $validation [Allows you to validate form data and
      * generate encryption safely]
      *
@@ -33,7 +32,7 @@ class RegistrationController
     public function register(
         Users $users,
         UsersModel $usersModel,
-        RegistrationService $registrationService,
+        AccountService $accountService,
         Validation $validation
     ): object {
         $response = $usersModel->createUsersDB(
@@ -45,10 +44,10 @@ class RegistrationController
         );
 
         if (isSuccess($response)) {
-            $registrationService->sendVerifiyEmail($users);
+            $accountService->sendVerifiyEmail($users);
         }
 
-        return $response;
+        return success('registered user successfully');
     }
 
     /**
@@ -59,6 +58,7 @@ class RegistrationController
      * the registration and verification are valid]
      * @param RegistrationService $registrationService [Service that assists the
      * user registration process]
+     * @param AccountService $accountService [Manage user account processes]
      *
      * @return object
      */
@@ -66,7 +66,7 @@ class RegistrationController
         Users $users,
         RegistrationModel $registrationModel,
         RegistrationService $registrationService,
-        AccountService $accountService,
+        AccountService $accountService
     ): object {
         $data = $registrationModel->verifyAccountDB(
             $users
