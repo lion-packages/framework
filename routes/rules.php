@@ -11,6 +11,9 @@ use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersNameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersNicknameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersRecoveryCodeRequiredRule;
+use App\Rules\UsersPasswordConfirmRule;
+use App\Rules\UsersPasswordNewRule;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Route\Route;
 
@@ -58,7 +61,21 @@ Routes::setRules([
             UsersNicknameRequiredRule::class,
             UsersEmailRule::class,
             UsersPasswordRule::class,
-        ]
+        ],
+        '/api/auth/password/recovery' => [
+            UsersEmailRule::class,
+        ],
+        '/api/auth/password/verify-code' => [
+            UsersEmailRule::class,
+            UsersRecoveryCodeRequiredRule::class,
+            UsersPasswordNewRule::class,
+            UsersPasswordConfirmRule::class,
+        ],
+        '/api/auth/password/update' => [
+            UsersPasswordRule::class,
+            UsersPasswordNewRule::class,
+            UsersPasswordConfirmRule::class,
+        ],
     ],
 
     /**
