@@ -8,15 +8,24 @@ use App\Exceptions\AuthenticationException;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Dependency\Injection\Container;
+use Lion\Request\Request;
 use Lion\Test\Test;
+use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class LoginServiceTest extends Test
 {
+    use SetUpMigrationsAndQueuesProviderTrait;
+
+    const USERS_EMAIL = 'manager@dev.com';
+
     private LoginService $loginService;
 
     protected function setUp(): void
     {
-        $this->loginService = (new Container())->injectDependencies(new LoginService());
+        $this->runMigrationsAndQueues();
+
+        $this->loginService = (new Container())
+            ->injectDependencies(new LoginService());
     }
 
     public function testValidateSession(): void
@@ -26,6 +35,18 @@ class LoginServiceTest extends Test
         $this->loginService->validateSession(
             (new Users())
                 ->setUsersEmail(fake()->email())
+        );
+    }
+
+    public function testVerifyAccountActivation(): void
+    {
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionCode(Request::HTTP_FORBIDDEN);
+        $this->expectExceptionMessage("the user's account has not yet been verified");
+
+        $this->loginService->verifyAccountActivation(
+            (new Users())
+                ->setUsersEmail(self::USERS_EMAIL)
         );
     }
 

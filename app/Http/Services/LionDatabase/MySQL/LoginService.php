@@ -91,6 +91,24 @@ class LoginService
     }
 
     /**
+     * Validates if the account is verified
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
+     * @return void
+     *
+     * @throws AuthenticationException [If the account has not been verified]
+     */
+    public function verifyAccountActivation(Users $users): void
+    {
+        $users_activation_code = $this->loginModel->verifyAccountActivationDB($users);
+
+        if ($users_activation_code->users_activation_code != null) {
+            throw new AuthenticationException("the user's account has not yet been verified", Request::HTTP_FORBIDDEN);
+        }
+    }
+
+    /**
      * Generate a JWT token for user authorization
      *
      * @param string $path [Path where RSA public and private keys are defined]

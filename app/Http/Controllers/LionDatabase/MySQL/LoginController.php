@@ -37,6 +37,8 @@ class LoginController
     ): object {
         $loginService->validateSession($users->capsule());
 
+        $loginService->verifyAccountActivation($users);
+
         $session = $loginModel->sessionDB($users);
 
         $passwordManagerService->verifyPasswords(

@@ -40,6 +40,7 @@ class LoginModelTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertObjectHasProperty('count', $response);
         $this->assertSame(1, $response->count);
     }
 
@@ -50,7 +51,21 @@ class LoginModelTest extends Test
                 ->setUsersEmail(self::USERS_EMAIL_ERR)
         );
 
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('count', $response);
         $this->assertSame(0, $response->count);
+    }
+
+    public function testVerifyAccountActivationDB(): void
+    {
+        $response = $this->loginModel->verifyAccountActivationDB(
+            (new Users())
+                ->setUsersEmail(self::USERS_EMAIL)
+        );
+
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('users_activation_code', $response);
+        $this->assertNull($response->users_activation_code);
     }
 
     public function testSessionDB(): void

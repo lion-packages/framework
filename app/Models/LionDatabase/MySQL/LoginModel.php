@@ -18,9 +18,9 @@ class LoginModel
     /**
      * Check if the user account exists
      *
-     * @param  Users $users [Object of the Users entity]
+     * @param Users $users [Object of the Users entity]
      *
-     * @return object
+     * @return array|object
      */
     public function authDB(Users $users): object
     {
@@ -31,9 +31,24 @@ class LoginModel
     }
 
     /**
+     * Check if the account is verified
+     *
+     * @param Users $users [Object of the Users entity]
+     *
+     * @return array|object
+     */
+    public function verifyAccountActivationDB(Users $users): array|object
+    {
+        return DB::table('users')
+            ->select('users_activation_code')
+            ->where()->equalTo('users_email', $users->getUsersEmail())
+            ->get();
+    }
+
+    /**
      * Gets a user's login information
      *
-     * @param  Users $users [Object of the Users entity]
+     * @param Users $users [Object of the Users entity]
      *
      * @return Users
      */
