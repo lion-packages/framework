@@ -6,20 +6,32 @@ import { useNavigate } from "react-router-dom";
 export default function VerifiedUser({ users_email, setVerified }) {
   const navigate = useNavigate();
 
-  const [code_1, setCode_1] = useState("");
-  const [code_2, setCode_2] = useState("");
-  const [code_3, setCode_3] = useState("");
-  const [code_4, setCode_4] = useState("");
-  const [code_5, setCode_5] = useState("");
-  const [code_6, setCode_6] = useState("");
+  const [codes, setCodes] = useState(["", "", "", "", "", ""]);
+  const inputs = [];
+
+  const handleChange = (e, index) => {
+    const { value } = e.target;
+    if (value.length > 1) return;
+
+    const newCodes = [...codes];
+    newCodes[index] = value;
+    setCodes(newCodes);
+
+    if (value !== "") {
+      const nextInput = inputs[index + 1];
+
+      if (nextInput) {
+        nextInput.focus();
+      }
+    }
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const form = {
       users_email: users_email,
-      users_activation_code:
-        code_1 + code_2 + code_3 + code_4 + code_5 + code_6,
+      users_activation_code: codes.join("").trim(),
     };
 
     axios
@@ -47,66 +59,26 @@ export default function VerifiedUser({ users_email, setVerified }) {
       <Form onSubmit={handleSubmit}>
         <div className="mb-3">
           <Row>
-            <Col xs={2}>
-              <Form.Control
-                type="number"
-                required
-                value={code_1}
-                onChange={(e) => setCode_1(e.target.value)}
-              />
-            </Col>
-
-            <Col xs={2}>
-              <Form.Control
-                type="number"
-                required
-                value={code_2}
-                onChange={(e) => setCode_2(e.target.value)}
-              />
-            </Col>
-
-            <Col xs={2}>
-              <Form.Control
-                type="number"
-                required
-                value={code_3}
-                onChange={(e) => setCode_3(e.target.value)}
-              />
-            </Col>
-
-            <Col xs={2}>
-              <Form.Control
-                type="number"
-                required
-                value={code_4}
-                onChange={(e) => setCode_4(e.target.value)}
-              />
-            </Col>
-
-            <Col xs={2}>
-              <Form.Control
-                type="number"
-                required
-                value={code_5}
-                onChange={(e) => setCode_5(e.target.value)}
-              />
-            </Col>
-
-            <Col xs={2}>
-              <Form.Control
-                type="number"
-                required
-                value={code_6}
-                onChange={(e) => setCode_6(e.target.value)}
-              />
-            </Col>
+            {codes.map((code, index) => (
+              <Col xs={2} key={index}>
+                <Form.Control
+                  type="text"
+                  maxLength={1}
+                  value={code}
+                  onChange={(e) => handleChange(e, index)}
+                  ref={(input) => (inputs[index] = input)}
+                  className="text-center"
+                  required
+                />
+              </Col>
+            ))}
           </Row>
         </div>
 
         <hr />
 
         <div className="d-grid gap-2">
-          <Button type="submit" variant="success">
+          <Button type="submit" variant="primary">
             Verify
           </Button>
         </div>
