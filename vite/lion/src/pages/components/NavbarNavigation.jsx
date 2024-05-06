@@ -1,11 +1,21 @@
-import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { Container, Image, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import logo from "../../assets/img/icon white.png";
 
 export default function NavbarNavigation() {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="#home">Lion-Packages</Navbar.Brand>
+        <LinkContainer to={"/"}>
+          <Navbar.Brand href="#">
+            <Image src={logo} width={40} />
+
+            <label role="button">
+              Lion-
+              <span style={{ color: "#ff8625" }}>Packages</span>
+            </label>
+          </Navbar.Brand>
+        </LinkContainer>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
