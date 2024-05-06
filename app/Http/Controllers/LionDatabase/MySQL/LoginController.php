@@ -20,6 +20,8 @@ class LoginController
     /**
      * Manage user authentication
      *
+     * @route api/auth/login
+     *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param LoginModel $loginModel [Model for user authentication]
      * @param LoginService $loginService [Service 'LoginService']

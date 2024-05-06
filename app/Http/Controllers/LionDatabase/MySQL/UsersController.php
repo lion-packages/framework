@@ -20,6 +20,8 @@ class UsersController
     /**
      * Create users
      *
+     * @route api/users
+     *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
      * @param Validation $validation [Allows you to validate form data and
@@ -48,6 +50,8 @@ class UsersController
     /**
      * Read users
      *
+     * @route api/users
+     *
      * @param UsersModel $usersModel [Model for the Users entity]
      *
      * @return array|object
@@ -65,6 +69,8 @@ class UsersController
 
     /**
      * Read users by id
+     *
+     * @route api/users/{idusers}
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -89,6 +95,8 @@ class UsersController
     /**
      * Update users
      *
+     * @route api/users/{idusers}
+     *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
      * @param string $idusers [user id defined in routes]
@@ -112,6 +120,8 @@ class UsersController
 
     /**
      * Delete users
+     *
+     * @route api/users/{idusers}
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
