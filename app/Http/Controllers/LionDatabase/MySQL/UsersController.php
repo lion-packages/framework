@@ -6,6 +6,8 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Exception;
+use Lion\Request\Request;
 use Lion\Security\Validation;
 
 /**
@@ -18,6 +20,8 @@ class UsersController
     /**
      * Create users
      *
+     * @route api/users
+     *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
      * @param Validation $validation [Allows you to validate form data and
@@ -27,17 +31,26 @@ class UsersController
      */
     public function createUsers(Users $users, UsersModel $usersModel, Validation $validation): object
     {
-        return $usersModel->createUsersDB(
+        $response = $usersModel->createUsersDB(
             $users
                 ->capsule()
                 ->setUsersPassword($validation->passwordHash($users->getUsersPassword()))
                 ->setUsersActivationCode(fake()->numerify('######'))
+                ->setUsersRecoveryCode(null)
                 ->setUsersCode(uniqid('code-'))
         );
+
+        if (isError($response)) {
+            throw new Exception('an error occurred while registering the user', Request::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return success('registered user successfully');
     }
 
     /**
      * Read users
+     *
+     * @route api/users
      *
      * @param UsersModel $usersModel [Model for the Users entity]
      *
@@ -45,11 +58,19 @@ class UsersController
      */
     public function readUsers(UsersModel $usersModel): array|object
     {
-        return $usersModel->readUsersDB();
+        $data = $usersModel->readUsersDB();
+
+        if (isSuccess($data)) {
+            return success($data->message);
+        }
+
+        return $data;
     }
 
     /**
      * Read users by id
+     *
+     * @route api/users/{idusers}
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -59,14 +80,22 @@ class UsersController
      */
     public function readUsersById(Users $users, UsersModel $usersModel, string $idusers): array|object
     {
-        return $usersModel->readUsersByIdDB(
+        $data = $usersModel->readUsersByIdDB(
             $users
                 ->setIdusers((int) $idusers)
         );
+
+        if (isSuccess($data)) {
+            return success($data->message);
+        }
+
+        return $data;
     }
 
     /**
      * Update users
+     *
+     * @route api/users/{idusers}
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -76,15 +105,23 @@ class UsersController
      */
     public function updateUsers(Users $users, UsersModel $usersModel, string $idusers): object
     {
-        return $usersModel->updateUsersDB(
+        $response = $usersModel->updateUsersDB(
             $users
                 ->capsule()
                 ->setIdusers((int) $idusers)
         );
+
+        if (isError($response)) {
+            throw new Exception('an error occurred while updating the user', Request::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return success('the registered user has been successfully updated');
     }
 
     /**
      * Delete users
+     *
+     * @route api/users/{idusers}
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -94,9 +131,15 @@ class UsersController
      */
     public function deleteUsers(Users $users, UsersModel $usersModel, string $idusers): object
     {
-        return $usersModel->deleteUsersDB(
+        $response = $usersModel->deleteUsersDB(
             $users
                 ->setIdusers((int) $idusers)
         );
+
+        if (isError($response)) {
+            throw new Exception('an error occurred while deleting the user', Request::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return success('the registered user has been successfully deleted');
     }
 }

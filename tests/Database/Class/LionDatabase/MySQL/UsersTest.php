@@ -19,6 +19,8 @@ class UsersTest extends Test
     const USERS_NICKNAME = 'Sleon';
     const USERS_EMAIL = 'sleon@dev.com';
     const USERS_PASSWORD = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
+    const USERS_ACTIVATION_CODE = '######';
+    const USERS_RECOVERY_CODE = '######';
     const USERS_CODE = 'code-65ca2d74ed1e1';
 
     private Users $users;
@@ -30,7 +32,9 @@ class UsersTest extends Test
 
     public function testGetIdusers(): void
     {
-        $this->assertSame(self::IDUSERS, $this->users->setIdusers(self::IDUSERS)->getIdusers());
+        $this->users->setIdusers(self::IDUSERS);
+
+        $this->assertSame(self::IDUSERS, $this->users->getIdusers());
     }
 
     public function testSetIdusers(): void
@@ -45,7 +49,9 @@ class UsersTest extends Test
 
     public function testGetIdroles(): void
     {
-        $this->assertSame(self::IDROLES, $this->users->setIdroles(self::IDROLES)->getIdroles());
+        $this->users->setIdroles(self::IDROLES);
+
+        $this->assertSame(self::IDROLES, $this->users->getIdroles());
     }
 
     public function testSetIdroles(): void
@@ -60,10 +66,9 @@ class UsersTest extends Test
 
     public function testGetIddocumentTypes(): void
     {
-        $this->assertSame(
-            self::IDDOCUMENT_TYPES,
-            $this->users->setIddocumentTypes(self::IDDOCUMENT_TYPES)->getIddocumentTypes()
-        );
+        $this->users->setIddocumentTypes(self::IDDOCUMENT_TYPES);
+
+        $this->assertSame(self::IDDOCUMENT_TYPES, $this->users->getIddocumentTypes());
     }
 
     public function testSetIddocumentTypes(): void
@@ -95,7 +100,9 @@ class UsersTest extends Test
 
     public function testGetUsersName(): void
     {
-        $this->assertSame(self::USERS_NAME, $this->users->setUsersName(self::USERS_NAME)->getUsersName());
+        $this->users->setUsersName(self::USERS_NAME);
+
+        $this->assertSame(self::USERS_NAME, $this->users->getUsersName());
     }
 
     public function testSetUsersName(): void
@@ -110,10 +117,9 @@ class UsersTest extends Test
 
     public function testGetUsersLastName(): void
     {
-        $this->assertSame(
-            self::USERS_LAST_NAME,
-            $this->users->setUsersLastName(self::USERS_LAST_NAME)->getUsersLastName()
-        );
+        $this->users->setUsersLastName(self::USERS_LAST_NAME);
+
+        $this->assertSame(self::USERS_LAST_NAME, $this->users->getUsersLastName());
     }
 
     public function testSetUsersLastName(): void
@@ -145,7 +151,9 @@ class UsersTest extends Test
 
     public function testGetUsersEmail(): void
     {
-        $this->assertSame(self::USERS_EMAIL, $this->users->setUsersEmail(self::USERS_EMAIL)->getUsersEmail());
+        $this->users->setUsersEmail(self::USERS_EMAIL);
+
+        $this->assertSame(self::USERS_EMAIL, $this->users->getUsersEmail());
     }
 
     public function testSetUsersEmail(): void
@@ -160,10 +168,9 @@ class UsersTest extends Test
 
     public function testGetUsersPassword(): void
     {
-        $this->assertSame(
-            self::USERS_PASSWORD,
-            $this->users->setUsersPassword(self::USERS_PASSWORD)->getUsersPassword()
-        );
+        $this->users->setUsersPassword(self::USERS_PASSWORD);
+
+        $this->assertSame(self::USERS_PASSWORD, $this->users->getUsersPassword());
     }
 
     public function testSetUsersPassword(): void
@@ -176,9 +183,45 @@ class UsersTest extends Test
         $this->assertSame(self::USERS_PASSWORD, $this->users->getUsersPassword());
     }
 
+    public function testGetUsersActivationCode(): void
+    {
+        $this->users->setUsersActivationCode(self::USERS_ACTIVATION_CODE);
+
+        $this->assertSame(self::USERS_ACTIVATION_CODE, $this->users->getUsersActivationCode());
+    }
+
+    public function testSetUsersActivationCode(): void
+    {
+        $this->assertInstances($this->users->setUsersActivationCode(self::USERS_ACTIVATION_CODE), [
+            Users::class,
+            CapsuleInterface::class,
+        ]);
+
+        $this->assertSame(self::USERS_ACTIVATION_CODE, $this->users->getUsersActivationCode());
+    }
+
+    public function testGetUsersRecoveryCode(): void
+    {
+        $this->users->setUsersRecoveryCode(self::USERS_RECOVERY_CODE);
+
+        $this->assertSame(self::USERS_RECOVERY_CODE, $this->users->getUsersRecoveryCode());
+    }
+
+    public function testSetUsersRecoveryCode(): void
+    {
+        $this->assertInstances($this->users->setUsersRecoveryCode(self::USERS_RECOVERY_CODE), [
+            Users::class,
+            CapsuleInterface::class,
+        ]);
+
+        $this->assertSame(self::USERS_RECOVERY_CODE, $this->users->getUsersRecoveryCode());
+    }
+
     public function testGetUsersCode(): void
     {
-        $this->assertSame(self::USERS_CODE, $this->users->setUsersCode(self::USERS_CODE)->getUsersCode());
+        $this->users->setUsersCode(self::USERS_CODE);
+
+        $this->assertSame(self::USERS_CODE, $this->users->getUsersCode());
     }
 
     public function testSetUsersCode(): void

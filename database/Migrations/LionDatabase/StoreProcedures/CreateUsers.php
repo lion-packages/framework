@@ -24,6 +24,7 @@ return new class implements MigrationUpInterface
                 Schema::in()->varchar('_users_email', 255);
                 Schema::in()->blob('_users_password');
                 Schema::in()->varchar('_users_activation_code', 6);
+                Schema::in()->varchar('_users_recovery_code', 6)->null();
                 Schema::in()->varchar('_users_code', 18);
             }, function (MySQL $db) {
                 $db
@@ -38,6 +39,7 @@ return new class implements MigrationUpInterface
                         'users_email' => '_users_email',
                         'users_password' => '_users_password',
                         'users_activation_code' => '_users_activation_code',
+                        'users_recovery_code' => '_users_recovery_code',
                         'users_code' => '_users_code',
                     ]);
             })

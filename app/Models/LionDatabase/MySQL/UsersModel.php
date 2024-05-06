@@ -33,6 +33,7 @@ class UsersModel
             $users->getUsersEmail(),
             $users->getUsersPassword(),
             $users->getUsersActivationCode(),
+            $users->getUsersRecoveryCode(),
             $users->getUsersCode(),
         ])->execute();
     }
@@ -63,6 +64,21 @@ class UsersModel
     }
 
     /**
+     * Read users by email
+     *
+     * @param Users $users [Object of the Users entity]
+     *
+     * @return array|object
+     */
+    public function readUsersByEmailDB(Users $users): array|object
+    {
+        return DB::view('read_users_by_id')
+            ->select()
+            ->where()->equalTo('users_email', $users->getUsersEmail())
+            ->get();
+    }
+
+    /**
      * Update users
      *
      * @param Users $users [Object of the Users entity]
@@ -84,17 +100,32 @@ class UsersModel
     }
 
     /**
-     * Update an account verification code
+     * Update an account activation code
      *
      * @param Users $users [Object of the Users entity]
      *
      * @return object
      */
-    public function updateVerificationCodeDB(Users $users): object
+    public function updateActivationCodeDB(Users $users): object
     {
         return DB::call('update_activation_code', [
             $users->getUsersActivationCode(),
-            $users->getIdusers()
+            $users->getIdusers(),
+        ])->execute();
+    }
+
+    /**
+     * Update an account recovery code
+     *
+     * @param Users $users [Object of the Users entity]
+     *
+     * @return object
+     */
+    public function updateRecoveryCodeDB(Users $users): object
+    {
+        return DB::call('update_recovery_code', [
+            $users->getUsersRecoveryCode(),
+            $users->getIdusers(),
         ])->execute();
     }
 

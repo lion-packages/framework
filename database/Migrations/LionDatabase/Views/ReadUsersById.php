@@ -27,6 +27,7 @@ return new class implements MigrationUpInterface
                         $db->getColumn('users_nickname', 'usr'),
                         $db->getColumn('users_email', 'usr'),
                         $db->getColumn('users_activation_code', 'usr'),
+                        $db->getColumn('users_recovery_code', 'usr'),
                         $db->getColumn('users_code', 'usr'),
                         $db->getColumn('roles_name', 'rl'),
                         $db->getColumn('document_types_name', 'dcmt')

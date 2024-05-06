@@ -19,9 +19,9 @@ class RegistrationModel
      *
      * @param Users $users [Capsule for the 'Users' entity]
      *
-     * @return object
+     * @return array|object
      */
-    public function verifyAccountDB(Users $users): object
+    public function verifyAccountDB(Users $users): array|object
     {
         return DB::table('users')
             ->select('idusers', 'users_activation_code')

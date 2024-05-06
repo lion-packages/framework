@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\LionDatabase\MySQL\LoginController;
+use App\Http\Controllers\LionDatabase\MySQL\PasswordManagerController;
 use App\Http\Controllers\LionDatabase\MySQL\RegistrationController;
 use App\Http\Controllers\LionDatabase\MySQL\UsersController;
 use Lion\Route\Route;
@@ -22,6 +23,12 @@ Route::prefix('api', function () {
         Route::post('login', [LoginController::class, 'auth']);
         Route::post('register', [RegistrationController::class, 'register']);
         Route::post('verify', [RegistrationController::class, 'verifyAccount']);
+
+        Route::prefix('password', function () {
+            Route::post('recovery', [PasswordManagerController::class, 'recoveryPassword']);
+            Route::post('verify-code', [PasswordManagerController::class, 'updateLostPassword']);
+            Route::post('update', [PasswordManagerController::class, 'updatePassword'], ['jwt-authorize']);
+        });
     });
 
     Route::middleware(['jwt-authorize'], function () {

@@ -19,6 +19,7 @@ use Lion\Bundle\Interface\CapsuleInterface;
  * @property string $users_email [Property for users_email]
  * @property string $users_password [Property for users_password]
  * @property string $users_activation_code [Property for users_activation_code]
+ * @property string $users_recovery_code [Property for users_recovery_code]
  * @property string $users_code [Property for users_code]
  *
  * @package Database\Class\LionDatabase\MySQL
@@ -96,6 +97,13 @@ class Users implements CapsuleInterface
 	private ?string $users_activation_code = null;
 
 	/**
+	 * [Property for users_recovery_code]
+	 *
+	 * @var string|null $users_recovery_code
+	 */
+	private ?string $users_recovery_code = null;
+
+	/**
 	 * [Property for users_code]
 	 *
 	 * @var string|null $users_code
@@ -126,6 +134,7 @@ class Users implements CapsuleInterface
 			->setUsersEmail(request->users_email ?? null)
 			->setUsersPassword(request->users_password ?? null)
 			->setUsersActivationCode(request->users_activation_code ?? null)
+			->setUsersRecoveryCode(request->users_recovery_code ?? null)
 			->setUsersCode(request->users_code ?? null);
 
 		return $this;
@@ -367,6 +376,30 @@ class Users implements CapsuleInterface
     public function setUsersActivationCode(?string $users_activation_code = null): Users
     {
         $this->users_activation_code = $users_activation_code;
+
+        return $this;
+    }
+
+    /**
+     * Getter method for 'users_recovery_code'
+     *
+     * @return string|null
+     */
+    public function getUsersRecoveryCode(): ?string
+    {
+        return $this->users_recovery_code;
+    }
+
+    /**
+     * Setter method for 'users_recovery_code'
+     *
+     * @param string|null $users_recovery_code
+     *
+     * @return Users
+     */
+    public function setUsersRecoveryCode(?string $users_recovery_code = null): Users
+    {
+        $this->users_recovery_code = $users_recovery_code;
 
         return $this;
     }

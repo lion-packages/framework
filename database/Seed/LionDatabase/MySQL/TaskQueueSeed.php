@@ -27,7 +27,7 @@ class TaskQueueSeed implements SeedInterface
      */
     public function run(): object
     {
-        return success();
+        return success('Rows inserted successfully');
 
         // return DB::table('task_queue')
         //     ->bulk(TaskQueueFactory::columns(), TaskQueueFactory::definition())
