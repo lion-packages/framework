@@ -4,7 +4,7 @@ import logo from "../../assets/img/icon white.png";
 
 export default function NavbarNavigation() {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className="bg-body-tertiary shadow-sm">
       <Container>
         <LinkContainer to={"/"}>
           <Navbar.Brand href="#">

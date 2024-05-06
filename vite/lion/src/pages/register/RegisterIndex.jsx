@@ -43,7 +43,7 @@ export default function RegisterIndex() {
             lg={7}
             xl={5}
             xxl={5}
-            className="mx-auto my-5"
+            className="mx-auto my-5 bg-light border rounded p-3"
           >
             <h4>Register</h4>
 

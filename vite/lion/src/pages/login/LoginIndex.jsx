@@ -42,7 +42,7 @@ export default function LoginIndex() {
             lg={7}
             xl={5}
             xxl={5}
-            className="mx-auto my-5"
+            className="mx-auto my-5 bg-light border rounded p-3"
           >
             {verified ? (
               <VerifiedUser
