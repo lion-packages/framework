@@ -71,7 +71,7 @@ class UsersFactory implements FactoryInterface
                 fake()->userName(),
                 'manager@dev.com',
                 $validation->passwordHash($validation->sha256(self::USERS_PASSWORD)),
-                null,
+                "123456",
                 uniqid('code-')
             ]
         ];
