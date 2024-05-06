@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Html\Email\RecoveryAccountHtml;
 use App\Html\Email\VerifyAccountHtml;
 use Lion\Bundle\Enums\LogTypeEnum;
 use Lion\Bundle\Enums\TaskStatusEnum;
@@ -17,8 +18,47 @@ use Lion\Mailer\Priority;
  * -----------------------------------------------------------------------------
  **/
 
-TaskQueue::add('send:email:account-recovery', function () {
-});
+TaskQueue::add(
+    'send:email:account-recovery',
+    /**
+     * Send emails for account validation
+     *
+     * @param object $queue [Queued task object]
+     *
+     * @return void
+     *
+     * @throws Exception [Catch an exception if the process fails]
+     */
+    function (object $queue): void {
+        $data = (object) json_decode($queue->task_queue_data, true);
+
+        try {
+            /** @var RecoveryAccountHtml $htmlTemplate */
+            $htmlTemplate = new $data->template;
+
+            Mailer::account(env('MAIL_NAME'))
+                ->subject('Password Recovery: check your email')
+                ->from(env('MAIL_USER_NAME'), 'Lion-Packages')
+                ->addAddress($data->account)
+                ->body(
+                    $htmlTemplate
+                        ->template()
+                        ->replace('{{ CODE_REPLACE }}', $data->code)
+                        ->get()
+                )
+                ->priority(Priority::HIGH)
+                ->send();
+        } catch (Exception $e) {
+            TaskQueue::edit($queue, TaskStatusEnum::FAILED);
+
+            logger($e->getMessage(), LogTypeEnum::ERROR, [
+                'idtask_queue' => $queue->idtask_queue,
+                'task_queue_type' => $queue->task_queue_type,
+                'task_queue_data' => $queue->task_queue_data
+            ], false);
+        }
+    }
+);
 
 TaskQueue::add(
     'send:email:account-verify',

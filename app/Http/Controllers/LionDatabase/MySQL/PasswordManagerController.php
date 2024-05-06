@@ -23,6 +23,8 @@ class PasswordManagerController
     /**
      * Manage user password recovery by sending a verification email
      *
+     * @route api/auth/password/recovery
+     *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
      * @param AccountService $accountService [Manage user account processes]
@@ -53,7 +55,66 @@ class PasswordManagerController
     }
 
     /**
-     * Manage system password recovery
+     * Update lost user passwords
+     *
+     * @route api/auth/password/verify-code
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param PasswordManager $passwordManagzzzzzzer [Capsule for the
+     * 'PasswordManager' entity]
+     * @param UsersModel $usersModel [Model for the Users entity]
+     * @param PasswordManagerModel $passwordManagerModel [Password management
+     * model]
+     * @param AccountService $accountService [Manage user account processes]
+     * @param PasswordManagerService $passwordManagerService [Manage different
+     * processes for strong password verifications]
+     *
+     * @return object
+     */
+    public function updateLostPassword(
+        Users $users,
+        PasswordManager $passwordManager,
+        UsersModel $usersModel,
+        PasswordManagerModel $passwordManagerModel,
+        AccountService $accountService,
+        PasswordManagerService $passwordManagerService,
+        LoginService $loginService
+    ): object {
+        $users->capsule();
+
+        $loginService->validateSession($users);
+
+        $data = $usersModel->readUsersByEmailDB($users);
+
+        $accountService->verifyRecoveryCode($users, $data);
+
+        $passwordManager->capsule();
+
+        $passwordManagerService->comparePasswords(
+            $passwordManager->getUsersPasswordNew(),
+            $passwordManager->getUsersPasswordConfirm()
+        );
+
+        $passwordManagerService->updatePassword(
+            $passwordManagerModel,
+            $passwordManager
+                ->setIdusers($data->idusers)
+                ->setUsersPasswordConfirm(request->users_password_confirm)
+        );
+
+        $accountService->updateRecoveryCode(
+            $users
+                ->setIdusers($data->idusers)
+                ->setUsersRecoveryCode(null)
+        );
+
+        return success('the recovery code is valid, your password has been updated successfully');
+    }
+
+    /**
+     * Update user passwords
+     *
+     * @route api/auth/password/update
      *
      * @param PasswordManager $passwordManager [Capsule for the
      * 'PasswordManager' entity]
