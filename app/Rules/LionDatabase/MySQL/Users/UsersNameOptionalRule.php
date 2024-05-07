@@ -54,7 +54,7 @@ class UsersNameOptionalRule extends Rules implements RulesInterface
      */
     public function passes(): void
     {
-        $this->validate(function(Validator $validator) {
+        $this->validate(function (Validator $validator): void {
             $validator
                 ->rule('optional', $this->field)
                 ->message('the "users_name" property is optional');

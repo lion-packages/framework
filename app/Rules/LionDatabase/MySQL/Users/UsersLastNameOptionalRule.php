@@ -54,7 +54,7 @@ class UsersLastNameOptionalRule extends Rules implements RulesInterface
      */
     public function passes(): void
     {
-        $this->validate(function(Validator $validator) {
+        $this->validate(function (Validator $validator): void {
             $validator
                 ->rule('optional', $this->field)
                 ->message('the "users_last_name" property is optional');

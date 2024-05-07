@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-use Lion\Bundle\Interface\MigrationUpInterface;
+use Lion\Bundle\Interface\Migrations\StoreProcedureInterface;
 use Lion\Database\Drivers\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 
-return new class implements MigrationUpInterface
+/**
+ * Delete users
+ */
+return new class implements StoreProcedureInterface
 {
     /**
      * {@inheritdoc}
@@ -14,10 +17,13 @@ return new class implements MigrationUpInterface
     public function up(): object
     {
         return Schema::connection('lion_database')
-            ->createStoreProcedure('delete_users', function () {
+            ->createStoreProcedure('delete_users', function (): void {
                 Schema::in()->int('_idusers');
-            }, function (MySQL $db) {
-                $db->table('users')->delete()->where()->equalTo('idusers', '_idusers');
+            }, function (MySQL $db): void {
+                $db
+                    ->table('users')
+                    ->delete()
+                    ->where()->equalTo('idusers', '_idusers');
             })
             ->execute();
     }

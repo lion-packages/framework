@@ -57,7 +57,7 @@ class UsersPasswordNewRule extends Rules implements RulesInterface
         $this->validate(function (Validator $validator) {
             $validator
                 ->rule('required', $this->field)
-                ->message('the "users_password_new" property is required');
+                ->message("the 'users_password_new' property is required");
         });
     }
 }

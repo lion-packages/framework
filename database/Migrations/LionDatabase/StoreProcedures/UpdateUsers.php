@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-use Lion\Bundle\Interface\MigrationUpInterface;
+use Lion\Bundle\Interface\Migrations\StoreProcedureInterface;
 use Lion\Database\Drivers\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 
-return new class implements MigrationUpInterface
+/**
+ * Update users
+ */
+return new class implements StoreProcedureInterface
 {
     /**
      * {@inheritdoc}
@@ -14,7 +17,7 @@ return new class implements MigrationUpInterface
     public function up(): object
     {
         return Schema::connection('lion_database')
-            ->createStoreProcedure('update_users', function () {
+            ->createStoreProcedure('update_users', function (): void {
                 Schema::in()->int('_idroles')->null();
                 Schema::in()->int('_iddocument_types')->null();
                 Schema::in()->varchar('_users_citizen_identification', 25)->null();
@@ -23,7 +26,7 @@ return new class implements MigrationUpInterface
                 Schema::in()->varchar('_users_nickname', 25)->null();
                 Schema::in()->varchar('_users_email', 255);
                 Schema::in()->int('_idusers');
-            }, function (MySQL $db) {
+            }, function (MySQL $db): void {
                 $db
                     ->table('users')
                     ->update([
@@ -33,7 +36,7 @@ return new class implements MigrationUpInterface
                         'users_name' => '_users_name',
                         'users_last_name' => '_users_last_name',
                         'users_nickname' => '_users_nickname',
-                        'users_email' => '_users_email'
+                        'users_email' => '_users_email',
                     ])
                     ->where()->equalTo('idusers', '_idusers');
             })

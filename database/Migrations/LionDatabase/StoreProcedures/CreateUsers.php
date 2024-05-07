@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-use Lion\Bundle\Interface\MigrationUpInterface;
+use Lion\Bundle\Interface\Migrations\StoreProcedureInterface;
 use Lion\Database\Drivers\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 
-return new class implements MigrationUpInterface
+/**
+ * Create users
+ */
+return new class implements StoreProcedureInterface
 {
     /**
      * {@inheritdoc}
@@ -14,7 +17,7 @@ return new class implements MigrationUpInterface
     public function up(): object
     {
         return Schema::connection('lion_database')
-            ->createStoreProcedure('create_users', function () {
+            ->createStoreProcedure('create_users', function (): void {
                 Schema::in()->int('_idroles')->null();
                 Schema::in()->int('_iddocument_types')->null();
                 Schema::in()->varchar('_users_citizen_identification', 25)->null();
@@ -26,7 +29,7 @@ return new class implements MigrationUpInterface
                 Schema::in()->varchar('_users_activation_code', 6);
                 Schema::in()->varchar('_users_recovery_code', 6)->null();
                 Schema::in()->varchar('_users_code', 18);
-            }, function (MySQL $db) {
+            }, function (MySQL $db): void {
                 $db
                     ->table('users')
                     ->insert([

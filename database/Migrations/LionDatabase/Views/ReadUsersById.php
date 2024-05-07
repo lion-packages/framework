@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-use Lion\Bundle\Interface\MigrationUpInterface;
+use Lion\Bundle\Interface\Migrations\ViewInterface;
 use Lion\Database\Drivers\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 
-return new class implements MigrationUpInterface
+/**
+ * View to read a users with their data relations
+ */
+return new class implements ViewInterface
 {
     /**
      * {@inheritdoc}
@@ -14,7 +17,7 @@ return new class implements MigrationUpInterface
     public function up(): object
     {
         return Schema::connection('lion_database')
-            ->createView('read_users_by_id', function (MySQL $db) {
+            ->createView('read_users_by_id', function (MySQL $db): void {
                 $db
                     ->table($db->as('users', 'usr'))
                     ->select(

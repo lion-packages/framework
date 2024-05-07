@@ -16,7 +16,7 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 use Dotenv\Dotenv;
 use Lion\Bundle\Helpers\ExceptionCore;
 use Lion\Bundle\Helpers\Http\Routes;
-use Lion\Bundle\HttpKernel;
+use Lion\Bundle\Kernel\HttpKernel;
 use Lion\Dependency\Injection\Container;
 use Lion\Route\Route;
 
@@ -28,7 +28,7 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  **/
 
-(new ExceptionCore)->exceptionHandler();
+(new ExceptionCore())->exceptionHandler();
 
 /**
  * -----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ require_once(__DIR__ . '/../config/cors.php');
  * -----------------------------------------------------------------------------
  **/
 
-(new Container)->injectDependencies((new HttpKernel))->validateRules();
+(new Container)->injectDependencies((new HttpKernel()))->validateRules();
 
 /**
  * -----------------------------------------------------------------------------

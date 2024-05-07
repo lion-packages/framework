@@ -54,7 +54,7 @@ class RolesDescriptionOptionalRule extends Rules implements RulesInterface
      */
     public function passes(): void
     {
-        $this->validate(function(Validator $validator) {
+        $this->validate(function (Validator $validator): void {
             $validator
                 ->rule('optional', $this->field)
                 ->message('the "roles_description" property is optional');
