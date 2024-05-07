@@ -904,16 +904,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v16.13.2",
+            "version": "v16.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "8ac9cd19f043c368141ca009f56a0d9c236799bf"
+                "reference": "728066bdbf2983b9f6f77615ac32d3be658f8c99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/8ac9cd19f043c368141ca009f56a0d9c236799bf",
-                "reference": "8ac9cd19f043c368141ca009f56a0d9c236799bf",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/728066bdbf2983b9f6f77615ac32d3be658f8c99",
+                "reference": "728066bdbf2983b9f6f77615ac32d3be658f8c99",
                 "shasum": ""
             },
             "require": {
@@ -943,7 +943,7 @@
             },
             "require-dev": {
                 "lion/test": "^1.1",
-                "phpunit/phpunit": "^10.1"
+                "phpunit/phpunit": "^11.1"
             },
             "suggest": {
                 "ext-gd": "Required to use LionSpreadsheet.",
@@ -985,7 +985,7 @@
                 "issues": "https://github.com/lion-packages/framework/issues",
                 "source": "https://github.com/lion-packages/framework"
             },
-            "time": "2024-05-05T19:51:36+00:00"
+            "time": "2024-05-07T19:06:19+00:00"
         },
         {
             "name": "lion/command",
