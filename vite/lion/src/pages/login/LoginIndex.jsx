@@ -3,8 +3,11 @@ import sha256 from "crypto-js/sha256";
 import { Fragment, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import VerifiedUser from "./components/VerifiedUser";
+import { useAuth } from "../../context/AuthProvider";
 
 export default function LoginIndex() {
+  const { login } = useAuth();
+
   const [users_email, setUsers_email] = useState("root@dev.com");
   const [users_password, setUsers_password] = useState("lion");
   const [verified, setVerified] = useState(false);
@@ -21,6 +24,10 @@ export default function LoginIndex() {
       .post(`${import.meta.env.VITE_SERVER_URL_AUD}/api/auth/login`, form)
       .then(({ data }) => {
         console.log(data);
+
+        if ("success" === data.status) {
+          login(data.data.jwt);
+        }
       })
       .catch(({ response }) => {
         console.log(response.data);
