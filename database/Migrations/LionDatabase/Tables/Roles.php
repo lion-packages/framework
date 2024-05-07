@@ -2,11 +2,19 @@
 
 declare(strict_types=1);
 
-use Lion\Bundle\Interface\MigrationUpInterface;
+use Lion\Bundle\Interface\Migrations\TableInterface;
 use Lion\Database\Drivers\Schema\MySQL as DB;
 
-return new class implements MigrationUpInterface
+/**
+ * Role scheme
+ */
+return new class implements TableInterface
 {
+    /**
+     * [Index number for seed execution priority]
+     *
+     * @const INDEX
+     */
     const INDEX = 2;
 
     /**
@@ -15,7 +23,7 @@ return new class implements MigrationUpInterface
     public function up(): object
     {
         return DB::connection('lion_database')
-            ->createTable('roles', function () {
+            ->createTable('roles', function (): void {
                 DB::int('idroles')->notNull()->autoIncrement()->primaryKey();
                 DB::varchar('roles_name', 25)->notNull();
                 DB::varchar('roles_description', 30)->null();
