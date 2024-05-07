@@ -54,7 +54,7 @@ class UsersCitizenIdentificationRequiredRule extends Rules implements RulesInter
      */
     public function passes(): void
     {
-        $this->validate(function(Validator $validator) {
+        $this->validate(function (Validator $validator): void {
             $validator
                 ->rule('required', $this->field)
                 ->message('the "users_citizen_identification" property is required');

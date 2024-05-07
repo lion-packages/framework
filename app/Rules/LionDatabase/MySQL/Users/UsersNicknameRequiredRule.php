@@ -54,7 +54,7 @@ class UsersNicknameRequiredRule extends Rules implements RulesInterface
      */
     public function passes(): void
     {
-        $this->validate(function(Validator $validator) {
+        $this->validate(function (Validator $validator): void {
             $validator
                 ->rule('required', $this->field)
                 ->message('the "users_nickname" property is required');

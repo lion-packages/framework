@@ -54,7 +54,7 @@ class UsersNameRequiredRule extends Rules implements RulesInterface
      */
     public function passes(): void
     {
-        $this->validate(function(Validator $validator) {
+        $this->validate(function (Validator $validator): void {
             $validator
                 ->rule('required', $this->field)
                 ->message('the "users_name" property is required');
