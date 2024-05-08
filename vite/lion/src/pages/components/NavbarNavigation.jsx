@@ -1,6 +1,6 @@
 import { Container, Image, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import logo from "../../assets/img/icon white.png";
+import logo from "../../assets/img/icon-white.png";
 
 export default function NavbarNavigation() {
   return (
@@ -8,7 +8,7 @@ export default function NavbarNavigation() {
       <Container>
         <LinkContainer to={"/"}>
           <Navbar.Brand href="#">
-            <Image src={logo} width={40} />
+            <Image src={logo} width={35} />
 
             <label role="button">
               Lion-

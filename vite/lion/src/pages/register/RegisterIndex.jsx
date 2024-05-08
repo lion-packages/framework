@@ -3,9 +3,11 @@ import sha256 from "crypto-js/sha256";
 import { Fragment, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useResponse } from "../../context/ResponseProvider";
 
 export default function RegisterIndex() {
   const navigate = useNavigate();
+  const { addToast } = useResponse();
 
   const [users_email, setUsers_email] = useState("");
   const [users_password, setUsers_password] = useState("");
@@ -21,14 +23,30 @@ export default function RegisterIndex() {
     axios
       .post(`${import.meta.env.VITE_SERVER_URL_AUD}/api/auth/register`, form)
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
+
+        addToast([
+          {
+            status: data.status,
+            title: "Registration",
+            message: data.message,
+          },
+        ]);
 
         if (data.status === "success") {
           navigate("/auth/login");
         }
       })
       .catch(({ response }) => {
-        console.log(response);
+        // console.log(response);
+
+        addToast([
+          {
+            status: response.data.status,
+            title: "Registration",
+            message: response.data.message,
+          },
+        ]);
       });
   };
 

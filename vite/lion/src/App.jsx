@@ -3,24 +3,24 @@ import { Route, Routes } from "react-router-dom";
 import LoginIndex from "./pages/login/LoginIndex";
 import NavbarNavigation from "./pages/components/NavbarNavigation";
 import RegisterIndex from "./pages/register/RegisterIndex";
-import { AuthProvider } from "./context/AuthProvider";
+import AlertResponse from "./pages/components/AlertResponse";
 
 function App() {
   return (
     <Fragment>
-      <AuthProvider>
-        <NavbarNavigation />
+      <NavbarNavigation />
 
-        <Routes>
-          <Route path="*" element={<LoginIndex />} />
+      <AlertResponse />
 
-          <Route path="auth">
-            <Route path="login" element={<LoginIndex />} />
+      <Routes>
+        <Route path="*" element={<LoginIndex />} />
 
-            <Route path="register" element={<RegisterIndex />} />
-          </Route>
-        </Routes>
-      </AuthProvider>
+        <Route path="auth">
+          <Route path="login" element={<LoginIndex />} />
+
+          <Route path="register" element={<RegisterIndex />} />
+        </Route>
+      </Routes>
     </Fragment>
   );
 }

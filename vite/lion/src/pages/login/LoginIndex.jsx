@@ -4,9 +4,11 @@ import { Fragment, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import VerifiedUser from "./components/VerifiedUser";
 import { useAuth } from "../../context/AuthProvider";
+import { useResponse } from "../../context/ResponseProvider";
 
 export default function LoginIndex() {
   const { login } = useAuth();
+  const { addToast } = useResponse();
 
   const [users_email, setUsers_email] = useState("root@dev.com");
   const [users_password, setUsers_password] = useState("lion");
@@ -23,18 +25,47 @@ export default function LoginIndex() {
     axios
       .post(`${import.meta.env.VITE_SERVER_URL_AUD}/api/auth/login`, form)
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
 
         if ("success" === data.status) {
           login(data.data.jwt);
+
+          addToast([
+            {
+              status: data.status,
+              title: "Authentication",
+              message: data.message,
+            },
+            {
+              status: "info",
+              title: "Authentication",
+              message: `Welcome: ${data.data.full_name}`,
+            },
+          ]);
+        } else {
+          addToast([
+            {
+              status: "info",
+              title: "Authentication",
+              message: data.message,
+            },
+          ]);
         }
       })
       .catch(({ response }) => {
-        console.log(response.data);
+        // console.log(response.data);
 
         if (403 === response.data.code) {
           setVerified(true);
         }
+
+        addToast([
+          {
+            status: "error",
+            title: "Authentication",
+            message: response.data.message,
+          },
+        ]);
       });
   };
 
