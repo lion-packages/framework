@@ -47,7 +47,40 @@ class RegistrationControllerTest extends Test
         $this->assertJsonContent($response, [
             'code' => Request::HTTP_OK,
             'status' => Response::SUCCESS,
-            'message' => 'registered user successfully',
+            'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
+        ]);
+    }
+
+    public function testRegisterRegistered(): void
+    {
+        $response = fetch(Route::POST, (self::API_URL . '/register'), [
+            'json' => [
+                'users_email' => self::USERS_EMAIL,
+                'users_password' => self::USERS_PASSWORD,
+            ]
+        ])
+            ->getBody()
+            ->getContents();
+
+        $this->assertJsonContent($response, [
+            'code' => Request::HTTP_OK,
+            'status' => Response::SUCCESS,
+            'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
+        ]);
+
+        $exception = $this->getExceptionFromApi(function () {
+            fetch(Route::POST, (self::API_URL . '/register'), [
+                'json' => [
+                    'users_email' => self::USERS_EMAIL,
+                    'users_password' => self::USERS_PASSWORD,
+                ]
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Request::HTTP_BAD_REQUEST,
+            'status' => Response::ERROR,
+            'message' => 'there is already an account registered with this email',
         ]);
     }
 
@@ -65,7 +98,7 @@ class RegistrationControllerTest extends Test
         $this->assertJsonContent($response, [
             'code' => Request::HTTP_OK,
             'status' => Response::SUCCESS,
-            'message' => 'registered user successfully',
+            'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
         $users_activation_code = DB::table('users')
@@ -103,7 +136,7 @@ class RegistrationControllerTest extends Test
         $this->assertJsonContent($response, [
             'code' => Request::HTTP_OK,
             'status' => Response::SUCCESS,
-            'message' => 'registered user successfully',
+            'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
         $exception = $this->getExceptionFromApi(function () {
@@ -136,7 +169,7 @@ class RegistrationControllerTest extends Test
         $this->assertJsonContent($response, [
             'code' => Request::HTTP_OK,
             'status' => Response::SUCCESS,
-            'message' => 'registered user successfully',
+            'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
         $exception = $this->getExceptionFromApi(function () {

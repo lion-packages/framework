@@ -34,12 +34,18 @@ class RegistrationController
     public function register(
         Users $users,
         UsersModel $usersModel,
+        RegistrationModel $registrationModel,
         AccountService $accountService,
         Validation $validation
     ): object {
-        $response = $usersModel->createUsersDB(
+        $accountService->validateAccountExists(
+            $registrationModel,
             $users
                 ->setUsersEmail(request->users_email)
+        );
+
+        $response = $usersModel->createUsersDB(
+            $users
                 ->setUsersPassword($validation->passwordHash(request->users_password))
                 ->setUsersActivationCode(fake()->numerify('######'))
                 ->setUsersCode(uniqid('code-'))
@@ -49,7 +55,7 @@ class RegistrationController
             $accountService->sendVerifiyCodeEmail($users);
         }
 
-        return success('registered user successfully');
+        return success('user successfully registered, check your mailbox to obtain the account activation code');
     }
 
     /**

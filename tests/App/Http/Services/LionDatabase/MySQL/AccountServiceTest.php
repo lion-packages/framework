@@ -8,6 +8,7 @@ use App\Exceptions\AccountException;
 use App\Html\Email\RecoveryAccountHtml;
 use App\Html\Email\VerifyAccountHtml;
 use App\Http\Services\LionDatabase\MySQL\AccountService;
+use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Bundle\Enums\TaskStatusEnum;
@@ -164,5 +165,18 @@ class AccountServiceTest extends Test
             ->setUsersActivationCode($code);
 
         $this->accountService->updateActivationCode($users);
+    }
+
+    public function testValidateAccountExists(): void
+    {
+        $this->expectException(AccountException::class);
+        $this->expectExceptionCode(Request::HTTP_BAD_REQUEST);
+        $this->expectExceptionMessage('there is already an account registered with this email');
+
+        $this->accountService->validateAccountExists(
+            new RegistrationModel(),
+            (new Users())
+                ->setUsersEmail(self::USERS_EMAIL)
+        );
     }
 }

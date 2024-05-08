@@ -28,4 +28,19 @@ class RegistrationModel
             ->where()->equalTo('users_email', $users->getUsersEmail())
             ->get();
     }
+
+    /**
+     * Valid in the database if an account exists
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
+     * @return array|object
+     */
+    public function validateAccountExistsDB(Users $users): array|object
+    {
+        return DB::table('users')
+            ->select(DB::as(DB::count('*'), 'cont'))
+            ->where()->equalTo('users_email', $users->getUsersEmail())
+            ->get();
+    }
 }

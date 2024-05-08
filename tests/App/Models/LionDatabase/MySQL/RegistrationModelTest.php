@@ -50,4 +50,27 @@ class RegistrationModelTest extends Test
         $this->assertSame($user->idusers, $data->idusers);
         $this->assertSame($user->users_activation_code, $data->users_activation_code);
     }
+
+    public function testValidateAccountExistsDB(): void
+    {
+        $users = $this->usersModel->readUsersDB();
+
+        $this->assertIsArray($users);
+
+        $row = reset($users);
+
+        $user = $this->usersModel->readUsersByIdDB(
+            (new Users())
+                ->setIdusers($row->idusers)
+        );
+
+        $cont = $this->registrationModel->validateAccountExistsDB(
+            (new Users())
+                ->setUsersEmail($user->users_email)
+        );
+
+        $this->assertIsObject($cont);
+        $this->assertObjectHasProperty('cont', $cont);
+        $this->assertSame(1, $cont->cont);
+    }
 }
