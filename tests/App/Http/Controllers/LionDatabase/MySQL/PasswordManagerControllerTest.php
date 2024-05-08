@@ -53,6 +53,37 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
+    public function testRecoveryPasswordCodeNotNull(): void
+    {
+        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/recovery'), [
+            'json' => [
+                'users_email' => self::USERS_EMAIL
+            ]
+        ])
+            ->getBody()
+            ->getContents();
+
+        $this->assertJsonContent($response, [
+            'code' => Request::HTTP_OK,
+            'status' => Response::SUCCESS,
+            'message' => 'confirmation code sent, check your email inbox to see your verification code',
+        ]);
+
+        $exception = $this->getExceptionFromApi(function () {
+            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/recovery'), [
+                'json' => [
+                    'users_email' => self::USERS_EMAIL
+                ]
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Request::HTTP_FORBIDDEN,
+            'status' => Response::ERROR,
+            'message' => 'a verification code has already been sent to this account',
+        ]);
+    }
+
     public function testRecoveryPasswordIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function () {

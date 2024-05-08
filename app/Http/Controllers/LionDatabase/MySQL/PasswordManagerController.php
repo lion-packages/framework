@@ -39,9 +39,17 @@ class PasswordManagerController
         AccountService $accountService,
         LoginService $loginService
     ): object {
-        $loginService->validateSession($users->setUsersEmail(request->users_email));
+        $users
+            ->setUsersEmail(request->users_email);
+
+        $loginService->validateSession($users);
 
         $user = $usersModel->readUsersByEmailDB($users);
+
+        $users
+            ->setUsersRecoveryCode($user->users_recovery_code);
+
+        $accountService->checkRecoveryCodeInactive($users);
 
         $users
             ->setIdusers($user->idusers)

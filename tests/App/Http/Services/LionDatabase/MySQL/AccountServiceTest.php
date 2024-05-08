@@ -45,6 +45,18 @@ class AccountServiceTest extends Test
         Schema::truncateTable('task_queue')->execute();
     }
 
+    public function testCheckRecoveryCodeInactive(): void
+    {
+        $this->expectException(AccountException::class);
+        $this->expectExceptionCode(Request::HTTP_FORBIDDEN);
+        $this->expectExceptionMessage('a verification code has already been sent to this account');
+
+        $this->accountService->checkRecoveryCodeInactive(
+            (new Users())
+                ->setUsersRecoveryCode(fake()->numerify('######'))
+        );
+    }
+
     public function testSendVerifiyCodeEmail(): void
     {
         $account = fake()->email();

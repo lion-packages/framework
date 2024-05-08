@@ -38,6 +38,26 @@ class AccountService
     }
 
     /**
+     * Check if the recovery code is inactive
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
+     * @return void
+     *
+     * @throws AccountException [Throws an error if the verification code is
+     * already active]
+     */
+    public function checkRecoveryCodeInactive(Users $users): void
+    {
+        if (null != $users->getUsersRecoveryCode()) {
+            throw new AccountException(
+                'a verification code has already been sent to this account',
+                Request::HTTP_FORBIDDEN
+            );
+        }
+    }
+
+    /**
      * Send a verification email to the user's account adding the process to the
      * task queue
      *
