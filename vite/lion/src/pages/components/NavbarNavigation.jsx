@@ -2,9 +2,14 @@ import { Container, Image, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import logo from "../../assets/img/icon-white.png";
 import { useAuth } from "../../context/AuthProvider";
+import { Fragment } from "react";
+import { useResponse } from "../../context/ResponseProvider";
+import { useNavigate } from "react-router-dom";
 
 export default function NavbarNavigation() {
-  const { jwt } = useAuth();
+  const navigate = useNavigate();
+  const { jwt, logout } = useAuth();
+  const { addToast } = useResponse();
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary shadow-sm">
@@ -24,25 +29,42 @@ export default function NavbarNavigation() {
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <LinkContainer to={"/auth/login"}>
-              <Nav.Link href="#">Login</Nav.Link>
-            </LinkContainer>
+            {!jwt && (
+              <Fragment>
+                <LinkContainer to={"/auth/login"}>
+                  <Nav.Link href="#">Login</Nav.Link>
+                </LinkContainer>
 
-            <LinkContainer to={"/auth/register"}>
-              <Nav.Link href="#">Register</Nav.Link>
-            </LinkContainer>
+                <LinkContainer to={"/auth/register"}>
+                  <Nav.Link href="#">Register</Nav.Link>
+                </LinkContainer>
+              </Fragment>
+            )}
 
-            {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown> */}
+            {jwt && (
+              <Fragment>
+                <NavDropdown title="Options" id="basic-nav-dropdown">
+                  <NavDropdown.Item
+                    href="#"
+                    onClick={() => {
+                      logout();
+
+                      addToast([
+                        {
+                          status: "info",
+                          title: "Sign off",
+                          message: "You have been signed off",
+                        },
+                      ]);
+
+                      navigate("/auth/login");
+                    }}
+                  >
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </Fragment>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
