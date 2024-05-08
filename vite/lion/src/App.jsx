@@ -4,6 +4,7 @@ import LoginIndex from "./pages/login/LoginIndex";
 import NavbarNavigation from "./pages/components/NavbarNavigation";
 import RegisterIndex from "./pages/register/RegisterIndex";
 import AlertResponse from "./pages/components/AlertResponse";
+import DashboardIndex from "./pages/dashboard/DashboardIndex";
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
 
       <Routes>
         <Route path="*" element={<LoginIndex />} />
+
+        <Route path="dashboard" element={<DashboardIndex />} />
 
         <Route path="auth">
           <Route path="login" element={<LoginIndex />} />

@@ -5,8 +5,10 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import VerifiedUser from "./components/VerifiedUser";
 import { useAuth } from "../../context/AuthProvider";
 import { useResponse } from "../../context/ResponseProvider";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginIndex() {
+  const navigate = useNavigate();
   const { login } = useAuth();
   const { addToast } = useResponse();
 
@@ -42,6 +44,8 @@ export default function LoginIndex() {
               message: `Welcome: ${data.data.full_name}`,
             },
           ]);
+
+          navigate("/dashboard");
         } else {
           addToast([
             {
