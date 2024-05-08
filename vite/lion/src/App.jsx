@@ -7,6 +7,7 @@ import AlertResponse from "./pages/components/AlertResponse";
 import DashboardIndex from "./pages/dashboard/DashboardIndex";
 import AuthenticatedMiddleware from "./middleware/AuthenticatedMiddleware";
 import NotAuthenticatedMiddleware from "./middleware/NotAuthenticatedMiddleware";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
       <AlertResponse />
 
       <Routes>
-        <Route path="*" element={<LoginIndex />} />
+        <Route path="*" element={<NotFound />} />
 
         <Route
           path="dashboard"
