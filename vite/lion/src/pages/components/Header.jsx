@@ -6,7 +6,7 @@ import { Fragment } from "react";
 import { useResponse } from "../../context/ResponseProvider";
 import { useNavigate } from "react-router-dom";
 
-export default function NavbarNavigation() {
+export default function Header() {
   const navigate = useNavigate();
   const { jwt, logout } = useAuth();
   const { addToast } = useResponse();

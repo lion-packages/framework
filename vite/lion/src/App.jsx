@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Route, Routes } from "react-router-dom";
 import LoginIndex from "./pages/auth/login/LoginIndex";
-import NavbarNavigation from "./pages/components/NavbarNavigation";
+import Header from "./pages/components/Header";
 import RegisterIndex from "./pages/auth/register/RegisterIndex";
 import AlertResponse from "./pages/components/AlertResponse";
 import DashboardIndex from "./pages/dashboard/DashboardIndex";
@@ -13,7 +13,7 @@ import RecoveryPasswordIndex from "./pages/auth/recovery-password/RecoveryPasswo
 function App() {
   return (
     <Fragment>
-      <NavbarNavigation />
+      <Header />
 
       <AlertResponse />
 
