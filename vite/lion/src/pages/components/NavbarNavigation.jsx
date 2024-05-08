@@ -1,13 +1,16 @@
 import { Container, Image, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import logo from "../../assets/img/icon-white.png";
+import { useAuth } from "../../context/AuthProvider";
 
 export default function NavbarNavigation() {
+  const { jwt } = useAuth();
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary shadow-sm">
       <Container>
-        <LinkContainer to={"/"}>
-          <Navbar.Brand href="#">
+        <LinkContainer to={jwt ? "/dashboard" : "/auth/login"}>
+          <Navbar.Brand href={"#"}>
             <Image src={logo} width={35} />
 
             <label role="button">

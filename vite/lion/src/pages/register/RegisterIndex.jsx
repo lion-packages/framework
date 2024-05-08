@@ -2,7 +2,7 @@ import axios from "axios";
 import sha256 from "crypto-js/sha256";
 import { Fragment, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useResponse } from "../../context/ResponseProvider";
 
 export default function RegisterIndex() {
@@ -69,27 +69,28 @@ export default function RegisterIndex() {
 
             <Form onSubmit={handleSubmit}>
               <Form.Group as={Row} className="mb-3" controlId="users_email">
-                <Form.Label column sm="2">
+                <Form.Label column sm={3}>
                   Email
                 </Form.Label>
 
-                <Col sm="10">
+                <Col sm={9}>
                   <Form.Control
                     value={users_email}
                     onChange={(e) => setUsers_email(e.target.value)}
                     type="email"
                     placeholder="Email..."
                     required
+                    autoComplete="off"
                   />
                 </Col>
               </Form.Group>
 
               <Form.Group as={Row} className="mb-3" controlId="users_password">
-                <Form.Label column sm="2">
+                <Form.Label column sm={3}>
                   Password
                 </Form.Label>
 
-                <Col sm="10">
+                <Col sm={9}>
                   <Form.Control
                     value={users_password}
                     onChange={(e) => setUsers_password(e.target.value)}
@@ -103,6 +104,10 @@ export default function RegisterIndex() {
               <Button type="submit" variant="success" className="float-end">
                 Register
               </Button>
+
+              <Link to="/auth/login" className="btn btn-link float-end me-2">
+                Login
+              </Link>
             </Form>
           </Col>
         </Row>

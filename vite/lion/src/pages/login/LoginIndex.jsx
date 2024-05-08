@@ -5,7 +5,7 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import VerifiedUser from "./components/VerifiedUser";
 import { useAuth } from "../../context/AuthProvider";
 import { useResponse } from "../../context/ResponseProvider";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginIndex() {
   const navigate = useNavigate();
@@ -99,17 +99,18 @@ export default function LoginIndex() {
 
                 <Form onSubmit={handleSubmit}>
                   <Form.Group as={Row} className="mb-3" controlId="users_email">
-                    <Form.Label column sm="2">
+                    <Form.Label column sm={3}>
                       Email
                     </Form.Label>
 
-                    <Col sm="10">
+                    <Col sm={9}>
                       <Form.Control
                         value={users_email}
                         onChange={(e) => setUsers_email(e.target.value)}
                         type="email"
                         placeholder="Email..."
                         required
+                        autoComplete="off"
                       />
                     </Col>
                   </Form.Group>
@@ -119,11 +120,11 @@ export default function LoginIndex() {
                     className="mb-3"
                     controlId="users_password"
                   >
-                    <Form.Label column sm="2">
+                    <Form.Label column sm={3}>
                       Password
                     </Form.Label>
 
-                    <Col sm="10">
+                    <Col sm={9}>
                       <Form.Control
                         value={users_password}
                         onChange={(e) => setUsers_password(e.target.value)}
@@ -137,6 +138,13 @@ export default function LoginIndex() {
                   <Button type="submit" variant="success" className="float-end">
                     Login
                   </Button>
+
+                  <Link
+                    to="/auth/register"
+                    className="btn btn-link float-end me-2"
+                  >
+                    Register
+                  </Link>
                 </Form>
               </Fragment>
             )}
