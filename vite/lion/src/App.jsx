@@ -6,6 +6,7 @@ import RegisterIndex from "./pages/register/RegisterIndex";
 import AlertResponse from "./pages/components/AlertResponse";
 import DashboardIndex from "./pages/dashboard/DashboardIndex";
 import AuthenticatedMiddleware from "./middleware/AuthenticatedMiddleware";
+import NotAuthenticatedMiddleware from "./middleware/NotAuthenticatedMiddleware";
 
 function App() {
   return (
@@ -27,9 +28,23 @@ function App() {
         />
 
         <Route path="auth">
-          <Route path="login" element={<LoginIndex />} />
+          <Route
+            path="login"
+            element={
+              <NotAuthenticatedMiddleware>
+                <LoginIndex />
+              </NotAuthenticatedMiddleware>
+            }
+          />
 
-          <Route path="register" element={<RegisterIndex />} />
+          <Route
+            path="register"
+            element={
+              <NotAuthenticatedMiddleware>
+                <RegisterIndex />
+              </NotAuthenticatedMiddleware>
+            }
+          />
         </Route>
       </Routes>
     </Fragment>
