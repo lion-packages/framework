@@ -3,8 +3,8 @@ import sha256 from "crypto-js/sha256";
 import { Fragment, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import VerifiedUser from "./components/VerifiedUser";
-import { useAuth } from "../../context/AuthProvider";
-import { useResponse } from "../../context/ResponseProvider";
+import { useAuth } from "../../../context/AuthProvider";
+import { useResponse } from "../../../context/ResponseProvider";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginIndex() {
@@ -135,16 +135,26 @@ export default function LoginIndex() {
                     </Col>
                   </Form.Group>
 
-                  <Button type="submit" variant="success" className="float-end">
-                    Login
-                  </Button>
+                  <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <Button type="submit" variant="success">
+                      Login
+                    </Button>
+                  </div>
 
-                  <Link
-                    to="/auth/register"
-                    className="btn btn-link float-end me-2"
-                  >
-                    Register
-                  </Link>
+                  <hr />
+
+                  <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <Link
+                      to="/auth/recovery-password"
+                      className="btn btn-link  me-2"
+                    >
+                      Forgot your password?
+                    </Link>
+
+                    <Link to="/auth/register" className="btn btn-link">
+                      Create Account
+                    </Link>
+                  </div>
                 </Form>
               </Fragment>
             )}

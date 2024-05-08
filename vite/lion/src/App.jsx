@@ -1,13 +1,14 @@
 import { Fragment } from "react";
 import { Route, Routes } from "react-router-dom";
-import LoginIndex from "./pages/login/LoginIndex";
+import LoginIndex from "./pages/auth/login/LoginIndex";
 import NavbarNavigation from "./pages/components/NavbarNavigation";
-import RegisterIndex from "./pages/register/RegisterIndex";
+import RegisterIndex from "./pages/auth/register/RegisterIndex";
 import AlertResponse from "./pages/components/AlertResponse";
 import DashboardIndex from "./pages/dashboard/DashboardIndex";
 import AuthenticatedMiddleware from "./middleware/AuthenticatedMiddleware";
 import NotAuthenticatedMiddleware from "./middleware/NotAuthenticatedMiddleware";
 import NotFound from "./pages/errors/NotFound";
+import RecoveryPasswordIndex from "./pages/auth/recovery-password/RecoveryPasswordIndex";
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
 
       <Routes>
         <Route path="*" element={<NotFound />} />
+
+        <Route path="/" element={<LoginIndex />} />
 
         <Route
           path="dashboard"
@@ -43,6 +46,15 @@ function App() {
             element={
               <NotAuthenticatedMiddleware>
                 <RegisterIndex />
+              </NotAuthenticatedMiddleware>
+            }
+          />
+
+          <Route
+            path="recovery-password"
+            element={
+              <NotAuthenticatedMiddleware>
+                <RecoveryPasswordIndex />
               </NotAuthenticatedMiddleware>
             }
           />

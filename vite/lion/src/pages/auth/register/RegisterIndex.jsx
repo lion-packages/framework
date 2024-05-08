@@ -3,7 +3,7 @@ import sha256 from "crypto-js/sha256";
 import { Fragment, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useResponse } from "../../context/ResponseProvider";
+import { useResponse } from "../../../context/ResponseProvider";
 
 export default function RegisterIndex() {
   const navigate = useNavigate();
