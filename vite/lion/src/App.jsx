@@ -7,7 +7,7 @@ import AlertResponse from "./pages/components/AlertResponse";
 import DashboardIndex from "./pages/dashboard/DashboardIndex";
 import AuthenticatedMiddleware from "./middleware/AuthenticatedMiddleware";
 import NotAuthenticatedMiddleware from "./middleware/NotAuthenticatedMiddleware";
-import NotFound from "./pages/NotFound";
+import NotFound from "./pages/errors/NotFound";
 
 function App() {
   return (
