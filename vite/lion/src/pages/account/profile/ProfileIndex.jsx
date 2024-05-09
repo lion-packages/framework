@@ -2,9 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useAuth } from "../../../context/AuthProvider";
+import { useResponse } from "../../../context/ResponseProvider";
+import useApiResponse from "../../../hooks/useApiResponse";
 
 export default function ProfileIndex() {
   const { getJWT } = useAuth();
+  const { addToast } = useResponse();
+  const { getResponseFromRules } = useApiResponse();
 
   const [idroles, setIdroles] = useState("");
   const [iddocument_types, setIddocument_types] = useState("");
@@ -15,8 +19,39 @@ export default function ProfileIndex() {
   const [users_nickname, setUsers_nickname] = useState("");
   const [users_email, setUsers_email] = useState("");
 
-  const handleUpdateProfile = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
+
+    const form = {
+      iddocument_types: parseInt(iddocument_types),
+      users_citizen_identification: users_citizen_identification,
+      users_name: users_name,
+      users_last_name: users_last_name,
+      users_nickname: users_nickname,
+    };
+
+    axios
+      .put(`${import.meta.env.VITE_SERVER_URL_AUD}/api/profile`, form, {
+        headers: {
+          Authorization: `Bearer ${getJWT()}`,
+        },
+      })
+      .then(({ data }) => {
+        // console.log(data);
+
+        addToast([
+          {
+            status: data.status,
+            title: "Profile",
+            message: data.message,
+          },
+        ]);
+      })
+      .catch(({ response }) => {
+        // console.log(response);
+
+        addToast([...getResponseFromRules("Profile", response.data)]);
+      });
   };
 
   const handleReadProfile = () => {
@@ -49,7 +84,7 @@ export default function ProfileIndex() {
   return (
     <Container>
       <div className="my-5">
-        <Form onSubmit={handleUpdateProfile}>
+        <Form onSubmit={handleSubmit}>
           <div className="mb-3">
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <h4>Account information</h4>
@@ -71,7 +106,12 @@ export default function ProfileIndex() {
                   </Form.Label>
 
                   <Col sm={9} md={8}>
-                    <Form.Select value={idroles} aria-label="idroles" disabled>
+                    <Form.Select
+                      value={idroles}
+                      onChange={(e) => setIdroles(e.target.value)}
+                      aria-label="idroles"
+                      disabled
+                    >
                       <option value={""}>Select</option>
                       <option value="1">Administrator</option>
                       <option value="2">Manager</option>

@@ -98,7 +98,14 @@ Routes::setRules([
             UsersNameRequiredRule::class,
             UsersLastNameRequiredRule::class,
             UsersEmailRule::class,
-        ]
+        ],
+        '/api/profile' => [
+            IddocumentTypesRule::class,
+            UsersCitizenIdentificationRequiredRule::class,
+            UsersNameRequiredRule::class,
+            UsersLastNameRequiredRule::class,
+            UsersNicknameRequiredRule::class,
+        ],
     ],
 
     /**

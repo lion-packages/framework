@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Enums\DocumentTypesEnum;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
+use Lion\Request\Request;
+use Lion\Request\Response;
 use Lion\Route\Route;
 use Lion\Test\Test;
 use Tests\Providers\AuthJwtProviderTrait;
@@ -48,5 +51,29 @@ class ProfileControllerTest extends Test
         $this->assertObjectHasProperty('users_last_name', $response);
         $this->assertObjectHasProperty('users_nickname', $response);
         $this->assertObjectHasProperty('users_email', $response);
+    }
+
+    public function testUpdateProfile(): void
+    {
+        $response = fetch(Route::PUT, (env('SERVER_URL') . '/api/profile'), [
+            'headers' => [
+                'Authorization' => $this->getAuthorization(['idusers' => self::IDUSERS])
+            ],
+            'json' => [
+                'iddocument_types' => DocumentTypesEnum::PASSPORT->value,
+                'users_citizen_identification' => fake()->numerify('##########'),
+                'users_name' => fake()->name(),
+                'users_last_name' => fake()->lastName(),
+                'users_nickname' => fake()->userName(),
+            ]
+        ])
+            ->getBody()
+            ->getContents();
+
+        $this->assertJsonContent($response, [
+            'code' => Request::HTTP_OK,
+            'status' => Response::SUCCESS,
+            'message' => 'profile updated successfully',
+        ]);
     }
 }

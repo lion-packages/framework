@@ -41,11 +41,20 @@ class ProfileModel
     /**
      * Description of 'updateProfileDB'
      *
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
      * @return object
      */
-    public function updateProfileDB(): object
+    public function updateProfileDB(Users $users): object
     {
-        return DB::call('', [])->execute();
+        return DB::call('update_profile', [
+            $users->getIddocumentTypes(),
+            $users->getUsersCitizenIdentification(),
+            $users->getUsersName(),
+            $users->getUsersLastName(),
+            $users->getUsersNickname(),
+            $users->getIdusers(),
+        ])->execute();
     }
 
     /**

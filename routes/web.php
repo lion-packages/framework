@@ -34,6 +34,7 @@ Route::prefix('api', function () {
 
     Route::middleware(['jwt-authorize'], function () {
         Route::get('profile', [ProfileController::class, 'readProfile']);
+        Route::put('profile', [ProfileController::class, 'updateProfile']);
 
         Route::post('users', [UsersController::class, 'createUsers']);
         Route::get('users', [UsersController::class, 'readUsers']);
