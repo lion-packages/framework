@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\LionDatabase\MySQL\LoginController;
 use App\Http\Controllers\LionDatabase\MySQL\PasswordManagerController;
+use App\Http\Controllers\LionDatabase\MySQL\ProfileController;
 use App\Http\Controllers\LionDatabase\MySQL\RegistrationController;
 use App\Http\Controllers\LionDatabase\MySQL\UsersController;
 use Lion\Route\Route;
@@ -32,6 +33,8 @@ Route::prefix('api', function () {
     });
 
     Route::middleware(['jwt-authorize'], function () {
+        Route::get('profile', [ProfileController::class, 'readProfile']);
+
         Route::post('users', [UsersController::class, 'createUsers']);
         Route::get('users', [UsersController::class, 'readUsers']);
         Route::get('users/{idusers:i}', [UsersController::class, 'readUsersById']);

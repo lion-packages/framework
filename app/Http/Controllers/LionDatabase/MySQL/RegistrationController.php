@@ -21,7 +21,7 @@ class RegistrationController
     /**
      * Register users with their basic data to create a user account
      *
-     * @route api/auth/register
+     * @route /api/auth/register
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -61,7 +61,7 @@ class RegistrationController
     /**
      * Validate if an account validation code is correct
      *
-     * @route api/auth/verify
+     * @route /api/auth/verify
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param RegistrationModel $registrationModel [Validate in the database if

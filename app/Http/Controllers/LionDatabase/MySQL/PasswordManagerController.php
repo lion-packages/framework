@@ -23,7 +23,7 @@ class PasswordManagerController
     /**
      * Manage user password recovery by sending a verification email
      *
-     * @route api/auth/password/recovery
+     * @route /api/auth/password/recovery
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -65,7 +65,7 @@ class PasswordManagerController
     /**
      * Update lost user passwords
      *
-     * @route api/auth/password/verify-code
+     * @route /api/auth/password/verify-code
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param PasswordManager $passwordManagzzzzzzer [Capsule for the
@@ -122,7 +122,7 @@ class PasswordManagerController
     /**
      * Update user passwords
      *
-     * @route api/auth/password/update
+     * @route /api/auth/password/update
      *
      * @param PasswordManager $passwordManager [Capsule for the
      * 'PasswordManager' entity]

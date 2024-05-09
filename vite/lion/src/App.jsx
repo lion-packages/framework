@@ -9,6 +9,7 @@ import AuthenticatedMiddleware from "./middleware/AuthenticatedMiddleware";
 import NotAuthenticatedMiddleware from "./middleware/NotAuthenticatedMiddleware";
 import NotFound from "./pages/errors/NotFound";
 import RecoveryPasswordIndex from "./pages/auth/recovery-password/RecoveryPasswordIndex";
+import ProfileIndex from "./pages/account/profile/ProfileIndex";
 
 function App() {
   return (
@@ -30,6 +31,8 @@ function App() {
             </AuthenticatedMiddleware>
           }
         />
+
+        <Route path="account" element={<ProfileIndex />} />
 
         <Route path="auth">
           <Route

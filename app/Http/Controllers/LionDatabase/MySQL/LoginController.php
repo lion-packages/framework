@@ -20,7 +20,7 @@ class LoginController
     /**
      * Manage user authentication
      *
-     * @route api/auth/login
+     * @route /api/auth/login
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param LoginModel $loginModel [Model for user authentication]
