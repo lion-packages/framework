@@ -68,17 +68,4 @@ class ProfileController
 
         return success('profile updated successfully');
     }
-
-    /**
-     * Description of 'deleteProfile'
-     *
-     * @param ProfileModel $profileModel [Parameter Description]
-     * @param string $id [Parameter Description]
-     *
-     * @return object
-     */
-    public function deleteProfile(ProfileModel $profileModel, string $id): object
-    {
-        return $profileModel->deleteProfileDB();
-    }
 }

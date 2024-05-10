@@ -10,6 +10,9 @@ import NotAuthenticatedMiddleware from "./middleware/NotAuthenticatedMiddleware"
 import NotFound from "./pages/errors/NotFound";
 import RecoveryPasswordIndex from "./pages/auth/recovery-password/RecoveryPasswordIndex";
 import ProfileIndex from "./pages/account/profile/ProfileIndex";
+import ProfileGeneral from "./pages/account/profile/components/ProfileGeneral";
+import ProfileInformation from "./pages/account/profile/components/ProfileInformation";
+import { ProfileProvider } from "./context/account/ProfileProvider";
 
 function App() {
   return (
@@ -32,7 +35,19 @@ function App() {
           }
         />
 
-        <Route path="account" element={<ProfileIndex />} />
+        <Route
+          path="account"
+          element={
+            <AuthenticatedMiddleware>
+              <ProfileProvider>
+                <ProfileIndex />
+              </ProfileProvider>
+            </AuthenticatedMiddleware>
+          }
+        >
+          <Route path="general" element={<ProfileGeneral />} />
+          <Route path="information" element={<ProfileInformation />} />
+        </Route>
 
         <Route path="auth">
           <Route

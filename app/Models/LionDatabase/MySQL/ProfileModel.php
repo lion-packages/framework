@@ -56,14 +56,4 @@ class ProfileModel
             $users->getIdusers(),
         ])->execute();
     }
-
-    /**
-     * Description of 'deleteProfileDB'
-     *
-     * @return object
-     */
-    public function deleteProfileDB(): object
-    {
-        return DB::call('', [])->execute();
-    }
 }

@@ -44,7 +44,7 @@ export default function Header() {
             {jwt && (
               <Fragment>
                 <NavDropdown title="Options" id="basic-nav-dropdown">
-                  <LinkContainer to={"/account"}>
+                  <LinkContainer to={"/account/general"}>
                     <NavDropdown.Item href="#">Account</NavDropdown.Item>
                   </LinkContainer>
 
