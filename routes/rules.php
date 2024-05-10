@@ -71,7 +71,7 @@ Routes::setRules([
             UsersPasswordNewRule::class,
             UsersPasswordConfirmRule::class,
         ],
-        '/api/auth/password/update' => [
+        '/api/profile/password' => [
             UsersPasswordRule::class,
             UsersPasswordNewRule::class,
             UsersPasswordConfirmRule::class,

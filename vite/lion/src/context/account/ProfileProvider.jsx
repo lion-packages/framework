@@ -68,7 +68,9 @@ export function ProfileProvider({ children }) {
         ]);
       })
       .catch(({ response }) => {
-        addToast([...getResponseFromRules("Profile", response.data)]);
+        if (500 === response.data.code) {
+          addToast([...getResponseFromRules("Profile", response.data)]);
+        }
       });
   };
 

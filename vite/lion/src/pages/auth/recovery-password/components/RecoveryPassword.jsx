@@ -112,7 +112,7 @@ export default function RecoveryPassword({ users_email, setActive }) {
           </Row>
         </div>
 
-        <Form.Group as={Row} className="mb-3" controlId="users_password">
+        <Form.Group as={Row} className="mb-3" controlId="users_password_new">
           <Form.Label column sm={3}>
             New password
           </Form.Label>
@@ -128,7 +128,11 @@ export default function RecoveryPassword({ users_email, setActive }) {
           </Col>
         </Form.Group>
 
-        <Form.Group as={Row} className="mb-3" controlId="users_password">
+        <Form.Group
+          as={Row}
+          className="mb-3"
+          controlId="users_password_confirm"
+        >
           <Form.Label column sm={3}>
             Confirm new password
           </Form.Label>

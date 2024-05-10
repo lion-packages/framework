@@ -29,6 +29,12 @@ export default function ProfileIndex() {
             Information
           </Nav.Link>
         </Nav.Item>
+
+        <Nav.Item>
+          <Nav.Link eventKey="change-password" className="text-warning">
+            Change Password
+          </Nav.Link>
+        </Nav.Item>
       </Nav>
 
       <Container>

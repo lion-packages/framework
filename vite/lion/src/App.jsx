@@ -13,6 +13,7 @@ import ProfileIndex from "./pages/account/profile/ProfileIndex";
 import ProfileGeneral from "./pages/account/profile/components/ProfileGeneral";
 import ProfileInformation from "./pages/account/profile/components/ProfileInformation";
 import { ProfileProvider } from "./context/account/ProfileProvider";
+import ProfileChangePassword from "./pages/account/profile/components/ProfileChangePassword";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
         >
           <Route path="general" element={<ProfileGeneral />} />
           <Route path="information" element={<ProfileInformation />} />
+          <Route path="change-password" element={<ProfileChangePassword />} />
         </Route>
 
         <Route path="auth">

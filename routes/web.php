@@ -28,13 +28,15 @@ Route::prefix('api', function () {
         Route::prefix('password', function () {
             Route::post('recovery', [PasswordManagerController::class, 'recoveryPassword']);
             Route::post('verify-code', [PasswordManagerController::class, 'updateLostPassword']);
-            Route::post('update', [PasswordManagerController::class, 'updatePassword'], ['jwt-authorize']);
         });
     });
 
     Route::middleware(['jwt-authorize'], function () {
-        Route::get('profile', [ProfileController::class, 'readProfile']);
-        Route::put('profile', [ProfileController::class, 'updateProfile']);
+        Route::prefix('profile', function () {
+            Route::get('/', [ProfileController::class, 'readProfile']);
+            Route::put('/', [ProfileController::class, 'updateProfile']);
+            Route::post('password', [PasswordManagerController::class, 'updatePassword']);
+        });
 
         Route::post('users', [UsersController::class, 'createUsers']);
         Route::get('users', [UsersController::class, 'readUsers']);
