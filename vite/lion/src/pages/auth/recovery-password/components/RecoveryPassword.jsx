@@ -4,10 +4,12 @@ import { Fragment, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useResponse } from "../../../../context/ResponseProvider";
+import useApiResponse from "../../../../hooks/useApiResponse";
 
 export default function RecoveryPassword({ users_email, setActive }) {
   const navigate = useNavigate();
   const { addToast } = useResponse();
+  const { getResponseFromRules } = useApiResponse();
 
   const [codes, setCodes] = useState(["", "", "", "", "", ""]);
   const [users_password_new, setUsers_password_new] = useState("");
@@ -63,19 +65,15 @@ export default function RecoveryPassword({ users_email, setActive }) {
         ]);
 
         if ("success" === data.status) {
+          setActive(false);
+
           navigate("/auth/login");
         }
       })
       .catch(({ response }) => {
         // console.log(response.data);
 
-        addToast([
-          {
-            status: response.data.status,
-            title: "Recover password",
-            message: response.data.message,
-          },
-        ]);
+        addToast([...getResponseFromRules("Recover password", response.data)]);
       });
   };
 

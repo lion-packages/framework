@@ -4,10 +4,12 @@ import { Fragment, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useResponse } from "../../../context/ResponseProvider";
+import useApiResponse from "../../../hooks/useApiResponse";
 
 export default function RegisterIndex() {
   const navigate = useNavigate();
   const { addToast } = useResponse();
+  const { getResponseFromRules } = useApiResponse();
 
   const [users_email, setUsers_email] = useState("");
   const [users_password, setUsers_password] = useState("");
@@ -40,78 +42,70 @@ export default function RegisterIndex() {
       .catch(({ response }) => {
         // console.log(response);
 
-        addToast([
-          {
-            status: response.data.status,
-            title: "Registration",
-            message: response.data.message,
-          },
-        ]);
+        addToast([...getResponseFromRules("Registration", response.data)]);
       });
   };
 
   return (
-    <Fragment>
-      <Container>
-        <Row>
-          <Col
-            xs={12}
-            sm={12}
-            md={8}
-            lg={7}
-            xl={5}
-            xxl={5}
-            className="mx-auto my-5 bg-light border rounded p-3"
-          >
-            <h4>Register</h4>
+    <Container>
+      <Row>
+        <Col
+          xs={12}
+          sm={12}
+          md={8}
+          lg={7}
+          xl={5}
+          xxl={5}
+          className="mx-auto my-5 bg-light border rounded p-3"
+        >
+          <h4>Register</h4>
 
-            <hr />
+          <hr />
 
-            <Form onSubmit={handleSubmit}>
-              <Form.Group as={Row} className="mb-3" controlId="users_email">
-                <Form.Label column sm={3}>
-                  Email
-                </Form.Label>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group as={Row} className="mb-3" controlId="users_email">
+              <Form.Label column sm={3}>
+                Email
+              </Form.Label>
 
-                <Col sm={9}>
-                  <Form.Control
-                    value={users_email}
-                    onChange={(e) => setUsers_email(e.target.value)}
-                    type="email"
-                    placeholder="Email..."
-                    required
-                    autoComplete="off"
-                  />
-                </Col>
-              </Form.Group>
+              <Col sm={9}>
+                <Form.Control
+                  value={users_email}
+                  onChange={(e) => setUsers_email(e.target.value)}
+                  type="email"
+                  placeholder="Email..."
+                  required
+                  autoComplete="off"
+                />
+              </Col>
+            </Form.Group>
 
-              <Form.Group as={Row} className="mb-3" controlId="users_password">
-                <Form.Label column sm={3}>
-                  Password
-                </Form.Label>
+            <Form.Group as={Row} className="mb-3" controlId="users_password">
+              <Form.Label column sm={3}>
+                Password
+              </Form.Label>
 
-                <Col sm={9}>
-                  <Form.Control
-                    value={users_password}
-                    onChange={(e) => setUsers_password(e.target.value)}
-                    type="password"
-                    placeholder="Password..."
-                    autoComplete="off"
-                  />
-                </Col>
-              </Form.Group>
+              <Col sm={9}>
+                <Form.Control
+                  value={users_password}
+                  onChange={(e) => setUsers_password(e.target.value)}
+                  type="password"
+                  placeholder="Password..."
+                  autoComplete="off"
+                />
+              </Col>
+            </Form.Group>
 
-              <Button type="submit" variant="success" className="float-end">
-                Register
-              </Button>
+            <Button type="submit" variant="success" className="float-end">
+              Register
+            </Button>
 
-              <Link to="/auth/login" className="btn btn-link float-end me-2">
-                Login
-              </Link>
-            </Form>
-          </Col>
-        </Row>
-      </Container>
-    </Fragment>
+            <Link to="/auth/login" className="btn btn-link float-end me-2">
+              Login
+            </Link>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
   );
 }

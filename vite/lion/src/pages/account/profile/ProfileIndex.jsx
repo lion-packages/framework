@@ -147,8 +147,8 @@ export default function ProfileIndex() {
 
               <div className="btn-toolbar mb-2 mb-md-0">
                 <div className="btn-group">
-                  <Button type="submit" variant="link" size="lg">
-                    <i className="bi bi-floppy-fill text-secondary"></i>
+                  <Button type="submit" variant="light">
+                    <i className="bi bi-floppy-fill"></i>
                   </Button>
                 </div>
               </div>

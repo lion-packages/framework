@@ -2,9 +2,13 @@ import axios from "axios";
 import { Fragment, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import useApiResponse from "../../../../hooks/useApiResponse";
+import { useResponse } from "../../../../context/ResponseProvider";
 
 export default function VerifiedUser({ users_email, setVerified }) {
   const navigate = useNavigate();
+  const { addToast } = useResponse();
+  const { getResponseFromRules } = useApiResponse();
 
   const [codes, setCodes] = useState(["", "", "", "", "", ""]);
   const inputs = [];
@@ -40,13 +44,15 @@ export default function VerifiedUser({ users_email, setVerified }) {
         console.log(data);
 
         if (data.status === "success") {
-          navigate("/auth/login");
-
           setVerified(false);
+
+          navigate("/auth/login");
         }
       })
       .catch(({ response }) => {
-        console.log(response.data);
+        // console.log(response.data);
+
+        addToast([...getResponseFromRules("Profile", response.data)]);
       });
   };
 
