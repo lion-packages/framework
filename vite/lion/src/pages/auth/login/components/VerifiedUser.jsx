@@ -41,9 +41,17 @@ export default function VerifiedUser({ users_email, setVerified }) {
     axios
       .post(`${import.meta.env.VITE_SERVER_URL_AUD}/api/auth/verify`, form)
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
 
         if (data.status === "success") {
+          addToast([
+            {
+              status: data.status,
+              title: "Activation code",
+              message: data.message,
+            },
+          ]);
+
           setVerified(false);
 
           navigate("/auth/login");
@@ -52,7 +60,19 @@ export default function VerifiedUser({ users_email, setVerified }) {
       .catch(({ response }) => {
         // console.log(response.data);
 
-        addToast([...getResponseFromRules("Profile", response.data)]);
+        if (400 === response.data.status) {
+          addToast([
+            {
+              status: response.data.status,
+              title: "Activation code",
+              message: response.data.message,
+            },
+          ]);
+        }
+
+        if (500 === response.data.status) {
+          addToast([...getResponseFromRules("Activation code", response.data)]);
+        }
       });
   };
 

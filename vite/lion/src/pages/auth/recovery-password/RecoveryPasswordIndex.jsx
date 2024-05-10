@@ -26,8 +26,6 @@ export default function RecoveryPasswordIndex() {
         form
       )
       .then(({ data }) => {
-        // console.log(data);
-
         addToast([
           {
             status: data.status,
@@ -41,13 +39,15 @@ export default function RecoveryPasswordIndex() {
         }
       })
       .catch(({ response }) => {
-        // console.log(response.data);
-
         if (403 === response.data.code) {
           setActive(true);
         }
 
-        addToast([...getResponseFromRules("Recover password", response.data)]);
+        if (500 === response.data.code) {
+          addToast([
+            ...getResponseFromRules("Recover password", response.data),
+          ]);
+        }
       });
   };
 

@@ -54,8 +54,6 @@ export default function RecoveryPassword({ users_email, setActive }) {
         form
       )
       .then(({ data }) => {
-        // console.log(data);
-
         addToast([
           {
             status: data.status,
@@ -71,9 +69,21 @@ export default function RecoveryPassword({ users_email, setActive }) {
         }
       })
       .catch(({ response }) => {
-        // console.log(response.data);
+        if (403 === response.data.code || 401 === response.data.code) {
+          addToast([
+            {
+              status: response.data.status,
+              title: "Recover password",
+              message: response.data.message,
+            },
+          ]);
+        }
 
-        addToast([...getResponseFromRules("Recover password", response.data)]);
+        if (500 === response.data.code) {
+          addToast([
+            ...getResponseFromRules("Recover password", response.data),
+          ]);
+        }
       });
   };
 

@@ -40,12 +40,17 @@ export default function LoginIndex() {
               title: "Authentication",
               message: data.message,
             },
-            {
-              status: "info",
-              title: "Authentication",
-              message: `Welcome: ${data.data.full_name}`,
-            },
           ]);
+
+          if (null != data.data.full_name) {
+            addToast([
+              {
+                status: "info",
+                title: "Authentication",
+                message: `Welcome: ${data.data.full_name}`,
+              },
+            ]);
+          }
 
           navigate("/dashboard");
         } else {
@@ -59,13 +64,33 @@ export default function LoginIndex() {
         }
       })
       .catch(({ response }) => {
-        // console.log(response.data);
+        console.log(response.data);
+
+        if (401 === response.data.code) {
+          addToast([
+            {
+              status: response.data.status,
+              title: "Authentication",
+              message: response.data.message,
+            },
+          ]);
+        }
 
         if (403 === response.data.code) {
           setVerified(true);
+
+          addToast([
+            {
+              status: response.data.status,
+              title: "Authentication",
+              message: response.data.message,
+            },
+          ]);
         }
 
-        addToast([...getResponseFromRules("Authentication", response.data)]);
+        if (500 === response.data.code) {
+          addToast([...getResponseFromRules("Authentication", response.data)]);
+        }
       });
   };
 

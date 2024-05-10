@@ -42,7 +42,19 @@ export default function RegisterIndex() {
       .catch(({ response }) => {
         // console.log(response);
 
-        addToast([...getResponseFromRules("Registration", response.data)]);
+        if (400 === response.data.code) {
+          addToast([
+            {
+              status: response.data.status,
+              title: "Registration",
+              message: response.data.message,
+            },
+          ]);
+        }
+
+        if (500 === response.data.code) {
+          addToast([...getResponseFromRules("Registration", response.data)]);
+        }
       });
   };
 
