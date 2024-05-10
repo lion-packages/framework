@@ -269,7 +269,7 @@ class PasswordManagerControllerTest extends Test
 
         $validation = new Validation();
 
-        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/update'), [
+        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/profile/password'), [
             'headers' => [
                 'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
             ],
@@ -303,7 +303,7 @@ class PasswordManagerControllerTest extends Test
         $exception = $this->getExceptionFromApi(function () use ($user) {
             $validation = new Validation();
 
-            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/update'), [
+            fetch(Route::POST, (env('SERVER_URL') . '/api/profile/password'), [
                 'headers' => [
                     'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
                 ],
@@ -336,7 +336,7 @@ class PasswordManagerControllerTest extends Test
         $exception = $this->getExceptionFromApi(function () use ($user) {
             $validation = new Validation();
 
-            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/update'), [
+            fetch(Route::POST, (env('SERVER_URL') . '/api/profile/password'), [
                 'headers' => [
                     'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
                 ],

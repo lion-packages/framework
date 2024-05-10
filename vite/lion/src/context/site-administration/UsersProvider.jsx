@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "../AuthProvider";
 import axios from "axios";
+import { useResponse } from "../ResponseProvider";
 
 const UsersContext = createContext();
 
 export function UsersProvider({ children }) {
   const { getJWT } = useAuth();
+  const { addToast } = useResponse();
 
   const [users, setUsers] = useState([]);
 
@@ -17,7 +19,17 @@ export function UsersProvider({ children }) {
         },
       })
       .then(({ data }) => {
-        setUsers(data.status ? [] : data);
+        if (!data.status) {
+          setUsers(data);
+
+          addToast([
+            {
+              status: "success",
+              title: "Users",
+              message: "Data updated correctly",
+            },
+          ]);
+        }
       })
       .catch(({ response }) => {
         console.log(response.data);

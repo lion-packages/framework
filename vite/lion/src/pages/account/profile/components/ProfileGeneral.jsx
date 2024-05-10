@@ -126,7 +126,7 @@ export default function ProfileGeneral() {
         </Row>
 
         <Button type="submit" variant="warning" className="float-end">
-          Save
+          Save Changes
         </Button>
       </Form>
     </Fragment>

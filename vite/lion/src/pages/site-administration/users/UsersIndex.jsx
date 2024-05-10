@@ -1,35 +1,47 @@
-import { Container, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 import { useUsers } from "../../../context/site-administration/UsersProvider";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import DataTable from "datatables.net-bs5";
+import UsersCreate from "./components/UsersCreate";
 
 export default function UsersIndex() {
-  const { users } = useUsers();
+  const { users, handleReadUsers } = useUsers();
 
   const tableRef = useRef(null);
 
+  const [show, setShow] = useState(false);
+
   useEffect(() => {
     const dt = new DataTable(tableRef.current, {
+      dom: `
+        <"row mt-2 justify-content-between"
+          <"col-md-auto me-auto"l>
+          <"col-md-auto ms-auto"f>
+        >
+        <"row mt-2 justify-content-md-center"
+          <"col-12"t>
+        >
+        <"row mt-2 justify-content-between"
+          <"col-md-auto me-auto"i>
+          <"col-md-auto ms-auto"p>
+        >
+        `,
       columns: [
         {
-          data: "idusers",
-          name: "#",
-        },
-        {
           data: "users_name",
-          name: "NAME",
+          title: "NAME",
         },
         {
           data: "users_last_name",
-          name: "LAST NAME",
+          title: "LAST NAME",
         },
         {
           data: "users_nickname",
-          name: "NICKNAME",
+          title: "NICKNAME",
         },
         {
           data: "users_citizen_identification",
-          name: "ID",
+          title: "ID",
         },
       ],
       data: users,
@@ -43,32 +55,31 @@ export default function UsersIndex() {
   return (
     <Container>
       <div className="my-3">
-        <h3>Users</h3>
+        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h4>Users</h4>
 
-        <hr />
+          <div className="btn-toolbar mb-2 mb-md-0">
+            <Button
+              type="button"
+              className="btn btn-sm btn-primary me-2"
+              onClick={() => handleReadUsers()}
+            >
+              Reload
+            </Button>
 
-        <Table hover ref={tableRef} className="text-center">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>NAME</th>
-              <th>LAST NAME</th>
-              <th>NICKNAME</th>
-              <th>ID</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{user.users_name}</td>
-                <td>{user.users_last_name}</td>
-                <td>{user.users_nickname}</td>
-                <td>{user.users_citizen_identification}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+            <Button
+              type="button"
+              className="btn btn-sm btn-primary"
+              onClick={() => setShow(true)}
+            >
+              Add
+            </Button>
+          </div>
+        </div>
+
+        <UsersCreate show={show} setShow={setShow} />
+
+        <Table hover ref={tableRef} />
       </div>
     </Container>
   );
