@@ -14,6 +14,8 @@ import ProfileGeneral from "./pages/account/profile/components/ProfileGeneral";
 import ProfileInformation from "./pages/account/profile/components/ProfileInformation";
 import { ProfileProvider } from "./context/account/ProfileProvider";
 import ProfileChangePassword from "./pages/account/profile/components/ProfileChangePassword";
+import UsersIndex from "./pages/site-administration/users/UsersIndex";
+import { UsersProvider } from "./context/site-administration/UsersProvider";
 
 function App() {
   return (
@@ -35,21 +37,6 @@ function App() {
             </AuthenticatedMiddleware>
           }
         />
-
-        <Route
-          path="account"
-          element={
-            <AuthenticatedMiddleware>
-              <ProfileProvider>
-                <ProfileIndex />
-              </ProfileProvider>
-            </AuthenticatedMiddleware>
-          }
-        >
-          <Route path="general" element={<ProfileGeneral />} />
-          <Route path="information" element={<ProfileInformation />} />
-          <Route path="change-password" element={<ProfileChangePassword />} />
-        </Route>
 
         <Route path="auth">
           <Route
@@ -76,6 +63,34 @@ function App() {
               <NotAuthenticatedMiddleware>
                 <RecoveryPasswordIndex />
               </NotAuthenticatedMiddleware>
+            }
+          />
+        </Route>
+
+        <Route
+          path="account"
+          element={
+            <AuthenticatedMiddleware>
+              <ProfileProvider>
+                <ProfileIndex />
+              </ProfileProvider>
+            </AuthenticatedMiddleware>
+          }
+        >
+          <Route path="general" element={<ProfileGeneral />} />
+          <Route path="information" element={<ProfileInformation />} />
+          <Route path="change-password" element={<ProfileChangePassword />} />
+        </Route>
+
+        <Route path="site-administration">
+          <Route
+            path="users"
+            element={
+              <AuthenticatedMiddleware>
+                <UsersProvider>
+                  <UsersIndex />
+                </UsersProvider>
+              </AuthenticatedMiddleware>
             }
           />
         </Route>

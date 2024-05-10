@@ -41,9 +41,23 @@ export default function Header() {
               </Fragment>
             )}
 
+            <NavDropdown
+              title="Site Administration"
+              align={"end"}
+              id="site-administration-nav-dropdown"
+            >
+              <LinkContainer to={"/site-administration/users"}>
+                <NavDropdown.Item href="#">Users</NavDropdown.Item>
+              </LinkContainer>
+            </NavDropdown>
+
             {jwt && (
               <Fragment>
-                <NavDropdown title="Options" id="basic-nav-dropdown">
+                <NavDropdown
+                  title="Options"
+                  align={"end"}
+                  id="options-nav-dropdown"
+                >
                   <LinkContainer to={"/account/general"}>
                     <NavDropdown.Item href="#">Account</NavDropdown.Item>
                   </LinkContainer>

@@ -34,20 +34,25 @@ export default function LoginIndex() {
         if ("success" === data.status) {
           login(data.data.jwt);
 
-          addToast([
-            {
-              status: data.status,
-              title: "Authentication",
-              message: data.message,
-            },
-          ]);
-
           if (null != data.data.full_name) {
             addToast([
+              {
+                status: data.status,
+                title: "Authentication",
+                message: data.message,
+              },
               {
                 status: "info",
                 title: "Authentication",
                 message: `Welcome: ${data.data.full_name}`,
+              },
+            ]);
+          } else {
+            addToast([
+              {
+                status: data.status,
+                title: "Authentication",
+                message: data.message,
               },
             ]);
           }
