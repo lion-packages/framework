@@ -20,7 +20,7 @@ class UsersController
     /**
      * Create users
      *
-     * @route api/users
+     * @route /api/users
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -50,7 +50,7 @@ class UsersController
     /**
      * Read users
      *
-     * @route api/users
+     * @route /api/users
      *
      * @param UsersModel $usersModel [Model for the Users entity]
      *
@@ -70,7 +70,7 @@ class UsersController
     /**
      * Read users by id
      *
-     * @route api/users/{idusers}
+     * @route /api/users/{idusers}
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -95,7 +95,7 @@ class UsersController
     /**
      * Update users
      *
-     * @route api/users/{idusers}
+     * @route /api/users/{idusers}
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -121,7 +121,7 @@ class UsersController
     /**
      * Delete users
      *
-     * @route api/users/{idusers}
+     * @route /api/users/{idusers}
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]

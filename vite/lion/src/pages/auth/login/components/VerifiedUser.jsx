@@ -2,9 +2,13 @@ import axios from "axios";
 import { Fragment, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import useApiResponse from "../../../../hooks/useApiResponse";
+import { useResponse } from "../../../../context/ResponseProvider";
 
 export default function VerifiedUser({ users_email, setVerified }) {
   const navigate = useNavigate();
+  const { addToast } = useResponse();
+  const { getResponseFromRules } = useApiResponse();
 
   const [codes, setCodes] = useState(["", "", "", "", "", ""]);
   const inputs = [];
@@ -37,16 +41,38 @@ export default function VerifiedUser({ users_email, setVerified }) {
     axios
       .post(`${import.meta.env.VITE_SERVER_URL_AUD}/api/auth/verify`, form)
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
 
         if (data.status === "success") {
-          navigate("/auth/login");
+          addToast([
+            {
+              status: data.status,
+              title: "Activation code",
+              message: data.message,
+            },
+          ]);
 
           setVerified(false);
+
+          navigate("/auth/login");
         }
       })
       .catch(({ response }) => {
-        console.log(response.data);
+        // console.log(response.data);
+
+        if (400 === response.data.status) {
+          addToast([
+            {
+              status: response.data.status,
+              title: "Activation code",
+              message: response.data.message,
+            },
+          ]);
+        }
+
+        if (500 === response.data.status) {
+          addToast([...getResponseFromRules("Activation code", response.data)]);
+        }
       });
   };
 

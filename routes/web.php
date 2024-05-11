@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\LionDatabase\MySQL\LoginController;
 use App\Http\Controllers\LionDatabase\MySQL\PasswordManagerController;
+use App\Http\Controllers\LionDatabase\MySQL\ProfileController;
 use App\Http\Controllers\LionDatabase\MySQL\RegistrationController;
 use App\Http\Controllers\LionDatabase\MySQL\UsersController;
 use Lion\Route\Route;
@@ -24,18 +25,25 @@ Route::prefix('api', function () {
         Route::post('register', [RegistrationController::class, 'register']);
         Route::post('verify', [RegistrationController::class, 'verifyAccount']);
 
-        Route::prefix('password', function () {
-            Route::post('recovery', [PasswordManagerController::class, 'recoveryPassword']);
+        Route::prefix('recovery', function () {
+            Route::post('password', [PasswordManagerController::class, 'recoveryPassword']);
             Route::post('verify-code', [PasswordManagerController::class, 'updateLostPassword']);
-            Route::post('update', [PasswordManagerController::class, 'updatePassword'], ['jwt-authorize']);
         });
     });
 
     Route::middleware(['jwt-authorize'], function () {
-        Route::post('users', [UsersController::class, 'createUsers']);
-        Route::get('users', [UsersController::class, 'readUsers']);
-        Route::get('users/{idusers:i}', [UsersController::class, 'readUsersById']);
-        Route::put('users/{idusers:i}', [UsersController::class, 'updateUsers']);
-        Route::delete('users/{idusers:i}', [UsersController::class, 'deleteUsers']);
+        Route::prefix('profile', function () {
+            Route::get('/', [ProfileController::class, 'readProfile']);
+            Route::put('/', [ProfileController::class, 'updateProfile']);
+            Route::post('password', [PasswordManagerController::class, 'updatePassword']);
+        });
+
+        Route::prefix('users', function () {
+            Route::post('/', [UsersController::class, 'createUsers']);
+            Route::get('/', [UsersController::class, 'readUsers']);
+            Route::get('{idusers:i}', [UsersController::class, 'readUsersById']);
+            Route::put('{idusers:i}', [UsersController::class, 'updateUsers']);
+            Route::delete('{idusers:i}', [UsersController::class, 'deleteUsers']);
+        });
     });
 });

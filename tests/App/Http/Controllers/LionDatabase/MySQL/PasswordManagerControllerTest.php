@@ -38,7 +38,7 @@ class PasswordManagerControllerTest extends Test
 
     public function testRecoveryPassword(): void
     {
-        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/recovery'), [
+        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
                 'users_email' => self::USERS_EMAIL
             ]
@@ -53,10 +53,41 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
+    public function testRecoveryPasswordCodeNotNull(): void
+    {
+        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
+            'json' => [
+                'users_email' => self::USERS_EMAIL
+            ]
+        ])
+            ->getBody()
+            ->getContents();
+
+        $this->assertJsonContent($response, [
+            'code' => Request::HTTP_OK,
+            'status' => Response::SUCCESS,
+            'message' => 'confirmation code sent, check your email inbox to see your verification code',
+        ]);
+
+        $exception = $this->getExceptionFromApi(function () {
+            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
+                'json' => [
+                    'users_email' => self::USERS_EMAIL
+                ]
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Request::HTTP_FORBIDDEN,
+            'status' => Response::ERROR,
+            'message' => 'a verification code has already been sent to this account',
+        ]);
+    }
+
     public function testRecoveryPasswordIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function () {
-            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/recovery'), [
+            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
                 'json' => [
                     'users_email' => fake()->email()
                 ]
@@ -72,7 +103,7 @@ class PasswordManagerControllerTest extends Test
 
     public function testUpdateLostPassword(): void
     {
-        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/recovery'), [
+        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
                 'users_email' => self::USERS_EMAIL
             ]
@@ -94,7 +125,7 @@ class PasswordManagerControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertObjectHasProperty('users_recovery_code', $user);
 
-        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/verify-code'), [
+        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
             'json' => [
                 'users_email' => self::USERS_EMAIL,
                 'users_password_new' => self::USERS_PASSWORD,
@@ -124,7 +155,7 @@ class PasswordManagerControllerTest extends Test
     public function testUpdateLostPasswordIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function () {
-            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/verify-code'), [
+            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
                 'json' => [
                     'users_email' => fake()->email(),
                     'users_password_new' => self::USERS_PASSWORD,
@@ -143,7 +174,7 @@ class PasswordManagerControllerTest extends Test
 
     public function testUpdateLostPasswordInvalid1(): void
     {
-        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/recovery'), [
+        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
                 'users_email' => self::USERS_EMAIL
             ]
@@ -166,7 +197,7 @@ class PasswordManagerControllerTest extends Test
         $this->assertObjectHasProperty('users_recovery_code', $user);
 
         $exception = $this->getExceptionFromApi(function () {
-            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/verify-code'), [
+            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
                 'json' => [
                     'users_email' => self::USERS_EMAIL,
                     'users_password_new' => self::USERS_PASSWORD,
@@ -185,7 +216,7 @@ class PasswordManagerControllerTest extends Test
 
     public function testUpdateLostPasswordIncorrect2(): void
     {
-        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/recovery'), [
+        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
                 'users_email' => self::USERS_EMAIL
             ]
@@ -208,7 +239,7 @@ class PasswordManagerControllerTest extends Test
         $this->assertObjectHasProperty('users_recovery_code', $user);
 
         $exception = $this->getExceptionFromApi(function () use ($user) {
-            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/verify-code'), [
+            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
                 'json' => [
                     'users_email' => self::USERS_EMAIL,
                     'users_password_new' => UsersFactory::USERS_PASSWORD,
@@ -238,7 +269,7 @@ class PasswordManagerControllerTest extends Test
 
         $validation = new Validation();
 
-        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/update'), [
+        $response = fetch(Route::POST, (env('SERVER_URL') . '/api/profile/password'), [
             'headers' => [
                 'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
             ],
@@ -272,7 +303,7 @@ class PasswordManagerControllerTest extends Test
         $exception = $this->getExceptionFromApi(function () use ($user) {
             $validation = new Validation();
 
-            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/update'), [
+            fetch(Route::POST, (env('SERVER_URL') . '/api/profile/password'), [
                 'headers' => [
                     'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
                 ],
@@ -305,7 +336,7 @@ class PasswordManagerControllerTest extends Test
         $exception = $this->getExceptionFromApi(function () use ($user) {
             $validation = new Validation();
 
-            fetch(Route::POST, (env('SERVER_URL') . '/api/auth/password/update'), [
+            fetch(Route::POST, (env('SERVER_URL') . '/api/profile/password'), [
                 'headers' => [
                     'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
                 ],

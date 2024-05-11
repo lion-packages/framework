@@ -20,7 +20,7 @@ class LoginController
     /**
      * Manage user authentication
      *
-     * @route api/auth/login
+     * @route /api/auth/login
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param LoginModel $loginModel [Model for user authentication]
@@ -37,8 +37,6 @@ class LoginController
     ): object {
         $loginService->validateSession($users->capsule());
 
-        $loginService->verifyAccountActivation($users);
-
         $session = $loginModel->sessionDB($users);
 
         $passwordManagerService->verifyPasswords(
@@ -47,12 +45,14 @@ class LoginController
             'email/password is incorrect [AUTH-2]'
         );
 
+        $loginService->verifyAccountActivation($users);
+
         return success('successfully authenticated user', Request::HTTP_OK, [
+            'full_name' => "{$session->getUsersName()} {$session->getUsersLastName()}",
             'jwt' => $loginService->getToken(storage_path(env('RSA_URL_PATH')), [
                 'session' => true,
                 'idusers' => $session->getIdusers(),
                 'idroles' => $session->getIdroles(),
-                'full_name' => "{$session->getUsersName()} {$session->getUsersLastName()}"
             ]),
         ]);
     }

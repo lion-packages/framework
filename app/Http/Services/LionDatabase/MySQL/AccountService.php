@@ -7,6 +7,7 @@ namespace App\Http\Services\LionDatabase\MySQL;
 use App\Exceptions\AccountException;
 use App\Html\Email\RecoveryAccountHtml;
 use App\Html\Email\VerifyAccountHtml;
+use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
@@ -34,6 +35,26 @@ class AccountService
     public function setUsersModel(UsersModel $usersModel): void
     {
         $this->usersModel = $usersModel;
+    }
+
+    /**
+     * Check if the recovery code is inactive
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
+     * @return void
+     *
+     * @throws AccountException [Throws an error if the verification code is
+     * already active]
+     */
+    public function checkRecoveryCodeInactive(Users $users): void
+    {
+        if (null != $users->getUsersRecoveryCode()) {
+            throw new AccountException(
+                'a verification code has already been sent to this account',
+                Request::HTTP_FORBIDDEN
+            );
+        }
     }
 
     /**
@@ -147,6 +168,29 @@ class AccountService
 
         if (isError($response)) {
             throw new AccountException('verification code is invalid [ERR-3]', Request::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * Valid if an account exists
+     *
+     * @param RegistrationModel $registrationModel [Validate in the database if
+     * the registration and verification are valid]
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
+     * @return void
+     *
+     * @throws AccountException [If the code does not update]
+     */
+    public function validateAccountExists(RegistrationModel $registrationModel, Users $users): void
+    {
+        $cont = $registrationModel->validateAccountExistsDB($users);
+
+        if ($cont->cont === 1 || $cont->cont === "1") {
+            throw new AccountException(
+                'there is already an account registered with this email',
+                Request::HTTP_BAD_REQUEST
+            );
         }
     }
 }

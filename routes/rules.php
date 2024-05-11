@@ -71,7 +71,7 @@ Routes::setRules([
             UsersPasswordNewRule::class,
             UsersPasswordConfirmRule::class,
         ],
-        '/api/auth/password/update' => [
+        '/api/profile/password' => [
             UsersPasswordRule::class,
             UsersPasswordNewRule::class,
             UsersPasswordConfirmRule::class,
@@ -98,7 +98,14 @@ Routes::setRules([
             UsersNameRequiredRule::class,
             UsersLastNameRequiredRule::class,
             UsersEmailRule::class,
-        ]
+        ],
+        '/api/profile' => [
+            IddocumentTypesRule::class,
+            UsersCitizenIdentificationRequiredRule::class,
+            UsersNameRequiredRule::class,
+            UsersLastNameRequiredRule::class,
+            UsersNicknameRequiredRule::class,
+        ],
     ],
 
     /**
