@@ -3,8 +3,10 @@ import { useUsers } from "../../../context/site-administration/UsersProvider";
 import { useEffect, useRef, useState } from "react";
 import DataTable from "datatables.net-bs5";
 import UsersCreate from "./components/UsersCreate";
+import { useNavigate } from "react-router-dom";
 
 export default function UsersIndex() {
+  const navigate = useNavigate();
   const { users, handleReadUsers } = useUsers();
 
   const tableRef = useRef(null);
@@ -45,6 +47,13 @@ export default function UsersIndex() {
         },
       ],
       data: users,
+      createdRow: function (row, data, dataIndex) {
+        row.setAttribute("role", "button");
+
+        row.addEventListener("click", () => {
+          navigate(`/site-administration/users/${data.idusers}`);
+        });
+      },
     });
 
     return () => {

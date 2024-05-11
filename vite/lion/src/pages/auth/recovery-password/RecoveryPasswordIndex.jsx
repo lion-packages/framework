@@ -22,7 +22,7 @@ export default function RecoveryPasswordIndex() {
 
     axios
       .post(
-        `${import.meta.env.VITE_SERVER_URL_AUD}/api/auth/password/recovery`,
+        `${import.meta.env.VITE_SERVER_URL_AUD}/api/auth/recovery/password`,
         form
       )
       .then(({ data }) => {
@@ -57,7 +57,7 @@ export default function RecoveryPasswordIndex() {
         <Col
           xs={12}
           sm={12}
-          md={8}
+          md={10}
           lg={7}
           xl={5}
           xxl={5}

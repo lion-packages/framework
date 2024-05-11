@@ -125,9 +125,11 @@ export default function ProfileGeneral() {
           </Col>
         </Row>
 
-        <Button type="submit" variant="warning" className="float-end">
-          Save Changes
-        </Button>
+        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+          <Button type="submit" variant="warning">
+            Save Changes
+          </Button>
+        </div>
       </Form>
     </Fragment>
   );

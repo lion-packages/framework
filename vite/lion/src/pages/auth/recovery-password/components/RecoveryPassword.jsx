@@ -50,7 +50,7 @@ export default function RecoveryPassword({ users_email, setActive }) {
 
     axios
       .post(
-        `${import.meta.env.VITE_SERVER_URL_AUD}/api/auth/password/verify-code`,
+        `${import.meta.env.VITE_SERVER_URL_AUD}/api/auth/recovery/verify-code`,
         form
       )
       .then(({ data }) => {

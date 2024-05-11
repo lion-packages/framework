@@ -16,6 +16,7 @@ import { ProfileProvider } from "./context/account/ProfileProvider";
 import ProfileChangePassword from "./pages/account/profile/components/ProfileChangePassword";
 import UsersIndex from "./pages/site-administration/users/UsersIndex";
 import { UsersProvider } from "./context/site-administration/UsersProvider";
+import UsersUpdate from "./pages/site-administration/users/components/UsersUpdate";
 
 function App() {
   return (
@@ -93,6 +94,8 @@ function App() {
               </AuthenticatedMiddleware>
             }
           />
+
+          <Route path="users/:idusers" element={<UsersUpdate />} />
         </Route>
       </Routes>
     </Fragment>
