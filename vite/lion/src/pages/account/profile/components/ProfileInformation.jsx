@@ -20,9 +20,9 @@ export default function ProfileInformation() {
               disabled
             >
               <option value={""}>Select</option>
-              <option value="1">Administrator</option>
-              <option value="2">Manager</option>
-              <option value="3">Customer</option>
+              <option value={1}>Administrator</option>
+              <option value={2}>Manager</option>
+              <option value={3}>Customer</option>
             </Form.Select>
           </Col>
         </Form.Group>

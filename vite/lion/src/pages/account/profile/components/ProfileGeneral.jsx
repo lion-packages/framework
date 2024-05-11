@@ -92,8 +92,8 @@ export default function ProfileGeneral() {
                   aria-label="iddocument_types"
                 >
                   <option value={""}>Select</option>
-                  <option value="1">Citizenship Card</option>
-                  <option value="2">Passport</option>
+                  <option value={1}>Citizenship Card</option>
+                  <option value={2}>Passport</option>
                 </Form.Select>
               </Col>
             </Form.Group>

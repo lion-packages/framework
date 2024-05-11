@@ -4,12 +4,14 @@ import { useResponse } from "../../../../context/ResponseProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useApiResponse from "../../../../hooks/useApiResponse";
 
-export default function UsersUpdate({ show, setShow }) {
+export default function UsersUpdate() {
   const navigate = useNavigate();
   const { getJWT } = useAuth();
   const { addToast } = useResponse();
   const { idusers } = useParams();
+  const { getResponseFromRules } = useApiResponse();
 
   const [idroles, setIdroles] = useState("");
   const [iddocument_types, setIddocument_types] = useState("");
@@ -28,8 +30,6 @@ export default function UsersUpdate({ show, setShow }) {
         },
       })
       .then(({ data }) => {
-        console.log(data);
-
         if (!data.status) {
           setIdroles(data.idroles);
           setIddocument_types(data.iddocument_types);
@@ -48,7 +48,54 @@ export default function UsersUpdate({ show, setShow }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log("submitted!");
+    const form = {
+      idroles: parseInt(idroles),
+      iddocument_types: parseInt(iddocument_types),
+      users_name: users_name,
+      users_last_name: users_last_name,
+      users_nickname: users_nickname,
+      users_citizen_identification: users_citizen_identification,
+      users_email: users_email,
+    };
+
+    axios
+      .put(
+        `${import.meta.env.VITE_SERVER_URL_AUD}/api/users/${idusers}`,
+        form,
+        {
+          headers: {
+            Authorization: `Bearer ${getJWT()}`,
+          },
+        }
+      )
+      .then(({ data }) => {
+        addToast([
+          {
+            status: data.status,
+            title: "Users Update",
+            message: data.message,
+          },
+        ]);
+
+        if (200 === data.code) {
+          navigate(`/site-administration/users`);
+        }
+      })
+      .catch(({ response }) => {
+        if (500 === response.data.code) {
+          if (response.data.data["rules-error"]) {
+            addToast([...getResponseFromRules("Update Users", response.data)]);
+          } else {
+            addToast([
+              {
+                status: response.data.status,
+                title: "Update Users",
+                message: response.data.message,
+              },
+            ]);
+          }
+        }
+      });
   };
 
   useEffect(() => {
@@ -90,9 +137,9 @@ export default function UsersUpdate({ show, setShow }) {
                     required
                   >
                     <option value={""}>Select</option>
-                    <option value="1">Administrator</option>
-                    <option value="2">Manager</option>
-                    <option value="3">Customer</option>
+                    <option value={1}>Administrator</option>
+                    <option value={2}>Manager</option>
+                    <option value={3}>Customer</option>
                   </Form.Select>
                 </Col>
               </Form.Group>
@@ -196,8 +243,8 @@ export default function UsersUpdate({ show, setShow }) {
                     aria-label="iddocument_types"
                   >
                     <option value={""}>Select</option>
-                    <option value="1">Citizenship Card</option>
-                    <option value="2">Passport</option>
+                    <option value={1}>Citizenship Card</option>
+                    <option value={2}>Passport</option>
                   </Form.Select>
                 </Col>
               </Form.Group>
