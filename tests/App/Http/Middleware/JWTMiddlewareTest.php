@@ -39,12 +39,14 @@ class JWTMiddlewareTest extends Test
 
     public function testInitRSA(): void
     {
-        $this->getPrivateMethod('initRSA', [env('RSA_URL_PATH')]);
+        $path = str->of(env('RSA_URL_PATH'))->replace('../', '')->get();
+
+        $this->getPrivateMethod('initRSA', [$path]);
 
         /** @var RSA $rsa */
         $rsa = $this->getPrivateProperty('rsa');
 
-        $this->assertSame(env('RSA_URL_PATH'), $rsa->getUrlPath());
+        $this->assertSame($path, $rsa->getUrlPath());
     }
 
     public function testValidateSessionIsError(): void

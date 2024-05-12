@@ -4,22 +4,16 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use Exception;
 use JsonSerializable;
-use Lion\Request\Response;
+use Lion\Bundle\Support\Exceptions\ExceptionSupport;
+use Lion\Bundle\Traits\ExceptionsTrait;
 
 /**
  * Exception handling for user authentication
  *
  * @package App\Exceptions
  */
-class AuthenticationException extends Exception implements JsonSerializable
+class AuthenticationException extends ExceptionSupport implements JsonSerializable
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize(): mixed
-    {
-        return response(Response::SESSION_ERROR, $this->getMessage(), $this->getCode());
-    }
+    use ExceptionsTrait;
 }

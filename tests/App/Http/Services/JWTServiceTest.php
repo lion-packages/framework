@@ -25,7 +25,7 @@ class JWTServiceTest extends Test
     {
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization();
 
-        $data = $this->jWTService->getTokenData(storage_path(env('RSA_URL_PATH'), false));
+        $data = $this->jWTService->getTokenData(env('RSA_URL_PATH'));
 
         $this->assertIsObject($data);
         $this->assertObjectHasProperty('session', $data);

@@ -6,6 +6,7 @@ namespace Tests\App\Exceptions;
 
 use App\Exceptions\PasswordException;
 use Lion\Request\Request;
+use Lion\Request\Response;
 use Lion\Test\Test;
 
 class PasswordExceptionTest extends Test
@@ -18,6 +19,6 @@ class PasswordExceptionTest extends Test
         $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
         $this->expectExceptionMessage(self::MESSAGE);
 
-        throw new PasswordException(self::MESSAGE, Request::HTTP_UNAUTHORIZED);
+        throw new PasswordException(self::MESSAGE, Response::ERROR, Request::HTTP_UNAUTHORIZED);
     }
 }

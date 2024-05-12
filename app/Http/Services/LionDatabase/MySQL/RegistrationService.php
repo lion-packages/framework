@@ -7,6 +7,7 @@ namespace App\Http\Services\LionDatabase\MySQL;
 use App\Exceptions\AuthenticationException;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Request\Request;
+use Lion\Request\Response;
 
 /**
  * Service that assists the user registration process
@@ -29,11 +30,19 @@ class RegistrationService
     public function verifyAccount(Users $users, object $data): void
     {
         if (isSuccess($data)) {
-            throw new AuthenticationException('verification code is invalid [ERR-1]', Request::HTTP_FORBIDDEN);
+            throw new AuthenticationException(
+                'verification code is invalid [ERR-1]',
+                Response::SESSION_ERROR,
+                Request::HTTP_FORBIDDEN
+            );
         }
 
         if ($data->users_activation_code != $users->getUsersActivationCode()) {
-            throw new AuthenticationException('verification code is invalid [ERR-2]', Request::HTTP_FORBIDDEN);
+            throw new AuthenticationException(
+                'verification code is invalid [ERR-2]',
+                Response::SESSION_ERROR,
+                Request::HTTP_FORBIDDEN
+            );
         }
     }
 }

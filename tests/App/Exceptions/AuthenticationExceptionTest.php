@@ -6,6 +6,7 @@ namespace Tests\App\Exceptions;
 
 use App\Exceptions\AuthenticationException;
 use Lion\Request\Request;
+use Lion\Request\Response;
 use Lion\Test\Test;
 
 class AuthenticationExceptionTest extends Test
@@ -18,6 +19,6 @@ class AuthenticationExceptionTest extends Test
         $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
         $this->expectExceptionMessage(self::MESSAGE);
 
-        throw new AuthenticationException(self::MESSAGE, Request::HTTP_UNAUTHORIZED);
+        throw new AuthenticationException(self::MESSAGE, Response::SESSION_ERROR, Request::HTTP_UNAUTHORIZED);
     }
 }

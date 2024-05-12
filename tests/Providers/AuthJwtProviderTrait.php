@@ -42,7 +42,7 @@ trait AuthJwtProviderTrait
         $token = (new JWT)
             ->config([
                 'privateKey' => (new RSA())
-                    ->setUrlPath(env('RSA_URL_PATH') . $path)
+                    ->setUrlPath(str->of(env('RSA_URL_PATH'))->concat($path)->get())
                     ->init()
                     ->getPrivateKey()
             ])
