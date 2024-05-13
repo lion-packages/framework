@@ -46,12 +46,12 @@
             <directory>tests/App/Http/Controllers/</directory>
         </testsuite>
 
-        <testsuite name="Services">
-            <directory>tests/App/Http/Services/</directory>
-        </testsuite>
-
         <testsuite name="Middleware">
             <directory>tests/App/Http/Middleware/</directory>
+        </testsuite>
+
+        <testsuite name="Services">
+            <directory>tests/App/Http/Services/</directory>
         </testsuite>
 
         <testsuite name="Interfaces">
