@@ -23,27 +23,24 @@ TaskQueue::add(
     /**
      * Send emails for account validation
      *
+     * @param RecoveryAccountHtml $recoveryAccountHtml [Password recovery
+     * template]
      * @param object $queue [Queued task object]
      *
      * @return void
      *
      * @throws Exception [Catch an exception if the process fails]
      */
-    function (object $queue): void {
-        $data = (object) json_decode($queue->task_queue_data, true);
-
+    function (RecoveryAccountHtml $recoveryAccountHtml, object $queue, string $account, string $code): void {
         try {
-            /** @var RecoveryAccountHtml $htmlTemplate */
-            $htmlTemplate = new $data->template;
-
             Mailer::account(env('MAIL_NAME'))
                 ->subject('Password Recovery: check your email')
                 ->from(env('MAIL_USER_NAME'), 'Lion-Packages')
-                ->addAddress($data->account)
+                ->addAddress($account)
                 ->body(
-                    $htmlTemplate
+                    $recoveryAccountHtml
                         ->template()
-                        ->replace('{{ CODE_REPLACE }}', $data->code)
+                        ->replace('CODE_REPLACE', $code)
                         ->get()
                 )
                 ->priority(Priority::HIGH)
@@ -72,21 +69,16 @@ TaskQueue::add(
          *
          * @throws Exception [Catch an exception if the process fails]
          */
-        function (object $queue): void {
-            $data = (object) json_decode($queue->task_queue_data, true);
-
+        function (VerifyAccountHtml $verifyAccountHtml, object $queue, string $code, string $account): void {
             try {
-                /** @var VerifyAccountHtml $htmlTemplate */
-                $htmlTemplate = new $data->template;
-
                 Mailer::account(env('MAIL_NAME'))
                     ->subject('Registration Confirmation - Please Verify Your Email')
                     ->from(env('MAIL_USER_NAME'), 'Lion-Packages')
-                    ->addAddress($data->account)
+                    ->addAddress($account)
                     ->body(
-                        $htmlTemplate
+                        $verifyAccountHtml
                             ->template()
-                            ->replace('{{ CODE_REPLACE }}', $data->code)
+                            ->replace('CODE_REPLACE', $code)
                             ->get()
                     )
                     ->priority(Priority::HIGH)

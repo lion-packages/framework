@@ -70,7 +70,6 @@ class AccountService
     public function sendVerifiyCodeEmail(Users $users): void
     {
         TaskQueue::push('send:email:account-verify', json([
-            'template' => VerifyAccountHtml::class,
             'account' => $users->getUsersEmail(),
             'code' => $users->getUsersActivationCode(),
         ]));
