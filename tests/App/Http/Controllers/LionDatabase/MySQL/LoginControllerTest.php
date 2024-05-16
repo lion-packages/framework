@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Request\Request;
-use Lion\Request\Response;
-use Lion\Route\Route;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Test\Test;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -33,7 +32,7 @@ class LoginControllerTest extends Test
     public function testAuth(): void
     {
         $auth = json_decode(
-            fetch(Route::POST, self::API_URL, [
+            fetch(Http::HTTP_POST, self::API_URL, [
                 'json' => [
                     'users_email' => self::USERS_EMAIL,
                     'users_password' => self::USERS_PASSWORD,
@@ -49,33 +48,15 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('message', $auth);
         $this->assertObjectHasProperty('data', $auth);
         $this->assertObjectHasProperty('jwt', $auth->data);
-        $this->assertSame(Request::HTTP_OK, $auth->code);
-        $this->assertSame(Response::SUCCESS, $auth->status);
+        $this->assertSame(Http::HTTP_OK, $auth->code);
+        $this->assertSame(Status::SUCCESS, $auth->status);
         $this->assertSame('successfully authenticated user', $auth->message);
-    }
-
-    public function testAuthVerifyAccount(): void
-    {
-        $exception = $this->getExceptionFromApi(function () {
-            fetch(Route::POST, self::API_URL, [
-                'json' => [
-                    'users_email' => self::USERS_EMAIL_MANAGER,
-                    'users_password' => self::USERS_PASSWORD,
-                ]
-            ]);
-        });
-
-        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_FORBIDDEN,
-            'status' => Response::SESSION_ERROR,
-            'message' => "the user's account has not yet been verified",
-        ]);
     }
 
     public function testAuthIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function () {
-            fetch(Route::POST, self::API_URL, [
+            fetch(Http::HTTP_POST, self::API_URL, [
                 'json' => [
                     'users_email' => 'root-dev@dev.com',
                     'users_password' => self::USERS_PASSWORD,
@@ -84,8 +65,8 @@ class LoginControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_UNAUTHORIZED,
-            'status' => Response::SESSION_ERROR,
+            'code' => Http::HTTP_UNAUTHORIZED,
+            'status' => Status::SESSION_ERROR,
             'message' => 'email/password is incorrect [AUTH-1]'
         ]);
     }
@@ -93,7 +74,7 @@ class LoginControllerTest extends Test
     public function testAuthIncorrect2(): void
     {
         $exception = $this->getExceptionFromApi(function () {
-            fetch(Route::POST, self::API_URL, [
+            fetch(Http::HTTP_POST, self::API_URL, [
                 'json' => [
                     'users_email' => self::USERS_EMAIL,
                     'users_password' => (self::USERS_PASSWORD . '-x'),
@@ -102,9 +83,27 @@ class LoginControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_UNAUTHORIZED,
-            'status' => Response::ERROR,
+            'code' => Http::HTTP_UNAUTHORIZED,
+            'status' => Status::ERROR,
             'message' => 'email/password is incorrect [AUTH-2]'
+        ]);
+    }
+
+    public function testAuthVerifyAccount(): void
+    {
+        $exception = $this->getExceptionFromApi(function () {
+            fetch(Http::HTTP_POST, self::API_URL, [
+                'json' => [
+                    'users_email' => self::USERS_EMAIL_MANAGER,
+                    'users_password' => self::USERS_PASSWORD,
+                ]
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Http::HTTP_FORBIDDEN,
+            'status' => Status::SESSION_ERROR,
+            'message' => "the user's account has not yet been verified",
         ]);
     }
 }

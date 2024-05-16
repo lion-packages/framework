@@ -7,7 +7,7 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Exception;
-use Lion\Request\Request;
+use Lion\Request\Http;
 use Lion\Security\Validation;
 
 /**
@@ -41,7 +41,7 @@ class UsersController
         );
 
         if (isError($response)) {
-            throw new Exception('an error occurred while registering the user', Request::HTTP_INTERNAL_SERVER_ERROR);
+            throw new Exception('an error occurred while registering the user', Http::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return success('registered user successfully');
@@ -112,7 +112,7 @@ class UsersController
         );
 
         if (isError($response)) {
-            throw new Exception('an error occurred while updating the user', Request::HTTP_INTERNAL_SERVER_ERROR);
+            throw new Exception('an error occurred while updating the user', Http::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return success('the registered user has been successfully updated');
@@ -137,7 +137,7 @@ class UsersController
         );
 
         if (isError($response)) {
-            throw new Exception('an error occurred while deleting the user', Request::HTTP_INTERNAL_SERVER_ERROR);
+            throw new Exception('an error occurred while deleting the user', Http::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return success('the registered user has been successfully deleted');

@@ -8,7 +8,7 @@ use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Lion\Request\Request;
+use Lion\Request\Http;
 
 /**
  * Controller for user authentication
@@ -47,7 +47,7 @@ class LoginController
 
         $loginService->verifyAccountActivation($users);
 
-        return success('successfully authenticated user', Request::HTTP_OK, [
+        return success('successfully authenticated user', Http::HTTP_OK, [
             'full_name' => "{$session->getUsersName()} {$session->getUsersLastName()}",
             'jwt' => $loginService->getToken(env('RSA_URL_PATH'), [
                 'session' => true,

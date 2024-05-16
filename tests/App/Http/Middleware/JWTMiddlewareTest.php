@@ -7,7 +7,8 @@ namespace Tests\App\Http\Middleware;
 use App\Http\Middleware\JWTMiddleware;
 use Lion\Bundle\Exceptions\MiddlewareException;
 use Lion\Dependency\Injection\Container;
-use Lion\Request\Request;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Security\RSA;
 use Lion\Test\Test;
 use Tests\Providers\AuthJwtProviderTrait;
@@ -51,105 +52,132 @@ class JWTMiddlewareTest extends Test
 
     public function testValidateSessionIsError(): void
     {
-        $this->expectException(MiddlewareException::class);
-        $this->expectExceptionMessage(self::MESSAGE);
-        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
-
-        $this->getPrivateMethod('validateSession', [error(self::MESSAGE)]);
+        $this
+            ->exception(MiddlewareException::class)
+            ->exceptionMessage(self::MESSAGE)
+            ->exceptionStatus(Status::SESSION_ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $this->getPrivateMethod('validateSession', [error(self::MESSAGE)]);
+            });
     }
 
     public function testValidateSessionNotSession(): void
     {
-        $this->expectException(MiddlewareException::class);
-        $this->expectExceptionMessage('undefined session');
-        $this->expectExceptionCode(Request::HTTP_FORBIDDEN);
-
-        $this->getPrivateMethod('validateSession', [success()]);
+        $this
+            ->exception(MiddlewareException::class)
+            ->exceptionMessage('undefined session')
+            ->exceptionStatus(Status::SESSION_ERROR)
+            ->exceptionCode(Http::HTTP_FORBIDDEN)
+            ->expectLionException(function (): void {
+                $this->getPrivateMethod('validateSession', [success()]);
+            });
     }
 
     public function testExistence(): void
     {
-        $this->expectException(MiddlewareException::class);
-        $this->expectExceptionMessage('the JWT does not exist');
-        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
-
-        $this->getPrivateMethod('existence');
+        $this
+            ->exception(MiddlewareException::class)
+            ->exceptionMessage('the JWT does not exist')
+            ->exceptionStatus(Status::SESSION_ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $this->getPrivateMethod('existence');
+            });
     }
 
     public function testAuthorizeWithoutSignatureInvalidJWT(): void
     {
-        $this->expectException(MiddlewareException::class);
-        $this->expectExceptionMessage('invalid JWT [AUTH-1]');
-        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
+        $this
+            ->exception(MiddlewareException::class)
+            ->exceptionMessage('invalid JWT [AUTH-1]')
+            ->exceptionStatus(Status::SESSION_ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . uniqid() . '.' . uniqid();
 
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . uniqid() . '.' . uniqid();
-
-        $this->jWTMiddleware->authorizeWithoutSignature();
+                $this->jWTMiddleware->authorizeWithoutSignature();
+            });
     }
 
     public function testAuthorizeWithoutSignatureWithoutUsersCode(): void
     {
-        $this->expectException(MiddlewareException::class);
-        $this->expectExceptionMessage('invalid JWT [AUTH-2]');
-        $this->expectExceptionCode(Request::HTTP_FORBIDDEN);
+        $this
+            ->exception(MiddlewareException::class)
+            ->exceptionMessage('invalid JWT [AUTH-2]')
+            ->exceptionStatus(Status::SESSION_ERROR)
+            ->exceptionCode(Http::HTTP_FORBIDDEN)
+            ->expectLionException(function (): void {
+                $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization();
 
-        $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization();
-
-        $this->jWTMiddleware->authorizeWithoutSignature();
+                $this->jWTMiddleware->authorizeWithoutSignature();
+            });
     }
 
     public function testAuthorizeWithoutSignaturePathNotExist(): void
     {
-        $this->expectException(MiddlewareException::class);
-        $this->expectExceptionMessage('invalid JWT [AUTH-3]');
-        $this->expectExceptionCode(Request::HTTP_FORBIDDEN);
+        $this
+            ->exception(MiddlewareException::class)
+            ->exceptionMessage('invalid JWT [AUTH-3]')
+            ->exceptionStatus(Status::SESSION_ERROR)
+            ->exceptionCode(Http::HTTP_FORBIDDEN)
+            ->expectLionException(function (): void {
+                $this->generateKeys($this->users_code);
 
-        $this->generateKeys($this->users_code);
+                $_SERVER['HTTP_AUTHORIZATION'] = $this->getCustomAuthorization("{$this->users_code}/", [
+                    'users_code' => $this->users_code
+                ]);
 
-        $_SERVER['HTTP_AUTHORIZATION'] = $this->getCustomAuthorization("{$this->users_code}/", [
-            'users_code' => $this->users_code
-        ]);
+                $this->rmdirRecursively(env('RSA_URL_PATH') . "{$this->users_code}/");
 
-        $this->rmdirRecursively(env('RSA_URL_PATH') . "{$this->users_code}/");
-
-        $this->jWTMiddleware->authorizeWithoutSignature();
+                $this->jWTMiddleware->authorizeWithoutSignature();
+            });
     }
 
     public function testAuthorizeWithoutSignatureNotAuthorize(): void
     {
-        $this->expectException(MiddlewareException::class);
-        $this->expectExceptionMessage('user not logged in, you must log in');
-        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
+        $this
+            ->exception(MiddlewareException::class)
+            ->exceptionMessage('user not logged in, you must log in')
+            ->exceptionStatus(Status::SESSION_ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $this->generateKeys($this->users_code);
 
-        $this->generateKeys($this->users_code);
+                $_SERVER['HTTP_AUTHORIZATION'] = $this->getCustomAuthorization("{$this->users_code}/", [
+                    'session' => false,
+                    'users_code' => $this->users_code
+                ]);
 
-        $_SERVER['HTTP_AUTHORIZATION'] = $this->getCustomAuthorization("{$this->users_code}/", [
-            'session' => false,
-            'users_code' => $this->users_code
-        ]);
-
-        $this->jWTMiddleware->authorizeWithoutSignature();
+                $this->jWTMiddleware->authorizeWithoutSignature();
+            });
     }
 
     public function testAuthorize(): void
     {
-        $this->expectException(MiddlewareException::class);
-        $this->expectExceptionMessage('user not logged in, you must log in');
-        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
+        $this
+            ->exception(MiddlewareException::class)
+            ->exceptionMessage('user not logged in, you must log in')
+            ->exceptionStatus(Status::SESSION_ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization(['session' => false]);
 
-        $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization(['session' => false]);
-
-        $this->jWTMiddleware->authorize();
+                $this->jWTMiddleware->authorize();
+            });
     }
 
     public function testNotAuthorize(): void
     {
-        $this->expectException(MiddlewareException::class);
-        $this->expectExceptionMessage('user in session, you must close the session');
-        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
+        $this
+            ->exception(MiddlewareException::class)
+            ->exceptionMessage('user in session, you must close the session')
+            ->exceptionStatus(Status::SESSION_ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization();
 
-        $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization();
-
-        $this->jWTMiddleware->notAuthorize();
+                $this->jWTMiddleware->notAuthorize();
+            });
     }
 }

@@ -28,10 +28,10 @@
     },
     "require": {
         "php": ">=8.3",
-        "lion/bundle": "^16.11"
+        "lion/bundle": "^17.0"
     },
     "require-dev": {
-        "lion/test": "^1.4",
+        "lion/test": "^2.0",
         "phpunit/phpunit": "^11.0"
     },
     "scripts": {

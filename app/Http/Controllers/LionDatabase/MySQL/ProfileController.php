@@ -8,7 +8,7 @@ use App\Http\Services\JWTService;
 use App\Models\LionDatabase\MySQL\ProfileModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Exception;
-use Lion\Request\Request;
+use Lion\Request\Http;
 
 /**
  * Description of Controller 'ProfileController'
@@ -62,7 +62,7 @@ class ProfileController
         if (isError($response)) {
             throw new Exception(
                 "an error occurred while updating the user's profile",
-                Request::HTTP_INTERNAL_SERVER_ERROR
+                Http::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 

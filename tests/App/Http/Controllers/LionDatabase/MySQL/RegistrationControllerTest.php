@@ -6,8 +6,8 @@ namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Request\Request;
-use Lion\Request\Response;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Route\Route;
 use Lion\Test\Test;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
@@ -45,8 +45,8 @@ class RegistrationControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
     }
@@ -63,8 +63,8 @@ class RegistrationControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
@@ -78,8 +78,8 @@ class RegistrationControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_BAD_REQUEST,
-            'status' => Response::ERROR,
+            'code' => Http::HTTP_BAD_REQUEST,
+            'status' => Status::ERROR,
             'message' => 'there is already an account registered with this email',
         ]);
     }
@@ -96,8 +96,8 @@ class RegistrationControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
@@ -116,8 +116,8 @@ class RegistrationControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'user account has been successfully verified'
         ]);
     }
@@ -134,8 +134,8 @@ class RegistrationControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
@@ -149,8 +149,8 @@ class RegistrationControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_FORBIDDEN,
-            'status' => Response::SESSION_ERROR,
+            'code' => Http::HTTP_FORBIDDEN,
+            'status' => Status::SESSION_ERROR,
             'message' => 'verification code is invalid [ERR-1]',
         ]);
     }
@@ -167,8 +167,8 @@ class RegistrationControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
@@ -182,8 +182,8 @@ class RegistrationControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_FORBIDDEN,
-            'status' => Response::SESSION_ERROR,
+            'code' => Http::HTTP_FORBIDDEN,
+            'status' => Status::SESSION_ERROR,
             'message' => 'verification code is invalid [ERR-2]',
         ]);
     }

@@ -9,7 +9,8 @@ use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Dependency\Injection\Container;
-use Lion\Request\Request;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Providers\App\Http\Services\LionDatabase\MySQL\RegistrationServiceProviderTrait;
@@ -26,7 +27,8 @@ class RegistrationServiceTest extends Test
     {
         $this->runMigrationsAndQueues();
 
-        $this->registrationService = (new Container())->injectDependencies(new RegistrationService());
+        $this->registrationService = (new Container())
+            ->injectDependencies(new RegistrationService());
     }
 
     protected function tearDown(): void
@@ -37,10 +39,13 @@ class RegistrationServiceTest extends Test
     #[DataProvider('verifyAccountProvider')]
     public function testVerifyAccount(string $message, object $data, Users $users): void
     {
-        $this->expectException(AuthenticationException::class);
-        $this->expectExceptionCode(Request::HTTP_FORBIDDEN);
-        $this->expectExceptionMessage($message);
-
-        $this->registrationService->verifyAccount($users, $data);
+        $this
+            ->exception(AuthenticationException::class)
+            ->exceptionMessage($message)
+            ->exceptionStatus(Status::SESSION_ERROR)
+            ->exceptionCode(Http::HTTP_FORBIDDEN)
+            ->expectLionException(function () use ($data, $users): void {
+                $this->registrationService->verifyAccount($users, $data);
+            });
     }
 }

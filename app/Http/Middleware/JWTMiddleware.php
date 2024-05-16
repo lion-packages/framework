@@ -6,8 +6,8 @@ namespace App\Http\Middleware;
 
 use Lion\Bundle\Exceptions\MiddlewareException;
 use Lion\Files\Store;
-use Lion\Request\Request;
-use Lion\Request\Response;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 
@@ -93,11 +93,11 @@ class JWTMiddleware
     private function validateSession(object $jwt): void
     {
         if (isError($jwt)) {
-            throw new MiddlewareException($jwt->message, Response::SESSION_ERROR, Request::HTTP_UNAUTHORIZED);
+            throw new MiddlewareException($jwt->message, Status::SESSION_ERROR, Http::HTTP_UNAUTHORIZED);
         }
 
         if (!isset($jwt->data->session)) {
-            throw new MiddlewareException('undefined session', Response::SESSION_ERROR, Request::HTTP_FORBIDDEN);
+            throw new MiddlewareException('undefined session', Status::SESSION_ERROR, Http::HTTP_FORBIDDEN);
         }
     }
 
@@ -111,11 +111,7 @@ class JWTMiddleware
     public function existence(): void
     {
         if (empty($_SERVER['HTTP_AUTHORIZATION'])) {
-            throw new MiddlewareException(
-                'the JWT does not exist',
-                Response::SESSION_ERROR,
-                Request::HTTP_UNAUTHORIZED
-            );
+            throw new MiddlewareException('the JWT does not exist', Status::SESSION_ERROR, Http::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -133,19 +129,19 @@ class JWTMiddleware
         $splitToken = explode('.', $this->jwt->getJWT());
 
         if (arr->of($splitToken)->length() != 3) {
-            throw new MiddlewareException('invalid JWT [AUTH-1]', Response::SESSION_ERROR, Request::HTTP_UNAUTHORIZED);
+            throw new MiddlewareException('invalid JWT [AUTH-1]', Status::SESSION_ERROR, Http::HTTP_UNAUTHORIZED);
         }
 
         $data = (object) ((object) json_decode(base64_decode($splitToken[1]), true));
 
         if (empty($data->data['users_code'])) {
-            throw new MiddlewareException('invalid JWT [AUTH-2]', Response::SESSION_ERROR, Request::HTTP_FORBIDDEN);
+            throw new MiddlewareException('invalid JWT [AUTH-2]', Status::SESSION_ERROR, Http::HTTP_FORBIDDEN);
         }
 
         $path = env('RSA_URL_PATH') . "{$data->data['users_code']}/";
 
         if (isError($this->store->exist($path))) {
-            throw new MiddlewareException('invalid JWT [AUTH-3]', Response::SESSION_ERROR, Request::HTTP_FORBIDDEN);
+            throw new MiddlewareException('invalid JWT [AUTH-3]', Status::SESSION_ERROR, Http::HTTP_FORBIDDEN);
         }
 
         $this->initRSA($path);
@@ -162,8 +158,8 @@ class JWTMiddleware
         if (!$token->data->session || empty($token->data->session)) {
             throw new MiddlewareException(
                 'user not logged in, you must log in',
-                Response::SESSION_ERROR,
-                Request::HTTP_UNAUTHORIZED
+                Status::SESSION_ERROR,
+                Http::HTTP_UNAUTHORIZED
             );
         }
     }
@@ -193,8 +189,8 @@ class JWTMiddleware
         if (!$token->data->session || empty($token->data->session)) {
             throw new MiddlewareException(
                 'user not logged in, you must log in',
-                Response::SESSION_ERROR,
-                Request::HTTP_UNAUTHORIZED
+                Status::SESSION_ERROR,
+                Http::HTTP_UNAUTHORIZED
             );
         }
     }
@@ -224,8 +220,8 @@ class JWTMiddleware
         if ($token->data->session) {
             throw new MiddlewareException(
                 'user in session, you must close the session',
-                Response::SESSION_ERROR,
-                Request::HTTP_UNAUTHORIZED
+                Status::SESSION_ERROR,
+                Http::HTTP_UNAUTHORIZED
             );
         }
     }

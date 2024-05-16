@@ -9,7 +9,7 @@ use App\Enums\RolesEnum;
 use App\Models\LionDatabase\MySQL\ProfileModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Request\Response;
+use Lion\Request\Status;
 use Lion\Test\Test;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -61,7 +61,7 @@ class ProfileModelTest extends Test
 
         $this->assertIsObject($response);
         $this->assertObjectHasProperty('status', $response);
-        $this->assertSame(Response::SUCCESS, $response->status);
+        $this->assertSame(Status::SUCCESS, $response->status);
 
         $response = $this->profileModel->readProfileDB(
             $this->users

@@ -7,8 +7,8 @@ namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Request\Request;
-use Lion\Request\Response;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Route\Route;
 use Lion\Test\Test;
 use Tests\Providers\AuthJwtProviderTrait;
@@ -61,8 +61,8 @@ class UsersControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'registered user successfully',
         ]);
     }
@@ -103,8 +103,8 @@ class UsersControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($users, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'no data available'
         ]);
     }
@@ -158,8 +158,8 @@ class UsersControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($users, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'no data available'
         ]);
     }
@@ -194,8 +194,8 @@ class UsersControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'the registered user has been successfully updated',
         ]);
 
@@ -253,8 +253,8 @@ class UsersControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'the registered user has been successfully deleted',
         ]);
 

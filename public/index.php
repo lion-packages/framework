@@ -14,10 +14,10 @@ define('LION_START', microtime(true));
 require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Dotenv\Dotenv;
-use Lion\Bundle\Helpers\ExceptionCore;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Bundle\Kernel\HttpKernel;
 use Lion\Dependency\Injection\Container;
+use Lion\Exceptions\Serialize;
 use Lion\Route\Route;
 
 /**
@@ -28,7 +28,8 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  **/
 
-(new ExceptionCore())->exceptionHandler();
+(new Serialize())
+    ->exceptionHandler();
 
 /**
  * -----------------------------------------------------------------------------
@@ -60,7 +61,9 @@ require_once(__DIR__ . '/../config/cors.php');
  * -----------------------------------------------------------------------------
  **/
 
-(new Container)->injectDependencies((new HttpKernel()))->validateRules();
+(new Container)
+    ->injectDependencies((new HttpKernel()))
+    ->validateRules();
 
 /**
  * -----------------------------------------------------------------------------
@@ -95,7 +98,11 @@ date_default_timezone_set(env('SERVER_DATE_TIMEZONE', 'America/Bogota'));
  **/
 
 Route::init();
+
 Route::addMiddleware(Routes::getMiddleware());
+
 include_once(__DIR__ . '/../routes/web.php');
+
 Route::get('route-list', fn () => Route::getFullRoutes(), ['protect-route-list']);
+
 Route::dispatch();

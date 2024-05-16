@@ -6,8 +6,8 @@ namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Enums\DocumentTypesEnum;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Request\Request;
-use Lion\Request\Response;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Route\Route;
 use Lion\Test\Test;
 use Tests\Providers\AuthJwtProviderTrait;
@@ -71,8 +71,8 @@ class ProfileControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'profile updated successfully',
         ]);
     }
