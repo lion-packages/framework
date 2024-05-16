@@ -8,6 +8,7 @@ use App\Exceptions\PasswordException;
 use App\Models\LionDatabase\MySQL\PasswordManagerModel;
 use Database\Class\PasswordManager;
 use Lion\Request\Request;
+use Lion\Request\Response;
 use Lion\Security\Validation;
 
 /**
@@ -52,7 +53,7 @@ class PasswordManagerService
         string $message = 'password is incorrect [ERR-1]'
     ): void {
         if (!password_verify($passwordEntered, $usersPassword)) {
-            throw new PasswordException($message, Request::HTTP_UNAUTHORIZED);
+            throw new PasswordException($message, Response::ERROR, Request::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -69,7 +70,7 @@ class PasswordManagerService
     public function comparePasswords(string $usersPassword, string $passwordEntered): void
     {
         if ($usersPassword != $passwordEntered) {
-            throw new PasswordException('password is incorrect [ERR-2]', Request::HTTP_UNAUTHORIZED);
+            throw new PasswordException('password is incorrect [ERR-2]', Response::ERROR, Request::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -93,7 +94,7 @@ class PasswordManagerService
         );
 
         if (isError($response)) {
-            throw new PasswordException('password is incorrect [ERR-3]', Request::HTTP_UNAUTHORIZED);
+            throw new PasswordException('password is incorrect [ERR-3]', Response::ERROR, Request::HTTP_UNAUTHORIZED);
         }
     }
 }

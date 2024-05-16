@@ -68,7 +68,7 @@ class PasswordManagerController
      * @route /api/auth/password/verify-code
      *
      * @param Users $users [Capsule for the 'Users' entity]
-     * @param PasswordManager $passwordManagzzzzzzer [Capsule for the
+     * @param PasswordManager $passwordManager [Capsule for the
      * 'PasswordManager' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
      * @param PasswordManagerModel $passwordManagerModel [Password management
@@ -122,7 +122,7 @@ class PasswordManagerController
     /**
      * Update user passwords
      *
-     * @route /api/auth/password/update
+     * @route /api/profile/password
      *
      * @param PasswordManager $passwordManager [Capsule for the
      * 'PasswordManager' entity]
@@ -143,7 +143,7 @@ class PasswordManagerController
         $users = $passwordManagerModel->getPasswordDB(
             $passwordManager
                 ->capsule()
-                ->setIdusers($jWTService->getTokenData(storage_path(env('RSA_URL_PATH')))->idusers)
+                ->setIdusers($jWTService->getTokenData(env('RSA_URL_PATH'))->idusers)
         );
 
         $passwordManagerService->verifyPasswords($users->users_password, $passwordManager->getUsersPassword());

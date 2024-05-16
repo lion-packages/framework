@@ -6,7 +6,6 @@ namespace Tests\App\Http\Services\LionDatabase\MySQL;
 
 use App\Exceptions\AccountException;
 use App\Html\Email\RecoveryAccountHtml;
-use App\Html\Email\VerifyAccountHtml;
 use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
@@ -83,8 +82,7 @@ class AccountServiceTest extends Test
 
         $this->assertJsonContent($row->task_queue_data, [
             'code' => $code,
-            'account' => $account,
-            'template' => VerifyAccountHtml::class
+            'account' => $account
         ]);
     }
 

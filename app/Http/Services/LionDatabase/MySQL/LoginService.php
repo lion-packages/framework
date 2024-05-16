@@ -8,6 +8,7 @@ use App\Exceptions\AuthenticationException;
 use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Request\Request;
+use Lion\Request\Response;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 
@@ -86,7 +87,11 @@ class LoginService
         $auth = $this->loginModel->authDB($users);
 
         if ($auth->count === 0 || $auth->count === "0") {
-            throw new AuthenticationException('email/password is incorrect [AUTH-1]', Request::HTTP_UNAUTHORIZED);
+            throw new AuthenticationException(
+                'email/password is incorrect [AUTH-1]',
+                Response::SESSION_ERROR,
+                Request::HTTP_UNAUTHORIZED
+            );
         }
     }
 
@@ -104,7 +109,11 @@ class LoginService
         $users_activation_code = $this->loginModel->verifyAccountActivationDB($users);
 
         if ($users_activation_code->users_activation_code != null) {
-            throw new AuthenticationException("the user's account has not yet been verified", Request::HTTP_FORBIDDEN);
+            throw new AuthenticationException(
+                "the user's account has not yet been verified",
+                Response::SESSION_ERROR,
+                Request::HTTP_FORBIDDEN
+            );
         }
     }
 

@@ -271,7 +271,9 @@ class PasswordManagerControllerTest extends Test
 
         $response = fetch(Route::POST, (env('SERVER_URL') . '/api/profile/password'), [
             'headers' => [
-                'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
+                'Authorization' => $this->getAuthorization([
+                    'idusers' => $user->idusers
+                ])
             ],
             'json' => [
                 'users_password' => $validation->sha256(UsersFactory::USERS_PASSWORD),

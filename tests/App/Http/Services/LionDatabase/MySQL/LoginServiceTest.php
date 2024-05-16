@@ -52,7 +52,7 @@ class LoginServiceTest extends Test
 
     public function testGetToken(): void
     {
-        $token = $this->loginService->getToken(storage_path(env('RSA_URL_PATH'), false), [
+        $token = $this->loginService->getToken(env('RSA_URL_PATH'), [
             'session' => true
         ]);
 

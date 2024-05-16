@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use Lion\Bundle\Exceptions\MiddlewareException;
 use Lion\Files\Store;
 use Lion\Request\Request;
 use Lion\Request\Response;
@@ -44,7 +45,7 @@ class JWTMiddleware
 
     /**
      * @required
-     * */
+     */
     public function setStore(Store $store): void
     {
         $this->store = $store;
@@ -52,7 +53,7 @@ class JWTMiddleware
 
     /**
      * @required
-     * */
+     */
     public function setRSA(RSA $rsa): void
     {
         $this->rsa = $rsa;
@@ -60,7 +61,7 @@ class JWTMiddleware
 
     /**
      * @required
-     * */
+     */
     public function setJWT(JWT $jwt): void
     {
         $this->jwt = $jwt;
@@ -76,7 +77,7 @@ class JWTMiddleware
     private function initRSA(string $path): void
     {
         $this->rsa
-            ->setUrlPath(storage_path($path))
+            ->setUrlPath($path)
             ->init();
     }
 
@@ -86,15 +87,17 @@ class JWTMiddleware
      * @param object $jwt [JWT object]
      *
      * @return void
+     *
+     * @throws MiddlewareException [The session with the JWT has failed]
      */
     private function validateSession(object $jwt): void
     {
         if (isError($jwt)) {
-            finish(response(Response::SESSION_ERROR, $jwt->message, Request::HTTP_UNAUTHORIZED));
+            throw new MiddlewareException($jwt->message, Response::SESSION_ERROR, Request::HTTP_UNAUTHORIZED);
         }
 
         if (!isset($jwt->data->session)) {
-            finish(response(Response::SESSION_ERROR, 'undefined session', Request::HTTP_FORBIDDEN));
+            throw new MiddlewareException('undefined session', Response::SESSION_ERROR, Request::HTTP_FORBIDDEN);
         }
     }
 
@@ -102,11 +105,17 @@ class JWTMiddleware
      * Validate if a JWT exists in the headers
      *
      * @return void
+     *
+     * @throws MiddlewareException [If authorization token does not exist]
      */
     public function existence(): void
     {
-        if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
-            finish(response(Response::SESSION_ERROR, 'the JWT does not exist', Request::HTTP_UNAUTHORIZED));
+        if (empty($_SERVER['HTTP_AUTHORIZATION'])) {
+            throw new MiddlewareException(
+                'the JWT does not exist',
+                Response::SESSION_ERROR,
+                Request::HTTP_UNAUTHORIZED
+            );
         }
     }
 
@@ -114,6 +123,8 @@ class JWTMiddleware
      * Validate a JWT in headers even though the signature is not validated
      *
      * @return void
+     *
+     * @throws MiddlewareException [If the authorization token is not valid]
      */
     public function authorizeWithoutSignature(): void
     {
@@ -122,33 +133,37 @@ class JWTMiddleware
         $splitToken = explode('.', $this->jwt->getJWT());
 
         if (arr->of($splitToken)->length() != 3) {
-            finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-1]', Request::HTTP_UNAUTHORIZED));
+            throw new MiddlewareException('invalid JWT [AUTH-1]', Response::SESSION_ERROR, Request::HTTP_UNAUTHORIZED);
         }
 
-        $data = (object) ((object) json_decode(base64_decode($splitToken[1]), true))->data;
+        $data = (object) ((object) json_decode(base64_decode($splitToken[1]), true));
 
-        if (!isset($data->users_code)) {
-            finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-2]', Request::HTTP_FORBIDDEN));
+        if (empty($data->data['users_code'])) {
+            throw new MiddlewareException('invalid JWT [AUTH-2]', Response::SESSION_ERROR, Request::HTTP_FORBIDDEN);
         }
 
-        $path = env('RSA_URL_PATH') . "{$data->users_code}/";
+        $path = env('RSA_URL_PATH') . "{$data->data['users_code']}/";
 
-        if (isError($this->store->exist(storage_path($path)))) {
-            finish(response(Response::SESSION_ERROR, 'invalid JWT [AWS-3]', Request::HTTP_FORBIDDEN));
+        if (isError($this->store->exist($path))) {
+            throw new MiddlewareException('invalid JWT [AUTH-3]', Response::SESSION_ERROR, Request::HTTP_FORBIDDEN);
         }
 
         $this->initRSA($path);
 
         $token = $this->jwt
-            ->config(['publicKey' => $this->rsa->getPublicKey()])
+            ->config([
+                'publicKey' => $this->rsa->getPublicKey()
+            ])
             ->decode($this->jwt->getJWT())
             ->get();
 
         $this->validateSession($token);
 
-        if (!$token->data->session || !isset($token->data->session)) {
-            finish(
-                response(Response::SESSION_ERROR, 'user not logged in, you must log in', Request::HTTP_UNAUTHORIZED)
+        if (!$token->data->session || empty($token->data->session)) {
+            throw new MiddlewareException(
+                'user not logged in, you must log in',
+                Response::SESSION_ERROR,
+                Request::HTTP_UNAUTHORIZED
             );
         }
     }
@@ -157,6 +172,8 @@ class JWTMiddleware
      * Validate a JWT to check if it is still valid and the session is true
      *
      * @return void
+     *
+     * @throws MiddlewareException [If the user session is not authorized]
      */
     public function authorize(): void
     {
@@ -165,15 +182,19 @@ class JWTMiddleware
         $this->existence();
 
         $token = $this->jwt
-            ->config(['publicKey' => $this->rsa->getPublicKey()])
+            ->config([
+                'publicKey' => $this->rsa->getPublicKey()
+            ])
             ->decode($this->jwt->getJWT())
             ->get();
 
         $this->validateSession($token);
 
-        if (!$token->data->session || !isset($token->data->session)) {
-            finish(
-                response(Response::SESSION_ERROR, 'user not logged in, you must log in', Request::HTTP_UNAUTHORIZED)
+        if (!$token->data->session || empty($token->data->session)) {
+            throw new MiddlewareException(
+                'user not logged in, you must log in',
+                Response::SESSION_ERROR,
+                Request::HTTP_UNAUTHORIZED
             );
         }
     }
@@ -182,6 +203,8 @@ class JWTMiddleware
      * Validate a JWT to check if it is still valid and the session is false
      *
      * @return void
+     *
+     * @throws MiddlewareException [If the user session is authorized]
      */
     public function notAuthorize(): void
     {
@@ -190,19 +213,19 @@ class JWTMiddleware
         $this->existence();
 
         $token = $this->jwt
-            ->config(['publicKey' => $this->rsa->getPublicKey()])
+            ->config([
+                'publicKey' => $this->rsa->getPublicKey()
+            ])
             ->decode($this->jwt->getJWT())
             ->get();
 
         $this->validateSession($token);
 
         if ($token->data->session) {
-            finish(
-                response(
-                    Response::SESSION_ERROR,
-                    'user in session, you must close the session',
-                    Request::HTTP_UNAUTHORIZED
-                )
+            throw new MiddlewareException(
+                'user in session, you must close the session',
+                Response::SESSION_ERROR,
+                Request::HTTP_UNAUTHORIZED
             );
         }
     }

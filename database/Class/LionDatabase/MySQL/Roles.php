@@ -17,47 +17,47 @@ use Lion\Bundle\Interface\CapsuleInterface;
  */
 class Roles implements CapsuleInterface
 {
-	/**
-	 * [Property for idroles]
-	 *
-	 * @var int|null $idroles
-	 */
-	private ?int $idroles = null;
+    /**
+     * [Property for idroles]
+     *
+     * @var int|null $idroles
+     */
+    private ?int $idroles = null;
 
-	/**
-	 * [Property for roles_name]
-	 *
-	 * @var string|null $roles_name
-	 */
-	private ?string $roles_name = null;
+    /**
+     * [Property for roles_name]
+     *
+     * @var string|null $roles_name
+     */
+    private ?string $roles_name = null;
 
-	/**
-	 * [Property for roles_description]
-	 *
-	 * @var string|null $roles_description
-	 */
-	private ?string $roles_description = null;
+    /**
+     * [Property for roles_description]
+     *
+     * @var string|null $roles_description
+     */
+    private ?string $roles_description = null;
 
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function jsonSerialize(): array
-	{
-		return get_object_vars($this);
-	}
+    /**
+     * {@inheritdoc}
+     * */
+    public function jsonSerialize(): array
+    {
+        return get_object_vars($this);
+    }
 
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function capsule(): Roles
-	{
-		$this
-			->setIdroles(request->idroles ?? null)
-			->setRolesName(request->roles_name ?? null)
-			->setRolesDescription(request->roles_description ?? null);
+    /**
+     * {@inheritdoc}
+     * */
+    public function capsule(): Roles
+    {
+        $this
+            ->setIdroles(request->idroles ?? null)
+            ->setRolesName(request->roles_name ?? null)
+            ->setRolesDescription(request->roles_description ?? null);
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Getter method for 'idroles'

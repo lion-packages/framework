@@ -49,7 +49,7 @@ class LoginController
 
         return success('successfully authenticated user', Request::HTTP_OK, [
             'full_name' => "{$session->getUsersName()} {$session->getUsersLastName()}",
-            'jwt' => $loginService->getToken(storage_path(env('RSA_URL_PATH')), [
+            'jwt' => $loginService->getToken(env('RSA_URL_PATH'), [
                 'session' => true,
                 'idusers' => $session->getIdusers(),
                 'idroles' => $session->getIdroles(),
