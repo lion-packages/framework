@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use JsonSerializable;
-use Lion\Bundle\Support\Exceptions\ExceptionSupport;
-use Lion\Bundle\Traits\ExceptionsTrait;
+use Lion\Exceptions\Exception;
+use Lion\Exceptions\Interfaces\ExceptionInterface;
+use Lion\Exceptions\Traits\ExceptionTrait;
 
 /**
  * Exception handling for user passwords
  *
  * @package App\Exceptions
  */
-class PasswordException extends ExceptionSupport implements JsonSerializable
+class PasswordException extends Exception implements ExceptionInterface
 {
-    use ExceptionsTrait;
+    use ExceptionTrait;
 }

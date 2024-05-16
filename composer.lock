@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16c490c68c3ef3a304c112834bf795a6",
+    "content-hash": "8ac3516fb384aece982fd7c58c194add",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -904,16 +904,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v16.15.0",
+            "version": "v17.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "f6acc9ea20ed205339bdc47ecf426f722f068499"
+                "reference": "ba0dbb4c0944d385995936dfcf632ff5383bfa81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/f6acc9ea20ed205339bdc47ecf426f722f068499",
-                "reference": "f6acc9ea20ed205339bdc47ecf426f722f068499",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/ba0dbb4c0944d385995936dfcf632ff5383bfa81",
+                "reference": "ba0dbb4c0944d385995936dfcf632ff5383bfa81",
                 "shasum": ""
             },
             "require": {
@@ -929,6 +929,7 @@
                 "guzzlehttp/guzzle": "^7.8",
                 "lion/command": "^3.1",
                 "lion/database": "^9.2",
+                "lion/exceptions": "^1.0",
                 "lion/files": "^6.0",
                 "lion/helpers": "^3.2",
                 "lion/mailer": "^6.0",
@@ -942,7 +943,7 @@
                 "symfony/console": "^6.3"
             },
             "require-dev": {
-                "lion/test": "^1.1",
+                "lion/test": "^2.0",
                 "phpunit/phpunit": "^11.1"
             },
             "suggest": {
@@ -985,7 +986,7 @@
                 "issues": "https://github.com/lion-packages/framework/issues",
                 "source": "https://github.com/lion-packages/framework"
             },
-            "time": "2024-05-12T16:00:47+00:00"
+            "time": "2024-05-16T18:20:30+00:00"
         },
         {
             "name": "lion/command",
@@ -1103,6 +1104,45 @@
                 "source": "https://github.com/lion-packages/dependency-injection/tree/v1.5.0"
             },
             "time": "2024-04-10T17:08:41+00:00"
+        },
+        {
+            "name": "lion/exceptions",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lion-packages/exceptions.git",
+                "reference": "b59071f7bb6ecd5c3f527397424f90f3f857b034"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lion-packages/exceptions/zipball/b59071f7bb6ecd5c3f527397424f90f3f857b034",
+                "reference": "b59071f7bb6ecd5c3f527397424f90f3f857b034",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.8",
+                "lion/test": "^2.0",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Lion\\Exceptions\\": "src/LionExceptions/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Handling exceptions and serializations",
+            "support": {
+                "issues": "https://github.com/lion-packages/exceptions/issues",
+                "source": "https://github.com/lion-packages/exceptions/tree/v1.1.2"
+            },
+            "time": "2024-05-16T17:32:01+00:00"
         },
         {
             "name": "lion/files",

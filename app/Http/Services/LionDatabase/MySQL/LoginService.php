@@ -7,8 +7,8 @@ namespace App\Http\Services\LionDatabase\MySQL;
 use App\Exceptions\AuthenticationException;
 use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Lion\Request\Request;
-use Lion\Request\Response;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 
@@ -89,8 +89,8 @@ class LoginService
         if ($auth->count === 0 || $auth->count === "0") {
             throw new AuthenticationException(
                 'email/password is incorrect [AUTH-1]',
-                Response::SESSION_ERROR,
-                Request::HTTP_UNAUTHORIZED
+                Status::SESSION_ERROR,
+                Http::HTTP_UNAUTHORIZED
             );
         }
     }
@@ -111,8 +111,8 @@ class LoginService
         if ($users_activation_code->users_activation_code != null) {
             throw new AuthenticationException(
                 "the user's account has not yet been verified",
-                Response::SESSION_ERROR,
-                Request::HTTP_FORBIDDEN
+                Status::SESSION_ERROR,
+                Http::HTTP_FORBIDDEN
             );
         }
     }
