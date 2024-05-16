@@ -8,7 +8,8 @@ use App\Exceptions\PasswordException;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Dependency\Injection\Container;
-use Lion\Request\Request;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Security\Validation;
 use Lion\Test\Test;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
@@ -31,28 +32,36 @@ class PasswordManagerServiceTest extends Test
 
     public function testVerifyPasswords(): void
     {
-        $this->expectException(PasswordException::class);
-        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
-        $this->expectExceptionMessage('password is incorrect [ERR-1]');
+        $this
+            ->exception(PasswordException::class)
+            ->exceptionMessage('password is incorrect [ERR-1]')
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $usersPassword = $this->validation->passwordHash(
+                    $this->validation->sha256(UsersFactory::USERS_PASSWORD)
+                );
 
-        $usersPassword = $this->validation->passwordHash($this->validation->sha256(UsersFactory::USERS_PASSWORD));
+                $passwordEntered = $this->validation->sha256(UsersFactory::USERS_PASSWORD . '-X');
 
-        $passwordEntered = $this->validation->sha256(UsersFactory::USERS_PASSWORD . '-X');
-
-        $this->passwordManagerService->verifyPasswords($usersPassword, $passwordEntered);
+                $this->passwordManagerService->verifyPasswords($usersPassword, $passwordEntered);
+            });
     }
 
     public function testComparePasswords(): void
     {
-        $this->expectException(PasswordException::class);
-        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
-        $this->expectExceptionMessage('password is incorrect [ERR-2]');
+        $this
+            ->exception(PasswordException::class)
+            ->exceptionMessage('password is incorrect [ERR-2]')
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $usersPassword = $this->validation->sha256(UsersFactory::USERS_PASSWORD);
 
-        $usersPassword = $this->validation->sha256(UsersFactory::USERS_PASSWORD);
+                $passwordEntered = $this->validation->sha256(UsersFactory::USERS_PASSWORD . '-X');
 
-        $passwordEntered = $this->validation->sha256(UsersFactory::USERS_PASSWORD . '-X');
-
-        $this->passwordManagerService->comparePasswords($usersPassword, $passwordEntered);
+                $this->passwordManagerService->comparePasswords($usersPassword, $passwordEntered);
+            });
     }
 
     public function testUpdatePassword(): void

@@ -9,7 +9,7 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Request\Response;
+use Lion\Request\Status;
 use Lion\Security\Validation;
 use Lion\Test\Test;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
@@ -82,6 +82,6 @@ class PasswordManagerModelTest extends Test
 
         $this->assertIsObject($response);
         $this->assertObjectHasProperty('status', $response);
-        $this->assertSame(Response::SUCCESS, $response->status);
+        $this->assertSame(Status::SUCCESS, $response->status);
     }
 }

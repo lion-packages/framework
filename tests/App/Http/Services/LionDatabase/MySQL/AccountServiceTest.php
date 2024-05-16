@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\App\Http\Services\LionDatabase\MySQL;
 
 use App\Exceptions\AccountException;
-use App\Html\Email\RecoveryAccountHtml;
 use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
@@ -14,7 +13,8 @@ use Lion\Bundle\Enums\TaskStatusEnum;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Dependency\Injection\Container;
-use Lion\Request\Request;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Providers\App\Http\Services\LionDatabase\MySQL\AccountServiceProviderTrait;
@@ -46,14 +46,17 @@ class AccountServiceTest extends Test
 
     public function testCheckRecoveryCodeInactive(): void
     {
-        $this->expectException(AccountException::class);
-        $this->expectExceptionCode(Request::HTTP_FORBIDDEN);
-        $this->expectExceptionMessage('a verification code has already been sent to this account');
-
-        $this->accountService->checkRecoveryCodeInactive(
-            (new Users())
-                ->setUsersRecoveryCode(fake()->numerify('######'))
-        );
+        $this
+            ->exception(AccountException::class)
+            ->exceptionMessage('a verification code has already been sent to this account')
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionCode(Http::HTTP_FORBIDDEN)
+            ->expectLionException(function (): void {
+                $this->accountService->checkRecoveryCodeInactive(
+                    (new Users())
+                        ->setUsersRecoveryCode(fake()->numerify('######'))
+                );
+            });
     }
 
     public function testSendVerifiyCodeEmail(): void
@@ -113,80 +116,94 @@ class AccountServiceTest extends Test
         $this->assertJsonContent($row->task_queue_data, [
             'code' => $code,
             'account' => $account,
-            'template' => RecoveryAccountHtml::class,
         ]);
     }
 
     #[DataProvider('verifyRecoveryCodeProvider')]
     public function testVerifyRecoveryCode(Users $users, object $data, string $exceptionMessage): void
     {
-        $this->expectException(AccountException::class);
-        $this->expectExceptionCode(Request::HTTP_FORBIDDEN);
-        $this->expectExceptionMessage($exceptionMessage);
-
-        $this->accountService->verifyRecoveryCode($users, $data);
+        $this
+            ->exception(AccountException::class)
+            ->exceptionMessage($exceptionMessage)
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionCode(Http::HTTP_FORBIDDEN)
+            ->expectLionException(function () use ($users, $data): void {
+                $this->accountService->verifyRecoveryCode($users, $data);
+            });
     }
 
     #[DataProvider('verifyActivationCodeProvider')]
     public function testVerifyActivationCode(Users $users, object $data, string $exceptionMessage): void
     {
-        $this->expectException(AccountException::class);
-        $this->expectExceptionCode(Request::HTTP_FORBIDDEN);
-        $this->expectExceptionMessage($exceptionMessage);
-
-        $this->accountService->verifyActivationCode($users, $data);
+        $this
+            ->exception(AccountException::class)
+            ->exceptionMessage($exceptionMessage)
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionCode(Http::HTTP_FORBIDDEN)
+            ->expectLionException(function () use ($users, $data): void {
+                $this->accountService->verifyActivationCode($users, $data);
+            });
     }
 
     public function testUpdateRecoveryCode(): void
     {
-        $this->expectException(AccountException::class);
-        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
-        $this->expectExceptionMessage('verification code is invalid [ERR-3]');
+        $this
+            ->exception(AccountException::class)
+            ->exceptionMessage('verification code is invalid [ERR-3]')
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $users = (new Users())
+                    ->setUsersEmail(self::USERS_EMAIL);
 
-        $users = (new Users())
-            ->setUsersEmail(self::USERS_EMAIL);
+                $user = (new UsersModel())->readUsersByEmailDB($users);
 
-        $user = (new UsersModel())->readUsersByEmailDB($users);
+                $code = fake()->numerify('##########');
 
-        $code = fake()->numerify('##########');
+                $users
+                    ->setIdusers($user->idusers)
+                    ->setUsersRecoveryCode($code);
 
-        $users
-            ->setIdusers($user->idusers)
-            ->setUsersRecoveryCode($code);
-
-        $this->accountService->updateRecoveryCode($users);
+                $this->accountService->updateRecoveryCode($users);
+            });
     }
 
     public function testUpdateActivationCode(): void
     {
-        $this->expectException(AccountException::class);
-        $this->expectExceptionCode(Request::HTTP_UNAUTHORIZED);
-        $this->expectExceptionMessage('verification code is invalid [ERR-3]');
+        $this
+            ->exception(AccountException::class)
+            ->exceptionMessage('verification code is invalid [ERR-3]')
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $users = (new Users())
+                    ->setUsersEmail(self::USERS_EMAIL);
 
-        $users = (new Users())
-            ->setUsersEmail(self::USERS_EMAIL);
+                $user = (new UsersModel())->readUsersByEmailDB($users);
 
-        $user = (new UsersModel())->readUsersByEmailDB($users);
+                $code = fake()->numerify('##########');
 
-        $code = fake()->numerify('##########');
+                $users
+                    ->setIdusers($user->idusers)
+                    ->setUsersActivationCode($code);
 
-        $users
-            ->setIdusers($user->idusers)
-            ->setUsersActivationCode($code);
-
-        $this->accountService->updateActivationCode($users);
+                $this->accountService->updateActivationCode($users);
+            });
     }
 
     public function testValidateAccountExists(): void
     {
-        $this->expectException(AccountException::class);
-        $this->expectExceptionCode(Request::HTTP_BAD_REQUEST);
-        $this->expectExceptionMessage('there is already an account registered with this email');
-
-        $this->accountService->validateAccountExists(
-            new RegistrationModel(),
-            (new Users())
-                ->setUsersEmail(self::USERS_EMAIL)
-        );
+        $this
+            ->exception(AccountException::class)
+            ->exceptionMessage('there is already an account registered with this email')
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionCode(Http::HTTP_BAD_REQUEST)
+            ->expectLionException(function (): void {
+                $this->accountService->validateAccountExists(
+                    new RegistrationModel(),
+                    (new Users())
+                        ->setUsersEmail(self::USERS_EMAIL)
+                );
+            });
     }
 }

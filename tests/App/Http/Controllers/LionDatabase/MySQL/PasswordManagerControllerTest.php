@@ -8,8 +8,8 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Request\Request;
-use Lion\Request\Response;
+use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Route\Route;
 use Lion\Security\Validation;
 use Lion\Test\Test;
@@ -47,8 +47,8 @@ class PasswordManagerControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'confirmation code sent, check your email inbox to see your verification code',
         ]);
     }
@@ -64,8 +64,8 @@ class PasswordManagerControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'confirmation code sent, check your email inbox to see your verification code',
         ]);
 
@@ -78,8 +78,8 @@ class PasswordManagerControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_FORBIDDEN,
-            'status' => Response::ERROR,
+            'code' => Http::HTTP_FORBIDDEN,
+            'status' => Status::ERROR,
             'message' => 'a verification code has already been sent to this account',
         ]);
     }
@@ -95,8 +95,8 @@ class PasswordManagerControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_UNAUTHORIZED,
-            'status' => Response::SESSION_ERROR,
+            'code' => Http::HTTP_UNAUTHORIZED,
+            'status' => Status::SESSION_ERROR,
             'message' => 'email/password is incorrect [AUTH-1]',
         ]);
     }
@@ -112,8 +112,8 @@ class PasswordManagerControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'confirmation code sent, check your email inbox to see your verification code',
         ]);
 
@@ -137,8 +137,8 @@ class PasswordManagerControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'the recovery code is valid, your password has been updated successfully',
         ]);
 
@@ -166,8 +166,8 @@ class PasswordManagerControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_UNAUTHORIZED,
-            'status' => Response::SESSION_ERROR,
+            'code' => Http::HTTP_UNAUTHORIZED,
+            'status' => Status::SESSION_ERROR,
             'message' => 'email/password is incorrect [AUTH-1]',
         ]);
     }
@@ -183,8 +183,8 @@ class PasswordManagerControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'confirmation code sent, check your email inbox to see your verification code',
         ]);
 
@@ -208,8 +208,8 @@ class PasswordManagerControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_FORBIDDEN,
-            'status' => Response::ERROR,
+            'code' => Http::HTTP_FORBIDDEN,
+            'status' => Status::ERROR,
             'message' => 'verification code is invalid [ERR-2]',
         ]);
     }
@@ -225,8 +225,8 @@ class PasswordManagerControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'confirmation code sent, check your email inbox to see your verification code',
         ]);
 
@@ -250,8 +250,8 @@ class PasswordManagerControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_UNAUTHORIZED,
-            'status' => Response::ERROR,
+            'code' => Http::HTTP_UNAUTHORIZED,
+            'status' => Status::ERROR,
             'message' => 'password is incorrect [ERR-2]',
         ]);
     }
@@ -285,8 +285,8 @@ class PasswordManagerControllerTest extends Test
             ->getContents();
 
         $this->assertJsonContent($response, [
-            'code' => Request::HTTP_OK,
-            'status' => Response::SUCCESS,
+            'code' => Http::HTTP_OK,
+            'status' => Status::SUCCESS,
             'message' => 'password updated successfully',
         ]);
     }
@@ -318,8 +318,8 @@ class PasswordManagerControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_UNAUTHORIZED,
-            'status' => Response::ERROR,
+            'code' => Http::HTTP_UNAUTHORIZED,
+            'status' => Status::ERROR,
             'message' => 'password is incorrect [ERR-1]',
         ]);
     }
@@ -351,8 +351,8 @@ class PasswordManagerControllerTest extends Test
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
-            'code' => Request::HTTP_UNAUTHORIZED,
-            'status' => Response::ERROR,
+            'code' => Http::HTTP_UNAUTHORIZED,
+            'status' => Status::ERROR,
             'message' => 'password is incorrect [ERR-2]',
         ]);
     }
