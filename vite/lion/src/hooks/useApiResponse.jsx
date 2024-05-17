@@ -1,6 +1,6 @@
 export default function useApiResponse() {
   const getResponseFromRules = (title, data) => {
-    if (data.data["rules-error"]) {
+    if (data && data.data && data.data["rules-error"]) {
       return Object.entries(data.data["rules-error"]).map(
         ([index, message]) => ({
           status: "error",
