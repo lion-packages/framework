@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Providers;
 
-use Lion\Command\Kernel;
+use Lion\Bundle\Helpers\Commands\ProcessCommand;
 
 trait SetUpMigrationsAndQueuesProviderTrait
 {
@@ -12,7 +12,6 @@ trait SetUpMigrationsAndQueuesProviderTrait
     {
         $seedOption = $runSeeds ? '--seed' : '';
 
-        (new Kernel())
-            ->execute("php lion migrate:fresh {$seedOption} && php lion schedule:schema", false);
+        ProcessCommand::run("php lion migrate:fresh {$seedOption}", false);
     }
 }
