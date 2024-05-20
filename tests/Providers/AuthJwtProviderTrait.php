@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Providers;
 
-use Lion\Command\Kernel;
+use Lion\Bundle\Helpers\Commands\ProcessCommand;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 
@@ -15,8 +15,7 @@ trait AuthJwtProviderTrait
 
     private function generateKeys(string $path): void
     {
-        (new Kernel())
-            ->execute("php lion new:rsa --path keys/{$path}/", false);
+        ProcessCommand::run("php lion new:rsa --path keys/{$path}/", false);
     }
 
     private function getAuthorization(array $data = []): string
