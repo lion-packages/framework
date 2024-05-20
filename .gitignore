@@ -6,6 +6,10 @@
 /storage/**/*.key
 /storage/**/*.log
 /storage/postman/*.json
+/tests/build/coverage/*
+!/tests/build/coverage/.gitignore
+/tests/build/logs/*
+!/tests/build/logs/.gitignore
 .rnd
 .env
 supervisord.pid
