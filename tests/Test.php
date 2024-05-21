@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Lion\Bundle\Interface\CapsuleInterface;
 use Lion\Test\Test as TestTest;
 
 /**
@@ -62,5 +63,20 @@ class Test extends TestTest
         $_SERVER = $server;
 
         $this->assertArrayNotHasKey($header, $_SERVER);
+    }
+
+    /**
+     * Checks two aspects of an object that implements the CapsuleInterface
+     * interface
+     *
+     * @param CapsuleInterface $capsuleInterface [Implement abstract methods for
+     * capsule classes]
+     *
+     * @return void
+     */
+    public function assertCapsule(CapsuleInterface $capsuleInterface): void
+    {
+        $this->assertInstanceOf(CapsuleInterface::class, $capsuleInterface->capsule());
+        $this->assertIsArray($capsuleInterface->jsonSerialize());
     }
 }
