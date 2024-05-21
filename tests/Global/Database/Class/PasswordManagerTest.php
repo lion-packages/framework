@@ -6,7 +6,7 @@ namespace Tests\Global\Database\Class;
 
 use Database\Class\PasswordManager;
 use Lion\Bundle\Interface\CapsuleInterface;
-use Lion\Test\Test;
+use Tests\Test;
 
 class PasswordManagerTest extends Test
 {
@@ -18,6 +18,11 @@ class PasswordManagerTest extends Test
     protected function setUp(): void
     {
         $this->passwordManager = new PasswordManager();
+    }
+
+    public function testCapsule(): void
+    {
+        $this->assertCapsule($this->passwordManager);
     }
 
     public function testGetIdusers(): void

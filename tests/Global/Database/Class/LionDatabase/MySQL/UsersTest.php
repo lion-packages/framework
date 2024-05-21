@@ -6,7 +6,7 @@ namespace Tests\Global\Database\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Bundle\Interface\CapsuleInterface;
-use Lion\Test\Test;
+use Tests\Test;
 
 class UsersTest extends Test
 {
@@ -28,6 +28,11 @@ class UsersTest extends Test
     protected function setUp(): void
     {
         $this->users = new Users();
+    }
+
+    public function testCapsule(): void
+    {
+        $this->assertCapsule($this->users);
     }
 
     public function testGetIdusers(): void

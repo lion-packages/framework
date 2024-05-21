@@ -6,6 +6,8 @@ namespace Tests\Global\App\Http\Services\LionDatabase\MySQL;
 
 use App\Exceptions\PasswordException;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
+use App\Models\LionDatabase\MySQL\PasswordManagerModel;
+use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Dependency\Injection\Container;
 use Lion\Request\Http;
@@ -66,6 +68,18 @@ class PasswordManagerServiceTest extends Test
 
     public function testUpdatePassword(): void
     {
-        $this->expectNotToPerformAssertions();
+        $this
+            ->exception(PasswordException::class)
+            ->exceptionMessage('password is incorrect [ERR-3]')
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionCode(Http::HTTP_UNAUTHORIZED)
+            ->expectLionException(function (): void {
+                $this->passwordManagerService->updatePassword(
+                    new PasswordManagerModel(),
+                    (new PasswordManager())
+                        ->setIdusers((int) fake()->numerify('###############'))
+                        ->setUsersPasswordConfirm(UsersFactory::USERS_PASSWORD)
+                );
+            });
     }
 }

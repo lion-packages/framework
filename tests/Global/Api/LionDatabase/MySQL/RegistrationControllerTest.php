@@ -22,7 +22,9 @@ class RegistrationControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues(false);
+        $this->runMigrationsAndQueues(true);
+
+        Schema::truncateTable('users')->execute();
     }
 
     protected function tearDown(): void

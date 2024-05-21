@@ -6,7 +6,7 @@ namespace Tests\Global\Database\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Roles;
 use Lion\Bundle\Interface\CapsuleInterface;
-use Lion\Test\Test;
+use Tests\Test;
 
 class RolesTest extends Test
 {
@@ -19,6 +19,11 @@ class RolesTest extends Test
     protected function setUp(): void
     {
         $this->roles = new Roles();
+    }
+
+    public function testCapsule(): void
+    {
+        $this->assertCapsule($this->roles);
     }
 
     public function testGetIdroles(): void

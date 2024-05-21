@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Enums\RolesEnum;
 use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
@@ -46,6 +47,7 @@ class RegistrationController
 
         $response = $usersModel->createUsersDB(
             $users
+                ->setIdroles(RolesEnum::CUSTOMER->value)
                 ->setUsersPassword($validation->passwordHash(request('users_password')))
                 ->setUsersActivationCode(fake()->numerify('######'))
                 ->setUsersCode(uniqid('code-'))
