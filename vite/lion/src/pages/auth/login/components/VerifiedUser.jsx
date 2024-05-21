@@ -70,6 +70,16 @@ export default function VerifiedUser({ users_email, setVerified }) {
           ]);
         }
 
+        if (403 === response.data.code) {
+          addToast([
+            {
+              status: response.data.status,
+              title: "Registration",
+              message: response.data.message,
+            },
+          ]);
+        }
+
         if (500 === response.data.status) {
           addToast([...getResponseFromRules("Activation code", response.data)]);
         }

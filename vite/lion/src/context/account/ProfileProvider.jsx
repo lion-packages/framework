@@ -29,12 +29,28 @@ export function ProfileProvider({ children }) {
       })
       .then(({ data }) => {
         setIdroles(data.idroles);
-        setIddocument_types(data.iddocument_types);
-        setUsers_citizen_identification(data.users_citizen_identification);
-        setUsers_name(data.users_name);
-        setUsers_last_name(data.users_last_name);
-        setUsers_nickname(data.users_nickname);
-        setUsers_email(data.users_email);
+
+        setIddocument_types(
+          data.iddocument_types === null ? "" : data.iddocument_types
+        );
+
+        setUsers_citizen_identification(
+          data.users_citizen_identification === null
+            ? ""
+            : data.users_citizen_identification
+        );
+
+        setUsers_name(data.users_name === null ? "" : data.users_name);
+
+        setUsers_last_name(
+          data.users_last_name === null ? "" : data.users_last_name
+        );
+
+        setUsers_nickname(
+          data.users_nickname === null ? "" : data.users_nickname
+        );
+
+        setUsers_email(data.users_email === null ? "" : data.users_email);
       })
       .catch((err) => {
         console.log(err);
