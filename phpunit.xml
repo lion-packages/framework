@@ -29,13 +29,6 @@
         <ini name="memory_limit" value="2048M" />
     </php>
 
-    <source>
-        <include>
-            <directory>app</directory>
-            <directory>Database/</directory>
-        </include>
-    </source>
-
     <extensions>
         <bootstrap class="RobinIngelbrecht\PHPUnitPrettyPrint\PhpUnitExtension">
             <parameter name="enableByDefault" value="true" />
@@ -44,52 +37,40 @@
         </bootstrap>
     </extensions>
 
-    <!-- <coverage>
-        <report>
-            <clover outputFile="tests/build/logs/clover.xml" />
-            <html outputDirectory="tests/build/coverage" />
-        </report>
-    </coverage> -->
+    <source>
+        <include>
+            <directory suffix=".php">app</directory>
+            <directory suffix=".php">database/Class</directory>
+        </include>
+
+        <exclude>
+            <directory suffix=".php">app/Html</directory>
+            <directory suffix=".php">app/Rules</directory>
+            <directory suffix=".php">app/Sockets</directory>
+        </exclude>
+    </source>
 
     <testsuites>
         <testsuite name="All-Test">
-            <directory>tests/</directory>
+            <directory suffix=".php">tests/Global</directory>
         </testsuite>
 
-        <testsuite name="Enums">
-            <directory>tests/App/Enums/</directory>
+        <testsuite name="Unit-Tests">
+            <directory>tests/Global/App/Enums</directory>
+            <directory>tests/Global/App/Exceptions</directory>
+            <directory>tests/Global/App/Interfaces</directory>
+            <directory>tests/Global/Database</directory>
         </testsuite>
 
-        <testsuite name="Exceptions">
-            <directory>tests/App/Exceptions/</directory>
+        <testsuite name="Integration-Tests">
+            <directory>tests/Global/App/Http/Controllers</directory>
+            <directory>tests/Global/App/Http/Middleware</directory>
+            <directory>tests/Global/App/Http/Services</directory>
+            <directory>tests/Global/App/Models</directory>
         </testsuite>
 
-        <testsuite name="Controllers">
-            <directory>tests/App/Http/Controllers/</directory>
-        </testsuite>
-
-        <testsuite name="Middleware">
-            <directory>tests/App/Http/Middleware/</directory>
-        </testsuite>
-
-        <testsuite name="Services">
-            <directory>tests/App/Http/Services/</directory>
-        </testsuite>
-
-        <testsuite name="Interfaces">
-            <directory>tests/App/Interfaces/</directory>
-        </testsuite>
-
-        <testsuite name="Models">
-            <directory>tests/App/Models/</directory>
-        </testsuite>
-
-        <testsuite name="Traits">
-            <directory>tests/App/Traits/</directory>
-        </testsuite>
-
-        <testsuite name="Class">
-            <directory>tests/Database/Class/</directory>
+        <testsuite name="Functional-Tests">
+            <directory>tests/Global/Api</directory>
         </testsuite>
     </testsuites>
 </phpunit>

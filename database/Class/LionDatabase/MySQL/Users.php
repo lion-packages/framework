@@ -26,119 +26,119 @@ use Lion\Bundle\Interface\CapsuleInterface;
  */
 class Users implements CapsuleInterface
 {
-    /**
-     * [Property for idusers]
-     *
-     * @var int|null $idusers
-     */
-    private ?int $idusers = null;
+	/**
+	 * [Property for idusers]
+	 *
+	 * @var int|null $idusers
+	 */
+	private ?int $idusers = null;
 
-    /**
-     * [Property for idroles]
-     *
-     * @var int|null $idroles
-     */
-    private ?int $idroles = null;
+	/**
+	 * [Property for idroles]
+	 *
+	 * @var int|null $idroles
+	 */
+	private ?int $idroles = null;
 
-    /**
-     * [Property for iddocument_types]
-     *
-     * @var int|null $iddocument_types
-     */
-    private ?int $iddocument_types = null;
+	/**
+	 * [Property for iddocument_types]
+	 *
+	 * @var int|null $iddocument_types
+	 */
+	private ?int $iddocument_types = null;
 
-    /**
-     * [Property for users_citizen_identification]
-     *
-     * @var string|null $users_citizen_identification
-     */
-    private ?string $users_citizen_identification = null;
+	/**
+	 * [Property for users_citizen_identification]
+	 *
+	 * @var string|null $users_citizen_identification
+	 */
+	private ?string $users_citizen_identification = null;
 
-    /**
-     * [Property for users_name]
-     *
-     * @var string|null $users_name
-     */
-    private ?string $users_name = null;
+	/**
+	 * [Property for users_name]
+	 *
+	 * @var string|null $users_name
+	 */
+	private ?string $users_name = null;
 
-    /**
-     * [Property for users_last_name]
-     *
-     * @var string|null $users_last_name
-     */
-    private ?string $users_last_name = null;
+	/**
+	 * [Property for users_last_name]
+	 *
+	 * @var string|null $users_last_name
+	 */
+	private ?string $users_last_name = null;
 
-    /**
-     * [Property for users_nickname]
-     *
-     * @var string|null $users_nickname
-     */
-    private ?string $users_nickname = null;
+	/**
+	 * [Property for users_nickname]
+	 *
+	 * @var string|null $users_nickname
+	 */
+	private ?string $users_nickname = null;
 
-    /**
-     * [Property for users_email]
-     *
-     * @var string|null $users_email
-     */
-    private ?string $users_email = null;
+	/**
+	 * [Property for users_email]
+	 *
+	 * @var string|null $users_email
+	 */
+	private ?string $users_email = null;
 
-    /**
-     * [Property for users_password]
-     *
-     * @var string|null $users_password
-     */
-    private ?string $users_password = null;
+	/**
+	 * [Property for users_password]
+	 *
+	 * @var string|null $users_password
+	 */
+	private ?string $users_password = null;
 
-    /**
-     * [Property for users_activation_code]
-     *
-     * @var string|null $users_activation_code
-     */
-    private ?string $users_activation_code = null;
+	/**
+	 * [Property for users_activation_code]
+	 *
+	 * @var string|null $users_activation_code
+	 */
+	private ?string $users_activation_code = null;
 
-    /**
-     * [Property for users_recovery_code]
-     *
-     * @var string|null $users_recovery_code
-     */
-    private ?string $users_recovery_code = null;
+	/**
+	 * [Property for users_recovery_code]
+	 *
+	 * @var string|null $users_recovery_code
+	 */
+	private ?string $users_recovery_code = null;
 
-    /**
-     * [Property for users_code]
-     *
-     * @var string|null $users_code
-     */
-    private ?string $users_code = null;
+	/**
+	 * [Property for users_code]
+	 *
+	 * @var string|null $users_code
+	 */
+	private ?string $users_code = null;
 
-    /**
-     * {@inheritdoc}
-     * */
-    public function jsonSerialize(): array
-    {
-        return get_object_vars($this);
-    }
+	/**
+	 * {@inheritdoc}
+	 * */
+	public function jsonSerialize(): array
+	{
+		return get_object_vars($this);
+	}
 
-    /**
-     * {@inheritdoc}
-     * */
-    public function capsule(): Users
-    {
-        $this
-            ->setIdusers(request->idusers ?? null)
-            ->setIdroles(request->idroles ?? null)
-            ->setIddocumentTypes(request->iddocument_types ?? null)
-            ->setUsersCitizenIdentification(request->users_citizen_identification ?? null)
-            ->setUsersName(request->users_name ?? null)
-            ->setUsersLastName(request->users_last_name ?? null)
-            ->setUsersNickname(request->users_nickname ?? null)
-            ->setUsersEmail(request->users_email ?? null)
-            ->setUsersPassword(request->users_password ?? null)
-            ->setUsersActivationCode(request->users_activation_code ?? null)
-            ->setUsersRecoveryCode(request->users_recovery_code ?? null)
-            ->setUsersCode(request->users_code ?? null);
+	/**
+	 * {@inheritdoc}
+	 * */
+	public function capsule(): Users
+	{
+		$this
+			->setIdusers(request('idusers'))
+			->setIdroles(request('idroles'))
+			->setIddocumentTypes(request('iddocument_types'))
+			->setUsersCitizenIdentification(request('users_citizen_identification'))
+			->setUsersName(request('users_name'))
+			->setUsersLastName(request('users_last_name'))
+			->setUsersNickname(request('users_nickname'))
+			->setUsersEmail(request('users_email'))
+			->setUsersPassword(request('users_password'))
+			->setUsersActivationCode(request('users_activation_code'))
+			->setUsersRecoveryCode(request('users_recovery_code'))
+			->setUsersCode(request('users_code'));
 
-        return $this;
-    }
+		return $this;
+	}
 
     /**
      * Getter method for 'idusers'

@@ -40,7 +40,7 @@ class PasswordManagerController
         LoginService $loginService
     ): object {
         $users
-            ->setUsersEmail(request->users_email);
+            ->setUsersEmail(request('users_email'));
 
         $loginService->validateSession($users);
 
@@ -107,7 +107,7 @@ class PasswordManagerController
             $passwordManagerModel,
             $passwordManager
                 ->setIdusers($data->idusers)
-                ->setUsersPasswordConfirm(request->users_password_confirm)
+                ->setUsersPasswordConfirm(request('users_password_confirm'))
         );
 
         $accountService->updateRecoveryCode(

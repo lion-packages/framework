@@ -41,12 +41,12 @@ class RegistrationController
         $accountService->validateAccountExists(
             $registrationModel,
             $users
-                ->setUsersEmail(request->users_email)
+                ->setUsersEmail(request('users_email'))
         );
 
         $response = $usersModel->createUsersDB(
             $users
-                ->setUsersPassword($validation->passwordHash(request->users_password))
+                ->setUsersPassword($validation->passwordHash(request('users_password')))
                 ->setUsersActivationCode(fake()->numerify('######'))
                 ->setUsersCode(uniqid('code-'))
         );
@@ -80,8 +80,8 @@ class RegistrationController
     ): object {
         $data = $registrationModel->verifyAccountDB(
             $users
-                ->setUsersEmail(request->users_email)
-                ->setUsersActivationCode(request->users_activation_code)
+                ->setUsersEmail(request('users_email'))
+                ->setUsersActivationCode(request('users_activation_code'))
         );
 
         $registrationService->verifyAccount($users, $data);
