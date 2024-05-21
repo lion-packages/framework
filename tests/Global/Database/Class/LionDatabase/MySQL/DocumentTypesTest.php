@@ -6,7 +6,7 @@ namespace Tests\Global\Database\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\DocumentTypes;
 use Lion\Bundle\Interface\CapsuleInterface;
-use Lion\Test\Test;
+use Tests\Test;
 
 class DocumentTypesTest extends Test
 {
@@ -18,6 +18,11 @@ class DocumentTypesTest extends Test
     protected function setUp(): void
     {
         $this->documentTypes = new DocumentTypes();
+    }
+
+    public function testCapsule(): void
+    {
+        $this->assertCapsule($this->documentTypes);
     }
 
     public function testGetIddocumentTypes(): void
