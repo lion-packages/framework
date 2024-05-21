@@ -60,10 +60,10 @@ class PasswordManager implements CapsuleInterface
 	public function capsule(): PasswordManager
 	{
 		$this
-			->setIdusers(request->idusers ?? null)
-			->setUsersPassword(request->users_password ?? null)
-			->setUsersPasswordNew(request->users_password_new ?? null)
-			->setUsersPasswordConfirm(request->users_password_confirm ?? null);
+			->setIdusers(request('idusers'))
+			->setUsersPassword(request('users_password'))
+			->setUsersPasswordNew(request('users_password_new'))
+			->setUsersPasswordConfirm(request('users_password_confirm'));
 
 		return $this;
 	}

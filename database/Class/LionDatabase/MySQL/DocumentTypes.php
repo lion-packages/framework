@@ -44,8 +44,8 @@ class DocumentTypes implements CapsuleInterface
 	public function capsule(): DocumentTypes
 	{
 		$this
-			->setIddocumentTypes(request->iddocument_types ?? null)
-			->setDocumentTypesName(request->document_types_name ?? null);
+			->setIddocumentTypes(request('iddocument_types'))
+			->setDocumentTypesName(request('document_types_name'));
 
 		return $this;
 	}
