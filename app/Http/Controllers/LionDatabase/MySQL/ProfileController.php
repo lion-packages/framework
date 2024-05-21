@@ -11,7 +11,7 @@ use Exception;
 use Lion\Request\Http;
 
 /**
- * Description of Controller 'ProfileController'
+ * Manage user profile
  *
  * @package App\Http\Controllers\LionDatabase\MySQL
  */
@@ -30,7 +30,7 @@ class ProfileController
      */
     public function readProfile(Users $users, ProfileModel $profileModel, JWTService $jWTService): array|object
     {
-        $data = $jWTService->getTokenData(storage_path(env('RSA_URL_PATH')));
+        $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
 
         return $profileModel->readProfileDB(
             $users
@@ -39,7 +39,7 @@ class ProfileController
     }
 
     /**
-     * Description of 'updateProfile'
+     * Update the user's personal information
      *
      * @route /api/profile
      *
@@ -51,7 +51,7 @@ class ProfileController
      */
     public function updateProfile(Users $users, ProfileModel $profileModel, JWTService $jWTService): object
     {
-        $data = $jWTService->getTokenData(storage_path(env('RSA_URL_PATH')));
+        $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
 
         $response = $profileModel->updateProfileDB(
             $users

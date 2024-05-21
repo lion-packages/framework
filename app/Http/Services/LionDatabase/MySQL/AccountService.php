@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Services\LionDatabase\MySQL;
 
 use App\Exceptions\AccountException;
-use App\Html\Email\RecoveryAccountHtml;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
