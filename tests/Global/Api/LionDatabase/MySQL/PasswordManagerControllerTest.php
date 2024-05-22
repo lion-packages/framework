@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
+namespace Tests\Global\Api\LionDatabase\MySQL;
 
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
