@@ -22,7 +22,7 @@ class LoginModel
      *
      * @return array|object
      */
-    public function authDB(Users $users): object
+    public function authDB(Users $users): array|object
     {
         return DB::table('users')
             ->select(DB::as(DB::count('users_email'), 'count'))
@@ -50,9 +50,9 @@ class LoginModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return Users
+     * @return array|object
      */
-    public function sessionDB(Users $users): Users
+    public function sessionDB(Users $users): array|object
     {
         return DB::table('users')
             ->select(
@@ -65,7 +65,6 @@ class LoginModel
                 'users_password'
             )
             ->where()->equalTo('users_email', $users->getUsersEmail())
-            ->fetchMode(PDO::FETCH_CLASS, Users::class)
             ->get();
     }
 }

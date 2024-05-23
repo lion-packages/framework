@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Exceptions\AuthenticationException;
+use App\Exceptions\PasswordException;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\LoginModel;
@@ -28,6 +30,9 @@ class LoginController
      * @param PasswordManagerService $passwordManagerService
      *
      * @return object
+     *
+     * @throws AuthenticationException
+     * @throws PasswordException
      */
     public function auth(
         Users $users,
@@ -40,7 +45,7 @@ class LoginController
         $session = $loginModel->sessionDB($users);
 
         $passwordManagerService->verifyPasswords(
-            $session->getUsersPassword(),
+            $session->users_password,
             $users->getUsersPassword(),
             'email/password is incorrect [AUTH-2]'
         );
@@ -48,11 +53,11 @@ class LoginController
         $loginService->verifyAccountActivation($users);
 
         return success('successfully authenticated user', Http::HTTP_OK, [
-            'full_name' => "{$session->getUsersName()} {$session->getUsersLastName()}",
+            'full_name' => "{$session->users_name} {$session->users_last_name}",
             'jwt' => $loginService->getToken(env('RSA_URL_PATH'), [
                 'session' => true,
-                'idusers' => $session->getIdusers(),
-                'idroles' => $session->getIdroles(),
+                'idusers' => $session->idusers,
+                'idroles' => $session->idroles,
             ]),
         ]);
     }

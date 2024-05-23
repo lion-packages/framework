@@ -22,8 +22,8 @@ class PasswordManagerControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const USERS_EMAIL = 'root@dev.com';
-    const USERS_PASSWORD = 'lion-password';
+    const string USERS_EMAIL = 'root@dev.com';
+    const string USERS_PASSWORD = 'lion-password';
 
     private PasswordManagerController $passwordManagerController;
     private Container $container;

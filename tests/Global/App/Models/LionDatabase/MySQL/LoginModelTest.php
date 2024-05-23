@@ -15,8 +15,8 @@ class LoginModelTest extends Test
 {
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const USERS_EMAIL = 'root@dev.com';
-    const USERS_EMAIL_ERR = 'sleon@dev.com';
+    const string USERS_EMAIL = 'root@dev.com';
+    const string USERS_EMAIL_ERR = 'sleon@dev.com';
 
     private LoginModel $loginModel;
 
@@ -75,7 +75,8 @@ class LoginModelTest extends Test
 
         $response = $this->loginModel->sessionDB($users);
 
-        $this->assertInstances($response, [Users::class, CapsuleInterface::class]);
-        $this->assertSame($users->getUsersEmail(), $response->getUsersEmail());
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('users_email', $response);
+        $this->assertSame($users->getUsersEmail(), $response->users_email);
     }
 }

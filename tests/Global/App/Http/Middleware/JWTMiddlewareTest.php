@@ -7,6 +7,7 @@ namespace Tests\Global\App\Http\Middleware;
 use App\Http\Middleware\JWTMiddleware;
 use Lion\Bundle\Exceptions\MiddlewareException;
 use Lion\Dependency\Injection\Container;
+use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\RSA;
@@ -17,7 +18,7 @@ class JWTMiddlewareTest extends Test
 {
     use AuthJwtProviderTrait;
 
-    const MESSAGE = 'ERR';
+    const string MESSAGE = 'ERR';
 
     private JWTMiddleware $jWTMiddleware;
 
@@ -50,6 +51,10 @@ class JWTMiddlewareTest extends Test
         $this->assertSame($path, $rsa->getUrlPath());
     }
 
+    /**
+     * @throws Exception
+     * @throws MiddlewareException
+     */
     public function testValidateSessionIsError(): void
     {
         $this
@@ -62,6 +67,10 @@ class JWTMiddlewareTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     * @throws MiddlewareException
+     */
     public function testValidateSessionNotSession(): void
     {
         $this
@@ -74,6 +83,10 @@ class JWTMiddlewareTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     * @throws MiddlewareException
+     */
     public function testExistence(): void
     {
         $this
@@ -86,6 +99,10 @@ class JWTMiddlewareTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     * @throws MiddlewareException
+     */
     public function testAuthorizeWithoutSignatureInvalidJWT(): void
     {
         $this
@@ -100,6 +117,10 @@ class JWTMiddlewareTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     * @throws MiddlewareException
+     */
     public function testAuthorizeWithoutSignatureWithoutUsersCode(): void
     {
         $this
@@ -114,6 +135,10 @@ class JWTMiddlewareTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     * @throws MiddlewareException
+     */
     public function testAuthorizeWithoutSignaturePathNotExist(): void
     {
         $this
@@ -134,6 +159,10 @@ class JWTMiddlewareTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     * @throws MiddlewareException
+     */
     public function testAuthorizeWithoutSignatureNotAuthorize(): void
     {
         $this
@@ -153,6 +182,10 @@ class JWTMiddlewareTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     * @throws MiddlewareException
+     */
     public function testAuthorize(): void
     {
         $this
@@ -167,6 +200,10 @@ class JWTMiddlewareTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     * @throws MiddlewareException
+     */
     public function testNotAuthorize(): void
     {
         $this

@@ -10,9 +10,9 @@ use Tests\Test;
 
 class RolesTest extends Test
 {
-    const IDROLES = 1;
-    const ROLES_NAME = 'Administrator';
-    const ROLES_DESCRIPTION = 'Administrator description';
+    const int IDROLES = 1;
+    const string ROLES_NAME = 'Administrator';
+    const string ROLES_DESCRIPTION = 'Administrator description';
 
     private Roles $roles;
 

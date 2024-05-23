@@ -27,7 +27,7 @@ use Dotenv\Dotenv;
 
 Dotenv::createImmutable(__DIR__ . '/../')->load();
 
-$_ENV['RSA_URL_PATH'] = str->of(env('RSA_URL_PATH'))->replace('../', '')->get();
+$_ENV['RSA_URL_PATH'] = str->of($_ENV['RSA_URL_PATH'])->replace('../', '')->get();
 
 /**
  * -----------------------------------------------------------------------------
@@ -51,4 +51,4 @@ include_once(__DIR__ . '/../config/email.php');
  * -----------------------------------------------------------------------------
  */
 
-date_default_timezone_set(env('SERVER_DATE_TIMEZONE', 'America/Bogota'));
+date_default_timezone_set($_ENV['SERVER_DATE_TIMEZONE']);

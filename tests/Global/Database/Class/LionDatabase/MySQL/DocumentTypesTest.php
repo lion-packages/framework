@@ -10,8 +10,8 @@ use Tests\Test;
 
 class DocumentTypesTest extends Test
 {
-    const IDDOCUMENT_TYPES = 1;
-    const DOCUMENT_TYPES_NAME = 'Passport';
+    const int IDDOCUMENT_TYPES = 1;
+    const string DOCUMENT_TYPES_NAME = 'Passport';
 
     private DocumentTypes $documentTypes;
 

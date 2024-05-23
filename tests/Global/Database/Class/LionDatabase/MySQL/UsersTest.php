@@ -10,18 +10,18 @@ use Tests\Test;
 
 class UsersTest extends Test
 {
-    const IDUSERS = 1;
-    const IDROLES = 1;
-    const IDDOCUMENT_TYPES = 1;
-    const USERS_CITIZEN_IDENTIFICATION = '1234567890';
-    const USERS_NAME = 'Sergio';
-    const USERS_LAST_NAME = 'Leon';
-    const USERS_NICKNAME = 'Sleon';
-    const USERS_EMAIL = 'sleon@dev.com';
-    const USERS_PASSWORD = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
-    const USERS_ACTIVATION_CODE = '######';
-    const USERS_RECOVERY_CODE = '######';
-    const USERS_CODE = 'code-65ca2d74ed1e1';
+    const int IDUSERS = 1;
+    const int IDROLES = 1;
+    const int IDDOCUMENT_TYPES = 1;
+    const string USERS_CITIZEN_IDENTIFICATION = '1234567890';
+    const string USERS_NAME = 'Sergio';
+    const string USERS_LAST_NAME = 'Leon';
+    const string USERS_NICKNAME = 'Sleon';
+    const string USERS_EMAIL = 'sleon@dev.com';
+    const string USERS_PASSWORD = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
+    const string USERS_ACTIVATION_CODE = '######';
+    const string USERS_RECOVERY_CODE = '######';
+    const string USERS_CODE = 'code-65ca2d74ed1e1';
 
     private Users $users;
 

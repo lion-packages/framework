@@ -10,8 +10,8 @@ use Tests\Test;
 
 class PasswordManagerTest extends Test
 {
-    const IDUSERS = 1;
-    const USERS_PASSWORD = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
+    const int IDUSERS = 1;
+    const string USERS_PASSWORD = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
 
     private PasswordManager $passwordManager;
 

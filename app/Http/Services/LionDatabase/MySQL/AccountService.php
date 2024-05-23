@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Services\LionDatabase\MySQL;
 
+use Exception;
 use App\Exceptions\AccountException;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
@@ -64,8 +65,10 @@ class AccountService
      * @param Users $users [Capsule for the 'Users' entity]
      *
      * @return void
+     *
+     * @throws Exception
      */
-    public function sendVerifiyCodeEmail(Users $users): void
+    public function sendVerifyCodeEmail(Users $users): void
     {
         TaskQueue::push('send:email:account-verify', json([
             'account' => $users->getUsersEmail(),
@@ -80,6 +83,8 @@ class AccountService
      * @param Users $users [Capsule for the 'Users' entity]
      *
      * @return void
+     *
+     * @throws Exception
      */
     public function sendRecoveryCodeEmail(Users $users): void
     {

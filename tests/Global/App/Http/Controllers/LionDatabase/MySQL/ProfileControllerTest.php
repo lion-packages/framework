@@ -20,7 +20,7 @@ class ProfileControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const USERS_EMAIL = 'root@dev.com';
+    const string USERS_EMAIL = 'root@dev.com';
 
     private ProfileController $profileController;
     private Container $container;

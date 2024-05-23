@@ -17,7 +17,7 @@ class ProfileControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const IDUSERS = 1;
+    const int IDUSERS = 1;
 
     protected function setUp(): void
     {

@@ -18,8 +18,8 @@ class UsersControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const API_URL = 'http://127.0.0.1:8000/api/users';
-    const JSON_UPDATE_USERS = [
+    const string API_URL = 'http://127.0.0.1:8000/api/users';
+    const array JSON_UPDATE_USERS = [
         'idroles' => 1,
         'iddocument_types' => 1,
         'users_citizen_identification' => '##########',

@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Enums\RolesEnum;
+use App\Exceptions\AccountException;
+use App\Exceptions\AuthenticationException;
 use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Exception;
 use Lion\Security\Validation;
 
 /**
@@ -26,11 +29,15 @@ class RegistrationController
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
+     * @param RegistrationModel $registrationModel [Validate in the database
+     * if the registration and verification are valid]
      * @param AccountService $accountService [Manage user account processes]
      * @param Validation $validation [Allows you to validate form data and
      * generate encryption safely]
      *
      * @return object
+     *
+     * @throws AccountException
      */
     public function register(
         Users $users,
@@ -54,7 +61,7 @@ class RegistrationController
         );
 
         if (isSuccess($response)) {
-            $accountService->sendVerifiyCodeEmail($users);
+            $accountService->sendVerifyCodeEmail($users);
         }
 
         return success('user successfully registered, check your mailbox to obtain the account activation code');
@@ -73,6 +80,9 @@ class RegistrationController
      * @param AccountService $accountService [Manage user account processes]
      *
      * @return object
+     *
+     * @throws AuthenticationException
+     * @throws AccountException
      */
     public function verifyAccount(
         Users $users,

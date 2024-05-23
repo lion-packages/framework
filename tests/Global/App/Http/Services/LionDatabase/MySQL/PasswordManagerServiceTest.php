@@ -10,6 +10,7 @@ use App\Models\LionDatabase\MySQL\PasswordManagerModel;
 use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Dependency\Injection\Container;
+use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\Validation;
@@ -32,6 +33,9 @@ class PasswordManagerServiceTest extends Test
         $this->validation = new Validation();
     }
 
+    /**
+     * @throws Exception
+     */
     public function testVerifyPasswords(): void
     {
         $this
@@ -50,6 +54,9 @@ class PasswordManagerServiceTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     */
     public function testComparePasswords(): void
     {
         $this
@@ -66,6 +73,9 @@ class PasswordManagerServiceTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     */
     public function testUpdatePassword(): void
     {
         $this

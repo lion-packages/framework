@@ -9,9 +9,9 @@ use Lion\Test\Test;
 
 class RolesEnumTest extends Test
 {
-    const ADMINISTRATOR = 1;
-    const MANAGER = 2;
-    const CUSTOMER = 3;
+    const int ADMINISTRATOR = 1;
+    const int MANAGER = 2;
+    const int CUSTOMER = 3;
 
     public function testValues(): void
     {

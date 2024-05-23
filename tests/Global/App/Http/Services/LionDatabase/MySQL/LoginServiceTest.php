@@ -8,6 +8,7 @@ use App\Exceptions\AuthenticationException;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Dependency\Injection\Container;
+use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
@@ -17,7 +18,7 @@ class LoginServiceTest extends Test
 {
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const USERS_EMAIL = 'manager@dev.com';
+    const string USERS_EMAIL = 'manager@dev.com';
 
     private LoginService $loginService;
 
@@ -29,6 +30,9 @@ class LoginServiceTest extends Test
             ->injectDependencies(new LoginService());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testValidateSession(): void
     {
         $this
@@ -44,6 +48,9 @@ class LoginServiceTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     */
     public function testVerifyAccountActivation(): void
     {
         $this
