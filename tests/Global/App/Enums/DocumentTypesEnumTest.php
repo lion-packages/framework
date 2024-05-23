@@ -9,8 +9,8 @@ use Lion\Test\Test;
 
 class DocumentTypesEnumTest extends Test
 {
-    const CITIZENSHIP_CARD = 1;
-    const PASSPORT = 2;
+    const int CITIZENSHIP_CARD = 1;
+    const int PASSPORT = 2;
 
     public function testValues(): void
     {

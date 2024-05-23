@@ -19,7 +19,7 @@ class RegistrationControllerTest extends Test
 {
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const USERS_EMAIL = 'root@dev.com';
+    const string USERS_EMAIL = 'root@dev.com';
 
     private RegistrationController $registrationController;
     private Container $container;

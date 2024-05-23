@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Exceptions\AccountException;
+use App\Exceptions\AuthenticationException;
+use App\Exceptions\PasswordException;
 use App\Http\Services\JWTService;
 use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
@@ -32,6 +35,9 @@ class PasswordManagerController
      * authentication process]
      *
      * @return object
+     *
+     * @throws AuthenticationException
+     * @throws AccountException
      */
     public function recoveryPassword(
         Users $users,
@@ -78,6 +84,10 @@ class PasswordManagerController
      * processes for strong password verifications]
      *
      * @return object
+     *
+     * @throws AuthenticationException
+     * @throws AccountException
+     * @throws PasswordException
      */
     public function updateLostPassword(
         Users $users,
@@ -133,6 +143,8 @@ class PasswordManagerController
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
      *
      * @return object
+     *
+     * @throws PasswordException
      */
     public function updatePassword(
         PasswordManager $passwordManager,

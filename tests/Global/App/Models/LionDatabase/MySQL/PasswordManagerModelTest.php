@@ -18,7 +18,7 @@ class PasswordManagerModelTest extends Test
 {
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const USERS_PASSWORD = 'lion-password';
+    const string USERS_PASSWORD = 'lion-password';
 
     private PasswordManagerModel $passwordManagerModel;
     private Validation $validation;

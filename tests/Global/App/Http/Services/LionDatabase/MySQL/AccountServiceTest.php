@@ -9,10 +9,12 @@ use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Exception as ExceptionGlobal;
 use Lion\Bundle\Enums\TaskStatusEnum;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Dependency\Injection\Container;
+use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
@@ -25,7 +27,7 @@ class AccountServiceTest extends Test
     use AccountServiceProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const USERS_EMAIL = 'root@dev.com';
+    const string USERS_EMAIL = 'root@dev.com';
 
     private AccountService $accountService;
 
@@ -44,6 +46,10 @@ class AccountServiceTest extends Test
         Schema::truncateTable('task_queue')->execute();
     }
 
+    /**
+     * @throws Exception
+     * @throws AccountException
+     */
     public function testCheckRecoveryCodeInactive(): void
     {
         $this
@@ -59,13 +65,16 @@ class AccountServiceTest extends Test
             });
     }
 
-    public function testSendVerifiyCodeEmail(): void
+    /**
+     * @throws ExceptionGlobal
+     */
+    public function testSendVerifyCodeEmail(): void
     {
         $account = fake()->email();
 
         $code = fake()->numerify('######');
 
-        $this->accountService->sendVerifiyCodeEmail(
+        $this->accountService->sendVerifyCodeEmail(
             (new Users())
                 ->setUsersEmail($account)
                 ->setUsersActivationCode($code)
@@ -89,6 +98,9 @@ class AccountServiceTest extends Test
         ]);
     }
 
+    /**
+     * @throws ExceptionGlobal
+     */
     public function testSendRecoveryCodeEmail(): void
     {
         $account = fake()->email();
@@ -119,6 +131,9 @@ class AccountServiceTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[DataProvider('verifyRecoveryCodeProvider')]
     public function testVerifyRecoveryCode(Users $users, object $data, string $exceptionMessage): void
     {
@@ -132,6 +147,9 @@ class AccountServiceTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     */
     #[DataProvider('verifyActivationCodeProvider')]
     public function testVerifyActivationCode(Users $users, object $data, string $exceptionMessage): void
     {
@@ -145,6 +163,9 @@ class AccountServiceTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     */
     public function testUpdateRecoveryCode(): void
     {
         $this
@@ -168,6 +189,9 @@ class AccountServiceTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     */
     public function testUpdateActivationCode(): void
     {
         $this
@@ -191,6 +215,9 @@ class AccountServiceTest extends Test
             });
     }
 
+    /**
+     * @throws Exception
+     */
     public function testValidateAccountExists(): void
     {
         $this

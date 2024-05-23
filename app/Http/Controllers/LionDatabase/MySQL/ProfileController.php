@@ -48,6 +48,8 @@ class ProfileController
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
      *
      * @return object
+     *
+     * @throws Exception
      */
     public function updateProfile(Users $users, ProfileModel $profileModel, JWTService $jWTService): object
     {

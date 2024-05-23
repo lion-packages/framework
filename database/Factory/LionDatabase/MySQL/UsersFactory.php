@@ -17,11 +17,18 @@ use Lion\Security\Validation;
 class UsersFactory implements FactoryInterface
 {
     /**
+     * [Users Email
+     *
+     * @const USERS_PASSWORD
+     */
+    const string USERS_EMAIL = 'root@dev.com';
+
+    /**
      * [User password]
      *
      * @const USERS_PASSWORD
      */
-    const USERS_PASSWORD = 'lion';
+    const string USERS_PASSWORD = 'lion';
 
     /**
      * {@inheritdoc}
@@ -57,7 +64,7 @@ class UsersFactory implements FactoryInterface
                 'root',
                 'lion',
                 fake()->userName(),
-                'root@dev.com',
+                self::USERS_EMAIL,
                 $validation->passwordHash($validation->sha256(self::USERS_PASSWORD)),
                 null,
                 uniqid('code-')

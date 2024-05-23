@@ -7,6 +7,7 @@ namespace Tests\Global\Api\LionDatabase\MySQL;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Exception;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -20,8 +21,8 @@ class PasswordManagerControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const USERS_EMAIL = 'root@dev.com';
-    const USERS_PASSWORD = 'lion-password';
+    const string USERS_EMAIL = 'root@dev.com';
+    const string USERS_PASSWORD = 'lion-password';
 
     protected function setUp(): void
     {
@@ -52,6 +53,9 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testRecoveryPasswordCodeNotNull(): void
     {
         $response = fetch(Http::HTTP_POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
@@ -83,6 +87,9 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testRecoveryPasswordIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function () {
@@ -151,6 +158,9 @@ class PasswordManagerControllerTest extends Test
         $this->assertNull($user->users_recovery_code);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testUpdateLostPasswordIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function () {
@@ -171,6 +181,9 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testUpdateLostPasswordInvalid1(): void
     {
         $response = fetch(Http::HTTP_POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
@@ -213,6 +226,9 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testUpdateLostPasswordIncorrect2(): void
     {
         $response = fetch(Http::HTTP_POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
@@ -290,6 +306,9 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testUpdatePasswordIncorrect1(): void
     {
         $users = (new UsersModel())->readUsersDB();
@@ -323,6 +342,9 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testUpdatePasswordIncorrect2(): void
     {
         $users = (new UsersModel())->readUsersDB();

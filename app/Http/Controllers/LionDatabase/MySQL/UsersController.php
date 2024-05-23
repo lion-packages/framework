@@ -28,6 +28,8 @@ class UsersController
      * generate encryption safely]
      *
      * @return object
+     *
+     * @throws Exception
      */
     public function createUsers(Users $users, UsersModel $usersModel, Validation $validation): object
     {
@@ -102,6 +104,8 @@ class UsersController
      * @param string $idusers [user id defined in routes]
      *
      * @return object
+     *
+     * @throws Exception
      */
     public function updateUsers(Users $users, UsersModel $usersModel, string $idusers): object
     {
@@ -128,6 +132,8 @@ class UsersController
      * @param string $idusers [user id defined in routes]
      *
      * @return object
+     *
+     * @throws Exception
      */
     public function deleteUsers(Users $users, UsersModel $usersModel, string $idusers): object
     {

@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace Tests\Global\App\Exceptions;
 
 use App\Exceptions\PasswordException;
+use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
 
 class PasswordExceptionTest extends Test
 {
-    const MESSAGE = 'ERR';
-
+    /**
+     * @throws Exception
+     * @throws PasswordException
+     */
     public function testPasswordException(): void
     {
         $this

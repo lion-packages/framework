@@ -9,6 +9,7 @@ use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Dependency\Injection\Container;
+use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
@@ -36,6 +37,9 @@ class RegistrationServiceTest extends Test
         Schema::truncateTable('task_queue')->execute();
     }
 
+    /**
+     * @throws Exception
+     */
     #[DataProvider('verifyAccountProvider')]
     public function testVerifyAccount(string $message, object $data, Users $users): void
     {

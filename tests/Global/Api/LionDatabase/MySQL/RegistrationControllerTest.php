@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Global\Api\LionDatabase\MySQL;
 
+use Exception;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
@@ -13,12 +14,11 @@ use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class RegistrationControllerTest extends Test
 {
-    const USERS_EMAIL = 'root@dev.com';
-    const USERS_PASSWORD = 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464';
-
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const API_URL = 'http://127.0.0.1:8000/api/auth';
+    const string API_URL = 'http://127.0.0.1:8000/api/auth';
+    const string USERS_EMAIL = 'root@dev.com';
+    const string USERS_PASSWORD = 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464';
 
     protected function setUp(): void
     {
@@ -52,6 +52,9 @@ class RegistrationControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testRegisterRegistered(): void
     {
         $response = fetch(Http::HTTP_POST, (self::API_URL . '/register'), [
@@ -123,6 +126,9 @@ class RegistrationControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testVerifyAccountInvalid1(): void
     {
         $response = fetch(Http::HTTP_POST, (self::API_URL . '/register'), [
@@ -156,6 +162,9 @@ class RegistrationControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testVerifyAccountInvalid2(): void
     {
         $response = fetch(Http::HTTP_POST, (self::API_URL . '/register'), [
