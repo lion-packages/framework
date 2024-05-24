@@ -69,7 +69,7 @@ export default function LoginIndex() {
         }
       })
       .catch(({ response }) => {
-        console.log(response.data);
+        // console.log(response.data);
 
         if (401 === response.data.code) {
           addToast([

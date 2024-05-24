@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthProvider";
 import { Fragment } from "react";
 import { useResponse } from "../../context/ResponseProvider";
 import { useNavigate } from "react-router-dom";
+import RolesMiddleware from "../../middleware/RolesMiddleware.jsx";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -43,15 +44,17 @@ export default function Header() {
 
             {jwt && (
               <Fragment>
-                <NavDropdown
-                  title="Site Administration"
-                  align={"end"}
-                  id="site-administration-nav-dropdown"
-                >
-                  <LinkContainer to={"/site-administration/users"}>
-                    <NavDropdown.Item href="#">Users</NavDropdown.Item>
-                  </LinkContainer>
-                </NavDropdown>
+                <RolesMiddleware roles={[1]} unauthorized={false}>
+                  <NavDropdown
+                    title="Site Administration"
+                    align={"end"}
+                    id="site-administration-nav-dropdown"
+                  >
+                    <LinkContainer to={"/site-administration/users"}>
+                      <NavDropdown.Item href="#">Users</NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+                </RolesMiddleware>
 
                 <NavDropdown
                   title="Options"
