@@ -17,7 +17,7 @@ export default function Header() {
       <Container>
         <LinkContainer to={jwt ? "/dashboard" : "/auth/login"}>
           <Navbar.Brand href={"#"}>
-            <Image src={logo} width={35} />
+            <Image src={logo} width={35} className="img-fluid me-2" />
 
             <label role="button">
               Lion-
@@ -44,7 +44,7 @@ export default function Header() {
 
             {jwt && (
               <Fragment>
-                <RolesMiddleware roles={[1]} unauthorized={false}>
+                <RolesMiddleware roles={["1"]} unauthorized={false}>
                   <NavDropdown
                     title="Site Administration"
                     align={"end"}

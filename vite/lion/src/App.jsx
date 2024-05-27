@@ -89,7 +89,7 @@ function App() {
             path="users"
             element={
               <AuthenticatedMiddleware>
-                <RolesMiddleware roles={[1]}>
+                <RolesMiddleware roles={["1"]}>
                   <UsersProvider>
                     <UsersIndex />
                   </UsersProvider>

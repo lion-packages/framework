@@ -2,6 +2,7 @@
 import Unauthorized from "../pages/errors/Unauthorized.jsx";
 import { useAuth } from "../context/AuthProvider.jsx";
 import { Fragment } from "react";
+import useAES from "../hooks/useAES.jsx";
 
 export default function RolesMiddleware({
   children,
@@ -9,8 +10,9 @@ export default function RolesMiddleware({
   unauthorized = true,
 }) {
   const { jwt } = useAuth();
+  const { decode } = useAES();
 
-  return jwt.idroles && !roles.includes(jwt.idroles) ? (
+  return jwt.idroles && !roles.includes(decode(jwt.idroles)) ? (
     unauthorized ? (
       <Unauthorized />
     ) : (
