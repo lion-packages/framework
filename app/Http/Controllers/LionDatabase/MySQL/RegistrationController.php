@@ -12,7 +12,6 @@ use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Exception;
 use Lion\Security\Validation;
 
 /**
@@ -25,7 +24,7 @@ class RegistrationController
     /**
      * Register users with their basic data to create a user account
      *
-     * @route /api/auth/register
+     * @api /api/auth/register
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]

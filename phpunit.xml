@@ -52,25 +52,27 @@
 
     <testsuites>
         <testsuite name="All-Test">
-            <directory suffix=".php">tests/Global</directory>
+            <directory suffix=".php">tests/Api</directory>
+            <directory suffix=".php">tests/App</directory>
+            <directory suffix=".php">tests/Database</directory>
         </testsuite>
 
         <testsuite name="Unit-Tests">
-            <directory>tests/Global/App/Enums</directory>
-            <directory>tests/Global/App/Exceptions</directory>
-            <directory>tests/Global/App/Interfaces</directory>
-            <directory>tests/Global/Database</directory>
+            <directory>tests/App/Enums</directory>
+            <directory>tests/App/Exceptions</directory>
+            <directory>tests/App/Interfaces</directory>
+            <directory>tests/Database</directory>
         </testsuite>
 
         <testsuite name="Integration-Tests">
-            <directory>tests/Global/App/Http/Controllers</directory>
-            <directory>tests/Global/App/Http/Middleware</directory>
-            <directory>tests/Global/App/Http/Services</directory>
-            <directory>tests/Global/App/Models</directory>
+            <directory>tests/App/Http/Controllers</directory>
+            <directory>tests/App/Http/Middleware</directory>
+            <directory>tests/App/Http/Services</directory>
+            <directory>tests/App/Models</directory>
         </testsuite>
 
         <testsuite name="Functional-Tests">
-            <directory>tests/Global/Api</directory>
+            <directory>tests/Api</directory>
         </testsuite>
     </testsuites>
 </phpunit>

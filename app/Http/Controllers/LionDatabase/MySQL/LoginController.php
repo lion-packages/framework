@@ -26,7 +26,8 @@ class LoginController
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param LoginModel $loginModel [Model for user authentication]
-     * @param LoginService $loginService [Service 'LoginService']
+     * @param LoginService $loginService [Allows you to manage the user
+     * authentication process]
      * @param PasswordManagerService $passwordManagerService
      *
      * @return object
@@ -52,7 +53,7 @@ class LoginController
 
         $loginService->verifyAccountActivation($users);
 
-        return success('successfully authenticated user', Http::HTTP_OK, [
+        return success('successfully authenticated user', Http::OK, [
             'full_name' => "{$session->users_name} {$session->users_last_name}",
             'jwt' => $loginService->getToken(env('RSA_URL_PATH'), [
                 'session' => true,

@@ -33,7 +33,7 @@ class RegistrationService
             throw new AuthenticationException(
                 'verification code is invalid [ERR-1]',
                 Status::SESSION_ERROR,
-                Http::HTTP_FORBIDDEN
+                Http::FORBIDDEN
             );
         }
 
@@ -41,7 +41,7 @@ class RegistrationService
             throw new AuthenticationException(
                 'verification code is invalid [ERR-2]',
                 Status::SESSION_ERROR,
-                Http::HTTP_FORBIDDEN
+                Http::FORBIDDEN
             );
         }
     }

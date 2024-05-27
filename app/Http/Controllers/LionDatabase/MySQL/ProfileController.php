@@ -64,7 +64,7 @@ class ProfileController
         if (isError($response)) {
             throw new Exception(
                 "an error occurred while updating the user's profile",
-                Http::HTTP_INTERNAL_SERVER_ERROR
+                Http::INTERNAL_SERVER_ERROR
             );
         }
 

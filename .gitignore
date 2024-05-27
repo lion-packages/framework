@@ -14,3 +14,4 @@
 .env
 supervisord.pid
 .phpunit.result.cache
+framework.sublime-project

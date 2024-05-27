@@ -90,7 +90,7 @@ class LoginService
             throw new AuthenticationException(
                 'email/password is incorrect [AUTH-1]',
                 Status::SESSION_ERROR,
-                Http::HTTP_UNAUTHORIZED
+                Http::UNAUTHORIZED
             );
         }
     }
@@ -112,7 +112,7 @@ class LoginService
             throw new AuthenticationException(
                 "the user's account has not yet been verified",
                 Status::SESSION_ERROR,
-                Http::HTTP_FORBIDDEN
+                Http::FORBIDDEN
             );
         }
     }
