@@ -11,7 +11,6 @@ use Exception;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
-use Lion\Security\Validation;
 use Lion\Test\Test;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
@@ -40,8 +39,8 @@ class PasswordManagerControllerTest extends Test
     {
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL
-            ]
+                'users_email' => self::USERS_EMAIL,
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -60,8 +59,8 @@ class PasswordManagerControllerTest extends Test
     {
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL
-            ]
+                'users_email' => self::USERS_EMAIL,
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -75,8 +74,8 @@ class PasswordManagerControllerTest extends Test
         $exception = $this->getExceptionFromApi(function () {
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
                 'json' => [
-                    'users_email' => self::USERS_EMAIL
-                ]
+                    'users_email' => self::USERS_EMAIL,
+                ],
             ]);
         });
 
@@ -95,8 +94,8 @@ class PasswordManagerControllerTest extends Test
         $exception = $this->getExceptionFromApi(function () {
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
                 'json' => [
-                    'users_email' => fake()->email()
-                ]
+                    'users_email' => fake()->email(),
+                ],
             ]);
         });
 
@@ -111,8 +110,8 @@ class PasswordManagerControllerTest extends Test
     {
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL
-            ]
+                'users_email' => self::USERS_EMAIL,
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -131,13 +130,18 @@ class PasswordManagerControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertObjectHasProperty('users_recovery_code', $user);
 
+        $encode = $this->AESEncode([
+            'users_password_new' => self::USERS_PASSWORD,
+            'users_password_confirm' => self::USERS_PASSWORD,
+        ]);
+
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
             'json' => [
                 'users_email' => self::USERS_EMAIL,
-                'users_password_new' => self::USERS_PASSWORD,
-                'users_password_confirm' => self::USERS_PASSWORD,
+                'users_password_new' => $encode['users_password_new'],
+                'users_password_confirm' => $encode['users_password_confirm'],
                 'users_recovery_code' => $user->users_recovery_code,
-            ]
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -164,13 +168,18 @@ class PasswordManagerControllerTest extends Test
     public function testUpdateLostPasswordIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function () {
+            $encode = $this->AESEncode([
+                'users_password_new' => self::USERS_PASSWORD,
+                'users_password_confirm' => self::USERS_PASSWORD,
+            ]);
+
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
                 'json' => [
                     'users_email' => fake()->email(),
-                    'users_password_new' => self::USERS_PASSWORD,
-                    'users_password_confirm' => self::USERS_PASSWORD,
+                    'users_password_new' => $encode['users_password_new'],
+                    'users_password_confirm' => $encode['users_password_confirm'],
                     'users_recovery_code' => fake()->numerify('######'),
-                ]
+                ],
             ]);
         });
 
@@ -188,8 +197,8 @@ class PasswordManagerControllerTest extends Test
     {
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL
-            ]
+                'users_email' => self::USERS_EMAIL,
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -209,13 +218,18 @@ class PasswordManagerControllerTest extends Test
         $this->assertObjectHasProperty('users_recovery_code', $user);
 
         $exception = $this->getExceptionFromApi(function () {
+            $encode = $this->AESEncode([
+                'users_password_new' => self::USERS_PASSWORD,
+                'users_password_confirm' => self::USERS_PASSWORD,
+            ]);
+
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
                 'json' => [
                     'users_email' => self::USERS_EMAIL,
-                    'users_password_new' => self::USERS_PASSWORD,
-                    'users_password_confirm' => self::USERS_PASSWORD,
+                    'users_password_new' => $encode['users_password_new'],
+                    'users_password_confirm' => $encode['users_password_confirm'],
                     'users_recovery_code' => fake()->numerify('######'),
-                ]
+                ],
             ]);
         });
 
@@ -233,8 +247,8 @@ class PasswordManagerControllerTest extends Test
     {
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL
-            ]
+                'users_email' => self::USERS_EMAIL,
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -254,13 +268,18 @@ class PasswordManagerControllerTest extends Test
         $this->assertObjectHasProperty('users_recovery_code', $user);
 
         $exception = $this->getExceptionFromApi(function () use ($user) {
+            $encode = $this->AESEncode([
+                'users_password_new' => UsersFactory::USERS_PASSWORD,
+                'users_password_confirm' => self::USERS_PASSWORD,
+            ]);
+
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
                 'json' => [
                     'users_email' => self::USERS_EMAIL,
-                    'users_password_new' => UsersFactory::USERS_PASSWORD,
-                    'users_password_confirm' => self::USERS_PASSWORD,
+                    'users_password_new' => $encode['users_password_new'],
+                    'users_password_confirm' => $encode['users_password_confirm'],
                     'users_recovery_code' => $user->users_recovery_code,
-                ]
+                ],
             ]);
         });
 
@@ -282,19 +301,24 @@ class PasswordManagerControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertObjectHasProperty('idusers', $user);
 
-        $validation = new Validation();
+        $encode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+            'users_password' => UsersFactory::USERS_PASSWORD,
+            'users_password_new' => self::USERS_PASSWORD,
+            'users_password_confirm' => self::USERS_PASSWORD,
+        ]);
 
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password'), [
             'headers' => [
                 'Authorization' => $this->getAuthorization([
-                    'idusers' => $user->idusers
+                    'idusers' => $encode['idusers'],
                 ])
             ],
             'json' => [
-                'users_password' => $validation->sha256(UsersFactory::USERS_PASSWORD),
-                'users_password_new' => $validation->sha256(self::USERS_PASSWORD),
-                'users_password_confirm' => $validation->sha256(self::USERS_PASSWORD),
-            ]
+                'users_password' => $encode['users_password'],
+                'users_password_new' => $encode['users_password_new'],
+                'users_password_confirm' => $encode['users_password_confirm'],
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -321,17 +345,24 @@ class PasswordManagerControllerTest extends Test
         $this->assertObjectHasProperty('idusers', $user);
 
         $exception = $this->getExceptionFromApi(function () use ($user) {
-            $validation = new Validation();
+            $encode = $this->AESEncode([
+                'idusers' => (string) $user->idusers,
+                'users_password' => self::USERS_PASSWORD,
+                'users_password_new' => self::USERS_PASSWORD,
+                'users_password_confirm' => self::USERS_PASSWORD,
+            ]);
 
             fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password'), [
                 'headers' => [
-                    'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $encode['idusers'],
+                    ]),
                 ],
                 'json' => [
-                    'users_password' => $validation->sha256(self::USERS_PASSWORD),
-                    'users_password_new' => $validation->sha256(self::USERS_PASSWORD),
-                    'users_password_confirm' => $validation->sha256(self::USERS_PASSWORD),
-                ]
+                    'users_password' => $encode['users_password'],
+                    'users_password_new' => $encode['users_password_new'],
+                    'users_password_confirm' => $encode['users_password_confirm'],
+                ],
             ]);
         });
 
@@ -357,17 +388,24 @@ class PasswordManagerControllerTest extends Test
         $this->assertObjectHasProperty('idusers', $user);
 
         $exception = $this->getExceptionFromApi(function () use ($user) {
-            $validation = new Validation();
+            $encode = $this->AESEncode([
+                'idusers' => (string) $user->idusers,
+                'users_password' => UsersFactory::USERS_PASSWORD,
+                'users_password_new' => UsersFactory::USERS_PASSWORD,
+                'users_password_confirm' => self::USERS_PASSWORD,
+            ]);
 
             fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password'), [
                 'headers' => [
-                    'Authorization' => $this->getAuthorization(['idusers' => $user->idusers])
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $encode['idusers'],
+                    ]),
                 ],
                 'json' => [
-                    'users_password' => $validation->sha256(UsersFactory::USERS_PASSWORD),
-                    'users_password_new' => $validation->sha256(UsersFactory::USERS_PASSWORD),
-                    'users_password_confirm' => $validation->sha256(self::USERS_PASSWORD),
-                ]
+                    'users_password' => $encode['users_password'],
+                    'users_password_new' => $encode['users_password_new'],
+                    'users_password_confirm' => $encode['users_password_confirm'],
+                ],
             ]);
         });
 

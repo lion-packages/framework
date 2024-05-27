@@ -12,10 +12,12 @@ use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Status;
 use Lion\Security\Validation;
 use Lion\Test\Test;
+use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class PasswordManagerModelTest extends Test
 {
+    use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
     const string USERS_PASSWORD = 'lion-password';
@@ -56,9 +58,9 @@ class PasswordManagerModelTest extends Test
         $this->assertIsObject($hash);
         $this->assertObjectHasProperty('users_password', $hash);
 
-        $password = $this->validation->sha256(UsersFactory::USERS_PASSWORD);
+        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $this->assertTrue(password_verify($password, $hash->users_password));
+        $this->assertTrue(password_verify($encode['users_password'], $hash->users_password));
     }
 
     public function testUpdatePasswordDB(): void
@@ -72,12 +74,12 @@ class PasswordManagerModelTest extends Test
         $this->assertIsObject($user);
         $this->assertObjectHasProperty('idusers', $user);
 
-        $users_password_confirm = $this->validation->sha256(self::USERS_PASSWORD);
+        $encode = $this->AESEncode(['users_password_confirm' => self::USERS_PASSWORD]);
 
         $response = $this->passwordManagerModel->updatePasswordDB(
             (new PasswordManager())
                 ->setIdusers($user->idusers)
-                ->setUsersPasswordConfirm($users_password_confirm)
+                ->setUsersPasswordConfirm($encode['users_password_confirm'])
         );
 
         $this->assertIsObject($response);

@@ -11,15 +11,14 @@ use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Dependency\Injection\Container;
 use Lion\Request\Http;
 use Lion\Request\Status;
-use Lion\Security\Validation;
+use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
 
 class RegistrationControllerTest extends Test
 {
+    use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
-
-    const string USERS_EMAIL = 'root@dev.com';
 
     private RegistrationController $registrationController;
     private Container $container;
@@ -40,9 +39,11 @@ class RegistrationControllerTest extends Test
 
     public function testRegister(): void
     {
-        $_POST['users_email'] = self::USERS_EMAIL;
+        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $_POST['users_password'] = (new Validation())->sha256(UsersFactory::USERS_PASSWORD);
+        $_POST['users_email'] = UsersFactory::USERS_EMAIL;
+
+        $_POST['users_password'] = $encode['users_password'];
 
         $response = $this->container->injectDependenciesMethod($this->registrationController, 'register');
 
@@ -60,9 +61,11 @@ class RegistrationControllerTest extends Test
 
     public function testVerifyAccount(): void
     {
-        $_POST['users_email'] = self::USERS_EMAIL;
+        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $_POST['users_password'] = (new Validation())->sha256(UsersFactory::USERS_PASSWORD);
+        $_POST['users_email'] = UsersFactory::USERS_EMAIL;
+
+        $_POST['users_password'] = $encode['users_password'];
 
         $response = $this->container->injectDependenciesMethod($this->registrationController, 'register');
 
@@ -77,7 +80,7 @@ class RegistrationControllerTest extends Test
 
         $users_activation_code = DB::table('users')
             ->select('users_activation_code')
-            ->where()->equalTo('users_email', self::USERS_EMAIL)
+            ->where()->equalTo('users_email', UsersFactory::USERS_EMAIL)
             ->get();
 
         $_POST['users_activation_code'] = $users_activation_code->users_activation_code;

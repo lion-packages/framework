@@ -11,11 +11,13 @@ use Lion\Dependency\Injection\Container;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\Validation;
+use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
 
 class LoginControllerTest extends Test
 {
+    use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
     private LoginController $loginController;
@@ -37,9 +39,11 @@ class LoginControllerTest extends Test
 
     public function testAuth(): void
     {
+        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+
         $_POST['users_email'] = UsersFactory::USERS_EMAIL;
 
-        $_POST['users_password'] = (new Validation())->sha256(UsersFactory::USERS_PASSWORD);
+        $_POST['users_password'] = $encode['users_password'];
 
         $response = $this->container->injectDependenciesMethod($this->loginController, 'auth');
 

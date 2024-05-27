@@ -1,5 +1,4 @@
 import axios from "axios";
-import sha256 from "crypto-js/sha256";
 import { Fragment, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import VerifiedUser from "./components/VerifiedUser";
@@ -7,12 +6,14 @@ import { useAuth } from "../../../context/AuthProvider";
 import { useResponse } from "../../../context/ResponseProvider";
 import { Link, useNavigate } from "react-router-dom";
 import useApiResponse from "../../../hooks/useApiResponse";
+import useAES from "../../../hooks/useAES";
 
 export default function LoginIndex() {
   const navigate = useNavigate();
   const { getResponseFromRules } = useApiResponse();
   const { login } = useAuth();
   const { addToast } = useResponse();
+  const { encode } = useAES();
 
   const [users_email, setUsers_email] = useState("root@dev.com");
   const [users_password, setUsers_password] = useState("lion");
@@ -23,7 +24,7 @@ export default function LoginIndex() {
 
     const form = {
       users_email: users_email,
-      users_password: sha256(users_password).toString(),
+      users_password: encode(users_password),
     };
 
     axios

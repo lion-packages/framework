@@ -47,6 +47,8 @@ class LoginController
     ): object {
         $loginService->validateSession($users->capsule());
 
+        $loginService->verifyAccountActivation($users);
+
         $session = $loginModel->sessionDB($users);
 
         $passwordManagerService->verifyPasswords(
@@ -54,8 +56,6 @@ class LoginController
             $users->getUsersPassword(),
             'email/password is incorrect [AUTH-2]'
         );
-
-        $loginService->verifyAccountActivation($users);
 
         return success('successfully authenticated user', Http::OK, [
             'full_name' => "{$session->users_name} {$session->users_last_name}",

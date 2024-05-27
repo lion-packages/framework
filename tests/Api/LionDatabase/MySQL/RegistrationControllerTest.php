@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\Api\LionDatabase\MySQL;
 
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
+use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class RegistrationControllerTest extends Test
 {
+    use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
     const string API_URL = 'http://127.0.0.1:8000/api/auth';
-    const string USERS_EMAIL = 'root@dev.com';
-    const string USERS_PASSWORD = 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464';
 
     protected function setUp(): void
     {
@@ -36,10 +37,12 @@ class RegistrationControllerTest extends Test
 
     public function testRegister(): void
     {
+        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+
         $response = fetch(Http::POST, (self::API_URL . '/register'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL,
-                'users_password' => self::USERS_PASSWORD,
+                'users_email' => UsersFactory::USERS_EMAIL,
+                'users_password' => $encode['users_password'],
             ]
         ])
             ->getBody()
@@ -57,10 +60,12 @@ class RegistrationControllerTest extends Test
      */
     public function testRegisterRegistered(): void
     {
+        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+
         $response = fetch(Http::POST, (self::API_URL . '/register'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL,
-                'users_password' => self::USERS_PASSWORD,
+                'users_email' => UsersFactory::USERS_EMAIL,
+                'users_password' => $encode['users_password'],
             ]
         ])
             ->getBody()
@@ -72,11 +77,11 @@ class RegistrationControllerTest extends Test
             'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
-        $exception = $this->getExceptionFromApi(function () {
+        $exception = $this->getExceptionFromApi(function () use ($encode): void {
             fetch(Http::POST, (self::API_URL . '/register'), [
                 'json' => [
-                    'users_email' => self::USERS_EMAIL,
-                    'users_password' => self::USERS_PASSWORD,
+                    'users_email' => UsersFactory::USERS_EMAIL,
+                    'users_password' => $encode['users_password'],
                 ]
             ]);
         });
@@ -90,10 +95,12 @@ class RegistrationControllerTest extends Test
 
     public function testVerifyAccount(): void
     {
+        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+
         $response = fetch(Http::POST, (self::API_URL . '/register'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL,
-                'users_password' => self::USERS_PASSWORD,
+                'users_email' => UsersFactory::USERS_EMAIL,
+                'users_password' => $encode['users_password'],
             ]
         ])
             ->getBody()
@@ -107,12 +114,12 @@ class RegistrationControllerTest extends Test
 
         $users_activation_code = DB::table('users')
             ->select('users_activation_code')
-            ->where()->equalTo('users_email', self::USERS_EMAIL)
+            ->where()->equalTo('users_email', UsersFactory::USERS_EMAIL)
             ->get();
 
         $response = fetch(Http::POST, (self::API_URL . '/verify'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL,
+                'users_email' => UsersFactory::USERS_EMAIL,
                 'users_activation_code' => $users_activation_code->users_activation_code
             ]
         ])
@@ -131,10 +138,12 @@ class RegistrationControllerTest extends Test
      */
     public function testVerifyAccountInvalid1(): void
     {
+        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+
         $response = fetch(Http::POST, (self::API_URL . '/register'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL,
-                'users_password' => self::USERS_PASSWORD,
+                'users_email' => UsersFactory::USERS_EMAIL,
+                'users_password' => $encode['users_password'],
             ]
         ])
             ->getBody()
@@ -146,7 +155,7 @@ class RegistrationControllerTest extends Test
             'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
-        $exception = $this->getExceptionFromApi(function () {
+        $exception = $this->getExceptionFromApi(function (): void {
             fetch(Http::POST, (self::API_URL . '/verify'), [
                 'json' => [
                     'users_activation_code' => fake()->numerify('######'),
@@ -167,10 +176,12 @@ class RegistrationControllerTest extends Test
      */
     public function testVerifyAccountInvalid2(): void
     {
+        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+
         $response = fetch(Http::POST, (self::API_URL . '/register'), [
             'json' => [
-                'users_email' => self::USERS_EMAIL,
-                'users_password' => self::USERS_PASSWORD,
+                'users_email' => UsersFactory::USERS_EMAIL,
+                'users_password' => $encode['users_password'],
             ]
         ])
             ->getBody()
@@ -182,10 +193,10 @@ class RegistrationControllerTest extends Test
             'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
-        $exception = $this->getExceptionFromApi(function () {
+        $exception = $this->getExceptionFromApi(function (): void {
             fetch(Http::POST, (self::API_URL . '/verify'), [
                 'json' => [
-                    'users_email' => self::USERS_EMAIL,
+                    'users_email' => UsersFactory::USERS_EMAIL,
                     'users_activation_code' => fake()->numerify('######'),
                 ]
             ]);

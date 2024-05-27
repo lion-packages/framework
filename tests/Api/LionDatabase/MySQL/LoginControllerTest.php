@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace Tests\Api\LionDatabase\MySQL;
 
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
+use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class LoginControllerTest extends Test
 {
+    use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const string USERS_EMAIL = 'root@dev.com';
     const string USERS_EMAIL_MANAGER = 'manager@dev.com';
-    const string USERS_PASSWORD = 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464';
 
     protected function setUp(): void
     {
@@ -31,12 +32,14 @@ class LoginControllerTest extends Test
 
     public function testAuth(): void
     {
+        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+
         $response = json_decode(
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
                 'json' => [
-                    'users_email' => self::USERS_EMAIL,
-                    'users_password' => self::USERS_PASSWORD,
-                ]
+                    'users_email' => UsersFactory::USERS_EMAIL,
+                    'users_password' => $encode['users_password'],
+                ],
             ])
                 ->getBody()
                 ->getContents()
@@ -58,12 +61,14 @@ class LoginControllerTest extends Test
      */
     public function testAuthIncorrect1(): void
     {
-        $exception = $this->getExceptionFromApi(function () {
+        $exception = $this->getExceptionFromApi(function (): void {
+            $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
                 'json' => [
                     'users_email' => 'root-dev@dev.com',
-                    'users_password' => self::USERS_PASSWORD,
-                ]
+                    'users_password' => $encode['users_password'],
+                ],
             ]);
         });
 
@@ -79,11 +84,13 @@ class LoginControllerTest extends Test
      */
     public function testAuthIncorrect2(): void
     {
-        $exception = $this->getExceptionFromApi(function () {
+        $exception = $this->getExceptionFromApi(function (): void {
+            $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
                 'json' => [
-                    'users_email' => self::USERS_EMAIL,
-                    'users_password' => (self::USERS_PASSWORD . '-x'),
+                    'users_email' => UsersFactory::USERS_EMAIL,
+                    'users_password' => "{$encode['users_password']}-x",
                 ]
             ]);
         });
@@ -101,11 +108,13 @@ class LoginControllerTest extends Test
     public function testAuthVerifyAccount(): void
     {
         $exception = $this->getExceptionFromApi(function () {
+            $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
                 'json' => [
                     'users_email' => self::USERS_EMAIL_MANAGER,
-                    'users_password' => self::USERS_PASSWORD,
-                ]
+                    'users_password' => $encode['users_password'],
+                ],
             ]);
         });
 

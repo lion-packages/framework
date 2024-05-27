@@ -1,15 +1,16 @@
 import axios from "axios";
-import sha256 from "crypto-js/sha256";
 import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useResponse } from "../../../context/ResponseProvider";
 import useApiResponse from "../../../hooks/useApiResponse";
+import useAES from "../../../hooks/useAES";
 
 export default function RegisterIndex() {
   const navigate = useNavigate();
   const { addToast } = useResponse();
   const { getResponseFromRules } = useApiResponse();
+  const { encode } = useAES();
 
   const [users_email, setUsers_email] = useState("");
   const [users_password, setUsers_password] = useState("");
@@ -19,7 +20,7 @@ export default function RegisterIndex() {
 
     const form = {
       users_email: users_email,
-      users_password: sha256(users_password).toString(),
+      users_password: encode(users_password),
     };
 
     axios

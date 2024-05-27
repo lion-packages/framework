@@ -1,15 +1,17 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
-import sha256 from "crypto-js/sha256";
 import { Fragment, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useResponse } from "../../../../context/ResponseProvider";
 import useApiResponse from "../../../../hooks/useApiResponse";
+import useAES from "../../../../hooks/useAES";
 
 export default function RecoveryPassword({ users_email, setActive }) {
   const navigate = useNavigate();
   const { addToast } = useResponse();
   const { getResponseFromRules } = useApiResponse();
+  const { encode } = useAES();
 
   const [codes, setCodes] = useState(["", "", "", "", "", ""]);
   const [users_password_new, setUsers_password_new] = useState("");
@@ -43,8 +45,8 @@ export default function RecoveryPassword({ users_email, setActive }) {
 
     const form = {
       users_email: users_email,
-      users_password_new: sha256(users_password_new).toString(),
-      users_password_confirm: sha256(users_password_confirm).toString(),
+      users_password_new: encode(users_password_new),
+      users_password_confirm: encode(users_password_confirm),
       users_recovery_code: codes.join("").trim(),
     };
 

@@ -31,9 +31,11 @@ class PasswordManagerService
     /**
      * @required
      */
-    public function setValidation(Validation $validation): void
+    public function setValidation(Validation $validation): PasswordManagerService
     {
         $this->validation = $validation;
+
+        return $this;
     }
 
     /**

@@ -64,7 +64,7 @@ class ProfileControllerTest extends Test
             'headers' => [
                 'Authorization' => $this->getAuthorization([
                     'idusers' => $encode['idusers'],
-                ])
+                ]),
             ],
             'json' => [
                 'iddocument_types' => DocumentTypesEnum::PASSPORT->value,

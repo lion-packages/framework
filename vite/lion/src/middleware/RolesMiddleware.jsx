@@ -12,7 +12,7 @@ export default function RolesMiddleware({
   const { jwt } = useAuth();
   const { decode } = useAES();
 
-  return jwt.idroles && !roles.includes(decode(jwt.idroles)) ? (
+  return jwt.idroles && !roles.includes(parseInt(decode(jwt.idroles))) ? (
     unauthorized ? (
       <Unauthorized />
     ) : (

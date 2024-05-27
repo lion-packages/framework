@@ -4,14 +4,15 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { useAuth } from "../../../../context/AuthProvider";
 import { useResponse } from "../../../../context/ResponseProvider";
 import useApiResponse from "../../../../hooks/useApiResponse";
-import sha256 from "crypto-js/sha256";
 import { useNavigate } from "react-router-dom";
+import useAES from "../../../../hooks/useAES";
 
 export default function ProfileChangePassword() {
   const navigate = useNavigate();
   const { getJWT, logout } = useAuth();
   const { addToast } = useResponse();
   const { getResponseFromRules } = useApiResponse();
+  const { encode } = useAES();
 
   const [users_password, setUsers_password] = useState("");
   const [users_password_new, setUsers_password_new] = useState("");
@@ -21,9 +22,9 @@ export default function ProfileChangePassword() {
     event.preventDefault();
 
     const form = {
-      users_password: sha256(users_password).toString(),
-      users_password_new: sha256(users_password_new).toString(),
-      users_password_confirm: sha256(users_password_confirm).toString(),
+      users_password: encode(users_password),
+      users_password_new: encode(users_password_new),
+      users_password_confirm: encode(users_password_confirm),
     };
 
     axios

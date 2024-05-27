@@ -12,7 +12,6 @@ use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Dependency\Injection\Container;
 use Lion\Request\Http;
 use Lion\Request\Status;
-use Lion\Security\Validation;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
@@ -22,7 +21,6 @@ class PasswordManagerControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const string USERS_EMAIL = 'root@dev.com';
     const string USERS_PASSWORD = 'lion-password';
 
     private PasswordManagerController $passwordManagerController;
@@ -46,7 +44,7 @@ class PasswordManagerControllerTest extends Test
 
     public function testRecoveryPassword(): void
     {
-        $_POST['users_email'] = self::USERS_EMAIL;
+        $_POST['users_email'] = UsersFactory::USERS_EMAIL;
 
         $response = $this->container->injectDependenciesMethod($this->passwordManagerController, 'recoveryPassword');
 
@@ -64,7 +62,7 @@ class PasswordManagerControllerTest extends Test
 
     public function testUpdateLostPassword(): void
     {
-        $_POST['users_email'] = self::USERS_EMAIL;
+        $_POST['users_email'] = UsersFactory::USERS_EMAIL;
 
         $response = $this->container->injectDependenciesMethod($this->passwordManagerController, 'recoveryPassword');
 
@@ -79,17 +77,20 @@ class PasswordManagerControllerTest extends Test
 
         $user = (new UsersModel())->readUsersByEmailDB(
             (new Users())
-                ->setUsersEmail(self::USERS_EMAIL)
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
         );
 
         $this->assertIsObject($user);
         $this->assertObjectHasProperty('users_recovery_code', $user);
 
-        $validation = new Validation();
+        $encode = $this->AESEncode([
+            'users_password_new' => self::USERS_PASSWORD,
+            'users_password_confirm' => self::USERS_PASSWORD,
+        ]);
 
-        $_POST['users_password_new'] = $validation->sha256(self::USERS_PASSWORD);
+        $_POST['users_password_new'] = $encode['users_password_new'];
 
-        $_POST['users_password_confirm'] = $validation->sha256(self::USERS_PASSWORD);
+        $_POST['users_password_confirm'] = $encode['users_password_confirm'];
 
         $_POST['users_recovery_code'] = $user->users_recovery_code;
 
@@ -123,16 +124,21 @@ class PasswordManagerControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertObjectHasProperty('idusers', $user);
 
-        $validation = new Validation();
+        $encode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+            'users_password' => UsersFactory::USERS_PASSWORD,
+            'users_password_new' => self::USERS_PASSWORD,
+            'users_password_confirm' => self::USERS_PASSWORD,
+        ]);
 
-        $_POST['users_password'] = $validation->sha256(UsersFactory::USERS_PASSWORD);
+        $_POST['users_password'] = $encode['users_password'];
 
-        $_POST['users_password_new'] = $validation->sha256(self::USERS_PASSWORD);
+        $_POST['users_password_new'] = $encode['users_password_new'];
 
-        $_POST['users_password_confirm'] = $validation->sha256(self::USERS_PASSWORD);
+        $_POST['users_password_confirm'] = $encode['users_password_confirm'];
 
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
-            'idusers' => $user->idusers
+            'idusers' => $encode['idusers'],
         ]);
 
         $response = $this->container->injectDependenciesMethod($this->passwordManagerController, 'updatePassword');
