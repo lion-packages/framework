@@ -38,7 +38,7 @@ Route::prefix('api', function () {
             Route::post('password', [PasswordManagerController::class, 'updatePassword']);
         });
 
-        Route::prefix('users', function () {
+        Route::middleware(['admin-access', 'prefix' => 'users'], function () {
             Route::post('/', [UsersController::class, 'createUsers']);
             Route::get('/', [UsersController::class, 'readUsers']);
             Route::get('{idusers:i}', [UsersController::class, 'readUsersById']);

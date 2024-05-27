@@ -44,7 +44,7 @@ export default function Header() {
 
             {jwt && (
               <Fragment>
-                <RolesMiddleware roles={["1"]} unauthorized={false}>
+                <RolesMiddleware roles={[1]} unauthorized={false}>
                   <NavDropdown
                     title="Site Administration"
                     align={"end"}

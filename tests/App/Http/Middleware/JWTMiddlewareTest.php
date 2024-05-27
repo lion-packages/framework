@@ -37,6 +37,8 @@ class JWTMiddlewareTest extends Test
     protected function tearDown(): void
     {
         $this->rmdirRecursively(env('RSA_URL_PATH') . "{$this->users_code}/");
+
+        unset($_SERVER['HTTP_AUTHORIZATION']);
     }
 
     public function testInitRSA(): void

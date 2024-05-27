@@ -18,7 +18,6 @@ class UsersControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const string API_URL = 'http://127.0.0.1:8000/api/users';
     const array JSON_UPDATE_USERS = [
         'idroles' => 1,
         'iddocument_types' => 1,
@@ -41,9 +40,13 @@ class UsersControllerTest extends Test
 
     public function testCreateUsers(): void
     {
-        $response = fetch(Http::POST, self::API_URL, [
+        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+
+        $response = fetch(Http::POST, env('SERVER_URL') . '/api/users', [
             'headers' => [
-                'Authorization' => $this->getAuthorization()
+                'Authorization' => $this->getAuthorization([
+                    'idroles' => $encode['idroles'],
+                ]),
             ],
             'json' => [
                 'idroles' => RolesEnum::ADMINISTRATOR->value,
@@ -73,11 +76,15 @@ class UsersControllerTest extends Test
 
     public function testReadUsers(): void
     {
+        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+
         $users = json_decode(
-            fetch(Http::GET, self::API_URL, [
+            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
                 'headers' => [
-                    'Authorization' => $this->getAuthorization()
-                ]
+                    'Authorization' => $this->getAuthorization([
+                        'idroles' => $encode['idroles'],
+                    ]),
+                ],
             ])
                 ->getBody()
                 ->getContents(),
@@ -93,10 +100,14 @@ class UsersControllerTest extends Test
     {
         Schema::truncateTable('users')->execute();
 
-        $users = fetch(Http::GET, self::API_URL, [
+        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+
+        $users = fetch(Http::GET, env('SERVER_URL') . '/api/users', [
             'headers' => [
-                'Authorization' => $this->getAuthorization()
-            ]
+                'Authorization' => $this->getAuthorization([
+                    'idroles' => $encode['idroles'],
+                ]),
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -110,11 +121,15 @@ class UsersControllerTest extends Test
 
     public function testReadUsersById(): void
     {
+        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+
         $users = json_decode(
-            fetch(Http::GET, self::API_URL, [
+            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
                 'headers' => [
-                    'Authorization' => $this->getAuthorization()
-                ]
+                    'Authorization' => $this->getAuthorization([
+                        'idroles' => $encode['idroles'],
+                    ]),
+                ],
             ])
                 ->getBody()
                 ->getContents(),
@@ -128,10 +143,12 @@ class UsersControllerTest extends Test
         $firstUser = (object) reset($users);
 
         $user = json_decode(
-            fetch(Http::GET, (self::API_URL . '/' . $firstUser->idusers), [
+            fetch(Http::GET, (env('SERVER_URL') . '/api/users/' . $firstUser->idusers), [
                 'headers' => [
-                    'Authorization' => $this->getAuthorization()
-                ]
+                    'Authorization' => $this->getAuthorization([
+                        'idroles' => $encode['idroles'],
+                    ]),
+                ],
             ])
                 ->getBody()
                 ->getContents(),
@@ -148,10 +165,14 @@ class UsersControllerTest extends Test
     {
         Schema::truncateTable('users')->execute();
 
-        $users = fetch(Http::GET, self::API_URL . '/1', [
+        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+
+        $users = fetch(Http::GET, env('SERVER_URL') . '/api/users/1', [
             'headers' => [
-                'Authorization' => $this->getAuthorization()
-            ]
+                'Authorization' => $this->getAuthorization([
+                    'idroles' => $encode['idroles'],
+                ]),
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -165,13 +186,17 @@ class UsersControllerTest extends Test
 
     public function testUpdateUsers(): void
     {
-        $token = $this->getAuthorization();
+        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+
+        $token = $this->getAuthorization([
+            'idroles' => $encode['idroles'],
+        ]);
 
         $users = json_decode(
-            fetch(Http::GET, self::API_URL, [
+            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
                 'headers' => [
-                    'Authorization' => $token
-                ]
+                    'Authorization' => $token,
+                ],
             ])
                 ->getBody()
                 ->getContents(),
@@ -183,11 +208,11 @@ class UsersControllerTest extends Test
 
         $firstUser = (object) reset($users);
 
-        $response = fetch(Http::PUT, self::API_URL . '/' . $firstUser->idusers, [
+        $response = fetch(Http::PUT, env('SERVER_URL') . '/api/users/' . $firstUser->idusers, [
             'json' => self::JSON_UPDATE_USERS,
             'headers' => [
-                'Authorization' => $token
-            ]
+                'Authorization' => $token,
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -199,10 +224,10 @@ class UsersControllerTest extends Test
         ]);
 
         $users = json_decode(
-            fetch(Http::GET, self::API_URL, [
+            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
                 'headers' => [
-                    'Authorization' => $token
-                ]
+                    'Authorization' => $token,
+                ],
             ])
                 ->getBody()
                 ->getContents(),
@@ -225,13 +250,17 @@ class UsersControllerTest extends Test
 
     public function testDeleteUsers(): void
     {
-        $token = $this->getAuthorization();
+        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+
+        $token = $this->getAuthorization([
+            'idroles' => $encode['idroles'],
+        ]);
 
         $users = json_decode(
-            fetch(Http::GET, self::API_URL, [
+            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
                 'headers' => [
-                    'Authorization' => $token
-                ]
+                    'Authorization' => $token,
+                ],
             ])
                 ->getBody()
                 ->getContents(),
@@ -243,10 +272,10 @@ class UsersControllerTest extends Test
 
         $firstUser = (object) reset($users);
 
-        $response = fetch(Http::DELETE, self::API_URL . '/' . $firstUser->idusers, [
+        $response = fetch(Http::DELETE, env('SERVER_URL') . '/api/users/' . $firstUser->idusers, [
             'headers' => [
-                'Authorization' => $token
-            ]
+                'Authorization' => $token,
+            ],
         ])
             ->getBody()
             ->getContents();
@@ -258,10 +287,10 @@ class UsersControllerTest extends Test
         ]);
 
         $users = json_decode(
-            fetch(Http::GET, self::API_URL, [
+            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
                 'headers' => [
-                    'Authorization' => $token
-                ]
+                    'Authorization' => $token,
+                ],
             ])
                 ->getBody()
                 ->getContents()

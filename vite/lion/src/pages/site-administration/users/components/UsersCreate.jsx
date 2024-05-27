@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { useResponse } from "../../../../context/ResponseProvider";
 import useApiResponse from "../../../../hooks/useApiResponse";
@@ -75,7 +76,7 @@ export default function UsersCreate({ show, setShow }) {
         }
       })
       .catch(({ response }) => {
-        if (400 === response.data.code) {
+        if ([400, 403].includes(response.data.code)) {
           addToast([
             {
               status: response.data.status,

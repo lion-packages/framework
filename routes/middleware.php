@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Enums\RolesEnum;
 use App\Http\Middleware\JWTMiddleware;
+use App\Http\Middleware\RolesMiddleware;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Bundle\Middleware\RouteMiddleware;
 use Lion\Route\Middleware;
@@ -34,5 +36,15 @@ Routes::setMiddleware([
     new Middleware('jwt-not-authorize', JWTMiddleware::class, 'notAuthorize'),
 
     new Middleware('jwt-without-signature', JWTMiddleware::class, 'authorizeWithoutSignature'),
+
+    /**
+     * Filters to validate user roles
+     */
+
+    new Middleware('admin-access', RolesMiddleware::class, 'access', [
+        'roles' => [
+            RolesEnum::ADMINISTRATOR->value,
+        ],
+    ]),
 
 ]);
