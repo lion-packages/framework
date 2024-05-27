@@ -52,8 +52,10 @@ class ProfileControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertObjectHasProperty('idusers', $user);
 
+        $encode = $this->AESEncode(['idusers' => (string) $user->idusers]);
+
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
-            'idusers' => $user->idusers
+            'idusers' => $encode['idusers']
         ]);
 
         $response = $this->container->injectDependenciesMethod($this->profileController, 'readProfile');
@@ -81,8 +83,10 @@ class ProfileControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertObjectHasProperty('idusers', $user);
 
+        $encode = $this->AESEncode(['idusers' => (string) $user->idusers]);
+
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
-            'idusers' => $user->idusers
+            'idusers' => $encode['idusers']
         ]);
 
         $users_name = fake()->name();
@@ -114,8 +118,10 @@ class ProfileControllerTest extends Test
         $this->expectExceptionMessage("an error occurred while updating the user's profile");
         $this->expectExceptionCode(Http::INTERNAL_SERVER_ERROR);
 
+        $encode = $this->AESEncode(['idusers' => fake()->numerify('###############')]);
+
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
-            'idusers' => (int) fake()->numerify('###############')
+            'idusers' => $encode['idusers']
         ]);
 
         $this->container->injectDependenciesMethod($this->profileController, 'updateProfile');

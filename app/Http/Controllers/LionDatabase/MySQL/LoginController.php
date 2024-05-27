@@ -6,6 +6,7 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\PasswordException;
+use App\Http\Services\AESService;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\LoginModel;
@@ -28,7 +29,9 @@ class LoginController
      * @param LoginModel $loginModel [Model for user authentication]
      * @param LoginService $loginService [Allows you to manage the user
      * authentication process]
-     * @param PasswordManagerService $passwordManagerService
+     * @param PasswordManagerService $passwordManagerService [Manage different
+     * processes for strong password verifications]
+     * @param AESService $aESService [Encrypt and decrypt data with AES]
      *
      * @return object
      *
@@ -39,7 +42,8 @@ class LoginController
         Users $users,
         LoginModel $loginModel,
         LoginService $loginService,
-        PasswordManagerService $passwordManagerService
+        PasswordManagerService $passwordManagerService,
+        AESService $aESService
     ): object {
         $loginService->validateSession($users->capsule());
 
@@ -57,8 +61,10 @@ class LoginController
             'full_name' => "{$session->users_name} {$session->users_last_name}",
             'jwt' => $loginService->getToken(env('RSA_URL_PATH'), [
                 'session' => true,
-                'idusers' => $session->idusers,
-                'idroles' => $session->idroles,
+                ...$aESService->encode([
+                    'idusers' => (string) $session->idusers,
+                    'idroles' => (string) $session->idroles,
+                ])
             ]),
         ]);
     }

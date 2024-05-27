@@ -31,10 +31,14 @@ class ProfileControllerTest extends Test
 
     public function testReadProfile(): void
     {
+        $encode = $this->AESEncode(['idusers' => (string) self::IDUSERS]);
+
         $response = json_decode(
             fetch(Http::GET, (env('SERVER_URL') . '/api/profile'), [
                 'headers' => [
-                    'Authorization' => $this->getAuthorization(['idusers' => self::IDUSERS])
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $encode['idusers'],
+                    ])
                 ]
             ])
                 ->getBody()
@@ -54,9 +58,13 @@ class ProfileControllerTest extends Test
 
     public function testUpdateProfile(): void
     {
+        $encode = $this->AESEncode(['idusers' => (string) self::IDUSERS]);
+
         $response = fetch(Http::PUT, (env('SERVER_URL') . '/api/profile'), [
             'headers' => [
-                'Authorization' => $this->getAuthorization(['idusers' => self::IDUSERS])
+                'Authorization' => $this->getAuthorization([
+                    'idusers' => $encode['idusers'],
+                ])
             ],
             'json' => [
                 'iddocument_types' => DocumentTypesEnum::PASSPORT->value,
