@@ -15,7 +15,7 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  * Here is where you can register web routes for your application
  * -----------------------------------------------------------------------------
- **/
+ */
 
 Route::get('/', fn () => info('[index]'));
 

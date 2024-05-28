@@ -52,7 +52,7 @@ Routes::setRules([
             UsersActivationCodeRequiredRule::class,
             UsersEmailRule::class,
         ],
-        '/api/users' => [
+        '/api/users/' => [
             IdrolesRule::class,
             IddocumentTypesRule::class,
             UsersCitizenIdentificationRequiredRule::class,
@@ -62,10 +62,10 @@ Routes::setRules([
             UsersEmailRule::class,
             UsersPasswordRule::class,
         ],
-        '/api/auth/password/recovery' => [
+        '/api/auth/recovery/password' => [
             UsersEmailRule::class,
         ],
-        '/api/auth/password/verify-code' => [
+        '/api/auth/recovery/verify-code' => [
             UsersEmailRule::class,
             UsersRecoveryCodeRequiredRule::class,
             UsersPasswordNewRule::class,
@@ -99,7 +99,7 @@ Routes::setRules([
             UsersLastNameRequiredRule::class,
             UsersEmailRule::class,
         ],
-        '/api/profile' => [
+        '/api/profile/' => [
             IddocumentTypesRule::class,
             UsersCitizenIdentificationRequiredRule::class,
             UsersNameRequiredRule::class,
