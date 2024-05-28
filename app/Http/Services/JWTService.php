@@ -34,17 +34,21 @@ class JWTService
     /**
      * @required
      */
-    public function setRSA(RSA $rsa): void
+    public function setRSA(RSA $rsa): JWTService
     {
         $this->rsa = $rsa;
+
+        return $this;
     }
 
     /**
      * @required
      */
-    public function setJWT(JWT $jwt): void
+    public function setJWT(JWT $jwt): JWTService
     {
         $this->jwt = $jwt;
+
+        return $this;
     }
 
     /**

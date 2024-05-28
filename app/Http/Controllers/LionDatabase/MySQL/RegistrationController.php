@@ -7,12 +7,12 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 use App\Enums\RolesEnum;
 use App\Exceptions\AccountException;
 use App\Exceptions\AuthenticationException;
+use App\Http\Services\AESService;
 use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Exception;
 use Lion\Security\Validation;
 
 /**
@@ -25,13 +25,14 @@ class RegistrationController
     /**
      * Register users with their basic data to create a user account
      *
-     * @route /api/auth/register
+     * @api /api/auth/register
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
      * @param RegistrationModel $registrationModel [Validate in the database
      * if the registration and verification are valid]
      * @param AccountService $accountService [Manage user account processes]
+     * @param AESService $aESService [Encrypt and decrypt data with AES]
      * @param Validation $validation [Allows you to validate form data and
      * generate encryption safely]
      *
@@ -44,6 +45,7 @@ class RegistrationController
         UsersModel $usersModel,
         RegistrationModel $registrationModel,
         AccountService $accountService,
+        AESService $aESService,
         Validation $validation
     ): object {
         $accountService->validateAccountExists(
@@ -52,10 +54,12 @@ class RegistrationController
                 ->setUsersEmail(request('users_email'))
         );
 
+        $decode = $aESService->decode(['users_password' => request('users_password')]);
+
         $response = $usersModel->createUsersDB(
             $users
                 ->setIdroles(RolesEnum::CUSTOMER->value)
-                ->setUsersPassword($validation->passwordHash(request('users_password')))
+                ->setUsersPassword($validation->passwordHash($decode['users_password']))
                 ->setUsersActivationCode(fake()->numerify('######'))
                 ->setUsersCode(uniqid('code-'))
         );

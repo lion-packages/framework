@@ -43,7 +43,7 @@ class UsersController
         );
 
         if (isError($response)) {
-            throw new Exception('an error occurred while registering the user', Http::HTTP_INTERNAL_SERVER_ERROR);
+            throw new Exception('an error occurred while registering the user', Http::INTERNAL_SERVER_ERROR);
         }
 
         return success('registered user successfully');
@@ -116,7 +116,7 @@ class UsersController
         );
 
         if (isError($response)) {
-            throw new Exception('an error occurred while updating the user', Http::HTTP_INTERNAL_SERVER_ERROR);
+            throw new Exception('an error occurred while updating the user', Http::INTERNAL_SERVER_ERROR);
         }
 
         return success('the registered user has been successfully updated');
@@ -143,7 +143,7 @@ class UsersController
         );
 
         if (isError($response)) {
-            throw new Exception('an error occurred while deleting the user', Http::HTTP_INTERNAL_SERVER_ERROR);
+            throw new Exception('an error occurred while deleting the user', Http::INTERNAL_SERVER_ERROR);
         }
 
         return success('the registered user has been successfully deleted');

@@ -31,9 +31,11 @@ class PasswordManagerService
     /**
      * @required
      */
-    public function setValidation(Validation $validation): void
+    public function setValidation(Validation $validation): PasswordManagerService
     {
         $this->validation = $validation;
+
+        return $this;
     }
 
     /**
@@ -53,7 +55,7 @@ class PasswordManagerService
         string $message = 'password is incorrect [ERR-1]'
     ): void {
         if (!password_verify($passwordEntered, $usersPassword)) {
-            throw new PasswordException($message, Status::ERROR, Http::HTTP_UNAUTHORIZED);
+            throw new PasswordException($message, Status::ERROR, Http::UNAUTHORIZED);
         }
     }
 
@@ -70,7 +72,7 @@ class PasswordManagerService
     public function comparePasswords(string $usersPassword, string $passwordEntered): void
     {
         if ($usersPassword != $passwordEntered) {
-            throw new PasswordException('password is incorrect [ERR-2]', Status::ERROR, Http::HTTP_UNAUTHORIZED);
+            throw new PasswordException('password is incorrect [ERR-2]', Status::ERROR, Http::UNAUTHORIZED);
         }
     }
 
@@ -94,7 +96,7 @@ class PasswordManagerService
         );
 
         if (isError($response)) {
-            throw new PasswordException('password is incorrect [ERR-3]', Status::ERROR, Http::HTTP_UNAUTHORIZED);
+            throw new PasswordException('password is incorrect [ERR-3]', Status::ERROR, Http::UNAUTHORIZED);
         }
     }
 }

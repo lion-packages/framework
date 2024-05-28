@@ -7,6 +7,7 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 use App\Exceptions\AccountException;
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\PasswordException;
+use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
@@ -26,7 +27,7 @@ class PasswordManagerController
     /**
      * Manage user password recovery by sending a verification email
      *
-     * @route /api/auth/password/recovery
+     * @route /api/auth/recovery/password
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -71,7 +72,7 @@ class PasswordManagerController
     /**
      * Update lost user passwords
      *
-     * @route /api/auth/password/verify-code
+     * @route /api/auth/recovery/verify-code
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param PasswordManager $passwordManager [Capsule for the
@@ -82,6 +83,8 @@ class PasswordManagerController
      * @param AccountService $accountService [Manage user account processes]
      * @param PasswordManagerService $passwordManagerService [Manage different
      * processes for strong password verifications]
+     * @param LoginService $loginService [Allows you to manage the user
+     * authentication process]
      *
      * @return object
      *
@@ -141,6 +144,7 @@ class PasswordManagerController
      * @param PasswordManagerService $passwordManagerService [Manage different
      * processes for strong password verifications]
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
+     * @param AESService $aESService [Encrypt and decrypt data with AES]
      *
      * @return object
      *
@@ -150,12 +154,17 @@ class PasswordManagerController
         PasswordManager $passwordManager,
         PasswordManagerModel $passwordManagerModel,
         PasswordManagerService $passwordManagerService,
-        JWTService $jWTService
+        JWTService $jWTService,
+        AESService $aESService,
     ): object {
+        $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
+
+        $decode = $aESService->decode(['idusers' => $data->idusers]);
+
         $users = $passwordManagerModel->getPasswordDB(
             $passwordManager
                 ->capsule()
-                ->setIdusers($jWTService->getTokenData(env('RSA_URL_PATH'))->idusers)
+                ->setIdusers((int) $decode['idusers'])
         );
 
         $passwordManagerService->verifyPasswords($users->users_password, $passwordManager->getUsersPassword());

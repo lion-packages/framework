@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
 import { Fragment, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";

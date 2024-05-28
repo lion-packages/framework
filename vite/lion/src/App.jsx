@@ -17,6 +17,7 @@ import ProfileChangePassword from "./pages/account/profile/components/ProfileCha
 import UsersIndex from "./pages/site-administration/users/UsersIndex";
 import { UsersProvider } from "./context/site-administration/UsersProvider";
 import UsersUpdate from "./pages/site-administration/users/components/UsersUpdate";
+import RolesMiddleware from "./middleware/RolesMiddleware.jsx";
 
 function App() {
   return (
@@ -88,9 +89,11 @@ function App() {
             path="users"
             element={
               <AuthenticatedMiddleware>
-                <UsersProvider>
-                  <UsersIndex />
-                </UsersProvider>
+                <RolesMiddleware roles={[1]}>
+                  <UsersProvider>
+                    <UsersIndex />
+                  </UsersProvider>
+                </RolesMiddleware>
               </AuthenticatedMiddleware>
             }
           />

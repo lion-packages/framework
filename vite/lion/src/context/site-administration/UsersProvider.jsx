@@ -32,7 +32,17 @@ export function UsersProvider({ children }) {
         }
       })
       .catch(({ response }) => {
-        console.log(response.data);
+        // console.log(response.data);
+
+        if (403 === response.data.code) {
+          addToast([
+            {
+              status: response.data.status,
+              title: "Users",
+              message: response.data.message,
+            },
+          ]);
+        }
       });
   };
 

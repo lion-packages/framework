@@ -53,7 +53,7 @@ class AccountService
             throw new AccountException(
                 'a verification code has already been sent to this account',
                 Status::ERROR,
-                Http::HTTP_FORBIDDEN
+                Http::FORBIDDEN
             );
         }
     }
@@ -108,11 +108,11 @@ class AccountService
     public function verifyRecoveryCode(Users $users, object $data): void
     {
         if (isSuccess($data)) {
-            throw new AccountException('verification code is invalid [ERR-1]', Status::ERROR, Http::HTTP_FORBIDDEN);
+            throw new AccountException('verification code is invalid [ERR-1]', Status::ERROR, Http::FORBIDDEN);
         }
 
         if ($data->users_recovery_code != $users->getUsersRecoveryCode()) {
-            throw new AccountException('verification code is invalid [ERR-2]', Status::ERROR, Http::HTTP_FORBIDDEN);
+            throw new AccountException('verification code is invalid [ERR-2]', Status::ERROR, Http::FORBIDDEN);
         }
     }
 
@@ -130,11 +130,11 @@ class AccountService
     public function verifyActivationCode(Users $users, object $data): void
     {
         if (isSuccess($data)) {
-            throw new AccountException('activation code is invalid [ERR-1]', Status::ERROR, Http::HTTP_FORBIDDEN);
+            throw new AccountException('activation code is invalid [ERR-1]', Status::ERROR, Http::FORBIDDEN);
         }
 
         if ($data->users_activation_code != $users->getUsersActivationCode()) {
-            throw new AccountException('activation code is invalid [ERR-2]', Status::ERROR, Http::HTTP_FORBIDDEN);
+            throw new AccountException('activation code is invalid [ERR-2]', Status::ERROR, Http::FORBIDDEN);
         }
     }
 
@@ -152,7 +152,7 @@ class AccountService
         $response = $this->usersModel->updateRecoveryCodeDB($users);
 
         if (isError($response)) {
-            throw new AccountException('verification code is invalid [ERR-3]', Status::ERROR, Http::HTTP_UNAUTHORIZED);
+            throw new AccountException('verification code is invalid [ERR-3]', Status::ERROR, Http::UNAUTHORIZED);
         }
     }
 
@@ -170,7 +170,7 @@ class AccountService
         $response = $this->usersModel->updateActivationCodeDB($users);
 
         if (isError($response)) {
-            throw new AccountException('verification code is invalid [ERR-3]', Status::ERROR, Http::HTTP_UNAUTHORIZED);
+            throw new AccountException('verification code is invalid [ERR-3]', Status::ERROR, Http::UNAUTHORIZED);
         }
     }
 
@@ -193,7 +193,7 @@ class AccountService
             throw new AccountException(
                 'there is already an account registered with this email',
                 Status::ERROR,
-                Http::HTTP_BAD_REQUEST
+                Http::BAD_REQUEST
             );
         }
     }

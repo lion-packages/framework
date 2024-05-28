@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { jwtDecode } from "jwt-decode";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -5,6 +6,7 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [jwt, setJwt] = useState(null);
+  const [loadingJWT, setLoadingJWT] = useState(true);
 
   const login = (jwtObject) => {
     setJwt(jwtDecode(jwtObject).data);
@@ -32,10 +34,14 @@ export function AuthProvider({ children }) {
     if (storedJwt) {
       setJwt(jwtDecode(storedJwt).data);
     }
+
+    setLoadingJWT(false);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ jwt, login, logout, getData, getJWT }}>
+    <AuthContext.Provider
+      value={{ jwt, loadingJWT, login, logout, getData, getJWT }}
+    >
       {children}
     </AuthContext.Provider>
   );

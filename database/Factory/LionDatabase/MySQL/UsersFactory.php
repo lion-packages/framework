@@ -6,7 +6,9 @@ namespace Database\Factory\LionDatabase\MySQL;
 
 use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
+use App\Http\Services\AESService;
 use Lion\Bundle\Interface\FactoryInterface;
+use Lion\Security\AES;
 use Lion\Security\Validation;
 
 /**
@@ -56,6 +58,8 @@ class UsersFactory implements FactoryInterface
     {
         $validation = new Validation();
 
+        $encode = (new AESService())->setAES(new AES())->encode(['users_password' => self::USERS_PASSWORD]);
+
         return [
             [
                 RolesEnum::ADMINISTRATOR->value,
@@ -65,7 +69,7 @@ class UsersFactory implements FactoryInterface
                 'lion',
                 fake()->userName(),
                 self::USERS_EMAIL,
-                $validation->passwordHash($validation->sha256(self::USERS_PASSWORD)),
+                $validation->passwordHash($encode['users_password']),
                 null,
                 uniqid('code-')
             ],
@@ -77,7 +81,7 @@ class UsersFactory implements FactoryInterface
                 'manager',
                 fake()->userName(),
                 'manager@dev.com',
-                $validation->passwordHash($validation->sha256(self::USERS_PASSWORD)),
+                $validation->passwordHash($encode['users_password']),
                 "123456",
                 uniqid('code-')
             ]

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Providers;
 
+use App\Http\Services\AESService;
 use Lion\Bundle\Helpers\Commands\ProcessCommand;
+use Lion\Security\AES;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 
@@ -16,6 +18,13 @@ trait AuthJwtProviderTrait
     private function generateKeys(string $path): void
     {
         ProcessCommand::run("php lion new:rsa --path keys/{$path}/", false);
+    }
+
+    private function AESEncode(array $rows): array
+    {
+        return (new AESService())
+            ->setAES(new AES())
+            ->encode($rows);
     }
 
     private function getAuthorization(array $data = []): string
@@ -36,7 +45,7 @@ trait AuthJwtProviderTrait
         return "Bearer {$token}";
     }
 
-    public function getCustomAuthorization(string $path, array $data = []): string
+    private function getCustomAuthorization(string $path, array $data = []): string
     {
         $token = (new JWT)
             ->config([
