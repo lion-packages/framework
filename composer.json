@@ -28,7 +28,6 @@
     },
     "require": {
         "php": ">=8.3",
-        "ext-pdo": "*",
         "lion/bundle": "^17.0"
     },
     "require-dev": {
