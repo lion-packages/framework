@@ -1,11 +1,15 @@
 FROM php:8.3-apache
 
+ARG DEBIAN_FRONTEND=noninteractive
+# ----------------------------------------------------------------------------------------------------------------------
+USER root
+
 # Add User
 RUN useradd -m lion && echo 'lion:lion' | chpasswd && usermod -aG sudo lion && usermod -s /bin/bash lion
 
 # Dependencies
 RUN apt-get update -y \
-    && apt-get install -y sudo nano git npm default-mysql-client curl wget unzip cron sendmail libpng-dev libzip-dev \
+    && apt-get install -y sudo nano git default-mysql-client curl wget unzip cron sendmail libpng-dev libzip-dev \
     && apt-get install -y zlib1g-dev libonig-dev supervisor libevent-dev libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
@@ -33,12 +37,27 @@ RUN echo "xdebug.mode=develop,coverage,debug" >> /usr/local/etc/php/conf.d/docke
     && echo "xdebug.log_level=0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.client_port=9000" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+# ----------------------------------------------------------------------------------------------------------------------
+USER lion
+
+# Install nvm, Node.js and npm
+SHELL ["/bin/bash", "--login", "-i", "-c"]
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
+    && source /home/lion/.bashrc \
+    && nvm install 20 \
+    && npm install -g npm
+# ----------------------------------------------------------------------------------------------------------------------
+USER root
+
+SHELL ["/bin/bash", "--login", "-c"]
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy Data
 COPY . .
+
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Init Project
