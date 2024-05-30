@@ -11,12 +11,16 @@
         "test": "vitest"
     },
     "dependencies": {
+        "@testing-library/jest-dom": "^6.4.5",
+        "@testing-library/react": "^15.0.7",
+        "@testing-library/user-event": "^14.5.2",
         "axios": "^1.6.8",
         "bootstrap": "^5.3.3",
         "bootstrap-icons": "^1.11.3",
         "crypto-js": "^4.2.0",
         "datatables.net-bs5": "^2.0.7",
         "jquery": "^3.7.1",
+        "jsdom": "^24.1.0",
         "jwt-decode": "^4.0.0",
         "react": "^18.2.0",
         "react-bootstrap": "^2.10.2",
