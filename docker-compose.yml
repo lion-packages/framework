@@ -16,6 +16,7 @@ services:
             - "8001:8001"
             - "8080:8080"
             - "5173:5173"
+            - "4173:4173"
         volumes:
             - ./:/var/www/html
             - /var/run/dbus:/var/run/dbus

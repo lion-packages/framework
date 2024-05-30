@@ -9,7 +9,7 @@ Thank you for considering contributing to our open-source projects! We strive to
 
 2. **Adherence to PSR Standards**: Our PHP projects follow the standards defined by [PHP-FIG](https://www.php-fig.org/). Please ensure that your code complies with the relevant PSR standards.
 
-3. **Adherence to Lion-Packages Standards**: Our PHP projects also follow our own standards along with the PSR, lease [Lion-Packages Standards](https://lion-client.vercel.app/standars).
+3. **Adherence to Lion-Packages Standards**: Our PHP projects also follow our own standards along with the PSR, lease [Lion-Packages Standards](https://lion-packages.vercel.app/standards).
 
 3. **Creating an Issue**: Before starting work on a new feature or bug fix, please open an issue to discuss it. This helps ensure that your contribution aligns with the project's goals and avoids duplication of effort.
 

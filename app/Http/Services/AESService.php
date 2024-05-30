@@ -48,7 +48,7 @@ class AESService
         $this->aes->config([
             'passphrase' => env('AES_PASSPHRASE'),
             'iv' => env('AES_IV'),
-            'method' => AES::AES_256_CBC,
+            'method' => env('AES_METHOD'),
         ]);
 
         foreach ($rows as $key => $value) {
@@ -71,7 +71,7 @@ class AESService
             ->config([
                 'passphrase' => env('AES_PASSPHRASE'),
                 'iv' => env('AES_IV'),
-                'method' => AES::AES_256_CBC,
+                'method' => env('AES_METHOD'),
             ])
             ->decode($rows)
             ->get();
