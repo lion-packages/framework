@@ -9,7 +9,7 @@ RUN useradd -m lion && echo 'lion:lion' | chpasswd && usermod -aG sudo lion && u
 
 # Dependencies
 RUN apt-get update -y \
-    && apt-get install -y sudo nano git default-mysql-client curl wget unzip cron sendmail libpng-dev libzip-dev \
+    && apt-get install -y sudo nano zsh git default-mysql-client curl wget unzip cron sendmail libpng-dev libzip-dev \
     && apt-get install -y zlib1g-dev libonig-dev supervisor libevent-dev libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
@@ -47,6 +47,9 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | b
     && source /home/lion/.bashrc \
     && nvm install 20 \
     && npm install -g npm
+
+# Install OhMyZsh
+RUN sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 # ----------------------------------------------------------------------------------------------------------------------
 USER root
 
