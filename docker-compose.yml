@@ -30,6 +30,7 @@ services:
             - SYS_ADMIN
         networks:
             - lion
+
     redis:
         image: redis
         container_name: framework-redis
@@ -44,6 +45,7 @@ services:
             REDIS_DATABASES: 1
         networks:
             - lion
+
     mailhog:
         image: mailhog/mailhog
         container_name: framework-mailhog
@@ -66,6 +68,7 @@ services:
             - mysql_data:/var/lib/mysql
         networks:
             - lion
+
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         container_name: framework-phpmyadmin
@@ -80,10 +83,12 @@ services:
             MYSQL_ROOT_PASSWORD: lion
         networks:
             - lion
+
 volumes:
     mysql_data:
     redis_data:
         driver: local
+
 networks:
     lion:
         driver: bridge

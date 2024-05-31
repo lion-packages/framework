@@ -1,12 +1,17 @@
 FROM php:8.3-apache
 
+ARG DEBIAN_FRONTEND=noninteractive
+# ----------------------------------------------------------------------------------------------------------------------
+USER root
+
 # Add User
 RUN useradd -m lion && echo 'lion:lion' | chpasswd && usermod -aG sudo lion && usermod -s /bin/bash lion
 
 # Dependencies
 RUN apt-get update -y \
-    && apt-get install -y sudo nano git npm default-mysql-client curl wget unzip cron sendmail libpng-dev libzip-dev \
-    && apt-get install -y zlib1g-dev libonig-dev supervisor libevent-dev libssl-dev \
+    && apt-get install -y sudo nano zsh git default-mysql-client curl wget unzip cron sendmail golang-go \
+    && apt-get install -y libpng-dev libzip-dev zlib1g-dev libonig-dev supervisor libevent-dev libssl-dev \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Electron-Vite Dependencies
@@ -36,11 +41,42 @@ RUN echo "xdebug.mode=develop,coverage,debug" >> /usr/local/etc/php/conf.d/docke
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# ----------------------------------------------------------------------------------------------------------------------
+USER lion
 
+SHELL ["/bin/bash", "--login", "-i", "-c"]
+
+# Install nvm, Node.js and npm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
+    && source /home/lion/.bashrc \
+    && nvm install 20 \
+    && npm install -g npm
+
+# Install OhMyZsh
+RUN sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+# ----------------------------------------------------------------------------------------------------------------------
+USER root
+
+SHELL ["/bin/bash", "--login", "-c"]
+
+# Install logo-ls
+RUN wget https://github.com/Yash-Handa/logo-ls/releases/download/v1.3.7/logo-ls_amd64.deb \
+    && dpkg -i logo-ls_amd64.deb \
+    && rm logo-ls_amd64.deb \
+    && curl https://raw.githubusercontent.com/UTFeight/logo-ls-modernized/master/INSTALL | bash
+
+# Add configuration in .zshrc
+RUN echo 'export NVM_DIR="$HOME/.nvm"' >> /home/lion/.zshrc \
+    && echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> /home/lion/.zshrc \
+    && echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> /home/lion/.zshrc \
+    && echo 'alias ls="logo-ls"' >> /home/lion/.zshrc \
+    && source /home/lion/.zshrc
+# ----------------------------------------------------------------------------------------------------------------------
 # Copy Data
 COPY . .
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# ----------------------------------------------------------------------------------------------------------------------
 # Init Project
 CMD touch storage/logs/server.log storage/logs/socket.log storage/logs/supervisord.log storage/logs/test-coverage.log \
     && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
