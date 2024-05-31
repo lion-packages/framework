@@ -9,8 +9,8 @@ RUN useradd -m lion && echo 'lion:lion' | chpasswd && usermod -aG sudo lion && u
 
 # Dependencies
 RUN apt-get update -y \
-    && apt-get install -y sudo nano zsh git default-mysql-client curl wget unzip cron sendmail libpng-dev libzip-dev \
-    && apt-get install -y zlib1g-dev libonig-dev supervisor libevent-dev libssl-dev \
+    && apt-get install -y sudo nano zsh git default-mysql-client curl wget unzip cron sendmail golang-go \
+    && apt-get install -y libpng-dev libzip-dev zlib1g-dev libonig-dev supervisor libevent-dev libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Electron-Vite Dependencies
@@ -54,6 +54,14 @@ RUN sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools
 USER root
 
 SHELL ["/bin/bash", "--login", "-c"]
+
+# Install logo-ls
+RUN wget https://github.com/Yash-Handa/logo-ls/releases/download/v1.3.7/logo-ls_amd64.deb \
+    && dpkg -i logo-ls_amd64.deb \
+    && rm logo-ls_amd64.deb \
+    && curl https://raw.githubusercontent.com/UTFeight/logo-ls-modernized/master/INSTALL | bash \
+    && echo 'alias ls="logo-ls"' >> /home/lion/.zshrc \
+    && source /home/lion/.zshrc
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
