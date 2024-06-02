@@ -14,7 +14,7 @@ return new class implements StoreProcedureInterface
     /**
      * {@inheritdoc}
      * */
-    public function up(): object
+    public function up(): stdClass
     {
         return Schema::connection('lion_database')
             ->createStoreProcedure('delete_users', function (): void {

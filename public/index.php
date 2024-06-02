@@ -15,8 +15,6 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Dotenv\Dotenv;
 use Lion\Bundle\Helpers\Http\Routes;
-use Lion\Bundle\Kernel\HttpKernel;
-use Lion\Dependency\Injection\Container;
 use Lion\Exceptions\Serialize;
 use Lion\Route\Route;
 
@@ -52,18 +50,6 @@ Dotenv::createImmutable(__DIR__ . '/../')->load();
  **/
 
 require_once(__DIR__ . '/../config/cors.php');
-
-/**
- * -----------------------------------------------------------------------------
- * Use rules by routes
- * -----------------------------------------------------------------------------
- * use whatever rules you want to validate input data
- * -----------------------------------------------------------------------------
- **/
-
-(new Container)
-    ->injectDependencies((new HttpKernel()))
-    ->validateRules();
 
 /**
  * -----------------------------------------------------------------------------

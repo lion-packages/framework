@@ -14,7 +14,7 @@ return new class implements ViewInterface
     /**
      * {@inheritdoc}
      * */
-    public function up(): object
+    public function up(): stdClass
     {
         return Schema::connection('lion_database')
             ->createView('read_users_by_id', function (MySQL $db): void {

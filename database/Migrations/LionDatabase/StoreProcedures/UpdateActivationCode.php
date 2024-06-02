@@ -14,7 +14,7 @@ return new class implements StoreProcedureInterface
     /**
      * {@inheritdoc}
      * */
-    public function up(): object
+    public function up(): stdClass
     {
         return Schema::connection(env('DB_NAME', 'lion_database'))
             ->createStoreProcedure('update_activation_code', function (): void {

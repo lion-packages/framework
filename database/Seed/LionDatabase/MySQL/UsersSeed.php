@@ -7,6 +7,7 @@ namespace Database\Seed\LionDatabase\MySQL;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Bundle\Interface\SeedInterface;
 use Lion\Database\Drivers\MySQL as DB;
+use stdClass;
 
 /**
  * Seed for users
@@ -25,7 +26,7 @@ class UsersSeed implements SeedInterface
     /**
      * {@inheritdoc}
      **/
-    public function run(): object
+    public function run(): stdClass
     {
         return DB::table('users')
             ->bulk(UsersFactory::columns(), UsersFactory::definition())

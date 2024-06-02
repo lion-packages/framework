@@ -22,7 +22,7 @@ return new class implements TableInterface
     /**
      * {@inheritdoc}
      */
-    public function up(): object
+    public function up(): stdClass
     {
         return Schema::connection(env('DB_NAME', 'lion_database'))
             ->createTable('task_queue', function () {
