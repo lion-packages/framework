@@ -6,6 +6,7 @@ namespace Tests\App\Models\LionDatabase\MySQL;
 
 use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Test\Test;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
@@ -14,7 +15,6 @@ class LoginModelTest extends Test
 {
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const string USERS_EMAIL = 'root@dev.com';
     const string USERS_EMAIL_ERR = 'sleon@dev.com';
 
     private LoginModel $loginModel;
@@ -35,7 +35,7 @@ class LoginModelTest extends Test
     {
         $response = $this->loginModel->authDB(
             (new Users())
-                ->setUsersEmail(self::USERS_EMAIL)
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
         );
 
         $this->assertIsObject($response);
@@ -59,7 +59,7 @@ class LoginModelTest extends Test
     {
         $response = $this->loginModel->verifyAccountActivationDB(
             (new Users())
-                ->setUsersEmail(self::USERS_EMAIL)
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
         );
 
         $this->assertIsObject($response);
@@ -70,12 +70,14 @@ class LoginModelTest extends Test
     public function testSessionDB(): void
     {
         $users = (new Users())
-            ->setUsersEmail(self::USERS_EMAIL);
+            ->setUsersEmail(UsersFactory::USERS_EMAIL);
 
+        /** @var Users $response */
         $response = $this->loginModel->sessionDB($users);
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(Users::class, $response);
         $this->assertObjectHasProperty('users_email', $response);
-        $this->assertSame($users->getUsersEmail(), $response->users_email);
+        $this->assertSame($users->getUsersEmail(), $response->getUsersEmail());
     }
 }

@@ -6,7 +6,6 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\PasswordException;
-use App\Http\Services\AESService;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\LoginModel;
@@ -35,7 +34,6 @@ class LoginController
      * authentication process]
      * @param PasswordManagerService $passwordManagerService [Manage different
      * processes for strong password verifications]
-     * @param AESService $aESService [Encrypt and decrypt data with AES]
      *
      * @return stdClass
      *
@@ -50,30 +48,28 @@ class LoginController
         Users $users,
         LoginModel $loginModel,
         LoginService $loginService,
-        PasswordManagerService $passwordManagerService,
-        AESService $aESService
+        PasswordManagerService $passwordManagerService
     ): stdClass {
         $loginService->validateSession($users->capsule());
 
         $loginService->verifyAccountActivation($users);
 
+        /** @var Users $session */
         $session = $loginModel->sessionDB($users);
 
         $passwordManagerService->verifyPasswords(
-            $session->users_password,
+            $session->getUsersPassword(),
             $users->getUsersPassword(),
             'email/password is incorrect [AUTH-2]'
         );
 
         return success('successfully authenticated user', Http::OK, [
-            'full_name' => "{$session->users_name} {$session->users_last_name}",
-            'jwt' => $loginService->getToken(env('RSA_URL_PATH'), [
-                'session' => true,
-                ...$aESService->encode([
-                    'idusers' => (string) $session->idusers,
-                    'idroles' => (string) $session->idroles,
-                ])
-            ]),
+            'full_name' => str
+                ->of("{$session->getUsersName()} {$session->getUsersLastName()}")
+                ->trim()
+                ->toNull()
+                ->get(),
+            ...$loginService->generateTokens($session),
         ]);
     }
 }

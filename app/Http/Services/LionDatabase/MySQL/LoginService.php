@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Services\LionDatabase\MySQL;
 
 use App\Exceptions\AuthenticationException;
+use App\Http\Services\AESService;
 use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Request\Http;
@@ -50,27 +51,50 @@ class LoginService
     private LoginModel $loginModel;
 
     /**
+     * [Encrypt and decrypt data with AES]
+     *
+     * @var AESService $aESService
+     */
+    private AESService $aESService;
+
+    /**
      * @required
      */
-    public function setRSA(RSA $rsa): void
+    public function setRSA(RSA $rsa): LoginService
     {
         $this->rsa = $rsa;
+
+        return $this;
     }
 
     /**
      * @required
      */
-    public function setJWT(JWT $jwt): void
+    public function setJWT(JWT $jwt): LoginService
     {
         $this->jwt = $jwt;
+
+        return $this;
     }
 
     /**
      * @required
      */
-    public function setLoginModel(LoginModel $loginModel): void
+    public function setLoginModel(LoginModel $loginModel): LoginService
     {
         $this->loginModel = $loginModel;
+
+        return $this;
+    }
+
+    /**
+     * @required
+     */
+    public function setAESService(AESService $aESService): LoginService
+    {
+        $this->aESService = $aESService;
+
+        return $this;
     }
 
     /**
@@ -125,8 +149,12 @@ class LoginService
      *
      * @return string
      */
-    public function getToken(string $path, array $data): string
+    public function getToken(string $path, string|int $time, array $data): string
     {
+        if (is_string($time)) {
+            $time = (int) $time;
+        }
+
         return $this->jwt
             ->config([
                 'privateKey' => $this->rsa
@@ -134,7 +162,39 @@ class LoginService
                     ->init()
                     ->getPrivateKey()
             ])
-            ->encode($data, (int) env('JWT_EXP', 3600))
+            ->encode($data, $time)
             ->get();
+    }
+
+    /**
+     * Generate authentication tokens and to refresh sessions
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
+     * @return array<string, string>
+     */
+    public function generateTokens(Users $users): array
+    {
+        $encode = $this->aESService->encode([
+            'idusers' => (string) $users->getIdusers(),
+            'idroles' => (string) $users->getIdroles(),
+        ]);
+
+        $encodeToken = $this->aESService->encode([
+            'jwt_refresh' => $this->getToken(env('RSA_URL_PATH'), env('JWT_REFRESH_EXP'), [
+                'session' => true,
+                'idusers' => $encode['idusers'],
+                'idroles' => $encode['idroles'],
+            ]),
+        ]);
+
+        return [
+            'jwt_access' => $this->getToken(env('RSA_URL_PATH'), env('JWT_EXP'), [
+                'session' => true,
+                'idusers' => $encode['idusers'],
+                'idroles' => $encode['idroles'],
+            ]),
+            'jwt_refresh' => $encodeToken['jwt_refresh'],
+        ];
     }
 }

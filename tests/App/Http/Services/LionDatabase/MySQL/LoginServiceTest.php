@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\App\Http\Services\LionDatabase\MySQL;
 
+use App\Enums\RolesEnum;
 use App\Exceptions\AuthenticationException;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
 use Database\Class\LionDatabase\MySQL\Users;
@@ -68,10 +69,25 @@ class LoginServiceTest extends Test
 
     public function testGetToken(): void
     {
-        $token = $this->loginService->getToken(env('RSA_URL_PATH'), [
-            'session' => true
+        $token = $this->loginService->getToken(env('RSA_URL_PATH'), env('JWT_EXP'), [
+            'session' => true,
         ]);
 
         $this->assertIsString($token);
+    }
+
+    public function testGenerateTokens(): void
+    {
+        $users = (new Users())
+            ->setIdusers(1)
+            ->setIdroles(RolesEnum::ADMINISTRATOR->value);
+
+        $tokens = $this->loginService->generateTokens($users);
+
+        $this->assertIsArray($tokens);
+        $this->assertArrayHasKey('jwt_access', $tokens);
+        $this->assertArrayHasKey('jwt_refresh', $tokens);
+        $this->assertIsString($tokens['jwt_access']);
+        $this->assertIsString($tokens['jwt_refresh']);
     }
 }

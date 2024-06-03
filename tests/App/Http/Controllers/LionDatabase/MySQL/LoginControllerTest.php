@@ -10,7 +10,6 @@ use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Dependency\Injection\Container;
 use Lion\Request\Http;
 use Lion\Request\Status;
-use Lion\Security\Validation;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
@@ -54,7 +53,8 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('data', $response);
         $this->assertIsArray($response->data);
         $this->assertArrayHasKey('full_name', $response->data);
-        $this->assertArrayHasKey('jwt', $response->data);
+        $this->assertArrayHasKey('jwt_access', $response->data);
+        $this->assertArrayHasKey('jwt_refresh', $response->data);
         $this->assertArrayNotHasKeyFromList($_POST, ['users_email', 'users_password']);
     }
 }

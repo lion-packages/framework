@@ -50,7 +50,9 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
         $this->assertObjectHasProperty('data', $response);
-        $this->assertObjectHasProperty('jwt', $response->data);
+        $this->assertObjectHasProperty('full_name', $response->data);
+        $this->assertObjectHasProperty('jwt_access', $response->data);
+        $this->assertObjectHasProperty('jwt_refresh', $response->data);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('successfully authenticated user', $response->message);
