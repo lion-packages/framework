@@ -14,8 +14,14 @@ use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\PasswordManagerModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
+use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersRecoveryCodeRequiredRule;
+use App\Rules\UsersPasswordConfirmRule;
+use App\Rules\UsersPasswordNewRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
+use Lion\Route\Attributes\Rules;
 
 /**
  * Driver to manage passwords
@@ -40,6 +46,7 @@ class PasswordManagerController
      * @throws AuthenticationException
      * @throws AccountException
      */
+    #[Rules(UsersEmailRule::class)]
     public function recoveryPassword(
         Users $users,
         UsersModel $usersModel,
@@ -92,6 +99,12 @@ class PasswordManagerController
      * @throws AccountException
      * @throws PasswordException
      */
+    #[Rules(
+        UsersEmailRule::class,
+        UsersRecoveryCodeRequiredRule::class,
+        UsersPasswordNewRule::class,
+        UsersPasswordConfirmRule::class
+    )]
     public function updateLostPassword(
         Users $users,
         PasswordManager $passwordManager,
@@ -150,6 +163,7 @@ class PasswordManagerController
      *
      * @throws PasswordException
      */
+    #[Rules(UsersPasswordRule::class, UsersPasswordNewRule::class, UsersPasswordConfirmRule::class)]
     public function updatePassword(
         PasswordManager $passwordManager,
         PasswordManagerModel $passwordManagerModel,

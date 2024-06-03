@@ -13,7 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
 /**
- * EncryptValueAESCommand description
+ * It is responsible for encrypting data with AES
+ *
+ * @property AESService $aESService
  *
  * @package App\Console\Commands
  */
@@ -29,9 +31,11 @@ class EncryptValueAESCommand extends Command
     /**
      * @required
      */
-    public function setAESService(AESService $aESService): void
+    public function setAESService(AESService $aESService): EncryptValueAESCommand
     {
         $this->aESService = $aESService;
+
+        return $this;
     }
 
     /**
@@ -67,10 +71,10 @@ class EncryptValueAESCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var QuestionHelper $question */
-        $question = $this->getHelper('question');
+        /** @var QuestionHelper $helper */
+        $helper = $this->getHelper('question');
 
-        $value = $question->ask($input, $output, new Question($this->warningOutput("\t>> enter a value: "), null));
+        $value = $helper->ask($input, $output, new Question($this->warningOutput("\t>> enter a value: "), null));
 
         if (null === $value) {
             $output->writeln($this->errorOutput("\t>> you must enter a value for encryption"));

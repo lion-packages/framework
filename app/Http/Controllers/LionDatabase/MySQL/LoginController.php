@@ -10,8 +10,11 @@ use App\Http\Services\AESService;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\LoginModel;
+use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Request\Http;
+use Lion\Route\Attributes\Rules;
 
 /**
  * Controller for user authentication
@@ -38,6 +41,10 @@ class LoginController
      * @throws AuthenticationException
      * @throws PasswordException
      */
+    #[Rules(
+        UsersEmailRule::class,
+        UsersPasswordRule::class
+    )]
     public function auth(
         Users $users,
         LoginModel $loginModel,

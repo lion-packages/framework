@@ -7,9 +7,15 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Models\LionDatabase\MySQL\ProfileModel;
+use App\Rules\LionDatabase\MySQL\DocumentTypes\IddocumentTypesRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersCitizenIdentificationRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersNameRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersNicknameRequiredRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Exception;
 use Lion\Request\Http;
+use Lion\Route\Attributes\Rules;
 
 /**
  * Manage user profile
@@ -60,6 +66,13 @@ class ProfileController
      *
      * @throws Exception
      */
+    #[Rules(
+        IddocumentTypesRule::class,
+        UsersCitizenIdentificationRequiredRule::class,
+        UsersNameRequiredRule::class,
+        UsersLastNameRequiredRule::class,
+        UsersNicknameRequiredRule::class
+    )]
     public function updateProfile(
         Users $users,
         ProfileModel $profileModel,

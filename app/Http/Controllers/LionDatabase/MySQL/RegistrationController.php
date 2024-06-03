@@ -12,7 +12,11 @@ use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
+use App\Rules\LionDatabase\MySQL\Users\UsersActivationCodeRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
+use Lion\Route\Attributes\Rules;
 use Lion\Security\Validation;
 
 /**
@@ -40,6 +44,7 @@ class RegistrationController
      *
      * @throws AccountException
      */
+    #[Rules(UsersEmailRule::class, UsersPasswordRule::class)]
     public function register(
         Users $users,
         UsersModel $usersModel,
@@ -88,6 +93,7 @@ class RegistrationController
      * @throws AuthenticationException
      * @throws AccountException
      */
+    #[Rules(UsersActivationCodeRequiredRule::class, UsersEmailRule::class)]
     public function verifyAccount(
         Users $users,
         RegistrationModel $registrationModel,

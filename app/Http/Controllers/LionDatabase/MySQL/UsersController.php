@@ -5,9 +5,18 @@ declare(strict_types=1);
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Models\LionDatabase\MySQL\UsersModel;
+use App\Rules\LionDatabase\MySQL\DocumentTypes\IddocumentTypesRule;
+use App\Rules\LionDatabase\MySQL\Roles\IdrolesRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersCitizenIdentificationRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersNameRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersNicknameRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Exception;
 use Lion\Request\Http;
+use Lion\Route\Attributes\Rules;
 use Lion\Security\Validation;
 
 /**
@@ -31,6 +40,16 @@ class UsersController
      *
      * @throws Exception
      */
+    #[Rules(
+        IdrolesRule::class,
+        IddocumentTypesRule::class,
+        UsersCitizenIdentificationRequiredRule::class,
+        UsersNameRequiredRule::class,
+        UsersLastNameRequiredRule::class,
+        UsersNicknameRequiredRule::class,
+        UsersEmailRule::class,
+        UsersPasswordRule::class
+    )]
     public function createUsers(Users $users, UsersModel $usersModel, Validation $validation): object
     {
         $response = $usersModel->createUsersDB(
@@ -107,6 +126,14 @@ class UsersController
      *
      * @throws Exception
      */
+    #[Rules(
+        IdrolesRule::class,
+        IddocumentTypesRule::class,
+        UsersCitizenIdentificationRequiredRule::class,
+        UsersNameRequiredRule::class,
+        UsersLastNameRequiredRule::class,
+        UsersEmailRule::class
+    )]
     public function updateUsers(Users $users, UsersModel $usersModel, string $idusers): object
     {
         $response = $usersModel->updateUsersDB(
