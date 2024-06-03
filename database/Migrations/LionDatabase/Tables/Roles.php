@@ -20,7 +20,7 @@ return new class implements TableInterface
     /**
      * {@inheritdoc}
      * */
-    public function up(): object
+    public function up(): stdClass
     {
         return DB::connection('lion_database')
             ->createTable('roles', function (): void {

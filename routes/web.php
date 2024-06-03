@@ -17,28 +17,28 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  */
 
-Route::get('/', fn () => info('[index]'));
+Route::get('/', fn (): stdClass => info('[index]'));
 
-Route::prefix('api', function () {
-    Route::prefix('auth', function () {
+Route::prefix('api', function (): void {
+    Route::prefix('auth', function (): void {
         Route::post('login', [LoginController::class, 'auth']);
         Route::post('register', [RegistrationController::class, 'register']);
         Route::post('verify', [RegistrationController::class, 'verifyAccount']);
 
-        Route::prefix('recovery', function () {
+        Route::prefix('recovery', function (): void {
             Route::post('password', [PasswordManagerController::class, 'recoveryPassword']);
             Route::post('verify-code', [PasswordManagerController::class, 'updateLostPassword']);
         });
     });
 
-    Route::middleware(['jwt-authorize'], function () {
-        Route::prefix('profile', function () {
+    Route::middleware(['jwt-authorize'], function (): void {
+        Route::prefix('profile', function (): void {
             Route::get('/', [ProfileController::class, 'readProfile']);
             Route::put('/', [ProfileController::class, 'updateProfile']);
             Route::post('password', [PasswordManagerController::class, 'updatePassword']);
         });
 
-        Route::middleware(['admin-access', 'prefix' => 'users'], function () {
+        Route::middleware(['admin-access', 'prefix' => 'users'], function (): void {
             Route::post('/', [UsersController::class, 'createUsers']);
             Route::get('/', [UsersController::class, 'readUsers']);
             Route::get('{idusers:i}', [UsersController::class, 'readUsersById']);

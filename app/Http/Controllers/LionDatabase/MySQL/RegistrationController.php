@@ -12,8 +12,13 @@ use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
+use App\Rules\LionDatabase\MySQL\Users\UsersActivationCodeRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
+use Lion\Route\Attributes\Rules;
 use Lion\Security\Validation;
+use stdClass;
 
 /**
  * Manage user registration on the platform
@@ -36,10 +41,11 @@ class RegistrationController
      * @param Validation $validation [Allows you to validate form data and
      * generate encryption safely]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws AccountException
      */
+    #[Rules(UsersEmailRule::class, UsersPasswordRule::class)]
     public function register(
         Users $users,
         UsersModel $usersModel,
@@ -47,7 +53,7 @@ class RegistrationController
         AccountService $accountService,
         AESService $aESService,
         Validation $validation
-    ): object {
+    ): stdClass {
         $accountService->validateAccountExists(
             $registrationModel,
             $users
@@ -83,17 +89,18 @@ class RegistrationController
      * user registration process]
      * @param AccountService $accountService [Manage user account processes]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws AuthenticationException
      * @throws AccountException
      */
+    #[Rules(UsersActivationCodeRequiredRule::class, UsersEmailRule::class)]
     public function verifyAccount(
         Users $users,
         RegistrationModel $registrationModel,
         RegistrationService $registrationService,
         AccountService $accountService
-    ): object {
+    ): stdClass {
         $data = $registrationModel->verifyAccountDB(
             $users
                 ->setUsersEmail(request('users_email'))

@@ -7,9 +7,17 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Models\LionDatabase\MySQL\ProfileModel;
+use App\Rules\LionDatabase\MySQL\DocumentTypes\IddocumentTypesRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersCitizenIdentificationRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersNameRequiredRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersNicknameRequiredRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Exception;
+use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
+use Lion\Route\Attributes\Rules;
+use stdClass;
 
 /**
  * Manage user profile
@@ -28,14 +36,14 @@ class ProfileController
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
      * @param AESService $aESService [Encrypt and decrypt data with AES]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
     public function readProfile(
         Users $users,
         ProfileModel $profileModel,
         JWTService $jWTService,
         AESService $aESService
-    ): array|object {
+    ): stdClass|array|DatabaseCapsuleInterface {
         $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
 
         $decode = $aESService->decode(['idusers' => $data->idusers]);
@@ -56,16 +64,23 @@ class ProfileController
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
      * @param AESService $aESService [Encrypt and decrypt data with AES]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws Exception
      */
+    #[Rules(
+        IddocumentTypesRule::class,
+        UsersCitizenIdentificationRequiredRule::class,
+        UsersNameRequiredRule::class,
+        UsersLastNameRequiredRule::class,
+        UsersNicknameRequiredRule::class
+    )]
     public function updateProfile(
         Users $users,
         ProfileModel $profileModel,
         JWTService $jWTService,
         AESService $aESService
-    ): object {
+    ): stdClass {
         $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
 
         $decode = $aESService->decode(['idusers' => $data->idusers]);

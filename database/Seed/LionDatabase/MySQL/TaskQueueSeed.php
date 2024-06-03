@@ -7,6 +7,7 @@ namespace Database\Seed\LionDatabase\MySQL;
 use Database\Factory\LionDatabase\MySQL\TaskQueueFactory;
 use Lion\Bundle\Interface\SeedInterface;
 use Lion\Database\Drivers\MySQL as DB;
+use stdClass;
 
 /**
  * Description of 'TaskQueueSeed' Seed
@@ -25,7 +26,7 @@ class TaskQueueSeed implements SeedInterface
     /**
      * {@inheritdoc}
      */
-    public function run(): object
+    public function run(): stdClass
     {
         return (object) [
             'status' => 'success',

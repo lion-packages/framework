@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Rules\LionDatabase\MySQL\Roles;
 
-use Lion\Bundle\Helpers\Rules;
-use Lion\Bundle\Interface\RulesInterface;
+use Lion\Route\Helpers\Rules;
+use Lion\Route\Interface\RulesInterface;
 use Valitron\Validator;
 
 /**

@@ -14,8 +14,15 @@ use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\PasswordManagerModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
+use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
+use App\Rules\LionDatabase\MySQL\Users\UsersRecoveryCodeRequiredRule;
+use App\Rules\UsersPasswordConfirmRule;
+use App\Rules\UsersPasswordNewRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
+use Lion\Route\Attributes\Rules;
+use stdClass;
 
 /**
  * Driver to manage passwords
@@ -35,17 +42,18 @@ class PasswordManagerController
      * @param LoginService $loginService [Allows you to manage the user
      * authentication process]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws AuthenticationException
      * @throws AccountException
      */
+    #[Rules(UsersEmailRule::class)]
     public function recoveryPassword(
         Users $users,
         UsersModel $usersModel,
         AccountService $accountService,
         LoginService $loginService
-    ): object {
+    ): stdClass {
         $users
             ->setUsersEmail(request('users_email'));
 
@@ -86,12 +94,18 @@ class PasswordManagerController
      * @param LoginService $loginService [Allows you to manage the user
      * authentication process]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws AuthenticationException
      * @throws AccountException
      * @throws PasswordException
      */
+    #[Rules(
+        UsersEmailRule::class,
+        UsersRecoveryCodeRequiredRule::class,
+        UsersPasswordNewRule::class,
+        UsersPasswordConfirmRule::class
+    )]
     public function updateLostPassword(
         Users $users,
         PasswordManager $passwordManager,
@@ -100,7 +114,7 @@ class PasswordManagerController
         AccountService $accountService,
         PasswordManagerService $passwordManagerService,
         LoginService $loginService
-    ): object {
+    ): stdClass {
         $users->capsule();
 
         $loginService->validateSession($users);
@@ -146,17 +160,18 @@ class PasswordManagerController
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
      * @param AESService $aESService [Encrypt and decrypt data with AES]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws PasswordException
      */
+    #[Rules(UsersPasswordRule::class, UsersPasswordNewRule::class, UsersPasswordConfirmRule::class)]
     public function updatePassword(
         PasswordManager $passwordManager,
         PasswordManagerModel $passwordManagerModel,
         PasswordManagerService $passwordManagerService,
         JWTService $jWTService,
         AESService $aESService,
-    ): object {
+    ): stdClass {
         $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
 
         $decode = $aESService->decode(['idusers' => $data->idusers]);

@@ -7,6 +7,7 @@ namespace Database\Seed\LionDatabase\MySQL;
 use Database\Factory\LionDatabase\MySQL\DocumentTypesFactory;
 use Lion\Bundle\Interface\SeedInterface;
 use Lion\Database\Drivers\MySQL as DB;
+use stdClass;
 
 /**
  * Seed for document types
@@ -25,7 +26,7 @@ class DocumentTypesSeed implements SeedInterface
     /**
      * {@inheritdoc}
      **/
-    public function run(): object
+    public function run(): stdClass
     {
         return DB::table('document_types')
             ->bulk(DocumentTypesFactory::columns(), DocumentTypesFactory::definition())

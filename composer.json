@@ -7,7 +7,6 @@
     "license": "MIT",
     "autoload": {
         "files": [
-            "routes/rules.php",
             "routes/middleware.php"
         ],
         "psr-4": {
@@ -19,7 +18,6 @@
     },
     "autoload-dev": {
         "files": [
-            "routes/rules.php",
             "routes/middleware.php"
         ],
         "psr-4": {
@@ -28,7 +26,7 @@
     },
     "require": {
         "php": ">=8.3",
-        "lion/bundle": "^17.0"
+        "lion/bundle": "^17.5"
     },
     "require-dev": {
         "lion/test": "^2.0",

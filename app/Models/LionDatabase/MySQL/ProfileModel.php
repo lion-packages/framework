@@ -6,6 +6,8 @@ namespace App\Models\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\MySQL as DB;
+use Lion\Database\Interface\DatabaseCapsuleInterface;
+use stdClass;
 
 /**
  * Model for user profile data
@@ -19,9 +21,9 @@ class ProfileModel
      *
      * @param Users $users [Capsule for the 'Users' entity]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function readProfileDB(Users $users): array|object
+    public function readProfileDB(Users $users): stdClass|array|DatabaseCapsuleInterface
     {
         return DB::view('read_users_by_id')
             ->select(
@@ -43,9 +45,9 @@ class ProfileModel
      *
      * @param Users $users [Capsule for the 'Users' entity]
      *
-     * @return object
+     * @return stdClass
      */
-    public function updateProfileDB(Users $users): object
+    public function updateProfileDB(Users $users): stdClass
     {
         return DB::call('update_profile', [
             $users->getIddocumentTypes(),
@@ -54,6 +56,7 @@ class ProfileModel
             $users->getUsersLastName(),
             $users->getUsersNickname(),
             $users->getIdusers(),
-        ])->execute();
+        ])
+            ->execute();
     }
 }

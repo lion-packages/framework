@@ -7,6 +7,7 @@ namespace Database\Seed\LionDatabase\MySQL;
 use Database\Factory\LionDatabase\MySQL\RolesFactory;
 use Lion\Bundle\Interface\SeedInterface;
 use Lion\Database\Drivers\MySQL as DB;
+use stdClass;
 
 /**
  * Seed for roles
@@ -25,7 +26,7 @@ class RolesSeed implements SeedInterface
     /**
      * {@inheritdoc}
      **/
-    public function run(): object
+    public function run(): stdClass
     {
         return DB::table('roles')
             ->bulk(RolesFactory::columns(), RolesFactory::definition())
