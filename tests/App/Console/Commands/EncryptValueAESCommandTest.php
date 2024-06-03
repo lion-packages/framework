@@ -44,4 +44,11 @@ class EncryptValueAESCommandTest extends Test
 
         $this->assertStringContainsString($encode['code'], $this->commandTester->getDisplay());
     }
+
+    public function testExecuteWithEmptyValue(): void
+    {
+        $this->assertSame(Command::INVALID, $this->commandTester->setInputs([""])->execute([]));
+
+        $this->assertStringContainsString('you must enter a value for encryption', $this->commandTester->getDisplay());
+    }
 }
