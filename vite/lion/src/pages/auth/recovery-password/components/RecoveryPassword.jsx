@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useResponse } from "../../../../context/ResponseProvider";
 import useApiResponse from "../../../../hooks/useApiResponse";
 import useAES from "../../../../hooks/useAES";
+import { ResponseContext } from "../../../../context/ResponseContext";
 
 export default function RecoveryPassword({ users_email, setActive }) {
   const navigate = useNavigate();
-  const { addToast } = useResponse();
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
   const { encode } = useAES();
 

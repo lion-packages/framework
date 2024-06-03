@@ -1,13 +1,13 @@
 import { Button, Container, Table } from "react-bootstrap";
-import { useUsers } from "../../../context/site-administration/UsersProvider";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import DataTable from "datatables.net-bs5";
 import UsersCreate from "./components/UsersCreate";
 import { useNavigate } from "react-router-dom";
+import { UsersContext } from "../../../context/site-administration/UsersContext";
 
 export default function UsersIndex() {
   const navigate = useNavigate();
-  const { users, handleReadUsers } = useUsers();
+  const { users, handleReadUsers } = useContext(UsersContext);
 
   const tableRef = useRef(null);
 

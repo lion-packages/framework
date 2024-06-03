@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import { Col, Form, Row } from "react-bootstrap";
-import { useProfile } from "../../../../context/account/ProfileProvider";
+import { ProfileContext } from "../../../../context/account/ProfileContext";
 
 export default function ProfileInformation() {
-  const { idroles, setIdroles, setUsers_email, users_email } = useProfile();
+  const { idroles, setIdroles, setUsers_email, users_email } =
+    useContext(ProfileContext);
 
   return (
     <Row>

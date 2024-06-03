@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-import { useResponse } from "../../../../context/ResponseProvider";
 import useApiResponse from "../../../../hooks/useApiResponse";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import sha256 from "crypto-js/sha256";
 import axios from "axios";
-import { useAuth } from "../../../../context/AuthProvider";
-import { useUsers } from "../../../../context/site-administration/UsersProvider";
+import { AuthContext } from "../../../../context/AuthContext";
+import { ResponseContext } from "../../../../context/ResponseContext";
+import { UsersContext } from "../../../../context/site-administration/UsersContext";
 
 export default function UsersCreate({ show, setShow }) {
-  const { getJWT } = useAuth();
-  const { addToast } = useResponse();
+  const { getJWT } = useContext(AuthContext);
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
-  const { handleReadUsers } = useUsers();
+  const { handleReadUsers } = useContext(UsersContext);
 
   const [idroles, setIdroles] = useState("");
   const [users_name, setUsers_name] = useState("");

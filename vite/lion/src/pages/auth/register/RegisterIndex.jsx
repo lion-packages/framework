@@ -1,14 +1,14 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useResponse } from "../../../context/ResponseProvider";
 import useApiResponse from "../../../hooks/useApiResponse";
 import useAES from "../../../hooks/useAES";
+import { ResponseContext } from "../../../context/ResponseContext";
 
 export default function RegisterIndex() {
   const navigate = useNavigate();
-  const { addToast } = useResponse();
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
   const { encode } = useAES();
 

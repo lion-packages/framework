@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
-import LoadingScreen from "../pages/components/LoadingScreen";
+import LoadingScreen from "../components/LoadingScreen";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 export default function NotAuthenticatedMiddleware({ children }) {
-  const { jwt, loadingJWT } = useAuth();
+  const { jwt, loadingJWT } = useContext(AuthContext)();
 
   if (loadingJWT) {
     return <LoadingScreen />;

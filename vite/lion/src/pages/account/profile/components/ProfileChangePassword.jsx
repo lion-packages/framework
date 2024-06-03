@@ -1,16 +1,16 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { useAuth } from "../../../../context/AuthProvider";
-import { useResponse } from "../../../../context/ResponseProvider";
 import useApiResponse from "../../../../hooks/useApiResponse";
 import { useNavigate } from "react-router-dom";
 import useAES from "../../../../hooks/useAES";
+import { AuthContext } from "../../../../context/AuthContext";
+import { ResponseContext } from "../../../../context/ResponseContext";
 
 export default function ProfileChangePassword() {
   const navigate = useNavigate();
-  const { getJWT, logout } = useAuth();
-  const { addToast } = useResponse();
+  const { getJWT, logout } = useContext(AuthContext);
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
   const { encode } = useAES();
 

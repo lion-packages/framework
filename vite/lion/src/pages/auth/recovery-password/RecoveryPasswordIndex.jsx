@@ -1,13 +1,13 @@
 import axios from "axios";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useResponse } from "../../../context/ResponseProvider";
 import RecoveryPassword from "./components/RecoveryPassword";
 import useApiResponse from "../../../hooks/useApiResponse";
+import { ResponseContext } from "../../../context/ResponseContext";
 
 export default function RecoveryPasswordIndex() {
-  const { addToast } = useResponse();
+  const { addToast } = useContext(ResponseContext)();
   const { getResponseFromRules } = useApiResponse();
 
   const [users_email, setUsers_email] = useState("root@dev.com");

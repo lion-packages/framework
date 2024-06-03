@@ -1,9 +1,10 @@
 import { Toast, ToastContainer } from "react-bootstrap";
-import { useResponse } from "../../context/ResponseProvider";
-import logo from "../../assets/img/icon-white.png";
+import logo from "../assets/img/icon-white.png";
+import { useContext } from "react";
+import { ResponseContext } from "../context/ResponseContext";
 
 export default function AlertResponse() {
-  const { toasts, removeToast } = useResponse();
+  const { toasts, removeToast } = useContext(ResponseContext);
 
   const getColor = (status) => {
     const colors = {

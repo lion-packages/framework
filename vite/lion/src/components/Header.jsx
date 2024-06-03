@@ -1,16 +1,16 @@
 import { Container, Image, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import logo from "../../assets/img/icon-white.png";
-import { useAuth } from "../../context/AuthProvider";
-import { Fragment } from "react";
-import { useResponse } from "../../context/ResponseProvider";
+import logo from "../assets/img/icon-white.png";
+import { Fragment, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import RolesMiddleware from "../../middleware/RolesMiddleware.jsx";
+import RolesMiddleware from "../middleware/RolesMiddleware.jsx";
+import { AuthContext } from "../context/AuthContext.jsx";
+import { ResponseContext } from "../context/ResponseContext.jsx";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { jwt, logout } = useAuth();
-  const { addToast } = useResponse();
+  const { jwt, logout } = useContext(AuthContext);
+  const { addToast } = useContext(ResponseContext);
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary shadow-sm">

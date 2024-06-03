@@ -1,11 +1,11 @@
-import { Fragment, useEffect } from "react";
+import { Fragment, useContext, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useProfile } from "../../../context/account/ProfileProvider";
 import { Container, Nav } from "react-bootstrap";
+import { ProfileContext } from "../../../context/account/ProfileContext";
 
 export default function ProfileIndex() {
   const navigate = useNavigate();
-  const { handleReadProfile } = useProfile();
+  const { handleReadProfile } = useContext(ProfileContext);
 
   useEffect(() => {
     handleReadProfile();

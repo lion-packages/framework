@@ -1,18 +1,18 @@
 import axios from "axios";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import VerifiedUser from "./components/VerifiedUser";
-import { useAuth } from "../../../context/AuthProvider";
-import { useResponse } from "../../../context/ResponseProvider";
 import { Link, useNavigate } from "react-router-dom";
 import useApiResponse from "../../../hooks/useApiResponse";
 import useAES from "../../../hooks/useAES";
+import { AuthContext } from "../../../context/AuthContext";
+import { ResponseContext } from "../../../context/ResponseContext";
 
 export default function LoginIndex() {
   const navigate = useNavigate();
   const { getResponseFromRules } = useApiResponse();
-  const { login } = useAuth();
-  const { addToast } = useResponse();
+  const { login } = useContext(AuthContext);
+  const { addToast } = useContext(ResponseContext);
   const { encode } = useAES();
 
   const [users_email, setUsers_email] = useState("root@dev.com");

@@ -1,8 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 
-const ResponseContext = createContext();
+export const ResponseContext = createContext();
 
 export function ResponseProvider({ children }) {
   const [toasts, setToasts] = useState([]);
@@ -24,5 +24,3 @@ export function ResponseProvider({ children }) {
     </ResponseContext.Provider>
   );
 }
-
-export const useResponse = () => useContext(ResponseContext);

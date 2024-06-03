@@ -1,14 +1,15 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
-import { useAuth } from "../AuthProvider";
-import { useResponse } from "../ResponseProvider";
 import useApiResponse from "../../hooks/useApiResponse";
+import { AuthContext } from "../AuthContext";
+import { ResponseContext } from "../ResponseContext";
 
-const ProfileContext = createContext();
+export const ProfileContext = createContext();
 
 export function ProfileProvider({ children }) {
-  const { getJWT } = useAuth();
-  const { addToast } = useResponse();
+  const { getJWT } = useContext(AuthContext);
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
 
   const [idroles, setIdroles] = useState("");
@@ -114,8 +115,4 @@ export function ProfileProvider({ children }) {
       {children}
     </ProfileContext.Provider>
   );
-}
-
-export function useProfile() {
-  return useContext(ProfileContext);
 }

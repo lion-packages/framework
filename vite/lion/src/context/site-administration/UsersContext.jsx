@@ -1,13 +1,14 @@
+/* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
-import { useAuth } from "../AuthProvider";
 import axios from "axios";
-import { useResponse } from "../ResponseProvider";
+import { AuthContext } from "../AuthContext";
+import { ResponseContext } from "../ResponseContext";
 
-const UsersContext = createContext();
+export const UsersContext = createContext();
 
 export function UsersProvider({ children }) {
-  const { getJWT } = useAuth();
-  const { addToast } = useResponse();
+  const { getJWT } = useContext(AuthContext);
+  const { addToast } = useContext(ResponseContext);
 
   const [users, setUsers] = useState([]);
 
@@ -55,8 +56,4 @@ export function UsersProvider({ children }) {
       {children}
     </UsersContext.Provider>
   );
-}
-
-export function useUsers() {
-  return useContext(UsersContext);
 }

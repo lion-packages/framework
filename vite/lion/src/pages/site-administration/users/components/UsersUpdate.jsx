@@ -1,15 +1,15 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { useAuth } from "../../../../context/AuthProvider";
-import { useResponse } from "../../../../context/ResponseProvider";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import useApiResponse from "../../../../hooks/useApiResponse";
+import { AuthContext } from "../../../../context/AuthContext";
+import { ResponseContext } from "../../../../context/ResponseContext";
 
 export default function UsersUpdate() {
   const navigate = useNavigate();
-  const { getJWT } = useAuth();
-  const { addToast } = useResponse();
+  const { getJWT } = useContext(AuthContext);
+  const { addToast } = useContext(ResponseContext);
   const { idusers } = useParams();
   const { getResponseFromRules } = useApiResponse();
 
