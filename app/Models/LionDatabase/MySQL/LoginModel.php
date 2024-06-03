@@ -6,7 +6,8 @@ namespace App\Models\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\MySQL as DB;
-use PDO;
+use Lion\Database\Interface\DatabaseCapsuleInterface;
+use stdClass;
 
 /**
  * Model for user authentication
@@ -20,9 +21,9 @@ class LoginModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function authDB(Users $users): array|object
+    public function authDB(Users $users): stdClass|array|DatabaseCapsuleInterface
     {
         return DB::table('users')
             ->select(DB::as(DB::count('users_email'), 'count'))
@@ -35,9 +36,9 @@ class LoginModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function verifyAccountActivationDB(Users $users): array|object
+    public function verifyAccountActivationDB(Users $users): stdClass|array|DatabaseCapsuleInterface
     {
         return DB::table('users')
             ->select('users_activation_code')
@@ -50,9 +51,9 @@ class LoginModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function sessionDB(Users $users): array|object
+    public function sessionDB(Users $users): stdClass|array|DatabaseCapsuleInterface
     {
         return DB::table('users')
             ->select(

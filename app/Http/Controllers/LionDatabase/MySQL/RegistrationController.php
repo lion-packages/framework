@@ -18,6 +18,7 @@ use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Route\Attributes\Rules;
 use Lion\Security\Validation;
+use stdClass;
 
 /**
  * Manage user registration on the platform
@@ -40,7 +41,7 @@ class RegistrationController
      * @param Validation $validation [Allows you to validate form data and
      * generate encryption safely]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws AccountException
      */
@@ -52,7 +53,7 @@ class RegistrationController
         AccountService $accountService,
         AESService $aESService,
         Validation $validation
-    ): object {
+    ): stdClass {
         $accountService->validateAccountExists(
             $registrationModel,
             $users
@@ -88,7 +89,7 @@ class RegistrationController
      * user registration process]
      * @param AccountService $accountService [Manage user account processes]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws AuthenticationException
      * @throws AccountException
@@ -99,7 +100,7 @@ class RegistrationController
         RegistrationModel $registrationModel,
         RegistrationService $registrationService,
         AccountService $accountService
-    ): object {
+    ): stdClass {
         $data = $registrationModel->verifyAccountDB(
             $users
                 ->setUsersEmail(request('users_email'))

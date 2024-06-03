@@ -22,6 +22,7 @@ use App\Rules\UsersPasswordNewRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
 use Lion\Route\Attributes\Rules;
+use stdClass;
 
 /**
  * Driver to manage passwords
@@ -41,7 +42,7 @@ class PasswordManagerController
      * @param LoginService $loginService [Allows you to manage the user
      * authentication process]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws AuthenticationException
      * @throws AccountException
@@ -52,7 +53,7 @@ class PasswordManagerController
         UsersModel $usersModel,
         AccountService $accountService,
         LoginService $loginService
-    ): object {
+    ): stdClass {
         $users
             ->setUsersEmail(request('users_email'));
 
@@ -93,7 +94,7 @@ class PasswordManagerController
      * @param LoginService $loginService [Allows you to manage the user
      * authentication process]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws AuthenticationException
      * @throws AccountException
@@ -113,7 +114,7 @@ class PasswordManagerController
         AccountService $accountService,
         PasswordManagerService $passwordManagerService,
         LoginService $loginService
-    ): object {
+    ): stdClass {
         $users->capsule();
 
         $loginService->validateSession($users);
@@ -159,7 +160,7 @@ class PasswordManagerController
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
      * @param AESService $aESService [Encrypt and decrypt data with AES]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws PasswordException
      */
@@ -170,7 +171,7 @@ class PasswordManagerController
         PasswordManagerService $passwordManagerService,
         JWTService $jWTService,
         AESService $aESService,
-    ): object {
+    ): stdClass {
         $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
 
         $decode = $aESService->decode(['idusers' => $data->idusers]);

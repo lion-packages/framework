@@ -15,6 +15,7 @@ use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Request\Http;
 use Lion\Route\Attributes\Rules;
+use stdClass;
 
 /**
  * Controller for user authentication
@@ -36,7 +37,7 @@ class LoginController
      * processes for strong password verifications]
      * @param AESService $aESService [Encrypt and decrypt data with AES]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws AuthenticationException
      * @throws PasswordException
@@ -51,7 +52,7 @@ class LoginController
         LoginService $loginService,
         PasswordManagerService $passwordManagerService,
         AESService $aESService
-    ): object {
+    ): stdClass {
         $loginService->validateSession($users->capsule());
 
         $loginService->verifyAccountActivation($users);

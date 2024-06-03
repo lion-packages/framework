@@ -65,6 +65,7 @@
         </testsuite>
 
         <testsuite name="Integration-Tests">
+            <directory>tests/App/Console/Commands</directory>
             <directory>tests/App/Http/Controllers</directory>
             <directory>tests/App/Http/Middleware</directory>
             <directory>tests/App/Http/Services</directory>

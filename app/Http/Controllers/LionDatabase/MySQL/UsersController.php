@@ -15,9 +15,11 @@ use App\Rules\LionDatabase\MySQL\Users\UsersNicknameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Exception;
+use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
 use Lion\Route\Attributes\Rules;
 use Lion\Security\Validation;
+use stdClass;
 
 /**
  * Controller for the Users entity
@@ -36,7 +38,7 @@ class UsersController
      * @param Validation $validation [Allows you to validate form data and
      * generate encryption safely]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws Exception
      */
@@ -50,7 +52,7 @@ class UsersController
         UsersEmailRule::class,
         UsersPasswordRule::class
     )]
-    public function createUsers(Users $users, UsersModel $usersModel, Validation $validation): object
+    public function createUsers(Users $users, UsersModel $usersModel, Validation $validation): stdClass
     {
         $response = $usersModel->createUsersDB(
             $users
@@ -75,9 +77,9 @@ class UsersController
      *
      * @param UsersModel $usersModel [Model for the Users entity]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function readUsers(UsersModel $usersModel): array|object
+    public function readUsers(UsersModel $usersModel): stdClass|array|DatabaseCapsuleInterface
     {
         $data = $usersModel->readUsersDB();
 
@@ -97,10 +99,13 @@ class UsersController
      * @param UsersModel $usersModel [Model for the Users entity]
      * @param string $idusers [user id defined in routes]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function readUsersById(Users $users, UsersModel $usersModel, string $idusers): array|object
-    {
+    public function readUsersById(
+        Users $users,
+        UsersModel $usersModel,
+        string $idusers
+    ): stdClass|array|DatabaseCapsuleInterface {
         $data = $usersModel->readUsersByIdDB(
             $users
                 ->setIdusers((int) $idusers)
@@ -122,7 +127,7 @@ class UsersController
      * @param UsersModel $usersModel [Model for the Users entity]
      * @param string $idusers [user id defined in routes]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws Exception
      */
@@ -134,7 +139,7 @@ class UsersController
         UsersLastNameRequiredRule::class,
         UsersEmailRule::class
     )]
-    public function updateUsers(Users $users, UsersModel $usersModel, string $idusers): object
+    public function updateUsers(Users $users, UsersModel $usersModel, string $idusers): stdClass
     {
         $response = $usersModel->updateUsersDB(
             $users
@@ -158,11 +163,11 @@ class UsersController
      * @param UsersModel $usersModel [Model for the Users entity]
      * @param string $idusers [user id defined in routes]
      *
-     * @return object
+     * @return stdClass
      *
      * @throws Exception
      */
-    public function deleteUsers(Users $users, UsersModel $usersModel, string $idusers): object
+    public function deleteUsers(Users $users, UsersModel $usersModel, string $idusers): stdClass
     {
         $response = $usersModel->deleteUsersDB(
             $users

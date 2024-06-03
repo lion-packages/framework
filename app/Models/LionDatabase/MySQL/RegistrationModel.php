@@ -6,6 +6,8 @@ namespace App\Models\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\MySQL as DB;
+use Lion\Database\Interface\DatabaseCapsuleInterface;
+use stdClass;
 
 /**
  * Validate in the database if the registration and verification are valid
@@ -19,9 +21,9 @@ class RegistrationModel
      *
      * @param Users $users [Capsule for the 'Users' entity]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function verifyAccountDB(Users $users): array|object
+    public function verifyAccountDB(Users $users): stdClass|array|DatabaseCapsuleInterface
     {
         return DB::table('users')
             ->select('idusers', 'users_activation_code')
@@ -34,9 +36,9 @@ class RegistrationModel
      *
      * @param Users $users [Capsule for the 'Users' entity]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function validateAccountExistsDB(Users $users): array|object
+    public function validateAccountExistsDB(Users $users): stdClass|array|DatabaseCapsuleInterface
     {
         return DB::table('users')
             ->select(DB::as(DB::count('*'), 'cont'))

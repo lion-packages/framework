@@ -6,6 +6,8 @@ namespace App\Models\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\MySQL as DB;
+use Lion\Database\Interface\DatabaseCapsuleInterface;
+use stdClass;
 
 /**
  * Model for the Users entity
@@ -19,9 +21,9 @@ class UsersModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return object
+     * @return stdClass
      */
-    public function createUsersDB(Users $users): object
+    public function createUsersDB(Users $users): stdClass
     {
         return DB::call('create_users', [
             $users->getIdroles(),
@@ -35,17 +37,20 @@ class UsersModel
             $users->getUsersActivationCode(),
             $users->getUsersRecoveryCode(),
             $users->getUsersCode(),
-        ])->execute();
+        ])
+            ->execute();
     }
 
     /**
      * Read users
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function readUsersDB(): array|object
+    public function readUsersDB(): stdClass|array|DatabaseCapsuleInterface
     {
-        return DB::view('read_users')->select()->getAll();
+        return DB::view('read_users')
+            ->select()
+            ->getAll();
     }
 
     /**
@@ -53,9 +58,9 @@ class UsersModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function readUsersByIdDB(Users $users): array|object
+    public function readUsersByIdDB(Users $users): stdClass|array|DatabaseCapsuleInterface
     {
         return DB::view('read_users_by_id')
             ->select()
@@ -68,9 +73,9 @@ class UsersModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return array|object
+     * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function readUsersByEmailDB(Users $users): array|object
+    public function readUsersByEmailDB(Users $users): stdClass|array|DatabaseCapsuleInterface
     {
         return DB::view('read_users_by_id')
             ->select()
@@ -83,9 +88,9 @@ class UsersModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return object
+     * @return stdClass
      */
-    public function updateUsersDB(Users $users): object
+    public function updateUsersDB(Users $users): stdClass
     {
         return DB::call('update_users', [
             $users->getIdroles(),
@@ -96,7 +101,8 @@ class UsersModel
             $users->getUsersNickname(),
             $users->getUsersEmail(),
             $users->getIdusers(),
-        ])->execute();
+        ])
+            ->execute();
     }
 
     /**
@@ -104,14 +110,15 @@ class UsersModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return object
+     * @return stdClass
      */
-    public function updateActivationCodeDB(Users $users): object
+    public function updateActivationCodeDB(Users $users): stdClass
     {
         return DB::call('update_activation_code', [
             $users->getUsersActivationCode(),
             $users->getIdusers(),
-        ])->execute();
+        ])
+            ->execute();
     }
 
     /**
@@ -119,14 +126,15 @@ class UsersModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return object
+     * @return stdClass
      */
-    public function updateRecoveryCodeDB(Users $users): object
+    public function updateRecoveryCodeDB(Users $users): stdClass
     {
         return DB::call('update_recovery_code', [
             $users->getUsersRecoveryCode(),
             $users->getIdusers(),
-        ])->execute();
+        ])
+            ->execute();
     }
 
     /**
@@ -134,12 +142,13 @@ class UsersModel
      *
      * @param Users $users [Object of the Users entity]
      *
-     * @return object
+     * @return stdClass
      */
-    public function deleteUsersDB(Users $users): object
+    public function deleteUsersDB(Users $users): stdClass
     {
         return DB::call('delete_users', [
             $users->getIdusers(),
-        ])->execute();
+        ])
+            ->execute();
     }
 }

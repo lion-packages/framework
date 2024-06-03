@@ -41,9 +41,9 @@ class AESService
      *
      * @param array<string, string> $rows [List of data to encrypt]
      *
-     * @return array<string, string>
+     * @return array|object
      */
-    public function encode(array $rows): array
+    public function encode(array $rows): array|object
     {
         $this->aes->config([
             'passphrase' => env('AES_PASSPHRASE'),
@@ -63,9 +63,9 @@ class AESService
      *
      * @param array<string, string> $rows [List of data to decrypt]
      *
-     * @return array<string, string>
+     * @return array|object
      */
-    public function decode(array $rows): array
+    public function decode(array $rows): array|object
     {
         return $this->aes
             ->config([
