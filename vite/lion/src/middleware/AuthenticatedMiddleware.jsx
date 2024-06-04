@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 export default function AuthenticatedMiddleware({ children }) {
-  const { jwt, loadingJWT } = useContext(AuthContext)();
+  const { jwt, loadingJWT } = useContext(AuthContext);
 
   if (loadingJWT) {
     return <LoadingScreen />;

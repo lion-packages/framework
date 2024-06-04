@@ -31,7 +31,7 @@ export default function AlertResponse() {
             key={`${index}-${toast.id}`}
             onClose={() => removeToast(toast.id)}
             autohide
-            delay={3500 + (index + 1) * 1000}
+            delay={2000 + (index + 1) * 1000}
           >
             <Toast.Header closeButton={true} className={getColor(toast.status)}>
               <img

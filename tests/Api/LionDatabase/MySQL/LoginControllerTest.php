@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Api\LionDatabase\MySQL;
 
+use App\Enums\RolesEnum;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
@@ -125,5 +126,46 @@ class LoginControllerTest extends Test
             'status' => Status::SESSION_ERROR,
             'message' => "the user's account has not yet been verified",
         ]);
+    }
+
+    public function testRefresh(): void
+    {
+        $encode = $this->AESEncode([
+            'idusers' => (string) 1,
+            'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
+        ]);
+
+        $response = json_decode(
+            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/refresh'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $encode['idusers'],
+                        'idroles' => $encode['idroles'],
+                    ]),
+                ],
+                'json' => [
+                    'jwt_refresh' => $this->getAuthorization([
+                        'idusers' => $encode['idusers'],
+                        'idroles' => $encode['idroles'],
+                    ]),
+                ],
+            ])
+                ->getBody()
+                ->getContents()
+        );
+
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertObjectHasProperty('data', $response);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('successfully authenticated user', $response->message);
+        $this->assertIsObject($response->data);
+        $this->assertObjectHasProperty('jwt_access', $response->data);
+        $this->assertObjectHasProperty('jwt_refresh', $response->data);
+        $this->assertIsString($response->data->jwt_access);
+        $this->assertIsString($response->data->jwt_refresh);
     }
 }

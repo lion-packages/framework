@@ -6,6 +6,7 @@ namespace App\Http\Services;
 
 use Lion\Security\JWT;
 use Lion\Security\RSA;
+use stdClass;
 
 /**
  * Service to manipulate JWT tokens
@@ -57,9 +58,9 @@ class JWTService
      * @param string $rsaPath [Path where RSA public and private keys are
      * defined]
      *
-     * @return object
+     * @return array|object|string
      */
-    public function getTokenData(string $rsaPath): object
+    public function getTokenData(string $rsaPath): array|object|string
     {
         $token = $this->jwt
             ->config([
@@ -72,5 +73,12 @@ class JWTService
             ->get();
 
         return $token->data;
+    }
+
+    public function getToken(): stdClass
+    {
+        $splitToken = explode('.', $this->jwt->getJWT());
+
+        return json_decode(base64_decode($splitToken[1]));
     }
 }

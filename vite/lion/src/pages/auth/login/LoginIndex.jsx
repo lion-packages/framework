@@ -33,7 +33,7 @@ export default function LoginIndex() {
         // console.log(data);
 
         if ("success" === data.status) {
-          login(data.data.jwt);
+          login(data.data.jwt_access);
 
           if (null != data.data.full_name) {
             addToast([
@@ -69,33 +69,25 @@ export default function LoginIndex() {
           ]);
         }
       })
-      .catch(({ response }) => {
-        // console.log(response.data);
+      .catch((err) => {
+        console.log(err);
 
-        if (401 === response.data.code) {
-          addToast([
-            {
-              status: response.data.status,
-              title: "Authentication",
-              message: response.data.message,
-            },
-          ]);
-        }
-
-        if (403 === response.data.code) {
+        if (err.response && 403 === err.response.data.code) {
           setVerified(true);
 
           addToast([
             {
-              status: response.data.status,
+              status: err.response.data.status,
               title: "Authentication",
-              message: response.data.message,
+              message: err.response.data.message,
             },
           ]);
         }
 
-        if (500 === response.data.code) {
-          addToast([...getResponseFromRules("Authentication", response.data)]);
+        if (err.response && 500 === err.response.data.code) {
+          addToast([
+            ...getResponseFromRules("Authentication", err.response.data),
+          ]);
         }
       });
   };

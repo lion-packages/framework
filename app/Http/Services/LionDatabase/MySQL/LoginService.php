@@ -22,6 +22,7 @@ use Lion\Security\RSA;
  * @property JWT $jwt [Allows you to generate the required configuration for JWT
  * tokens, has methods that allow you to encrypt and decrypt data with JWT]
  * @property LoginModel $loginModel [Model for user authentication]
+ * @property AESService $aESService [Encrypt and decrypt data with AES]
  *
  * @package App\Http\Services\LionDatabase\MySQL
  */
@@ -151,10 +152,6 @@ class LoginService
      */
     public function getToken(string $path, string|int $time, array $data): string
     {
-        if (is_string($time)) {
-            $time = (int) $time;
-        }
-
         return $this->jwt
             ->config([
                 'privateKey' => $this->rsa
@@ -162,7 +159,7 @@ class LoginService
                     ->init()
                     ->getPrivateKey()
             ])
-            ->encode($data, $time)
+            ->encode($data, is_string($time) ? (int) $time : $time)
             ->get();
     }
 

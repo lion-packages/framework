@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import AlertResponse from "../../../src/pages/components/AlertResponse";
 import { expect, test, vi } from "vitest";
+import AlertResponse from "../../../src/components/AlertResponse";
 
 const mockToasts = [
   {
@@ -20,11 +20,9 @@ const mockToasts = [
 
 const mockRemoveToast = vi.fn();
 
-vi.mock("../../../src/context/ResponseProvider.jsx", () => ({
-  useResponse: () => ({
-    toasts: mockToasts,
-    removeToast: mockRemoveToast,
-  }),
+vi.mock("../../../src/context/ResponseContext.jsx", () => ({
+  toasts: mockToasts,
+  removeToast: mockRemoveToast,
 }));
 
 test("AlertResponseCorrectly", () => {

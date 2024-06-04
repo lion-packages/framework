@@ -57,14 +57,14 @@
             <directory suffix=".php">tests/Database</directory>
         </testsuite>
 
-        <testsuite name="Unit-Tests">
+        <testsuite name="Unit">
             <directory>tests/App/Enums</directory>
             <directory>tests/App/Exceptions</directory>
             <directory>tests/App/Interfaces</directory>
             <directory>tests/Database</directory>
         </testsuite>
 
-        <testsuite name="Integration-Tests">
+        <testsuite name="Integration">
             <directory>tests/App/Console/Commands</directory>
             <directory>tests/App/Http/Controllers</directory>
             <directory>tests/App/Http/Middleware</directory>
@@ -72,7 +72,7 @@
             <directory>tests/App/Models</directory>
         </testsuite>
 
-        <testsuite name="Functional-Tests">
+        <testsuite name="Functional">
             <directory>tests/Api</directory>
         </testsuite>
     </testsuites>

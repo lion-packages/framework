@@ -7,7 +7,7 @@ import useApiResponse from "../../../hooks/useApiResponse";
 import { ResponseContext } from "../../../context/ResponseContext";
 
 export default function RecoveryPasswordIndex() {
-  const { addToast } = useContext(ResponseContext)();
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
 
   const [users_email, setUsers_email] = useState("root@dev.com");
