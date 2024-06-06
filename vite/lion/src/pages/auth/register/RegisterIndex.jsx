@@ -1,14 +1,14 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useResponse } from "../../../context/ResponseProvider";
 import useApiResponse from "../../../hooks/useApiResponse";
 import useAES from "../../../hooks/useAES";
+import { ResponseContext } from "../../../context/ResponseContext";
 
 export default function RegisterIndex() {
   const navigate = useNavigate();
-  const { addToast } = useResponse();
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
   const { encode } = useAES();
 
@@ -40,21 +40,28 @@ export default function RegisterIndex() {
           navigate("/auth/login");
         }
       })
-      .catch(({ response }) => {
+      .catch((err) => {
         // console.log(response);
 
-        if (400 === response.data.code) {
+        if (err.response && 400 === err.response.data.code) {
           addToast([
             {
-              status: response.data.status,
+              status: err.response.data.status,
               title: "Registration",
-              message: response.data.message,
+              message: err.response.data.message,
             },
           ]);
         }
 
-        if (500 === response.data.code) {
-          addToast([...getResponseFromRules("Registration", response.data)]);
+        if (err.response && 500 === err.response.data.code) {
+          addToast([
+            ...getResponseFromRules("Registration", err.response.data),
+            {
+              status: err.response.data.status,
+              title: "Registration",
+              message: err.response.data.message,
+            },
+          ]);
         }
       });
   };
@@ -104,6 +111,7 @@ export default function RegisterIndex() {
                   onChange={(e) => setUsers_password(e.target.value)}
                   type="password"
                   placeholder="Password..."
+                  required
                   autoComplete="off"
                 />
               </Col>

@@ -1,13 +1,14 @@
 import { expect, beforeEach, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { useContext } from "react";
 import {
+  ResponseContext,
   ResponseProvider,
-  useResponse,
-} from "../../src/context/ResponseProvider";
+} from "../../src/context/ResponseContext";
 
 const TestComponent = () => {
-  const { toasts, addToast, removeToast } = useResponse();
+  const { toasts, addToast, removeToast } = useContext(ResponseContext);
 
   return (
     <div>

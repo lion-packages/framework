@@ -1,6 +1,6 @@
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { useProfile } from "../../../../context/account/ProfileProvider";
+import { ProfileContext } from "../../../../context/account/ProfileContext";
 
 export default function ProfileGeneral() {
   const {
@@ -15,7 +15,7 @@ export default function ProfileGeneral() {
     setUsers_nickname,
     setIddocument_types,
     setUsers_citizen_identification,
-  } = useProfile();
+  } = useContext(ProfileContext);
 
   return (
     <Fragment>

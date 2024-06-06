@@ -7,6 +7,7 @@ namespace App\Models\LionDatabase\MySQL;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
+use PDO;
 use stdClass;
 
 /**
@@ -66,6 +67,7 @@ class LoginModel
                 'users_password'
             )
             ->where()->equalTo('users_email', $users->getUsersEmail())
+            ->fetchMode(PDO::FETCH_CLASS, Users::class)
             ->get();
     }
 }

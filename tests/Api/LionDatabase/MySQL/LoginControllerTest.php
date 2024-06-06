@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Api\LionDatabase\MySQL;
 
+use App\Enums\RolesEnum;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
@@ -50,7 +51,9 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
         $this->assertObjectHasProperty('data', $response);
-        $this->assertObjectHasProperty('jwt', $response->data);
+        $this->assertObjectHasProperty('full_name', $response->data);
+        $this->assertObjectHasProperty('jwt_access', $response->data);
+        $this->assertObjectHasProperty('jwt_refresh', $response->data);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('successfully authenticated user', $response->message);
@@ -85,12 +88,14 @@ class LoginControllerTest extends Test
     public function testAuthIncorrect2(): void
     {
         $exception = $this->getExceptionFromApi(function (): void {
-            $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+            $encode = $this->AESEncode([
+                'users_password' => UsersFactory::USERS_PASSWORD . '-x',
+            ]);
 
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
                 'json' => [
                     'users_email' => UsersFactory::USERS_EMAIL,
-                    'users_password' => "{$encode['users_password']}-x",
+                    'users_password' => $encode['users_password'],
                 ]
             ]);
         });
@@ -123,5 +128,57 @@ class LoginControllerTest extends Test
             'status' => Status::SESSION_ERROR,
             'message' => "the user's account has not yet been verified",
         ]);
+    }
+
+    public function testRefresh(): void
+    {
+        $encode = $this->AESEncode([
+            'idusers' => (string) 1,
+            'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
+
+        ]);
+
+        $jwtEncode = $this->AESEncode([
+            'jwt_refresh' => str->of(
+                $this->getAuthorization([
+                    'session' => true,
+                    'idusers' => $encode['idusers'],
+                    'idroles' => $encode['idroles'],
+                ])
+            )
+                ->replace('Bearer', '')
+                ->trim()
+                ->get(),
+        ]);
+
+        $response = json_decode(
+            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/refresh'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $encode['idusers'],
+                        'idroles' => $encode['idroles'],
+                    ]),
+                ],
+                'json' => [
+                    'jwt_refresh' => $jwtEncode['jwt_refresh'],
+                ],
+            ])
+                ->getBody()
+                ->getContents()
+        );
+
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertObjectHasProperty('data', $response);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('successfully authenticated user', $response->message);
+        $this->assertIsObject($response->data);
+        $this->assertObjectHasProperty('jwt_access', $response->data);
+        $this->assertObjectHasProperty('jwt_refresh', $response->data);
+        $this->assertIsString($response->data->jwt_access);
+        $this->assertIsString($response->data->jwt_refresh);
     }
 }

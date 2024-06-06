@@ -1,9 +1,7 @@
 import { Fragment } from "react";
 import { Route, Routes } from "react-router-dom";
 import LoginIndex from "./pages/auth/login/LoginIndex";
-import Header from "./pages/components/Header";
 import RegisterIndex from "./pages/auth/register/RegisterIndex";
-import AlertResponse from "./pages/components/AlertResponse";
 import DashboardIndex from "./pages/dashboard/DashboardIndex";
 import AuthenticatedMiddleware from "./middleware/AuthenticatedMiddleware";
 import NotAuthenticatedMiddleware from "./middleware/NotAuthenticatedMiddleware";
@@ -12,12 +10,14 @@ import RecoveryPasswordIndex from "./pages/auth/recovery-password/RecoveryPasswo
 import ProfileIndex from "./pages/account/profile/ProfileIndex";
 import ProfileGeneral from "./pages/account/profile/components/ProfileGeneral";
 import ProfileInformation from "./pages/account/profile/components/ProfileInformation";
-import { ProfileProvider } from "./context/account/ProfileProvider";
+import { ProfileProvider } from "./context/account/ProfileContext.jsx";
 import ProfileChangePassword from "./pages/account/profile/components/ProfileChangePassword";
 import UsersIndex from "./pages/site-administration/users/UsersIndex";
-import { UsersProvider } from "./context/site-administration/UsersProvider";
+import { UsersProvider } from "./context/site-administration/UsersContext.jsx";
 import UsersUpdate from "./pages/site-administration/users/components/UsersUpdate";
 import RolesMiddleware from "./middleware/RolesMiddleware.jsx";
+import Header from "./components/Header.jsx";
+import AlertResponse from "./components/AlertResponse.jsx";
 
 function App() {
   return (

@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-import { useResponse } from "../../../../context/ResponseProvider";
 import useApiResponse from "../../../../hooks/useApiResponse";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import sha256 from "crypto-js/sha256";
-import axios from "axios";
-import { useAuth } from "../../../../context/AuthProvider";
-import { useUsers } from "../../../../context/site-administration/UsersProvider";
+import { AuthContext } from "../../../../context/AuthContext";
+import { ResponseContext } from "../../../../context/ResponseContext";
+import { UsersContext } from "../../../../context/site-administration/UsersContext";
+import axiosApi from "../../../../Api";
 
 export default function UsersCreate({ show, setShow }) {
-  const { getJWT } = useAuth();
-  const { addToast } = useResponse();
+  const { refreshToken } = useContext(AuthContext);
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
-  const { handleReadUsers } = useUsers();
+  const { handleReadUsers } = useContext(UsersContext);
 
   const [idroles, setIdroles] = useState("");
   const [users_name, setUsers_name] = useState("");
@@ -24,7 +24,7 @@ export default function UsersCreate({ show, setShow }) {
   const [users_email, setUsers_email] = useState("");
   const [users_password, setUsers_password] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const form = {
@@ -38,68 +38,67 @@ export default function UsersCreate({ show, setShow }) {
       users_password: sha256(users_password).toString(),
     };
 
-    axios
-      .post(`${import.meta.env.VITE_SERVER_URL_AUD}/api/users`, form, {
-        headers: {
-          Authorization: `Bearer ${getJWT()}`,
+    const res = await axiosApi(refreshToken).post(`/api/users`, form);
+
+    if (res.data) {
+      addToast([
+        {
+          status: res.data.status,
+          title: "Create Users",
+          message: res.data.message,
         },
-      })
-      .then(({ data }) => {
+      ]);
+
+      if (200 === res.data.code) {
+        setIdroles("");
+
+        setUsers_name("");
+
+        setUsers_last_name("");
+
+        setUsers_nickname("");
+
+        setIddocument_types("");
+
+        setUsers_citizen_identification("");
+
+        setUsers_email("");
+
+        setUsers_password("");
+
+        setShow(false);
+
+        handleReadUsers();
+      }
+    }
+
+    if (res.response) {
+      if ([400, 403].includes(res.response.data.code)) {
         addToast([
           {
-            status: data.status,
+            status: res.response.data.status,
             title: "Create Users",
-            message: data.message,
+            message: res.response.data.message,
           },
         ]);
+      }
 
-        if (200 === data.code) {
-          setIdroles("");
-
-          setUsers_name("");
-
-          setUsers_last_name("");
-
-          setUsers_nickname("");
-
-          setIddocument_types("");
-
-          setUsers_citizen_identification("");
-
-          setUsers_email("");
-
-          setUsers_password("");
-
-          setShow(false);
-
-          handleReadUsers();
-        }
-      })
-      .catch(({ response }) => {
-        if ([400, 403].includes(response.data.code)) {
+      if (500 === res.response.data.code) {
+        if (res.response.data.data["rules-error"]) {
+          addToast([
+            ...getResponseFromRules("Create Users", res.response.data),
+          ]);
+        } else {
           addToast([
             {
-              status: response.data.status,
+              status: res.response.data.status,
               title: "Create Users",
-              message: response.data.message,
+              message: res.response.data.message,
             },
           ]);
         }
-
-        if (500 === response.data.code) {
-          if (response.data.data["rules-error"]) {
-            addToast([...getResponseFromRules("Create Users", response.data)]);
-          } else {
-            addToast([
-              {
-                status: response.data.status,
-                title: "Create Users",
-                message: response.data.message,
-              },
-            ]);
-          }
-        }
-      });
+      }
+    }
   };
 
   return (

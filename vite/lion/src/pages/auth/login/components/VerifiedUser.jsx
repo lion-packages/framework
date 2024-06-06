@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import useApiResponse from "../../../../hooks/useApiResponse";
-import { useResponse } from "../../../../context/ResponseProvider";
+import { ResponseContext } from "../../../../context/ResponseContext";
 
 export default function VerifiedUser({ users_email, setVerified }) {
   const navigate = useNavigate();
-  const { addToast } = useResponse();
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
 
   const [codes, setCodes] = useState(["", "", "", "", "", ""]);
@@ -19,7 +19,9 @@ export default function VerifiedUser({ users_email, setVerified }) {
     if (value.length > 1) return;
 
     const newCodes = [...codes];
+
     newCodes[index] = value;
+
     setCodes(newCodes);
 
     if (value !== "") {

@@ -1,13 +1,13 @@
 import axios from "axios";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useResponse } from "../../../context/ResponseProvider";
 import RecoveryPassword from "./components/RecoveryPassword";
 import useApiResponse from "../../../hooks/useApiResponse";
+import { ResponseContext } from "../../../context/ResponseContext";
 
 export default function RecoveryPasswordIndex() {
-  const { addToast } = useResponse();
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
 
   const [users_email, setUsers_email] = useState("root@dev.com");
@@ -38,14 +38,22 @@ export default function RecoveryPasswordIndex() {
           setActive(true);
         }
       })
-      .catch(({ response }) => {
-        if (403 === response.data.code) {
+      .catch((err) => {
+        if (err.response && 403 === err.response.data.code) {
           setActive(true);
+
+          addToast([
+            {
+              status: err.response.data.status,
+              title: "Recover password",
+              message: err.response.data.message,
+            },
+          ]);
         }
 
-        if (500 === response.data.code) {
+        if (err.response && 500 === err.response.data.code) {
           addToast([
-            ...getResponseFromRules("Recover password", response.data),
+            ...getResponseFromRules("Recover password", err.response.data),
           ]);
         }
       });

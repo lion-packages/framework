@@ -24,6 +24,7 @@ Route::prefix('api', function (): void {
         Route::post('login', [LoginController::class, 'auth']);
         Route::post('register', [RegistrationController::class, 'register']);
         Route::post('verify', [RegistrationController::class, 'verifyAccount']);
+        Route::post('refresh', [LoginController::class, 'refresh'], ['jwt-existence']);
 
         Route::prefix('recovery', function (): void {
             Route::post('password', [PasswordManagerController::class, 'recoveryPassword']);

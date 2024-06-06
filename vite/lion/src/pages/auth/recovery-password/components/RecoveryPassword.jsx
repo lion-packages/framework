@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useResponse } from "../../../../context/ResponseProvider";
 import useApiResponse from "../../../../hooks/useApiResponse";
 import useAES from "../../../../hooks/useAES";
+import { ResponseContext } from "../../../../context/ResponseContext";
 
 export default function RecoveryPassword({ users_email, setActive }) {
   const navigate = useNavigate();
-  const { addToast } = useResponse();
+  const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
   const { encode } = useAES();
 
@@ -70,20 +70,23 @@ export default function RecoveryPassword({ users_email, setActive }) {
           navigate("/auth/login");
         }
       })
-      .catch(({ response }) => {
-        if (403 === response.data.code || 401 === response.data.code) {
+      .catch((err) => {
+        if (
+          err.response &&
+          (403 === err.response.data.code || 401 === err.response.data.code)
+        ) {
           addToast([
             {
-              status: response.data.status,
+              status: err.response.data.status,
               title: "Recover password",
-              message: response.data.message,
+              message: err.response.data.message,
             },
           ]);
         }
 
-        if (500 === response.data.code) {
+        if (500 === err.response.data.code) {
           addToast([
-            ...getResponseFromRules("Recover password", response.data),
+            ...getResponseFromRules("Recover password", err.response.data),
           ]);
         }
       });
@@ -126,6 +129,7 @@ export default function RecoveryPassword({ users_email, setActive }) {
               type="password"
               placeholder="New password..."
               autoComplete="off"
+              required
             />
           </Col>
         </Form.Group>
@@ -146,6 +150,7 @@ export default function RecoveryPassword({ users_email, setActive }) {
               type="password"
               placeholder="Confirm new password..."
               autoComplete="off"
+              required
             />
           </Col>
         </Form.Group>

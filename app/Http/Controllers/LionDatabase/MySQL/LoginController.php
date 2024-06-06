@@ -7,9 +7,11 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\PasswordException;
 use App\Http\Services\AESService;
+use App\Http\Services\JWTService;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\LoginModel;
+use App\Rules\JWTRefreshRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
@@ -42,10 +44,7 @@ class LoginController
      * @throws AuthenticationException
      * @throws PasswordException
      */
-    #[Rules(
-        UsersEmailRule::class,
-        UsersPasswordRule::class
-    )]
+    #[Rules(UsersEmailRule::class, UsersPasswordRule::class)]
     public function auth(
         Users $users,
         LoginModel $loginModel,
@@ -57,23 +56,64 @@ class LoginController
 
         $loginService->verifyAccountActivation($users);
 
+        /** @var Users $session */
         $session = $loginModel->sessionDB($users);
 
+        $decode = $aESService->decode([
+            'users_password' => $users->getUsersPassword(),
+        ]);
+
         $passwordManagerService->verifyPasswords(
-            $session->users_password,
-            $users->getUsersPassword(),
+            $session->getUsersPassword(),
+            $users
+                ->setUsersPassword($decode['users_password'])
+                ->getUsersPassword(),
             'email/password is incorrect [AUTH-2]'
         );
 
         return success('successfully authenticated user', Http::OK, [
-            'full_name' => "{$session->users_name} {$session->users_last_name}",
-            'jwt' => $loginService->getToken(env('RSA_URL_PATH'), [
-                'session' => true,
-                ...$aESService->encode([
-                    'idusers' => (string) $session->idusers,
-                    'idroles' => (string) $session->idroles,
-                ])
-            ]),
+            'full_name' => str
+                ->of("{$session->getUsersName()} {$session->getUsersLastName()}")
+                ->trim()
+                ->toNull()
+                ->get(),
+            ...$loginService->generateTokens($session),
+        ]);
+    }
+
+    /**
+     * Refresh a user's session
+     *
+     * @route /api/auth/refresh
+     *
+     * @param LoginService $loginService [Allows you to manage the user
+     * authentication process]
+     * @param AESService $aESService [Encrypt and decrypt data with AES]
+     * @param JWTService $jWTService [Service to manipulate JWT tokens]
+     *
+     * @return stdClass
+     *
+     * @throws AuthenticationException
+     */
+    #[Rules(JWTRefreshRule::class)]
+    public function refresh(LoginService $loginService, AESService $aESService, JWTService $jWTService): stdClass
+    {
+        $data = $jWTService->getToken()->data;
+
+        $decode = $aESService->decode([
+            'idusers' => $data->idusers,
+            'idroles' => $data->idroles,
+            'jwt_refresh' => request('jwt_refresh'),
+        ]);
+
+        $loginService->validateRefreshToken($decode['jwt_refresh']);
+
+        $users = (new Users())
+            ->setIdusers((int) $decode['idusers'])
+            ->setIdroles((int) $decode['idroles']);
+
+        return success('successfully authenticated user', Http::OK, [
+            ...$loginService->generateTokens($users),
         ]);
     }
 }

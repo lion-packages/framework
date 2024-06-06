@@ -6,9 +6,7 @@ namespace Database\Factory\LionDatabase\MySQL;
 
 use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
-use App\Http\Services\AESService;
 use Lion\Bundle\Interface\FactoryInterface;
-use Lion\Security\AES;
 use Lion\Security\Validation;
 
 /**
@@ -47,7 +45,7 @@ class UsersFactory implements FactoryInterface
             'users_email',
             'users_password',
             'users_activation_code',
-            'users_code'
+            'users_code',
         ];
     }
 
@@ -58,8 +56,6 @@ class UsersFactory implements FactoryInterface
     {
         $validation = new Validation();
 
-        $encode = (new AESService())->setAES(new AES())->encode(['users_password' => self::USERS_PASSWORD]);
-
         return [
             [
                 RolesEnum::ADMINISTRATOR->value,
@@ -69,7 +65,7 @@ class UsersFactory implements FactoryInterface
                 'lion',
                 fake()->userName(),
                 self::USERS_EMAIL,
-                $validation->passwordHash($encode['users_password']),
+                $validation->passwordHash(self::USERS_PASSWORD),
                 null,
                 uniqid('code-')
             ],
@@ -81,10 +77,24 @@ class UsersFactory implements FactoryInterface
                 'manager',
                 fake()->userName(),
                 'manager@dev.com',
-                $validation->passwordHash($encode['users_password']),
+                $validation->passwordHash(self::USERS_PASSWORD),
                 "123456",
                 uniqid('code-')
-            ]
+            ],
+            // ...array_map(function () use ($validation): array {
+            //     return [
+            //         RolesEnum::CUSTOMER->value,
+            //         DocumentTypesEnum::CITIZENSHIP_CARD->value,
+            //         fake()->numerify('##########'),
+            //         fake()->userName(),
+            //         fake()->lastName(),
+            //         fake()->userName(),
+            //         fake()->email(),
+            //         $validation->passwordHash(self::USERS_PASSWORD),
+            //         null,
+            //         uniqid('code-')
+            //     ];
+            // }, range(0, 999)),
         ];
     }
 }
