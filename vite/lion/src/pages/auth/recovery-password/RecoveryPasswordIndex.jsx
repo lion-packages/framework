@@ -38,14 +38,22 @@ export default function RecoveryPasswordIndex() {
           setActive(true);
         }
       })
-      .catch(({ response }) => {
-        if (403 === response.data.code) {
+      .catch((err) => {
+        if (err.response && 403 === err.response.data.code) {
           setActive(true);
+
+          addToast([
+            {
+              status: err.response.data.status,
+              title: "Recover password",
+              message: err.response.data.message,
+            },
+          ]);
         }
 
-        if (500 === response.data.code) {
+        if (err.response && 500 === err.response.data.code) {
           addToast([
-            ...getResponseFromRules("Recover password", response.data),
+            ...getResponseFromRules("Recover password", err.response.data),
           ]);
         }
       });

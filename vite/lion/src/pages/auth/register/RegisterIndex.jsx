@@ -56,6 +56,11 @@ export default function RegisterIndex() {
         if (err.response && 500 === err.response.data.code) {
           addToast([
             ...getResponseFromRules("Registration", err.response.data),
+            {
+              status: err.response.data.status,
+              title: "Registration",
+              message: err.response.data.message,
+            },
           ]);
         }
       });
@@ -106,6 +111,7 @@ export default function RegisterIndex() {
                   onChange={(e) => setUsers_password(e.target.value)}
                   type="password"
                   placeholder="Password..."
+                  required
                   autoComplete="off"
                 />
               </Col>

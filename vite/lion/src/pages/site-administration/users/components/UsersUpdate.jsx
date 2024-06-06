@@ -26,17 +26,35 @@ export default function UsersUpdate() {
   const handleReadUsersById = async () => {
     const res = await axiosApi(refreshToken).get(`/api/users/${idusers}`);
 
-    if (!res.data.status) {
+    if (res.data && !res.data.status) {
       setIdroles(res.data.idroles);
+
       setIddocument_types(res.data.iddocument_types);
+
       setUsers_name(res.data.users_name);
+
       setUsers_last_name(res.data.users_last_name);
+
       setUsers_nickname(res.data.users_nickname);
-      setUsers_citizen_identification(res.data.users_citizen_identification);
+
+      setUsers_citizen_identification(
+        res.data.users_citizen_identification || ""
+      );
+
       setUsers_email(res.data.users_email);
     }
 
     if (res.response && 403 === res.response.data.code) {
+      addToast([
+        {
+          status: res.response.data.status,
+          title: "Users",
+          message: res.response.data.message,
+        },
+      ]);
+    }
+
+    if (res.response && 500 === res.response.data.code) {
       addToast([
         {
           status: res.response.data.status,
@@ -60,30 +78,33 @@ export default function UsersUpdate() {
       users_email: users_email,
     };
 
-    const res = await axiosApi(refreshToken).put(`/api/users/${idusers}`, form);
+    try {
+      const res = await axiosApi(refreshToken).put(
+        `/api/users/${idusers}`,
+        form
+      );
 
-    if (res.data) {
-      addToast([
-        {
-          status: res.data.status,
-          title: "Users Update",
-          message: res.data.message,
-        },
-      ]);
-
-      if (200 === res.data.code) {
-        navigate(`/site-administration/users`);
-      }
-    }
-
-    if (res.response) {
-      if (500 === res.response.data.code) {
+      if (res.data) {
         addToast([
-          ...getResponseFromRules("Update Users", res.response.data),
           {
-            status: res.response.data.status,
+            status: res.data.status,
+            title: "Users Update",
+            message: res.data.message,
+          },
+        ]);
+
+        if (200 === res.data.code) {
+          navigate(`/site-administration/users`);
+        }
+      }
+    } catch (err) {
+      if (err.response && 500 === err.response.data.code) {
+        addToast([
+          ...getResponseFromRules("Update Users", err.response.data),
+          {
+            status: err.response.data.status,
             title: "Update Users",
-            message: res.response.data.message,
+            message: err.response.data.message,
           },
         ]);
       }

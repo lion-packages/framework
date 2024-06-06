@@ -60,11 +60,16 @@ class RegistrationController
                 ->setUsersEmail(request('users_email'))
         );
 
-        $decode = $aESService->decode(['users_password' => request('users_password')]);
+        $decode = $aESService->decode([
+            'users_password' => request('users_password'),
+        ]);
 
         $response = $usersModel->createUsersDB(
             $users
                 ->setIdroles(RolesEnum::CUSTOMER->value)
+                ->setUsersName('N/A')
+                ->setUsersLastName('N/A')
+                ->setUsersNickname('N/A')
                 ->setUsersPassword($validation->passwordHash($decode['users_password']))
                 ->setUsersActivationCode(fake()->numerify('######'))
                 ->setUsersCode(uniqid('code-'))

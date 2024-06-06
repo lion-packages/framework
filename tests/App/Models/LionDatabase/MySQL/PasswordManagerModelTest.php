@@ -58,9 +58,7 @@ class PasswordManagerModelTest extends Test
         $this->assertIsObject($hash);
         $this->assertObjectHasProperty('users_password', $hash);
 
-        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
-
-        $this->assertTrue(password_verify($encode['users_password'], $hash->users_password));
+        $this->assertTrue(password_verify(UsersFactory::USERS_PASSWORD, $hash->users_password));
     }
 
     public function testUpdatePasswordDB(): void

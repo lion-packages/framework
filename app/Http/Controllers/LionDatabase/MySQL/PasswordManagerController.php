@@ -93,6 +93,7 @@ class PasswordManagerController
      * processes for strong password verifications]
      * @param LoginService $loginService [Allows you to manage the user
      * authentication process]
+     * @var AESService $aESService [Encrypt and decrypt data with AES]
      *
      * @return stdClass
      *
@@ -113,7 +114,8 @@ class PasswordManagerController
         PasswordManagerModel $passwordManagerModel,
         AccountService $accountService,
         PasswordManagerService $passwordManagerService,
-        LoginService $loginService
+        LoginService $loginService,
+        AESService $aESService
     ): stdClass {
         $users->capsule();
 
@@ -125,16 +127,25 @@ class PasswordManagerController
 
         $passwordManager->capsule();
 
+        $decode = $aESService->decode([
+            'users_password_new' => $passwordManager->getUsersPasswordNew(),
+            'users_password_confirm' => $passwordManager->getUsersPasswordConfirm(),
+        ]);
+
         $passwordManagerService->comparePasswords(
-            $passwordManager->getUsersPasswordNew(),
-            $passwordManager->getUsersPasswordConfirm()
+            $passwordManager
+                ->setUsersPasswordNew($decode['users_password_new'])
+                ->getUsersPasswordNew(),
+            $passwordManager
+                ->setUsersPasswordConfirm($decode['users_password_confirm'])
+                ->getUsersPasswordConfirm()
         );
 
         $passwordManagerService->updatePassword(
             $passwordManagerModel,
             $passwordManager
                 ->setIdusers($data->idusers)
-                ->setUsersPasswordConfirm(request('users_password_confirm'))
+                ->setUsersPasswordConfirm($decode['users_password_confirm'])
         );
 
         $accountService->updateRecoveryCode(
@@ -172,21 +183,37 @@ class PasswordManagerController
         JWTService $jWTService,
         AESService $aESService,
     ): stdClass {
+        $passwordManager->capsule();
+
         $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
 
-        $decode = $aESService->decode(['idusers' => $data->idusers]);
+        $decode = $aESService->decode([
+            'idusers' => $data->idusers,
+        ]);
 
         $users = $passwordManagerModel->getPasswordDB(
             $passwordManager
-                ->capsule()
                 ->setIdusers((int) $decode['idusers'])
         );
 
-        $passwordManagerService->verifyPasswords($users->users_password, $passwordManager->getUsersPassword());
+        $decodePassword = $aESService->decode([
+            'users_password' => $passwordManager->getUsersPassword(),
+            'users_password_new' => $passwordManager->getUsersPasswordNew(),
+            'users_password_confirm' => $passwordManager->getUsersPasswordConfirm(),
+        ]);
+
+        $passwordManagerService->verifyPasswords(
+            $users->users_password,
+            $decodePassword['users_password']
+        );
 
         $passwordManagerService->comparePasswords(
-            $passwordManager->getUsersPasswordNew(),
-            $passwordManager->getUsersPasswordConfirm()
+            $passwordManager
+                ->setUsersPasswordNew($decodePassword['users_password_new'])
+                ->getUsersPasswordNew(),
+            $passwordManager
+                ->setUsersPasswordConfirm($decodePassword['users_password_confirm'])
+                ->getUsersPasswordConfirm()
         );
 
         $passwordManagerService->updatePassword($passwordManagerModel, $passwordManager);

@@ -37,21 +37,20 @@ class LoginController
      * authentication process]
      * @param PasswordManagerService $passwordManagerService [Manage different
      * processes for strong password verifications]
+     * @param AESService $aESService [Encrypt and decrypt data with AES]
      *
      * @return stdClass
      *
      * @throws AuthenticationException
      * @throws PasswordException
      */
-    #[Rules(
-        UsersEmailRule::class,
-        UsersPasswordRule::class
-    )]
+    #[Rules(UsersEmailRule::class, UsersPasswordRule::class)]
     public function auth(
         Users $users,
         LoginModel $loginModel,
         LoginService $loginService,
-        PasswordManagerService $passwordManagerService
+        PasswordManagerService $passwordManagerService,
+        AESService $aESService
     ): stdClass {
         $loginService->validateSession($users->capsule());
 
@@ -60,9 +59,15 @@ class LoginController
         /** @var Users $session */
         $session = $loginModel->sessionDB($users);
 
+        $decode = $aESService->decode([
+            'users_password' => $users->getUsersPassword(),
+        ]);
+
         $passwordManagerService->verifyPasswords(
             $session->getUsersPassword(),
-            $users->getUsersPassword(),
+            $users
+                ->setUsersPassword($decode['users_password'])
+                ->getUsersPassword(),
             'email/password is incorrect [AUTH-2]'
         );
 
@@ -87,6 +92,8 @@ class LoginController
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
      *
      * @return stdClass
+     *
+     * @throws AuthenticationException
      */
     #[Rules(JWTRefreshRule::class)]
     public function refresh(LoginService $loginService, AESService $aESService, JWTService $jWTService): stdClass
@@ -96,7 +103,10 @@ class LoginController
         $decode = $aESService->decode([
             'idusers' => $data->idusers,
             'idroles' => $data->idroles,
+            'jwt_refresh' => request('jwt_refresh'),
         ]);
+
+        $loginService->validateRefreshToken($decode['jwt_refresh']);
 
         $users = (new Users())
             ->setIdusers((int) $decode['idusers'])

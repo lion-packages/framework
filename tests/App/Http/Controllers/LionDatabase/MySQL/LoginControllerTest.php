@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Enums\RolesEnum;
+use App\Exceptions\AuthenticationException;
 use App\Http\Controllers\LionDatabase\MySQL\LoginController;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
@@ -70,7 +71,9 @@ class LoginControllerTest extends Test
                         ->setAES(new AES())
                 ),
             (new PasswordManagerService())
-                ->setValidation(new Validation())
+                ->setValidation(new Validation()),
+            (new AESService())
+                ->setAES(new AES())
         );
 
         $this->assertIsSuccess($response);
@@ -85,17 +88,36 @@ class LoginControllerTest extends Test
         $this->assertArrayNotHasKeyFromList($_POST, ['users_email', 'users_password']);
     }
 
+    /**
+     * @throws AuthenticationException
+     */
     public function testRefresh(): void
     {
         $encode = $this->AESEncode([
-            'idusers' => (string) 1,
+            'idusers' => "1",
             'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
         ]);
 
+        $jwtEncode = $this->AESEncode([
+            'jwt_refresh' => str->of(
+                $this->getAuthorization([
+                    'session' => true,
+                    'idusers' => $encode['idusers'],
+                    'idroles' => $encode['idroles'],
+                ])
+            )
+                ->replace('Bearer', '')
+                ->trim()
+                ->get(),
+        ]);
+
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
+            'session' => true,
             'idusers' => $encode['idusers'],
             'idroles' => $encode['idroles'],
         ]);
+
+        $_POST['jwt_refresh'] = $jwtEncode['jwt_refresh'];
 
         $response = $this->loginController->refresh(
             (new LoginService())
@@ -105,6 +127,11 @@ class LoginControllerTest extends Test
                 ->setAESService(
                     (new AESService())
                         ->setAES(new AES())
+                )
+                ->setJWTService(
+                    (new JWTService())
+                        ->setJWT(new JWT())
+                        ->setRSA(new RSA())
                 ),
             (new AESService())
                 ->setAES(new AES()),
@@ -128,5 +155,6 @@ class LoginControllerTest extends Test
         $this->assertIsString($response->data['jwt_access']);
         $this->assertIsString($response->data['jwt_refresh']);
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
+        $this->assertArrayNotHasKeyFromList($_POST, ['jwt_refresh']);
     }
 }

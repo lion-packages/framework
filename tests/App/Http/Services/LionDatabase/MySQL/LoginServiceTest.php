@@ -13,10 +13,12 @@ use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
+use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class LoginServiceTest extends Test
 {
+    use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
     const string USERS_EMAIL = 'manager@dev.com';
@@ -89,5 +91,19 @@ class LoginServiceTest extends Test
         $this->assertArrayHasKey('jwt_refresh', $tokens);
         $this->assertIsString($tokens['jwt_access']);
         $this->assertIsString($tokens['jwt_refresh']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testValidateRefreshToken(): void
+    {
+        $this->exception(AuthenticationException::class)
+            ->exceptionMessage('user not logged in, you must log in')
+            ->exceptionCode(Http::UNAUTHORIZED)
+            ->exceptionStatus(Status::ERROR)
+            ->expectLionException(function (): void {
+                $this->loginService->validateRefreshToken(uniqid());
+            });
     }
 }

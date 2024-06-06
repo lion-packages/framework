@@ -88,12 +88,14 @@ class LoginControllerTest extends Test
     public function testAuthIncorrect2(): void
     {
         $exception = $this->getExceptionFromApi(function (): void {
-            $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+            $encode = $this->AESEncode([
+                'users_password' => UsersFactory::USERS_PASSWORD . '-x',
+            ]);
 
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
                 'json' => [
                     'users_email' => UsersFactory::USERS_EMAIL,
-                    'users_password' => "{$encode['users_password']}-x",
+                    'users_password' => $encode['users_password'],
                 ]
             ]);
         });
@@ -133,6 +135,20 @@ class LoginControllerTest extends Test
         $encode = $this->AESEncode([
             'idusers' => (string) 1,
             'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
+
+        ]);
+
+        $jwtEncode = $this->AESEncode([
+            'jwt_refresh' => str->of(
+                $this->getAuthorization([
+                    'session' => true,
+                    'idusers' => $encode['idusers'],
+                    'idroles' => $encode['idroles'],
+                ])
+            )
+                ->replace('Bearer', '')
+                ->trim()
+                ->get(),
         ]);
 
         $response = json_decode(
@@ -144,10 +160,7 @@ class LoginControllerTest extends Test
                     ]),
                 ],
                 'json' => [
-                    'jwt_refresh' => $this->getAuthorization([
-                        'idusers' => $encode['idusers'],
-                        'idroles' => $encode['idroles'],
-                    ]),
+                    'jwt_refresh' => $jwtEncode['jwt_refresh'],
                 ],
             ])
                 ->getBody()

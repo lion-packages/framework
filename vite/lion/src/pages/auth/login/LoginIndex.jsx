@@ -42,11 +42,11 @@ export default function LoginIndex() {
                 title: "Authentication",
                 message: data.message,
               },
-              {
-                status: "info",
-                title: "Authentication",
-                message: `Welcome: ${data.data.full_name}`,
-              },
+              // {
+              //   status: "info",
+              //   title: "Authentication",
+              //   message: `Welcome: ${data.data.full_name}`,
+              // },
             ]);
           } else {
             addToast([

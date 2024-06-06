@@ -70,20 +70,23 @@ export default function RecoveryPassword({ users_email, setActive }) {
           navigate("/auth/login");
         }
       })
-      .catch(({ response }) => {
-        if (403 === response.data.code || 401 === response.data.code) {
+      .catch((err) => {
+        if (
+          err.response &&
+          (403 === err.response.data.code || 401 === err.response.data.code)
+        ) {
           addToast([
             {
-              status: response.data.status,
+              status: err.response.data.status,
               title: "Recover password",
-              message: response.data.message,
+              message: err.response.data.message,
             },
           ]);
         }
 
-        if (500 === response.data.code) {
+        if (500 === err.response.data.code) {
           addToast([
-            ...getResponseFromRules("Recover password", response.data),
+            ...getResponseFromRules("Recover password", err.response.data),
           ]);
         }
       });
@@ -126,6 +129,7 @@ export default function RecoveryPassword({ users_email, setActive }) {
               type="password"
               placeholder="New password..."
               autoComplete="off"
+              required
             />
           </Col>
         </Form.Group>
@@ -146,6 +150,7 @@ export default function RecoveryPassword({ users_email, setActive }) {
               type="password"
               placeholder="Confirm new password..."
               autoComplete="off"
+              required
             />
           </Col>
         </Form.Group>
