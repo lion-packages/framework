@@ -40,21 +40,23 @@ export default function RegisterIndex() {
           navigate("/auth/login");
         }
       })
-      .catch(({ response }) => {
+      .catch((err) => {
         // console.log(response);
 
-        if (400 === response.data.code) {
+        if (err.response && 400 === err.response.data.code) {
           addToast([
             {
-              status: response.data.status,
+              status: err.response.data.status,
               title: "Registration",
-              message: response.data.message,
+              message: err.response.data.message,
             },
           ]);
         }
 
-        if (500 === response.data.code) {
-          addToast([...getResponseFromRules("Registration", response.data)]);
+        if (err.response && 500 === err.response.data.code) {
+          addToast([
+            ...getResponseFromRules("Registration", err.response.data),
+          ]);
         }
       });
   };

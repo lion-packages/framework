@@ -6,10 +6,11 @@ import { useNavigate } from "react-router-dom";
 import useAES from "../../../../hooks/useAES";
 import { AuthContext } from "../../../../context/AuthContext";
 import { ResponseContext } from "../../../../context/ResponseContext";
+import axiosApi from "../../../../Api";
 
 export default function ProfileChangePassword() {
   const navigate = useNavigate();
-  const { getJWT, logout } = useContext(AuthContext);
+  const { refreshToken, logout } = useContext(AuthContext);
   const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
   const { encode } = useAES();
@@ -18,7 +19,7 @@ export default function ProfileChangePassword() {
   const [users_password_new, setUsers_password_new] = useState("");
   const [users_password_confirm, setUsers_password_confirm] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const form = {
@@ -27,46 +28,34 @@ export default function ProfileChangePassword() {
       users_password_confirm: encode(users_password_confirm),
     };
 
-    axios
-      .post(
-        `${import.meta.env.VITE_SERVER_URL_AUD}/api/profile/password`,
-        form,
+    const res = await axiosApi(refreshToken).post(
+      `/api/profile/password`,
+      form
+    );
+
+    if (res.data) {
+      addToast([
         {
-          headers: {
-            Authorization: `Bearer ${getJWT()}`,
-          },
-        }
-      )
-      .then(({ data }) => {
+          status: res.data.status,
+          title: "Change Password",
+          message: res.data.message,
+        },
+      ]);
+
+      if (200 === res.data.code) {
+        logout();
+
+        navigate("/auth/login");
+      }
+    }
+
+    if (res.response) {
+      if (500 === res.response.data.code) {
         addToast([
-          {
-            status: data.status,
-            title: "Change Password",
-            message: data.message,
-          },
+          ...getResponseFromRules("Change Password", res.response.data),
         ]);
-
-        if (200 === data.code) {
-          logout();
-
-          navigate("/auth/login");
-        }
-      })
-      .catch(({ response }) => {
-        if (401 === response.data.code) {
-          addToast([
-            {
-              status: response.data.status,
-              title: "Change Password",
-              message: response.data.message,
-            },
-          ]);
-        }
-
-        if (500 === response.data.code) {
-          addToast([...getResponseFromRules("Change Password", response.data)]);
-        }
-      });
+      }
+    }
   };
 
   return (

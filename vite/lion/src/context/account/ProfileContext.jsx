@@ -4,11 +4,12 @@ import { createContext, useContext, useState } from "react";
 import useApiResponse from "../../hooks/useApiResponse";
 import { AuthContext } from "../AuthContext";
 import { ResponseContext } from "../ResponseContext";
+import axiosApi from "../../Api";
 
 export const ProfileContext = createContext();
 
 export function ProfileProvider({ children }) {
-  const { getJWT } = useContext(AuthContext);
+  const { refreshToken } = useContext(AuthContext);
   const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
 
@@ -21,44 +22,29 @@ export function ProfileProvider({ children }) {
   const [users_last_name, setUsers_last_name] = useState("");
   const [users_nickname, setUsers_nickname] = useState("");
 
-  const handleReadProfile = () => {
-    axios
-      .get(`${import.meta.env.VITE_SERVER_URL_AUD}/api/profile`, {
-        headers: {
-          Authorization: `Bearer ${getJWT()}`,
-        },
-      })
-      .then(({ data }) => {
-        setIdroles(data.idroles);
+  const handleReadProfile = async () => {
+    const res = await axiosApi(refreshToken).get(`/api/profile`);
 
-        setIddocument_types(
-          data.iddocument_types === null ? "" : data.iddocument_types
-        );
+    if (res.data) {
+      setIdroles(res.data.idroles);
 
-        setUsers_citizen_identification(
-          data.users_citizen_identification === null
-            ? ""
-            : data.users_citizen_identification
-        );
+      setIddocument_types(res.data.iddocument_types || "");
 
-        setUsers_name(data.users_name === null ? "" : data.users_name);
+      setUsers_citizen_identification(
+        res.data.users_citizen_identification || ""
+      );
 
-        setUsers_last_name(
-          data.users_last_name === null ? "" : data.users_last_name
-        );
+      setUsers_name(res.data.users_name || "");
 
-        setUsers_nickname(
-          data.users_nickname === null ? "" : data.users_nickname
-        );
+      setUsers_last_name(res.data.users_last_name || "");
 
-        setUsers_email(data.users_email === null ? "" : data.users_email);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      setUsers_nickname(res.data.users_nickname || "");
+
+      setUsers_email(res.data.users_email || "");
+    }
   };
 
-  const handleUpdateProfile = (event) => {
+  const handleUpdateProfile = async (event) => {
     event.preventDefault();
 
     const form = {
@@ -69,26 +55,23 @@ export function ProfileProvider({ children }) {
       users_nickname: users_nickname,
     };
 
-    axios
-      .put(`${import.meta.env.VITE_SERVER_URL_AUD}/api/profile`, form, {
-        headers: {
-          Authorization: `Bearer ${getJWT()}`,
+    const res = await axiosApi(refreshToken).put(`/api/profile`, form);
+
+    if (res.data) {
+      addToast([
+        {
+          status: res.data.status,
+          title: "Profile",
+          message: res.data.message,
         },
-      })
-      .then(({ data }) => {
-        addToast([
-          {
-            status: data.status,
-            title: "Profile",
-            message: data.message,
-          },
-        ]);
-      })
-      .catch(({ response }) => {
-        if (500 === response.data.code) {
-          addToast([...getResponseFromRules("Profile", response.data)]);
-        }
-      });
+      ]);
+    }
+
+    if (res.response) {
+      if (500 === res.response.data.code) {
+        addToast([...getResponseFromRules("Profile", res.response.data)]);
+      }
+    }
   };
 
   return (

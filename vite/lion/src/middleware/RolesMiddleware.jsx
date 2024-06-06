@@ -3,6 +3,7 @@ import { Fragment, useContext } from "react";
 import useAES from "../hooks/useAES";
 import Unauthorized from "../pages/errors/Unauthorized";
 import { AuthContext } from "../context/AuthContext";
+import { jwtDecode } from "jwt-decode";
 
 export default function RolesMiddleware({
   children,
@@ -12,7 +13,8 @@ export default function RolesMiddleware({
   const { jwt } = useContext(AuthContext);
   const { decode } = useAES();
 
-  return jwt.idroles && !roles.includes(parseInt(decode(jwt.idroles))) ? (
+  return jwt &&
+    !roles.includes(parseInt(decode(jwtDecode(jwt).data.idroles))) ? (
     unauthorized ? (
       <Unauthorized />
     ) : (

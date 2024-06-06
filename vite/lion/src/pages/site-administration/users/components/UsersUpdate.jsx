@@ -1,14 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
 import useApiResponse from "../../../../hooks/useApiResponse";
 import { AuthContext } from "../../../../context/AuthContext";
 import { ResponseContext } from "../../../../context/ResponseContext";
+import axiosApi from "../../../../Api";
 
 export default function UsersUpdate() {
   const navigate = useNavigate();
-  const { getJWT } = useContext(AuthContext);
+  const { refreshToken } = useContext(AuthContext);
   const { addToast } = useContext(ResponseContext);
   const { idusers } = useParams();
   const { getResponseFromRules } = useApiResponse();
@@ -22,30 +23,31 @@ export default function UsersUpdate() {
     useState("");
   const [users_email, setUsers_email] = useState("");
 
-  const handleReadUsersById = () => {
-    axios
-      .get(`${import.meta.env.VITE_SERVER_URL_AUD}/api/users/${idusers}`, {
-        headers: {
-          Authorization: `Bearer ${getJWT()}`,
+  const handleReadUsersById = async () => {
+    const res = await axiosApi(refreshToken).get(`/api/users/${idusers}`);
+
+    if (!res.data.status) {
+      setIdroles(res.data.idroles);
+      setIddocument_types(res.data.iddocument_types);
+      setUsers_name(res.data.users_name);
+      setUsers_last_name(res.data.users_last_name);
+      setUsers_nickname(res.data.users_nickname);
+      setUsers_citizen_identification(res.data.users_citizen_identification);
+      setUsers_email(res.data.users_email);
+    }
+
+    if (res.response && 403 === res.response.data.code) {
+      addToast([
+        {
+          status: res.response.data.status,
+          title: "Users",
+          message: res.response.data.message,
         },
-      })
-      .then(({ data }) => {
-        if (!data.status) {
-          setIdroles(data.idroles);
-          setIddocument_types(data.iddocument_types);
-          setUsers_name(data.users_name);
-          setUsers_last_name(data.users_last_name);
-          setUsers_nickname(data.users_nickname);
-          setUsers_citizen_identification(data.users_citizen_identification);
-          setUsers_email(data.users_email);
-        }
-      })
-      .catch(({ response }) => {
-        console.log(response.data);
-      });
+      ]);
+    }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const form = {
@@ -58,44 +60,34 @@ export default function UsersUpdate() {
       users_email: users_email,
     };
 
-    axios
-      .put(
-        `${import.meta.env.VITE_SERVER_URL_AUD}/api/users/${idusers}`,
-        form,
+    const res = await axiosApi(refreshToken).put(`/api/users/${idusers}`, form);
+
+    if (res.data) {
+      addToast([
         {
-          headers: {
-            Authorization: `Bearer ${getJWT()}`,
-          },
-        }
-      )
-      .then(({ data }) => {
+          status: res.data.status,
+          title: "Users Update",
+          message: res.data.message,
+        },
+      ]);
+
+      if (200 === res.data.code) {
+        navigate(`/site-administration/users`);
+      }
+    }
+
+    if (res.response) {
+      if (500 === res.response.data.code) {
         addToast([
+          ...getResponseFromRules("Update Users", res.response.data),
           {
-            status: data.status,
-            title: "Users Update",
-            message: data.message,
+            status: res.response.data.status,
+            title: "Update Users",
+            message: res.response.data.message,
           },
         ]);
-
-        if (200 === data.code) {
-          navigate(`/site-administration/users`);
-        }
-      })
-      .catch(({ response }) => {
-        if (500 === response.data.code) {
-          if (response.data.data["rules-error"]) {
-            addToast([...getResponseFromRules("Update Users", response.data)]);
-          } else {
-            addToast([
-              {
-                status: response.data.status,
-                title: "Update Users",
-                message: response.data.message,
-              },
-            ]);
-          }
-        }
-      });
+      }
+    }
   };
 
   useEffect(() => {

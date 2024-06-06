@@ -33,7 +33,7 @@ export default function LoginIndex() {
         // console.log(data);
 
         if ("success" === data.status) {
-          login(data.data.jwt_access);
+          login(data.data.jwt_access, data.data.jwt_refresh);
 
           if (null != data.data.full_name) {
             addToast([
@@ -75,6 +75,16 @@ export default function LoginIndex() {
         if (err.response && 403 === err.response.data.code) {
           setVerified(true);
 
+          addToast([
+            {
+              status: err.response.data.status,
+              title: "Authentication",
+              message: err.response.data.message,
+            },
+          ]);
+        }
+
+        if (err.response && 401 === err.response.data.code) {
           addToast([
             {
               status: err.response.data.status,

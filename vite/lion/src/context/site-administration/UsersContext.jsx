@@ -1,50 +1,37 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { AuthContext } from "../AuthContext";
 import { ResponseContext } from "../ResponseContext";
+import { AuthContext } from "../AuthContext";
+import axiosApi from "../../Api";
 
 export const UsersContext = createContext();
 
 export function UsersProvider({ children }) {
-  const { getJWT } = useContext(AuthContext);
   const { addToast } = useContext(ResponseContext);
+  const { refreshToken } = useContext(AuthContext);
 
   const [users, setUsers] = useState([]);
 
-  const handleReadUsers = () => {
-    axios
-      .get(`${import.meta.env.VITE_SERVER_URL_AUD}/api/users`, {
-        headers: {
-          Authorization: `Bearer ${getJWT()}`,
+  const handleReadUsers = async () => {
+    const res = await axiosApi(refreshToken).get(
+      `${import.meta.env.VITE_SERVER_URL_AUD}/api/users`
+    );
+
+    if (res.data && !res.data.status) {
+      setUsers(res.data);
+    }
+
+    if (res.response && 403 === res.response.data.code) {
+      console.log(res);
+      addToast([
+        {
+          status: res.response.data.status,
+          title: "Users",
+          message: res.response.data.message,
         },
-      })
-      .then(({ data }) => {
-        if (!data.status) {
-          setUsers(data);
-
-          addToast([
-            {
-              status: "success",
-              title: "Users",
-              message: "Data updated correctly",
-            },
-          ]);
-        }
-      })
-      .catch(({ response }) => {
-        // console.log(response.data);
-
-        if (403 === response.data.code) {
-          addToast([
-            {
-              status: response.data.status,
-              title: "Users",
-              message: response.data.message,
-            },
-          ]);
-        }
-      });
+      ]);
+    }
   };
 
   useEffect(() => {
