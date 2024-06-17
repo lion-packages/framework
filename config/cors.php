@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use Lion\Request\Http;
 use Lion\Request\Request;
-use Lion\Route\Route;
 
 /**
  * -----------------------------------------------------------------------------
@@ -21,8 +21,8 @@ Request::header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, 
 
 Request::header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
-if (Route::OPTIONS === $_SERVER['REQUEST_METHOD']) {
-    http_response_code(Request::HTTP_OK);
+if (Http::OPTIONS === $_SERVER['REQUEST_METHOD']) {
+    http_response_code(Http::OK);
 
     exit;
 }
