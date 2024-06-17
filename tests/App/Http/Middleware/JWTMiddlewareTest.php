@@ -35,6 +35,8 @@ class JWTMiddlewareTest extends Test
 
     protected function tearDown(): void
     {
+        $this->rmdirRecursively(storage_path(env('RSA_URL_PATH') . "{$this->users_code}/"));
+
         unset($_SERVER['HTTP_AUTHORIZATION']);
     }
 
@@ -45,7 +47,7 @@ class JWTMiddlewareTest extends Test
         /** @var RSA $rsa */
         $rsa = $this->getPrivateProperty('rsa');
 
-        $this->assertSame(env('RSA_URL_PATH'), $rsa->getUrlPath());
+        $this->assertSame(storage_path(env('RSA_URL_PATH')), $rsa->getUrlPath());
     }
 
     /**
@@ -150,7 +152,7 @@ class JWTMiddlewareTest extends Test
                     'users_code' => $this->users_code
                 ]);
 
-                $this->rmdirRecursively(env('RSA_URL_PATH') . "{$this->users_code}/");
+                $this->rmdirRecursively(storage_path(env('RSA_URL_PATH') . "{$this->users_code}/"));
 
                 $this->jWTMiddleware->authorizeWithoutSignature();
             });

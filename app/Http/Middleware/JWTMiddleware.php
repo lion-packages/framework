@@ -83,7 +83,7 @@ class JWTMiddleware
     private function initRSA(string $path): void
     {
         $this->rsa
-            ->setUrlPath($path)
+            ->setUrlPath(storage_path($path))
             ->init();
     }
 
@@ -146,7 +146,7 @@ class JWTMiddleware
 
         $path = env('RSA_URL_PATH') . "{$data->data['users_code']}/";
 
-        if (isError($this->store->exist($path))) {
+        if (isError($this->store->exist(storage_path($path)))) {
             throw new MiddlewareException('invalid JWT [AUTH-3]', Status::SESSION_ERROR, Http::FORBIDDEN);
         }
 

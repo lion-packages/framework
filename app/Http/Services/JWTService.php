@@ -91,7 +91,7 @@ class JWTService
         return $this->jwt
             ->config([
                 'publicKey' => $this->rsa
-                    ->setUrlPath($rsaPath)
+                    ->setUrlPath(storage_path($rsaPath))
                     ->init()
                     ->getPublicKey()
             ])

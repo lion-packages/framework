@@ -29,8 +29,6 @@ use Dotenv\Dotenv;
 
 Dotenv::createImmutable(__DIR__ . '/../')->load();
 
-$_ENV['RSA_URL_PATH'] = str->of($_ENV['RSA_URL_PATH'])->replace('../', '')->get();
-
 /**
  * -----------------------------------------------------------------------------
  * Database initialization

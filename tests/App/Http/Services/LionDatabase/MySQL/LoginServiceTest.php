@@ -71,7 +71,7 @@ class LoginServiceTest extends Test
 
     public function testGetToken(): void
     {
-        $token = $this->loginService->getToken(env('RSA_URL_PATH'), env('JWT_EXP'), [
+        $token = $this->loginService->getToken(env('JWT_EXP'), [
             'session' => true,
         ]);
 
