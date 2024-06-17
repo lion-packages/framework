@@ -26,7 +26,7 @@
     },
     "require": {
         "php": ">=8.3",
-        "lion/bundle": "^17.5"
+        "lion/bundle": "^17.7"
     },
     "require-dev": {
         "lion/test": "^2.0",

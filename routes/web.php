@@ -39,12 +39,14 @@ Route::prefix('api', function (): void {
             Route::post('password', [PasswordManagerController::class, 'updatePassword']);
         });
 
-        Route::middleware(['admin-access', 'prefix' => 'users'], function (): void {
-            Route::post('/', [UsersController::class, 'createUsers']);
-            Route::get('/', [UsersController::class, 'readUsers']);
-            Route::get('{idusers:i}', [UsersController::class, 'readUsersById']);
-            Route::put('{idusers:i}', [UsersController::class, 'updateUsers']);
-            Route::delete('{idusers:i}', [UsersController::class, 'deleteUsers']);
+        Route::middleware(['admin-access'], function (): void {
+            Route::controller(UsersController::class, function (): void {
+                Route::post('users', 'createUsers');
+                Route::get('users', 'readUsers');
+                Route::get('users/{idusers:i}', 'readUsersById');
+                Route::put('users/{idusers:i}', 'updateUsers');
+                Route::delete('users/{idusers:i}', 'deleteUsers');
+            });
         });
     });
 });

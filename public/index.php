@@ -2,6 +2,8 @@
 
 define('LION_START', microtime(true));
 
+define('IS_INDEX', true);
+
 /**
  * -----------------------------------------------------------------------------
  * Register The Auto Loader

@@ -21,7 +21,7 @@ Driver::run([
             'port' => env('DB_PORT', 3306),
             'dbname' => env('DB_NAME', 'lion_database'),
             'user' => env('DB_USER', 'root'),
-            'password' => env('DB_PASSWORD', 'lion')
-        ]
+            'password' => env('DB_PASSWORD', 'lion'),
+        ],
     ]
 ]);

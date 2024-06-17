@@ -169,12 +169,12 @@ class LoginService
      *
      * @return string
      */
-    public function getToken(string $path, string|int $time, array $data): string
+    public function getToken(string|int $time, array $data): string
     {
         return $this->jwt
             ->config([
                 'privateKey' => $this->rsa
-                    ->setUrlPath($path)
+                    ->setUrlPath(storage_path(env('RSA_URL_PATH')))
                     ->init()
                     ->getPrivateKey()
             ])
@@ -197,7 +197,7 @@ class LoginService
         ]);
 
         $encodeToken = $this->aESService->encode([
-            'jwt_refresh' => $this->getToken(env('RSA_URL_PATH'), env('JWT_REFRESH_EXP'), [
+            'jwt_refresh' => $this->getToken(env('JWT_REFRESH_EXP'), [
                 'session' => true,
                 'idusers' => $encode['idusers'],
                 'idroles' => $encode['idroles'],
@@ -205,7 +205,7 @@ class LoginService
         ]);
 
         return [
-            'jwt_access' => $this->getToken(env('RSA_URL_PATH'), env('JWT_EXP'), [
+            'jwt_access' => $this->getToken(env('JWT_EXP'), [
                 'session' => true,
                 'idusers' => $encode['idusers'],
                 'idroles' => $encode['idroles'],
