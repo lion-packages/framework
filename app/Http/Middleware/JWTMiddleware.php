@@ -46,25 +46,31 @@ class JWTMiddleware
     /**
      * @required
      */
-    public function setStore(Store $store): void
+    public function setStore(Store $store): JWTMiddleware
     {
         $this->store = $store;
+
+        return $this;
     }
 
     /**
      * @required
      */
-    public function setRSA(RSA $rsa): void
+    public function setRSA(RSA $rsa): JWTMiddleware
     {
         $this->rsa = $rsa;
+
+        return $this;
     }
 
     /**
      * @required
      */
-    public function setJWT(JWT $jwt): void
+    public function setJWT(JWT $jwt): JWTMiddleware
     {
         $this->jwt = $jwt;
+
+        return $this;
     }
 
     /**
@@ -132,7 +138,7 @@ class JWTMiddleware
             throw new MiddlewareException('invalid JWT [AUTH-1]', Status::SESSION_ERROR, Http::UNAUTHORIZED);
         }
 
-        $data = (object) ((object) json_decode(base64_decode($splitToken[1]), true));
+        $data = ((object) json_decode(base64_decode($splitToken[1]), true));
 
         if (empty($data->data['users_code'])) {
             throw new MiddlewareException('invalid JWT [AUTH-2]', Status::SESSION_ERROR, Http::FORBIDDEN);

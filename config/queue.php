@@ -26,7 +26,8 @@ TaskQueue::add(
      * @param RecoveryAccountHtml $recoveryAccountHtml [Password recovery
      * template]
      * @param object $queue [Queued task object]
-     *
+     * @param string $account [Mail account]
+     * @param string $code [Code]
      * @return void
      *
      * @throws Exception [Catch an exception if the process fails]
@@ -63,13 +64,16 @@ TaskQueue::add(
         /**
          * Send emails for account validation
          *
+         * @param VerifyAccountHtml $verifyAccountHtml
          * @param object $queue [Queued task object]
+         * @param string $account [Mail account]
+         * @param string $code [Code]
          *
          * @return void
          *
          * @throws Exception [Catch an exception if the process fails]
          */
-        function (VerifyAccountHtml $verifyAccountHtml, object $queue, string $code, string $account): void {
+        function (VerifyAccountHtml $verifyAccountHtml, object $queue, string $account, string $code): void {
             try {
                 Mailer::account(env('MAIL_NAME'))
                     ->subject('Registration Confirmation - Please Verify Your Email')

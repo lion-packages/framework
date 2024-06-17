@@ -26,8 +26,7 @@ class JWTMiddlewareTest extends Test
 
     protected function setUp(): void
     {
-        $this->jWTMiddleware = (new Container())
-            ->injectDependencies(new JWTMiddleware());
+        $this->jWTMiddleware = (new Container())->injectDependencies(new JWTMiddleware());
 
         $this->users_code = uniqid('code-');
 
@@ -36,21 +35,17 @@ class JWTMiddlewareTest extends Test
 
     protected function tearDown(): void
     {
-        $this->rmdirRecursively(env('RSA_URL_PATH') . "{$this->users_code}/");
-
         unset($_SERVER['HTTP_AUTHORIZATION']);
     }
 
     public function testInitRSA(): void
     {
-        $path = str->of(env('RSA_URL_PATH'))->replace('../', '')->get();
-
-        $this->getPrivateMethod('initRSA', [$path]);
+        $this->getPrivateMethod('initRSA', [env('RSA_URL_PATH')]);
 
         /** @var RSA $rsa */
         $rsa = $this->getPrivateProperty('rsa');
 
-        $this->assertSame($path, $rsa->getUrlPath());
+        $this->assertSame(env('RSA_URL_PATH'), $rsa->getUrlPath());
     }
 
     /**
