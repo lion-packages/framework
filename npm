@@ -68,6 +68,5 @@ date_default_timezone_set($_ENV['SERVER_DATE_TIMEZONE']);
         'Lion\\Bundle\\Commands\\Npm\\',
         'Commands/Npm/'
     )
-    ->registerCommands('./app/Console/Commands/', 'App\\Console\\Commands\\', 'Console/Commands/')
     ->getApplication()
     ->run();
