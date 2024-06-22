@@ -58,22 +58,22 @@
         </testsuite>
 
         <testsuite name="Unit">
-            <directory>tests/App/Enums</directory>
-            <directory>tests/App/Exceptions</directory>
-            <directory>tests/App/Interfaces</directory>
-            <directory>tests/Database</directory>
+            <directory suffix=".php">tests/App/Enums</directory>
+            <directory suffix=".php">tests/App/Exceptions</directory>
+            <directory suffix=".php">tests/App/Interfaces</directory>
+            <directory suffix=".php">tests/Database</directory>
         </testsuite>
 
         <testsuite name="Integration">
-            <directory>tests/App/Console/Commands</directory>
-            <directory>tests/App/Http/Controllers</directory>
-            <directory>tests/App/Http/Middleware</directory>
-            <directory>tests/App/Http/Services</directory>
-            <directory>tests/App/Models</directory>
+            <directory suffix=".php">tests/App/Console/Commands</directory>
+            <directory suffix=".php">tests/App/Http/Controllers</directory>
+            <directory suffix=".php">tests/App/Http/Middleware</directory>
+            <directory suffix=".php">tests/App/Http/Services</directory>
+            <directory suffix=".php">tests/App/Models</directory>
         </testsuite>
 
         <testsuite name="Functional">
-            <directory>tests/Api</directory>
+            <directory suffix=".php">tests/Api</directory>
         </testsuite>
     </testsuites>
 </phpunit>
