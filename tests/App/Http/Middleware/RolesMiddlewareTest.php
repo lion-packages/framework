@@ -25,13 +25,18 @@ class RolesMiddlewareTest extends Test
 
     protected function setUp(): void
     {
-        $this->rolesMiddleware = new RolesMiddleware();
+        $this->rolesMiddleware = (new RolesMiddleware())
+            ->setAESService(
+                (new AESService())
+                    ->setAES(new AES())
+            )
+            ->setJWTService(
+                (new JWTService())
+                    ->setRSA(new RSA())
+                    ->setJWT(new JWT())
+            );
 
         $this->initReflection($this->rolesMiddleware);
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     public function testSetAESService(): void
@@ -51,30 +56,15 @@ class RolesMiddlewareTest extends Test
      */
     public function testAccess(): void
     {
-        $this->assertInstanceOf(
-            RolesMiddleware::class,
-            $this->rolesMiddleware->setAESService(
-                (new AESService())
-                    ->setAES(new AES())
-            )
-        );
-
-        $this->assertInstanceOf(
-            RolesMiddleware::class,
-            $this->rolesMiddleware->setJWTService(
-                (new JWTService())
-                    ->setRSA(new RSA())
-                    ->setJWT(new JWT())
-            )
-        );
-
         $this
             ->exception(MiddlewareException::class)
             ->exceptionMessage('you do not have the necessary permissions to access this resource')
             ->exceptionStatus(Status::SESSION_ERROR)
             ->exceptionCode(Http::FORBIDDEN)
             ->expectLionException(function (): void {
-                $encode = $this->AESEncode(['idroles' => (string) RolesEnum::CUSTOMER->value]);
+                $encode = $this->AESEncode([
+                    'idroles' => (string) RolesEnum::CUSTOMER->value,
+                ]);
 
                 $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
                     'idroles' => $encode['idroles'],

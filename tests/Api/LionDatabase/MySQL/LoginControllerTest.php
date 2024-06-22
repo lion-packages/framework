@@ -78,7 +78,7 @@ class LoginControllerTest extends Test
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
             'code' => Http::UNAUTHORIZED,
             'status' => Status::SESSION_ERROR,
-            'message' => 'email/password is incorrect [AUTH-1]'
+            'message' => 'email/password is incorrect [AUTH-1]',
         ]);
     }
 
@@ -96,14 +96,14 @@ class LoginControllerTest extends Test
                 'json' => [
                     'users_email' => UsersFactory::USERS_EMAIL,
                     'users_password' => $encode['users_password'],
-                ]
+                ],
             ]);
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
             'code' => Http::UNAUTHORIZED,
             'status' => Status::ERROR,
-            'message' => 'email/password is incorrect [AUTH-2]'
+            'message' => 'email/password is incorrect [AUTH-2]',
         ]);
     }
 
@@ -133,9 +133,8 @@ class LoginControllerTest extends Test
     public function testRefresh(): void
     {
         $encode = $this->AESEncode([
-            'idusers' => (string) 1,
+            'idusers' => "1",
             'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
-
         ]);
 
         $jwtEncode = $this->AESEncode([

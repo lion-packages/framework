@@ -5,13 +5,24 @@ declare(strict_types=1);
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Http\Controllers\LionDatabase\MySQL\PasswordManagerController;
+use App\Http\Services\AESService;
+use App\Http\Services\JWTService;
+use App\Http\Services\LionDatabase\MySQL\AccountService;
+use App\Http\Services\LionDatabase\MySQL\LoginService;
+use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
+use App\Models\LionDatabase\MySQL\LoginModel;
+use App\Models\LionDatabase\MySQL\PasswordManagerModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Dependency\Injection\Container;
 use Lion\Request\Http;
 use Lion\Request\Status;
+use Lion\Security\AES;
+use Lion\Security\JWT;
+use Lion\Security\RSA;
+use Lion\Security\Validation;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
@@ -24,15 +35,12 @@ class PasswordManagerControllerTest extends Test
     const string USERS_PASSWORD = 'lion-password';
 
     private PasswordManagerController $passwordManagerController;
-    private Container $container;
 
     protected function setUp(): void
     {
         $this->runMigrationsAndQueues();
 
         $this->passwordManagerController = new PasswordManagerController();
-
-        $this->container = new Container();
     }
 
     protected function tearDown(): void
@@ -46,7 +54,25 @@ class PasswordManagerControllerTest extends Test
     {
         $_POST['users_email'] = UsersFactory::USERS_EMAIL;
 
-        $response = $this->container->injectDependenciesMethod($this->passwordManagerController, 'recoveryPassword');
+        $response = $this->passwordManagerController->recoveryPassword(
+            new Users(),
+            new UsersModel(),
+            (new AccountService())
+                ->setUsersModel(new UsersModel()),
+            (new LoginService())
+                ->setRSA(new RSA())
+                ->setJWT(new JWT())
+                ->setLoginModel(new LoginModel())
+                ->setAESService(
+                    (new AESService())
+                        ->setAES(new AES())
+                )
+                ->setJWTService(
+                    (new JWTService())
+                        ->setRSA(new RSA())
+                        ->setJWT(new JWT())
+                )
+        );
 
         $this->assertIsSuccess($response);
         $this->assertSame(Http::OK, $response->code);
@@ -64,7 +90,25 @@ class PasswordManagerControllerTest extends Test
     {
         $_POST['users_email'] = UsersFactory::USERS_EMAIL;
 
-        $response = $this->container->injectDependenciesMethod($this->passwordManagerController, 'recoveryPassword');
+        $response = $this->passwordManagerController->recoveryPassword(
+            new Users(),
+            new UsersModel(),
+            (new AccountService())
+                ->setUsersModel(new UsersModel()),
+            (new LoginService())
+                ->setRSA(new RSA())
+                ->setJWT(new JWT())
+                ->setLoginModel(new LoginModel())
+                ->setAESService(
+                    (new AESService())
+                        ->setAES(new AES())
+                )
+                ->setJWTService(
+                    (new JWTService())
+                        ->setRSA(new RSA())
+                        ->setJWT(new JWT())
+                )
+        );
 
         $this->assertIsSuccess($response);
         $this->assertSame(Http::OK, $response->code);
@@ -94,7 +138,31 @@ class PasswordManagerControllerTest extends Test
 
         $_POST['users_recovery_code'] = $user->users_recovery_code;
 
-        $response = $this->container->injectDependenciesMethod($this->passwordManagerController, 'updateLostPassword');
+        $response = $this->passwordManagerController->updateLostPassword(
+            new Users(),
+            new PasswordManager(),
+            new UsersModel(),
+            new PasswordManagerModel(),
+            (new AccountService())
+                ->setUsersModel(new UsersModel()),
+            (new PasswordManagerService())
+                ->setValidation(new Validation()),
+            (new LoginService())
+                ->setRSA(new RSA())
+                ->setJWT(new JWT())
+                ->setLoginModel(new LoginModel())
+                ->setAESService(
+                    (new AESService())
+                        ->setAES(new AES())
+                )
+                ->setJWTService(
+                    (new JWTService())
+                        ->setRSA(new RSA())
+                        ->setJWT(new JWT())
+                ),
+            (new AESService())
+                ->setAES(new AES())
+        );
 
         $this->assertIsSuccess($response);
         $this->assertSame(Http::OK, $response->code);
@@ -141,7 +209,17 @@ class PasswordManagerControllerTest extends Test
             'idusers' => $encode['idusers'],
         ]);
 
-        $response = $this->container->injectDependenciesMethod($this->passwordManagerController, 'updatePassword');
+        $response = $this->passwordManagerController->updatePassword(
+            new PasswordManager(),
+            new PasswordManagerModel(),
+            (new PasswordManagerService())
+                ->setValidation(new Validation()),
+            (new JWTService())
+                ->setRSA(new RSA())
+                ->setJWT(new JWT()),
+            (new AESService())
+                ->setAES(new AES())
+        );
 
         $this->assertIsSuccess($response);
         $this->assertSame(Http::OK, $response->code);

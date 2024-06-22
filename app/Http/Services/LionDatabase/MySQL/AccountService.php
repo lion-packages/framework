@@ -32,9 +32,11 @@ class AccountService
     /**
      * @required
      */
-    public function setUsersModel(UsersModel $usersModel): void
+    public function setUsersModel(UsersModel $usersModel): AccountService
     {
         $this->usersModel = $usersModel;
+
+        return $this;
     }
 
     /**

@@ -56,7 +56,7 @@ class UsersControllerTest extends Test
                 'users_last_name' => fake()->lastName(),
                 'users_nickname' => fake()->userName(),
                 'users_email' => fake()->email(),
-                'users_password' => 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481'
+                'users_password' => 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481',
             ],
         ])
             ->getBody()
@@ -67,11 +67,6 @@ class UsersControllerTest extends Test
             'status' => Status::SUCCESS,
             'message' => 'registered user successfully',
         ]);
-    }
-
-    public function testCreateUsersIsError(): void
-    {
-        $this->expectNotToPerformAssertions();
     }
 
     public function testReadUsers(): void
@@ -180,7 +175,7 @@ class UsersControllerTest extends Test
         $this->assertJsonContent($users, [
             'code' => Http::OK,
             'status' => Status::SUCCESS,
-            'message' => 'no data available'
+            'message' => 'no data available',
         ]);
     }
 
@@ -243,11 +238,6 @@ class UsersControllerTest extends Test
         $this->assertSame(self::JSON_UPDATE_USERS['users_last_name'], $firstUser->users_last_name);
     }
 
-    public function testUpdateUsersIsError(): void
-    {
-        $this->expectNotToPerformAssertions();
-    }
-
     public function testDeleteUsers(): void
     {
         $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
@@ -298,10 +288,5 @@ class UsersControllerTest extends Test
 
         $this->assertIsArray($users);
         $this->assertCount(self::REMAINING_USERS, $users);
-    }
-
-    public function testDeleteUsersIsError(): void
-    {
-        $this->expectNotToPerformAssertions();
     }
 }

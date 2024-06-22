@@ -7,10 +7,11 @@ namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
 use App\Http\Controllers\LionDatabase\MySQL\UsersController;
+use App\Models\LionDatabase\MySQL\UsersModel;
+use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Dependency\Injection\Container;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\Validation;
@@ -24,15 +25,12 @@ class UsersControllerTest extends Test
     use SetUpMigrationsAndQueuesProviderTrait;
 
     private UsersController $usersController;
-    private Container $container;
 
     protected function setUp(): void
     {
         $this->runMigrationsAndQueues();
 
         $this->usersController = new UsersController();
-
-        $this->container = new Container();
     }
 
     protected function tearDown(): void
@@ -69,7 +67,7 @@ class UsersControllerTest extends Test
 
         $_POST['users_password'] = (new Validation())->sha256(UsersFactory::USERS_PASSWORD);
 
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'createUsers');
+        $response = $this->usersController->createUsers(new Users(), new UsersModel(), new Validation());
 
         $this->assertIsSuccess($response);
         $this->assertSame(Http::OK, $response->code);
@@ -99,12 +97,12 @@ class UsersControllerTest extends Test
 
         $_POST['users_password'] = (new Validation())->sha256(UsersFactory::USERS_PASSWORD);
 
-        $this->container->injectDependenciesMethod($this->usersController, 'createUsers');
+        $this->usersController->createUsers(new Users(), new UsersModel(), new Validation());
     }
 
     public function testReadUsers(): void
     {
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'readUsers');
+        $response = $this->usersController->readUsers(new UsersModel());
 
         $this->assertIsArray($response);
         $this->assertCount(self::AVAILABLE_USERS, $response);
@@ -114,7 +112,7 @@ class UsersControllerTest extends Test
     {
         Schema::truncateTable('users')->execute();
 
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'readUsers');
+        $response = $this->usersController->readUsers(new UsersModel());
 
         $this->assertIsSuccess($response);
         $this->assertSame(Http::OK, $response->code);
@@ -124,7 +122,7 @@ class UsersControllerTest extends Test
 
     public function testReadUsersById(): void
     {
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'readUsers');
+        $response = $this->usersController->readUsers(new UsersModel());
 
         $this->assertIsArray($response);
         $this->assertCount(self::AVAILABLE_USERS, $response);
@@ -134,9 +132,7 @@ class UsersControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertObjectHasProperty('idusers', $user);
 
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'readUsersById', [
-            'idusers' => $user->idusers
-        ]);
+        $response = $this->usersController->readUsersById(new Users(), new UsersModel(), (string) $user->idusers);
 
         $this->assertIsObject($response);
         $this->assertObjectHasProperty('idusers', $response);
@@ -147,9 +143,7 @@ class UsersControllerTest extends Test
     {
         Schema::truncateTable('users')->execute();
 
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'readUsersById', [
-            'idusers' => 1
-        ]);
+        $response = $this->usersController->readUsersById(new Users(), new UsersModel(), "1");
 
         $this->assertIsSuccess($response);
         $this->assertSame(Http::OK, $response->code);
@@ -159,7 +153,7 @@ class UsersControllerTest extends Test
 
     public function testUpdateUsers(): void
     {
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'readUsers');
+        $response = $this->usersController->readUsers(new UsersModel());
 
         $this->assertIsArray($response);
         $this->assertCount(self::AVAILABLE_USERS, $response);
@@ -183,9 +177,7 @@ class UsersControllerTest extends Test
 
         $_POST['users_email'] = 'sleon@dev.com';
 
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'updateUsers', [
-            'idusers' => $user->idusers
-        ]);
+        $response = $this->usersController->updateUsers(new Users(), new UsersModel(), (string) $user->idusers);
 
         $this->assertIsSuccess($response);
         $this->assertSame(Http::OK, $response->code);
@@ -213,14 +205,16 @@ class UsersControllerTest extends Test
 
         $_POST['users_email'] = 'sleon@dev.com';
 
-        $this->container->injectDependenciesMethod($this->usersController, 'updateUsers', [
-            'idusers' => fake()->numerify('###############')
-        ]);
+        $this->usersController->updateUsers(
+            new Users(),
+            new UsersModel(),
+            fake()->numerify('###############')
+        );
     }
 
     public function testDeleteUsers(): void
     {
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'readUsers');
+        $response = $this->usersController->readUsers(new UsersModel());
 
         $this->assertIsArray($response);
         $this->assertCount(self::AVAILABLE_USERS, $response);
@@ -230,16 +224,14 @@ class UsersControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertObjectHasProperty('idusers', $user);
 
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'deleteUsers', [
-            'idusers' => $user->idusers
-        ]);
+        $response = $this->usersController->deleteUsers(new Users(), new UsersModel(), (string) $user->idusers);
 
         $this->assertIsSuccess($response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('the registered user has been successfully deleted', $response->message);
 
-        $response = $this->container->injectDependenciesMethod($this->usersController, 'readUsers');
+        $response = $this->usersController->readUsers(new UsersModel());
 
         $this->assertIsArray($response);
         $this->assertCount(self::REMAINING_USERS, $response);
@@ -251,8 +243,6 @@ class UsersControllerTest extends Test
         $this->expectExceptionMessage('an error occurred while deleting the user');
         $this->expectExceptionCode(Http::INTERNAL_SERVER_ERROR);
 
-        $this->container->injectDependenciesMethod($this->usersController, 'deleteUsers', [
-            'idusers' => fake()->numerify('###############')
-        ]);
+        $this->usersController->deleteUsers(new Users(), new UsersModel(), fake()->numerify('###############'));
     }
 }

@@ -21,6 +21,7 @@ use App\Rules\UsersPasswordConfirmRule;
 use App\Rules\UsersPasswordNewRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
+use Exception;
 use Lion\Route\Attributes\Rules;
 use stdClass;
 
@@ -46,6 +47,7 @@ class PasswordManagerController
      *
      * @throws AuthenticationException
      * @throws AccountException
+     * @throws Exception
      */
     #[Rules(UsersEmailRule::class)]
     public function recoveryPassword(
@@ -59,6 +61,7 @@ class PasswordManagerController
 
         $loginService->validateSession($users);
 
+        /** @var stdClass $user */
         $user = $usersModel->readUsersByEmailDB($users);
 
         $users
@@ -121,6 +124,7 @@ class PasswordManagerController
 
         $loginService->validateSession($users);
 
+        /** @var stdClass $data */
         $data = $usersModel->readUsersByEmailDB($users);
 
         $accountService->verifyRecoveryCode($users, $data);
@@ -191,6 +195,7 @@ class PasswordManagerController
             'idusers' => $data->idusers,
         ]);
 
+        /** @var stdClass $users */
         $users = $passwordManagerModel->getPasswordDB(
             $passwordManager
                 ->setIdusers((int) $decode['idusers'])

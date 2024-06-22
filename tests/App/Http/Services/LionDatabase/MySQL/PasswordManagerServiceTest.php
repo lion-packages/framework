@@ -9,7 +9,6 @@ use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\PasswordManagerModel;
 use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
-use Lion\Dependency\Injection\Container;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -28,9 +27,10 @@ class PasswordManagerServiceTest extends Test
     {
         $this->runMigrationsAndQueues();
 
-        $this->passwordManagerService = (new Container())->injectDependencies(new PasswordManagerService());
-
         $this->validation = new Validation();
+
+        $this->passwordManagerService = (new PasswordManagerService())
+            ->setValidation($this->validation);
     }
 
     /**
