@@ -8,7 +8,6 @@ use App\Exceptions\AuthenticationException;
 use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Dependency\Injection\Container;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -28,8 +27,7 @@ class RegistrationServiceTest extends Test
     {
         $this->runMigrationsAndQueues();
 
-        $this->registrationService = (new Container())
-            ->injectDependencies(new RegistrationService());
+        $this->registrationService = new RegistrationService();
     }
 
     protected function tearDown(): void

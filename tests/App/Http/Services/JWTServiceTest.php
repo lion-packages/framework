@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Tests\App\Http\Services;
 
 use App\Http\Services\JWTService;
-use Lion\Dependency\Injection\Container;
+use Lion\Security\JWT;
+use Lion\Security\RSA;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Test;
 
@@ -17,8 +18,9 @@ class JWTServiceTest extends Test
 
     protected function setUp(): void
     {
-        $this->jWTService = (new Container())
-            ->injectDependencies(new JWTService());
+        $this->jWTService = (new JWTService())
+            ->setRSA(new RSA())
+            ->setJWT(new JWT());
     }
 
     public function testGetTokenData(): void

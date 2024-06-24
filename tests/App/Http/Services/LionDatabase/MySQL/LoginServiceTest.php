@@ -6,12 +6,17 @@ namespace Tests\App\Http\Services\LionDatabase\MySQL;
 
 use App\Enums\RolesEnum;
 use App\Exceptions\AuthenticationException;
+use App\Http\Services\AESService;
+use App\Http\Services\JWTService;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
+use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Lion\Dependency\Injection\Container;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
+use Lion\Security\AES;
+use Lion\Security\JWT;
+use Lion\Security\RSA;
 use Lion\Test\Test;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
@@ -29,8 +34,19 @@ class LoginServiceTest extends Test
     {
         $this->runMigrationsAndQueues();
 
-        $this->loginService = (new Container())
-            ->injectDependencies(new LoginService());
+        $this->loginService = (new LoginService())
+            ->setJWT(new JWT())
+            ->setRSA(new RSA())
+            ->setLoginModel(new LoginModel())
+            ->setAESService(
+                (new AESService())
+                    ->setAES(new AES())
+            )
+            ->setJWTService(
+                (new JWTService())
+                    ->setJWT(new JWT())
+                    ->setRSA(new RSA())
+            );
     }
 
     /**

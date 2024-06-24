@@ -7,6 +7,7 @@ namespace Tests\Api\LionDatabase\MySQL;
 use App\Enums\RolesEnum;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -31,6 +32,9 @@ class LoginControllerTest extends Test
         Schema::truncateTable('users')->execute();
     }
 
+    /**
+     * @throws GuzzleException
+     */
     public function testAuth(): void
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
@@ -78,7 +82,7 @@ class LoginControllerTest extends Test
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
             'code' => Http::UNAUTHORIZED,
             'status' => Status::SESSION_ERROR,
-            'message' => 'email/password is incorrect [AUTH-1]'
+            'message' => 'email/password is incorrect [AUTH-1]',
         ]);
     }
 
@@ -96,14 +100,14 @@ class LoginControllerTest extends Test
                 'json' => [
                     'users_email' => UsersFactory::USERS_EMAIL,
                     'users_password' => $encode['users_password'],
-                ]
+                ],
             ]);
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
             'code' => Http::UNAUTHORIZED,
             'status' => Status::ERROR,
-            'message' => 'email/password is incorrect [AUTH-2]'
+            'message' => 'email/password is incorrect [AUTH-2]',
         ]);
     }
 
@@ -130,12 +134,14 @@ class LoginControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws GuzzleException
+     */
     public function testRefresh(): void
     {
         $encode = $this->AESEncode([
-            'idusers' => (string) 1,
+            'idusers' => "1",
             'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
-
         ]);
 
         $jwtEncode = $this->AESEncode([

@@ -55,6 +55,7 @@ services:
             - "1025:1025"
         networks:
             - lion
+
     mysql:
         image: mysql
         container_name: framework-mysql

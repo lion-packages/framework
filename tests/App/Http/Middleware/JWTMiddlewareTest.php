@@ -6,10 +6,11 @@ namespace Tests\App\Http\Middleware;
 
 use App\Http\Middleware\JWTMiddleware;
 use Lion\Bundle\Exceptions\MiddlewareException;
-use Lion\Dependency\Injection\Container;
 use Lion\Exceptions\Exception;
+use Lion\Files\Store;
 use Lion\Request\Http;
 use Lion\Request\Status;
+use Lion\Security\JWT;
 use Lion\Security\RSA;
 use Lion\Test\Test;
 use Tests\Providers\AuthJwtProviderTrait;
@@ -21,12 +22,14 @@ class JWTMiddlewareTest extends Test
     const string MESSAGE = 'ERR';
 
     private JWTMiddleware $jWTMiddleware;
-
     private string $users_code;
 
     protected function setUp(): void
     {
-        $this->jWTMiddleware = (new Container())->injectDependencies(new JWTMiddleware());
+        $this->jWTMiddleware = (new JWTMiddleware())
+            ->setStore(new Store())
+            ->setRSA(new RSA())
+            ->setJWT(new JWT());
 
         $this->users_code = uniqid('code-');
 

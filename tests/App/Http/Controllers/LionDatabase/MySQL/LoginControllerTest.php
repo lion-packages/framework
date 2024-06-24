@@ -15,7 +15,6 @@ use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Dependency\Injection\Container;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\AES;
@@ -33,15 +32,12 @@ class LoginControllerTest extends Test
     use SetUpMigrationsAndQueuesProviderTrait;
 
     private LoginController $loginController;
-    private Container $container;
 
     protected function setUp(): void
     {
         $this->runMigrationsAndQueues();
 
         $this->loginController = new LoginController();
-
-        $this->container = new Container();
     }
 
     protected function tearDown(): void
@@ -69,6 +65,11 @@ class LoginControllerTest extends Test
                 ->setAESService(
                     (new AESService())
                         ->setAES(new AES())
+                )
+                ->setJWTService(
+                    (new JWTService())
+                        ->setJWT(new JWT())
+                        ->setRSA(new RSA())
                 ),
             (new PasswordManagerService())
                 ->setValidation(new Validation()),

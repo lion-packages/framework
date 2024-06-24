@@ -14,7 +14,8 @@ class AESServiceTest extends Test
 
     protected function setUp(): void
     {
-        $this->aESService = new AESService();
+        $this->aESService = (new AESService())
+            ->setAES(new AES());
 
         $this->initReflection($this->aESService);
     }
@@ -27,8 +28,6 @@ class AESServiceTest extends Test
 
     public function testEncode(): void
     {
-        $this->assertInstanceOf(AESService::class, $this->aESService->setAES(new AES()));
-
         $encode = $this->aESService->encode(['key' => 'example']);
 
         $this->assertIsArray($encode);
@@ -38,8 +37,6 @@ class AESServiceTest extends Test
 
     public function testDecode(): void
     {
-        $this->assertInstanceOf(AESService::class, $this->aESService->setAES(new AES()));
-
         $encode = $this->aESService->encode(['key' => 'example']);
 
         $this->assertIsArray($encode);

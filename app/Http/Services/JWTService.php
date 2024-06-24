@@ -11,22 +11,27 @@ use stdClass;
 /**
  * Service to manipulate JWT tokens
  *
- * @property RSA $rsa [RSA class object]
- * @property JWT $jwt [JWT class object]
+ * @property RSA $rsa [Allows you to generate the required configuration for
+ * public and private keys, has methods that allow you to encrypt and decrypt
+ * data with RSA]
+ * @property JWT $jwt [Allows you to generate the required configuration for JWT
+ *  tokens, has methods that allow you to encrypt and decrypt data with JWT]
  *
  * @package App\Http\Services
  */
 class JWTService
 {
     /**
-     * [Object of class RSA]
+     * [Allows you to generate the required configuration for public and private
+     *  keys, has methods that allow you to encrypt and decrypt data with RSA]
      *
      * @var RSA $rsa
      */
     private RSA $rsa;
 
     /**
-     * [Object of class JWT]
+     * [Allows you to generate the required configuration for JWT tokens, has
+     * methods that allow you to encrypt and decrypt data with JWT]
      *
      * @var JWT $jwt
      */

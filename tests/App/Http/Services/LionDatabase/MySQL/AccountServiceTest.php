@@ -13,7 +13,6 @@ use Exception as ExceptionGlobal;
 use Lion\Bundle\Enums\TaskStatusEnum;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Dependency\Injection\Container;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -35,8 +34,8 @@ class AccountServiceTest extends Test
     {
         $this->runMigrationsAndQueues();
 
-        $this->accountService = (new Container)
-            ->injectDependencies(new AccountService());
+        $this->accountService = (new AccountService())
+            ->setUsersModel(new UsersModel());
     }
 
     protected function tearDown(): void
@@ -94,7 +93,7 @@ class AccountServiceTest extends Test
 
         $this->assertJsonContent($row->task_queue_data, [
             'code' => $code,
-            'account' => $account
+            'account' => $account,
         ]);
     }
 
@@ -205,11 +204,9 @@ class AccountServiceTest extends Test
 
                 $user = (new UsersModel())->readUsersByEmailDB($users);
 
-                $code = fake()->numerify('##########');
-
                 $users
                     ->setIdusers($user->idusers)
-                    ->setUsersActivationCode($code);
+                    ->setUsersActivationCode(fake()->numerify('##########'));
 
                 $this->accountService->updateActivationCode($users);
             });

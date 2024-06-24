@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Http\Controllers\LionDatabase\MySQL\ProfileController;
+use App\Http\Services\AESService;
+use App\Http\Services\JWTService;
+use App\Models\LionDatabase\MySQL\ProfileModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
+use Database\Class\LionDatabase\MySQL\Users;
 use Exception;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
-use Lion\Dependency\Injection\Container;
 use Lion\Request\Http;
 use Lion\Request\Status;
+use Lion\Security\AES;
+use Lion\Security\JWT;
+use Lion\Security\RSA;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
@@ -23,15 +29,12 @@ class ProfileControllerTest extends Test
     const string USERS_EMAIL = 'root@dev.com';
 
     private ProfileController $profileController;
-    private Container $container;
 
     protected function setUp(): void
     {
         $this->runMigrationsAndQueues();
 
         $this->profileController = new ProfileController();
-
-        $this->container = new Container();
     }
 
     protected function tearDown(): void
@@ -58,7 +61,15 @@ class ProfileControllerTest extends Test
             'idusers' => $encode['idusers']
         ]);
 
-        $response = $this->container->injectDependenciesMethod($this->profileController, 'readProfile');
+        $response = $this->profileController->readProfile(
+            new Users(),
+            new ProfileModel(),
+            (new JWTService())
+                ->setRSA(new RSA())
+                ->setJWT(new JWT()),
+            (new AESService())
+                ->setAES(new AES())
+        );
 
         $this->assertIsObject($response);
         $this->assertObjectHasProperty('idusers', $response);
@@ -93,7 +104,15 @@ class ProfileControllerTest extends Test
 
         $_POST['users_name'] = $users_name;
 
-        $response = $this->container->injectDependenciesMethod($this->profileController, 'updateProfile');
+        $response = $this->profileController->updateProfile(
+            new Users(),
+            new ProfileModel(),
+            (new JWTService())
+                ->setRSA(new RSA())
+                ->setJWT(new JWT()),
+            (new AESService())
+                ->setAES(new AES())
+        );
 
         $this->assertIsSuccess($response);
         $this->assertSame(Http::OK, $response->code);
@@ -124,6 +143,14 @@ class ProfileControllerTest extends Test
             'idusers' => $encode['idusers']
         ]);
 
-        $this->container->injectDependenciesMethod($this->profileController, 'updateProfile');
+        $this->profileController->updateProfile(
+            new Users(),
+            new ProfileModel(),
+            (new JWTService())
+                ->setRSA(new RSA())
+                ->setJWT(new JWT()),
+            (new AESService())
+                ->setAES(new AES())
+        );
     }
 }
