@@ -7,6 +7,7 @@ namespace Tests\Api\LionDatabase\MySQL;
 use App\Enums\RolesEnum;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -31,6 +32,9 @@ class LoginControllerTest extends Test
         Schema::truncateTable('users')->execute();
     }
 
+    /**
+     * @throws GuzzleException
+     */
     public function testAuth(): void
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
@@ -130,6 +134,9 @@ class LoginControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws GuzzleException
+     */
     public function testRefresh(): void
     {
         $encode = $this->AESEncode([

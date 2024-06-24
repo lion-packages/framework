@@ -13,22 +13,20 @@ use Lion\Request\Request;
  * sharing or "CORS". This determines which cross-origin operations
  * can be executed in web browsers.
  * -----------------------------------------------------------------------------
- **/
+ */
 
-Request::header('Access-Control-Allow-Origin', '*');
+Request::header('Access-Control-Allow-Origin', env('SERVER_URL_AUD', 'http://localhost:5173'));
 
 Request::header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 
 Request::header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
-if (Http::OPTIONS === $_SERVER['REQUEST_METHOD']) {
+Request::header('Access-Control-Max-Age', '3600');
+
+if (Http::OPTIONS === str->of($_SERVER['REQUEST_METHOD'])->lower()->get()) {
     http_response_code(Http::OK);
 
-    exit;
+    exit(0);
 }
 
 Request::header('Content-Type', 'application/json; charset=UTF-8');
-
-Request::header('Access-Control-Max-Age', '0');
-
-Request::header('Allow', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
