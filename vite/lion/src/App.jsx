@@ -11,13 +11,13 @@ import ProfileIndex from "./pages/account/profile/ProfileIndex";
 import ProfileGeneral from "./pages/account/profile/components/ProfileGeneral";
 import ProfileInformation from "./pages/account/profile/components/ProfileInformation";
 import { ProfileProvider } from "./context/account/ProfileContext.jsx";
-import ProfileChangePassword from "./pages/account/profile/components/ProfileChangePassword";
 import UsersIndex from "./pages/site-administration/users/UsersIndex";
 import { UsersProvider } from "./context/site-administration/UsersContext.jsx";
 import UsersUpdate from "./pages/site-administration/users/components/UsersUpdate";
 import RolesMiddleware from "./middleware/RolesMiddleware.jsx";
 import Header from "./components/Header.jsx";
 import AlertResponse from "./components/AlertResponse.jsx";
+import ProfileSecurity from "./pages/account/profile/components/ProfileSecurity.jsx";
 
 function App() {
   return (
@@ -81,7 +81,7 @@ function App() {
         >
           <Route path="general" element={<ProfileGeneral />} />
           <Route path="information" element={<ProfileInformation />} />
-          <Route path="change-password" element={<ProfileChangePassword />} />
+          <Route path="security" element={<ProfileSecurity />} />
         </Route>
 
         <Route path="site-administration">
