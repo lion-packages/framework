@@ -31,6 +31,7 @@ export default function axiosApi(refreshToken) {
       if (
         401 === err.response.data.code &&
         "session-error" === err.response.data.status &&
+        "Expired token" === err.response.data.message &&
         !originalRequest._retry
       ) {
         originalRequest._retry = true;

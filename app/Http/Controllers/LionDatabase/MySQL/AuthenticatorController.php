@@ -8,10 +8,12 @@ use App\Exceptions\PasswordException;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Http\Services\LionDatabase\MySQL\AuthenticatorService;
-use App\Models\LionDatabase\MySQL\AuthenticatorModel;
+use App\Models\LionDatabase\MySQL\UsersModel;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
+use Lion\Authentication\Auth2FA;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
+use Lion\Request\Http;
 use Lion\Route\Attributes\Rules;
 use stdClass;
 
@@ -63,13 +65,38 @@ class AuthenticatorController
     /**
      * Enable user authentication via 2FA
      *
-     * @param AuthenticatorModel $authenticatorModel [Perform queries to
-     * validate user authentication through 2FA]
+     * @route /api/profile/2fa/qr
+     *
+     * @param Auth2FA $auth2FA [Provides functionality for two-factor
+     * authentication (2FA) using Google Authenticator]
+     * @param UsersModel $usersModel [Model for the Users entity]
+     * @param AESService $aESService [Encrypt and decrypt data with AES]
+     * @param JWTService $jWTService [Service to manipulate JWT tokens]
      *
      * @return stdClass|array|DatabaseCapsuleInterface
      */
-    public function enable2FA(Users $users, AuthenticatorModel $authenticatorModel): stdClass|array|DatabaseCapsuleInterface
-    {
-        return $authenticatorModel->readUsersPasswordDB($users->capsule());
+    public function qr(
+        Auth2FA $auth2FA,
+        UsersModel $usersModel,
+        AESService $aESService,
+        JWTService $jWTService
+    ): stdClass|array|DatabaseCapsuleInterface {
+        $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
+
+        $aesDecode = $aESService->decode([
+            'idusers' => $data->idusers,
+        ]);
+
+        $users = $usersModel->readUsersByIdDB(
+            (new Users())
+                ->setIdusers((int) $aesDecode['idusers'])
+        );
+
+        $qr2fa = $auth2FA->qr(env('APP_NAME'), $users->users_email);
+
+        return success(null, Http::OK, (object) $aESService->encode([
+            'qr' => $qr2fa->data->qr,
+            'secret' => $qr2fa->data->secretKey,
+        ]));
     }
 }

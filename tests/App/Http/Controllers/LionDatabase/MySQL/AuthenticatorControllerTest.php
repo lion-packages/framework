@@ -12,6 +12,7 @@ use App\Models\LionDatabase\MySQL\AuthenticatorModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Lion\Authentication\Auth2FA;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -63,7 +64,7 @@ class AuthenticatorControllerTest extends Test
         $_POST['users_password'] = $aesEncode['users_password'];
 
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
-            'idusers' => $aesEncode['idusers']
+            'idusers' => $aesEncode['idusers'],
         ]);
 
         $response = $this->authenticatorController->passwordVerify(
@@ -84,6 +85,53 @@ class AuthenticatorControllerTest extends Test
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('the password is valid', $response->message);
+        $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
         $this->assertArrayNotHasKeyFromList($_POST, ['users_password']);
+    }
+
+    #[Testing]
+    public function qr(): void
+    {
+        $users = (new UsersModel())->readUsersDB();
+
+        $this->assertIsArray($users);
+        $this->assertCount(2, $users);
+
+        $user = reset($users);
+
+        $this->assertIsObject($user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $aesEncode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+        ]);
+
+        $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
+            'idusers' => $aesEncode['idusers'],
+        ]);
+
+        $response = $this->authenticatorController->qr(
+            new Auth2FA(),
+            new UsersModel(),
+            (new AESService())
+                ->setAES(new AES()),
+            (new JWTService())
+                ->setRSA(new RSA())
+                ->setJWT(new JWT())
+        );
+
+        $this->assertIsObject($response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertObjectHasProperty('data', $response);
+        $this->assertObjectHasProperty('qr', $response->data);
+        $this->assertObjectHasProperty('secret', $response->data);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertNull($response->message);
+        $this->assertIsString($response->data->qr);
+        $this->assertIsString($response->data->secret);
+        $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
     }
 }

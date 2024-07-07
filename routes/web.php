@@ -38,6 +38,10 @@ Route::prefix('api', function (): void {
             Route::get('/', [ProfileController::class, 'readProfile']);
             Route::put('/', [ProfileController::class, 'updateProfile']);
 
+            Route::prefix('2fa', function (): void {
+                Route::get('qr', [AuthenticatorController::class, 'qr']);
+            });
+
             Route::prefix('password', function (): void {
                 Route::post('/', [PasswordManagerController::class, 'updatePassword']);
                 Route::post('verify', [AuthenticatorController::class, 'passwordVerify']);
