@@ -8,6 +8,7 @@ use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Test\Test;
@@ -32,7 +33,8 @@ class UsersModelTest extends Test
             ->setUsersPassword('cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481')
             ->setUsersActivationCode(fake()->numerify('######'))
             ->setUsersRecoveryCode(null)
-            ->setUsersCode(uniqid('code-'));
+            ->setUsersCode(uniqid('code-'))
+            ->setUsers2fa(UsersFactory::DISABLED_2FA);
     }
 
     protected function tearDown(): void

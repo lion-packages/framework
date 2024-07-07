@@ -47,7 +47,7 @@ class AuthenticatorControllerTest extends Test
             'users_password' => UsersFactory::USERS_PASSWORD,
         ]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password/verify'), [
+        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/verify'), [
             'headers' => [
                 'Authorization' => $this->getAuthorization([
                     'idusers' => $aesEncode['idusers'],
@@ -86,7 +86,7 @@ class AuthenticatorControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function () use ($aesEncode): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password/verify'), [
+            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/verify'), [
                 'headers' => [
                     'Authorization' => $this->getAuthorization([
                         'idusers' => $aesEncode['idusers'],

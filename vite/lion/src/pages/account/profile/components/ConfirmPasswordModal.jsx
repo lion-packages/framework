@@ -19,7 +19,7 @@ export default function ConfirmPasswordModal({ show, setShow, setShow2FA }) {
     };
 
     try {
-      const res = await axiosApi().post("/api/profile/password/verify", form);
+      const res = await axiosApi().post("/api/profile/2fa/verify", form);
 
       if (200 === res.data.code) {
         setUsers_password("");
@@ -38,6 +38,10 @@ export default function ConfirmPasswordModal({ show, setShow, setShow2FA }) {
           },
         ]);
       }
+
+      setShow(false);
+
+      setUsers_password("");
     }
   };
 

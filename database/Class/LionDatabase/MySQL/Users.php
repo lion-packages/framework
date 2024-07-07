@@ -21,6 +21,7 @@ use Lion\Bundle\Interface\CapsuleInterface;
  * @property string $users_activation_code [Property for users_activation_code]
  * @property string $users_recovery_code [Property for users_recovery_code]
  * @property string $users_code [Property for users_code]
+ * @property int $users_2fa [Property for users_2fa]
  *
  * @package Database\Class\LionDatabase\MySQL
  */
@@ -111,6 +112,13 @@ class Users implements CapsuleInterface
 	private ?string $users_code = null;
 
 	/**
+	 * [Property for users_2fa]
+	 *
+	 * @var int|null $users_2fa
+	 */
+	private ?int $users_2fa = null;
+
+	/**
 	 * {@inheritdoc}
 	 * */
 	public function jsonSerialize(): array
@@ -135,7 +143,8 @@ class Users implements CapsuleInterface
 			->setUsersPassword(request('users_password'))
 			->setUsersActivationCode(request('users_activation_code'))
 			->setUsersRecoveryCode(request('users_recovery_code'))
-			->setUsersCode(request('users_code'));
+			->setUsersCode(request('users_code'))
+			->setUsers2fa(request('users_2fa'));
 
 		return $this;
 	}
@@ -424,6 +433,30 @@ class Users implements CapsuleInterface
     public function setUsersCode(?string $users_code = null): Users
     {
         $this->users_code = $users_code;
+
+        return $this;
+    }
+
+    /**
+     * Getter method for 'users_2fa'
+     *
+     * @return int|null
+     */
+    public function getUsers2fa(): ?int
+    {
+        return $this->users_2fa;
+    }
+
+    /**
+     * Setter method for 'users_2fa'
+     *
+     * @param int|null $users_2fa
+     *
+     * @return Users
+     */
+    public function setUsers2fa(?int $users_2fa = null): Users
+    {
+        $this->users_2fa = $users_2fa;
 
         return $this;
     }

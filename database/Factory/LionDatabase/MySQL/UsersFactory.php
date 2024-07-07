@@ -21,18 +21,32 @@ class UsersFactory implements FactoryInterface
      *
      * @const USERS_PASSWORD
      */
-    const string USERS_EMAIL = 'root@dev.com';
+    public const string USERS_EMAIL = 'root@dev.com';
 
     /**
      * [User password]
      *
      * @const USERS_PASSWORD
      */
-    const string USERS_PASSWORD = 'lion';
+    public const string USERS_PASSWORD = 'lion';
+
+    /**
+     * [Defines whether a user has 2-step security enabled with 2FA]
+     *
+     * @const ENABLE_2FA
+     */
+    public const int ENABLED_2FA = 1;
+
+    /**
+     * [Defines whether a user has 2-step security disabled with 2FA]
+     *
+     * @const DISABLED_2FA
+     */
+    public const int DISABLED_2FA = 0;
 
     /**
      * {@inheritdoc}
-     **/
+     */
     public static function columns(): array
     {
         return [
@@ -46,12 +60,13 @@ class UsersFactory implements FactoryInterface
             'users_password',
             'users_activation_code',
             'users_code',
+            'users_2fa',
         ];
     }
 
     /**
      * {@inheritdoc}
-     **/
+     */
     public static function definition(): array
     {
         $validation = new Validation();
@@ -67,7 +82,8 @@ class UsersFactory implements FactoryInterface
                 self::USERS_EMAIL,
                 $validation->passwordHash(self::USERS_PASSWORD),
                 null,
-                uniqid('code-')
+                uniqid('code-'),
+                self::DISABLED_2FA,
             ],
             [
                 RolesEnum::MANAGER->value,
@@ -79,7 +95,8 @@ class UsersFactory implements FactoryInterface
                 'manager@dev.com',
                 $validation->passwordHash(self::USERS_PASSWORD),
                 "123456",
-                uniqid('code-')
+                uniqid('code-'),
+                self::DISABLED_2FA,
             ],
             // ...array_map(function () use ($validation): array {
             //     return [
@@ -92,7 +109,8 @@ class UsersFactory implements FactoryInterface
             //         fake()->email(),
             //         $validation->passwordHash(self::USERS_PASSWORD),
             //         null,
-            //         uniqid('code-')
+            //         uniqid('code-'),
+            //         self::DISABLED_2FA,
             //     ];
             // }, range(0, 999)),
         ];

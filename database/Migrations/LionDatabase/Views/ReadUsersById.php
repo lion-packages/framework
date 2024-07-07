@@ -32,6 +32,7 @@ return new class implements ViewInterface
                         $db->getColumn('users_activation_code', 'usr'),
                         $db->getColumn('users_recovery_code', 'usr'),
                         $db->getColumn('users_code', 'usr'),
+                        $db->getColumn('users_2fa', 'usr'),
                         $db->getColumn('roles_name', 'rl'),
                         $db->getColumn('document_types_name', 'dcmt')
                     )

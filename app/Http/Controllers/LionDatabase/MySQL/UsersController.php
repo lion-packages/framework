@@ -14,6 +14,7 @@ use App\Rules\LionDatabase\MySQL\Users\UsersNameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersNicknameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
@@ -61,6 +62,7 @@ class UsersController
                 ->setUsersActivationCode(fake()->numerify('######'))
                 ->setUsersRecoveryCode(null)
                 ->setUsersCode(uniqid('code-'))
+                ->setUsers2fa(UsersFactory::DISABLED_2FA)
         );
 
         if (isError($response)) {

@@ -78,7 +78,9 @@ export default function Enable2FAModal({ show, setShow }) {
           <Row>
             <Col xs={12} sm={4} lg={3}>
               <div className="text-center">
-                {img && <Image src={img} alt="QR Code" fluid />}
+                {img && (
+                  <Image src={img} className="mb-3" alt="QR Code" fluid />
+                )}
 
                 <Button
                   type="button"
