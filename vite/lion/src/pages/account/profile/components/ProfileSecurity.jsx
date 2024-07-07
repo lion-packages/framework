@@ -1,9 +1,13 @@
 import { Fragment, useState } from "react";
 import { Button } from "react-bootstrap";
 import ChangePasswordModal from "./ChangePasswordModal";
+import Enable2FAModal from "./Enable2FAModal";
+import ConfirmPasswordModal from "./ConfirmPasswordModal";
 
 export default function ProfileSecurity() {
   const [show, setShow] = useState(false);
+  const [show2FA, setShow2FA] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <Fragment>
@@ -29,7 +33,22 @@ export default function ProfileSecurity() {
             complete an additional sign-in step.
           </p>
 
-          <Button>Enable Authenticator App</Button>
+          <Button
+            type="button"
+            variant="info"
+            size="sm"
+            onClick={() => setShowConfirmPassword(true)}
+          >
+            Enable Authenticator App
+          </Button>
+
+          <ConfirmPasswordModal
+            show={showConfirmPassword}
+            setShow={setShowConfirmPassword}
+            setShow2FA={setShow2FA}
+          />
+
+          <Enable2FAModal show={show2FA} setShow={setShow2FA} />
         </Fragment>
       </div>
     </Fragment>

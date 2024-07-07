@@ -105,6 +105,7 @@ export default function ChangePasswordModal({ show, setShow }) {
               type="password"
               placeholder="Current Password..."
               autoComplete="off"
+              required
             />
           </Form.Group>
 
@@ -117,6 +118,7 @@ export default function ChangePasswordModal({ show, setShow }) {
               type="password"
               placeholder="New password..."
               autoComplete="off"
+              required
             />
           </Form.Group>
 
@@ -129,6 +131,7 @@ export default function ChangePasswordModal({ show, setShow }) {
               type="password"
               placeholder="Confirm new password..."
               autoComplete="off"
+              required
             />
           </Form.Group>
         </Form>

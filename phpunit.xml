@@ -32,7 +32,7 @@
     <extensions>
         <bootstrap class="RobinIngelbrecht\PHPUnitPrettyPrint\PhpUnitExtension">
             <parameter name="enableByDefault" value="true" />
-            <parameter name="displayProfiling" value="true" />
+            <parameter name="displayProfiling" value="false" />
             <parameter name="useCompactMode" value="true" />
         </bootstrap>
     </extensions>
