@@ -20,6 +20,13 @@ trait AuthJwtProviderTrait
         ProcessCommand::run("php lion new:rsa --path keys/{$path}/", false);
     }
 
+    /**
+     * Encrypt the data list with AES
+     *
+     * @param array<string, string> $rows [List of data to encrypt]
+     *
+     * @return array|object
+     */
     private function AESEncode(array $rows): array
     {
         return (new AESService())

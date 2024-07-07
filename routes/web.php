@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\LionDatabase\MySQL\AuthenticatorController;
 use App\Http\Controllers\LionDatabase\MySQL\LoginController;
 use App\Http\Controllers\LionDatabase\MySQL\PasswordManagerController;
 use App\Http\Controllers\LionDatabase\MySQL\ProfileController;
@@ -17,7 +18,7 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  */
 
-Route::get('/', fn (): stdClass => info('[index]'));
+Route::get('/', fn(): stdClass => info('[index]'));
 
 Route::prefix('api', function (): void {
     Route::prefix('auth', function (): void {
@@ -36,7 +37,11 @@ Route::prefix('api', function (): void {
         Route::prefix('profile', function (): void {
             Route::get('/', [ProfileController::class, 'readProfile']);
             Route::put('/', [ProfileController::class, 'updateProfile']);
-            Route::post('password', [PasswordManagerController::class, 'updatePassword']);
+
+            Route::prefix('password', function (): void {
+                Route::post('/', [PasswordManagerController::class, 'updatePassword']);
+                Route::post('verify', [AuthenticatorController::class, 'passwordVerify']);
+            });
         });
 
         Route::middleware(['admin-access'], function (): void {
