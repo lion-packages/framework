@@ -19,12 +19,14 @@ return new class implements StoreProcedureInterface
         return Schema::connection(env('DB_NAME', 'lion_database'))
             ->createStoreProcedure('update_2fa', function (): void {
                 Schema::in()->tinyInt('_users_2fa', 1);
+                Schema::in()->varchar('_users_2fa_secret', 16)->null();
                 Schema::in()->int('_idusers');
             }, function (MySQL $db): void {
                 $db
                     ->table('users')
                     ->update([
-                        'users_2fa' => '_users_2fa'
+                        'users_2fa' => '_users_2fa',
+                        'users_2fa_secret' => '_users_2fa_secret',
                     ])
                     ->where()->equalTo('idusers', '_idusers');
             })

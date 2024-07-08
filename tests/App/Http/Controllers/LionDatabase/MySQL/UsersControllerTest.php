@@ -6,6 +6,7 @@ namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
+use App\Exceptions\ProcessException;
 use App\Http\Controllers\LionDatabase\MySQL\UsersController;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
@@ -15,6 +16,7 @@ use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\Validation;
+use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
@@ -75,29 +77,33 @@ class UsersControllerTest extends Test
         $this->assertSame('registered user successfully', $response->message);
     }
 
-    public function testCreateUsersIsError(): void
+    #[Testing]
+    public function createUsersIsError(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('an error occurred while registering the user');
-        $this->expectExceptionCode(Http::INTERNAL_SERVER_ERROR);
+        $this
+            ->exception(ProcessException::class)
+            ->exceptionCode(Http::INTERNAL_SERVER_ERROR)
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionMessage('an error occurred while registering the user')
+            ->expectLionException(function (): void {
+                $_POST['idroles'] = RolesEnum::ADMINISTRATOR->value;
 
-        $_POST['idroles'] = RolesEnum::ADMINISTRATOR->value;
+                $_POST['iddocument_types'] = DocumentTypesEnum::PASSPORT->value;
 
-        $_POST['iddocument_types'] = DocumentTypesEnum::PASSPORT->value;
+                $_POST['users_citizen_identification'] = fake()->numerify('##########');
 
-        $_POST['users_citizen_identification'] = fake()->numerify('##########');
+                $_POST['users_name'] = fake()->name();
 
-        $_POST['users_name'] = fake()->name();
+                $_POST['users_last_name'] = fake()->lastName();
 
-        $_POST['users_last_name'] = fake()->lastName();
+                $_POST['users_nickname'] = fake()->userName();
 
-        $_POST['users_nickname'] = fake()->userName();
+                $_POST['users_email'] = null;
 
-        $_POST['users_email'] = null;
+                $_POST['users_password'] = (new Validation())->sha256(UsersFactory::USERS_PASSWORD);
 
-        $_POST['users_password'] = (new Validation())->sha256(UsersFactory::USERS_PASSWORD);
-
-        $this->usersController->createUsers(new Users(), new UsersModel(), new Validation());
+                $this->usersController->createUsers(new Users(), new UsersModel(), new Validation());
+            });
     }
 
     public function testReadUsers(): void

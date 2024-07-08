@@ -75,6 +75,7 @@ class RegistrationController
                 ->setUsersActivationCode(fake()->numerify('######'))
                 ->setUsersCode(uniqid('code-'))
                 ->setUsers2fa(UsersFactory::DISABLED_2FA)
+                ->setUsers2faSecret(null)
         );
 
         if (isSuccess($response)) {

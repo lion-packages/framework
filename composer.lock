@@ -1411,16 +1411,16 @@
         },
         {
             "name": "lion/request",
-            "version": "v6.9.0",
+            "version": "v6.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/request.git",
-                "reference": "0f493ffd803c2b840c906a1ca5138b0e0c048741"
+                "reference": "e50d6abcde492688a93417f3a015acb8f09e673b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/request/zipball/0f493ffd803c2b840c906a1ca5138b0e0c048741",
-                "reference": "0f493ffd803c2b840c906a1ca5138b0e0c048741",
+                "url": "https://api.github.com/repos/lion-packages/request/zipball/e50d6abcde492688a93417f3a015acb8f09e673b",
+                "reference": "e50d6abcde492688a93417f3a015acb8f09e673b",
                 "shasum": ""
             },
             "require": {
@@ -1443,9 +1443,9 @@
             "description": "Library created to request input data and response requests",
             "support": {
                 "issues": "https://github.com/lion-packages/request/issues",
-                "source": "https://github.com/lion-packages/request/tree/v6.9.0"
+                "source": "https://github.com/lion-packages/request/tree/v6.10.0"
             },
-            "time": "2024-06-29T17:49:37+00:00"
+            "time": "2024-07-09T21:03:05+00:00"
         },
         {
             "name": "lion/route",

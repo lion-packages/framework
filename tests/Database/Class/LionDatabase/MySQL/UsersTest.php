@@ -24,6 +24,7 @@ class UsersTest extends Test
     private const string USERS_RECOVERY_CODE = '######';
     private const string USERS_CODE = 'code-65ca2d74ed1e1';
     private const int USERS_2FA = 0;
+    private const string USERS_2FA_SECRET = '################';
 
     private Users $users;
 
@@ -258,5 +259,24 @@ class UsersTest extends Test
         ]);
 
         $this->assertSame(self::USERS_2FA, $this->users->getUsers2fa());
+    }
+
+    #[Testing]
+    public function getUsers2faSecret(): void
+    {
+        $this->users->setUsers2faSecret(self::USERS_2FA_SECRET);
+
+        $this->assertSame(self::USERS_2FA_SECRET, $this->users->getUsers2faSecret());
+    }
+
+    #[Testing]
+    public function setUsers2faSecret(): void
+    {
+        $this->assertInstances($this->users->setUsers2faSecret(self::USERS_2FA_SECRET), [
+            Users::class,
+            CapsuleInterface::class,
+        ]);
+
+        $this->assertSame(self::USERS_2FA_SECRET, $this->users->getUsers2faSecret());
     }
 }

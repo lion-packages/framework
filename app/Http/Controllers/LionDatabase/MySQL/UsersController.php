@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Exceptions\ProcessException;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use App\Rules\LionDatabase\MySQL\DocumentTypes\IddocumentTypesRule;
 use App\Rules\LionDatabase\MySQL\Roles\IdrolesRule;
@@ -18,6 +19,7 @@ use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Route\Attributes\Rules;
 use Lion\Security\Validation;
 use stdClass;
@@ -63,10 +65,15 @@ class UsersController
                 ->setUsersRecoveryCode(null)
                 ->setUsersCode(uniqid('code-'))
                 ->setUsers2fa(UsersFactory::DISABLED_2FA)
+                ->setUsers2faSecret(null)
         );
 
         if (isError($response)) {
-            throw new Exception('an error occurred while registering the user', Http::INTERNAL_SERVER_ERROR);
+            throw new ProcessException(
+                'an error occurred while registering the user',
+                Status::ERROR,
+                Http::INTERNAL_SERVER_ERROR
+            );
         }
 
         return success('registered user successfully');

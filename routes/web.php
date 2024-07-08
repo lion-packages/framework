@@ -42,6 +42,7 @@ Route::prefix('api', function (): void {
             Route::prefix('2fa', function (): void {
                 Route::post('verify', [AuthenticatorController::class, 'passwordVerify']);
                 Route::get('qr', [AuthenticatorController::class, 'qr']);
+                Route::post('enable', [AuthenticatorController::class, 'enable2FA']);
             });
         });
 

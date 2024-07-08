@@ -30,6 +30,7 @@ return new class implements StoreProcedureInterface
                 Schema::in()->varchar('_users_recovery_code', 6)->null();
                 Schema::in()->varchar('_users_code', 18);
                 Schema::in()->tinyInt('_users_2fa', 1);
+                Schema::in()->varchar('_users_2fa_secret', 16)->null();
             }, function (MySQL $db): void {
                 $db
                     ->table('users')
@@ -46,6 +47,7 @@ return new class implements StoreProcedureInterface
                         'users_recovery_code' => '_users_recovery_code',
                         'users_code' => '_users_code',
                         'users_2fa' => '_users_2fa',
+                        'users_2fa_secret' => '_users_2fa_secret',
                     ]);
             })
             ->execute();

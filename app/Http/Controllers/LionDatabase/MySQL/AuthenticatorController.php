@@ -8,9 +8,12 @@ use App\Exceptions\PasswordException;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Http\Services\LionDatabase\MySQL\AuthenticatorService;
+use App\Models\LionDatabase\MySQL\AuthenticatorModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
+use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Authentication\Auth2FA;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
@@ -27,7 +30,7 @@ class AuthenticatorController
     /**
      * Check if the user's password is valid
      *
-     * @route /api/profile/password/verify
+     * @route /api/profile/2fa/verify
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param AuthenticatorService $authenticatorService [Manage 2FA services]
@@ -67,6 +70,7 @@ class AuthenticatorController
      *
      * @route /api/profile/2fa/qr
      *
+     * @param Users $users [Capsule for the 'Users' entity]
      * @param Auth2FA $auth2FA [Provides functionality for two-factor
      * authentication (2FA) using Google Authenticator]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -76,6 +80,7 @@ class AuthenticatorController
      * @return stdClass|array|DatabaseCapsuleInterface
      */
     public function qr(
+        Users $users,
         Auth2FA $auth2FA,
         UsersModel $usersModel,
         AESService $aESService,
@@ -88,7 +93,7 @@ class AuthenticatorController
         ]);
 
         $users = $usersModel->readUsersByIdDB(
-            (new Users())
+            $users
                 ->setIdusers((int) $aesDecode['idusers'])
         );
 
@@ -98,5 +103,49 @@ class AuthenticatorController
             'qr' => $qr2fa->data->qr,
             'secret' => $qr2fa->data->secretKey,
         ]));
+    }
+
+    /**
+     * Enable 2-step authentication with 2FA
+     *
+     * @route /api/profile/2fa/enable
+     *
+     * @param Authenticator2FA $authenticator2FA [Capsule for the
+     * 'Authenticator2FA' entity]
+     * @param AuthenticatorService $authenticatorService [Manage 2FA services]
+     * @param AESService $aESService [Encrypt and decrypt data with AES]
+     * @param JWTService $jWTService [Service to manipulate JWT tokens]
+     *
+     * @return stdClass
+     *
+     * @throws ProcessException
+     */
+    public function enable2FA(
+        Authenticator2FA $authenticator2FA,
+        AuthenticatorService $authenticatorService,
+        AESService $aESService,
+        JWTService $jWTService
+    ): stdClass {
+        $authenticator2FA->capsule();
+
+        $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
+
+        $aesDecode = $aESService->decode([
+            'idusers' => $data->idusers,
+            'users_2fa_secret' => $authenticator2FA->getUsers2faSecret(),
+        ]);
+
+        $authenticator2FA
+            ->setIdusers((int) $aesDecode['idusers'])
+            ->setUsers2fa(UsersFactory::ENABLED_2FA)
+            ->setUsers2faSecret($aesDecode['users_2fa_secret']);
+
+        $authenticatorService->checkStatus(UsersFactory::ENABLED_2FA, $authenticator2FA);
+
+        $authenticatorService->verify2FA($aesDecode['users_2fa_secret'], $authenticator2FA);
+
+        $authenticatorService->update2FA($authenticator2FA);
+
+        return success('2FA authentication has been enabled');
     }
 }

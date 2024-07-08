@@ -38,6 +38,7 @@ class UsersModel
             $users->getUsersRecoveryCode(),
             $users->getUsersCode(),
             $users->getUsers2fa(),
+            $users->getUsers2faSecret(),
         ])
             ->execute();
     }

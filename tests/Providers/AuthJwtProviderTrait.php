@@ -27,11 +27,25 @@ trait AuthJwtProviderTrait
      *
      * @return array|object
      */
-    private function AESEncode(array $rows): array
+    private function AESEncode(array $rows): array|object
     {
         return (new AESService())
             ->setAES(new AES())
             ->encode($rows);
+    }
+
+    /**
+     * Decrypt data list with AES
+     *
+     * @param array<string, string> $rows [List of data to decrypt]
+     *
+     * @return array|object
+     */
+    private function AESDecode(array $rows): array|object
+    {
+        return (new AESService())
+            ->setAES(new AES())
+            ->decode($rows);
     }
 
     private function getAuthorization(array $data = []): string

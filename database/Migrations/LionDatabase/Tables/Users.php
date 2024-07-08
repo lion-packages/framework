@@ -38,6 +38,7 @@ return new class implements TableInterface
                 DB::varchar('users_recovery_code', 6)->null();
                 DB::varchar('users_code', 18)->notNull()->unique();
                 DB::tinyInt('users_2fa', 1)->notNull()->default(UsersFactory::DISABLED_2FA);
+                DB::varchar('users_2fa_secret', 16)->null();
             })
             ->execute();
     }
