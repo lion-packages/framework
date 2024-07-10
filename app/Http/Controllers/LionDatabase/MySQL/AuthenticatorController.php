@@ -8,9 +8,9 @@ use App\Exceptions\PasswordException;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Http\Services\LionDatabase\MySQL\AuthenticatorService;
-use App\Models\LionDatabase\MySQL\AuthenticatorModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
+use App\Rules\Users2FASecretRule;
 use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
@@ -120,6 +120,7 @@ class AuthenticatorController
      *
      * @throws ProcessException
      */
+    #[Rules(Users2FASecretRule::class)]
     public function enable2FA(
         Authenticator2FA $authenticator2FA,
         AuthenticatorService $authenticatorService,

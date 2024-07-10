@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useApiResponse from "../../../../hooks/useApiResponse";
 import { ResponseContext } from "../../../../context/ResponseContext";
 
-export default function VerifiedUser({ users_email, setVerified }) {
+export default function VerifiedUser({ users_email, setShow, setVerified }) {
   const navigate = useNavigate();
   const { addToast } = useContext(ResponseContext);
   const { getResponseFromRules } = useApiResponse();
@@ -56,6 +56,8 @@ export default function VerifiedUser({ users_email, setVerified }) {
           ]);
 
           setVerified(false);
+
+          setShow(true);
 
           navigate("/auth/login");
         }

@@ -1,10 +1,13 @@
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import ChangePasswordModal from "./ChangePasswordModal";
 import Enable2FAModal from "./Enable2FAModal";
 import ConfirmPasswordModal from "./ConfirmPasswordModal";
+import { AuthContext } from "../../../../context/AuthContext";
 
 export default function ProfileSecurity() {
+  const { auth_2fa } = useContext(AuthContext);
+
   const [show, setShow] = useState(false);
   const [show2FA, setShow2FA] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -33,14 +36,22 @@ export default function ProfileSecurity() {
             complete an additional sign-in step.
           </p>
 
-          <Button
-            type="button"
-            variant="info"
-            size="sm"
-            onClick={() => setShowConfirmPassword(true)}
-          >
-            Enable Authenticator App
-          </Button>
+          {!auth_2fa && (
+            <Button
+              type="button"
+              variant="info"
+              size="sm"
+              onClick={() => setShowConfirmPassword(true)}
+            >
+              Enabled Authenticator App
+            </Button>
+          )}
+
+          {auth_2fa && (
+            <Button type="button" variant="danger" size="sm">
+              Disabled Authenticator App
+            </Button>
+          )}
 
           <ConfirmPasswordModal
             show={showConfirmPassword}

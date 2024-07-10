@@ -23,6 +23,7 @@ Route::get('/', fn(): stdClass => info('[index]'));
 Route::prefix('api', function (): void {
     Route::prefix('auth', function (): void {
         Route::post('login', [LoginController::class, 'auth']);
+        Route::post('2fa', [LoginController::class, 'auth2FA']);
         Route::post('register', [RegistrationController::class, 'register']);
         Route::post('verify', [RegistrationController::class, 'verifyAccount']);
         Route::post('refresh', [LoginController::class, 'refresh'], ['jwt-existence']);

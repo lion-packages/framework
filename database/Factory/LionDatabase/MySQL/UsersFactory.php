@@ -17,11 +17,25 @@ use Lion\Security\Validation;
 class UsersFactory implements FactoryInterface
 {
     /**
-     * [Users Email
+     * [Users Email for root]
      *
-     * @const USERS_PASSWORD
+     * @const USERS_EMAIL
      */
     public const string USERS_EMAIL = 'root@dev.com';
+
+    /**
+     * [Users Email for Manager]
+     *
+     * @const USERS_EMAIL_MANAGER
+     */
+    public const string USERS_EMAIL_MANAGER = 'manager@dev.com';
+
+    /**
+     * [Users Email for Security]
+     *
+     * @const USERS_EMAIL_SECURITY
+     */
+    public const string USERS_EMAIL_SECURITY = 'security@dev.com';
 
     /**
      * [User password]
@@ -33,7 +47,7 @@ class UsersFactory implements FactoryInterface
     /**
      * [Defines whether a user has 2-step security enabled with 2FA]
      *
-     * @const ENABLE_2FA
+     * @const ENABLED_2FA
      */
     public const int ENABLED_2FA = 1;
 
@@ -43,6 +57,13 @@ class UsersFactory implements FactoryInterface
      * @const DISABLED_2FA
      */
     public const int DISABLED_2FA = 0;
+
+    /**
+     * [Secret key for 2FA security]
+     *
+     * @const SECURITY_KEY_2FA
+     */
+    public const string SECURITY_KEY_2FA = 'QWTEQL5DKKZCF4KE';
 
     /**
      * {@inheritdoc}
@@ -61,6 +82,7 @@ class UsersFactory implements FactoryInterface
             'users_activation_code',
             'users_code',
             'users_2fa',
+            'users_2fa_secret',
         ];
     }
 
@@ -84,6 +106,7 @@ class UsersFactory implements FactoryInterface
                 null,
                 uniqid('code-'),
                 self::DISABLED_2FA,
+                null,
             ],
             [
                 RolesEnum::MANAGER->value,
@@ -97,6 +120,21 @@ class UsersFactory implements FactoryInterface
                 "123456",
                 uniqid('code-'),
                 self::DISABLED_2FA,
+                null,
+            ],
+            [
+                RolesEnum::MANAGER->value,
+                DocumentTypesEnum::CITIZENSHIP_CARD->value,
+                fake()->numerify('##########'),
+                'root',
+                'manager',
+                fake()->userName(),
+                'security@dev.com',
+                $validation->passwordHash(self::USERS_PASSWORD),
+                null,
+                uniqid('code-'),
+                self::ENABLED_2FA,
+                self::SECURITY_KEY_2FA,
             ],
             // ...array_map(function () use ($validation): array {
             //     return [
@@ -111,6 +149,7 @@ class UsersFactory implements FactoryInterface
             //         null,
             //         uniqid('code-'),
             //         self::DISABLED_2FA,
+            //         null,
             //     ];
             // }, range(0, 999)),
         ];

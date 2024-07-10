@@ -11,6 +11,8 @@ use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use PragmaRX\Google2FAQRCode\Google2FA;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -19,9 +21,13 @@ class AuthenticatorControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
+    private UsersModel $usersModel;
+
     protected function setUp(): void
     {
         $this->runMigrationsAndQueues();
+
+        $this->usersModel = new UsersModel();
     }
 
     protected function tearDown(): void
@@ -30,12 +36,12 @@ class AuthenticatorControllerTest extends Test
     }
 
     #[Testing]
-    public function verifyPassword(): void
+    public function passwordVerify(): void
     {
-        $users = (new UsersModel())->readUsersDB();
+        $users = $this->usersModel->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
@@ -70,10 +76,10 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function passwordVerifyPasswordIsInvalid(): void
     {
-        $users = (new UsersModel())->readUsersDB();
+        $users = $this->usersModel->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
@@ -108,10 +114,10 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function qr(): void
     {
-        $users = (new UsersModel())->readUsersDB();
+        $users = $this->usersModel->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
@@ -142,5 +148,44 @@ class AuthenticatorControllerTest extends Test
         $this->assertNull($response->message);
         $this->assertIsString($response->data->qr);
         $this->assertIsString($response->data->secret);
+    }
+
+    #[Testing]
+    public function enable2FA(): void
+    {
+        $users = $this->usersModel->readUsersDB();
+
+        $this->assertIsArray($users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
+
+        $user = reset($users);
+
+        $this->assertIsObject($user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $aesEncode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+            'users_2fa_secret' => UsersFactory::SECURITY_KEY_2FA,
+        ]);
+
+        $response = json_decode(
+            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $aesEncode['idusers'],
+                    ]),
+                ],
+                'json' => [
+                    'users_2fa_secret' => $aesEncode['users_2fa_secret'],
+                    'users_secret_code' => (new Google2FA())
+                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                ],
+            ])
+                ->getBody()
+                ->getContents()
+        );
+
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
     }
 }

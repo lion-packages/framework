@@ -7,6 +7,7 @@ import useApiResponse from "../../../hooks/useApiResponse";
 import useAES from "../../../hooks/useAES";
 import { AuthContext } from "../../../context/AuthContext";
 import { ResponseContext } from "../../../context/ResponseContext";
+import Authenticator2FA from "./components/Authenticator2FA";
 
 export default function LoginIndex() {
   const navigate = useNavigate();
@@ -17,7 +18,9 @@ export default function LoginIndex() {
 
   const [users_email, setUsers_email] = useState("root@dev.com");
   const [users_password, setUsers_password] = useState("lion");
+  const [show, setShow] = useState(true);
   const [verified, setVerified] = useState(false);
+  const [authenticator2FA, setAuthenticator2FA] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -32,33 +35,24 @@ export default function LoginIndex() {
       .then(({ data }) => {
         // console.log(data);
 
-        if ("success" === data.status) {
-          login(data.data.jwt_access, data.data.jwt_refresh);
+        if (200 === data.code) {
+          login(data.data.jwt_access, data.data.jwt_refresh, {
+            auth_2fa: data.data.auth_2fa,
+          });
 
-          if (null != data.data.full_name) {
-            addToast([
-              {
-                status: data.status,
-                title: "Authentication",
-                message: data.message,
-              },
-              // {
-              //   status: "info",
-              //   title: "Authentication",
-              //   message: `Welcome: ${data.data.full_name}`,
-              // },
-            ]);
-          } else {
-            addToast([
-              {
-                status: data.status,
-                title: "Authentication",
-                message: data.message,
-              },
-            ]);
-          }
+          addToast([
+            {
+              status: data.status,
+              title: "Authentication",
+              message: data.message,
+            },
+          ]);
 
           navigate("/dashboard");
+        } else if (202 === data.code) {
+          setShow(false);
+
+          setAuthenticator2FA(true);
         } else {
           addToast([
             {
@@ -70,11 +64,9 @@ export default function LoginIndex() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
 
-        if (err.response && 403 === err.response.data.code) {
-          setVerified(true);
-
+        if (err.response && 401 === err.response.data.code) {
           addToast([
             {
               status: err.response.data.status,
@@ -84,7 +76,11 @@ export default function LoginIndex() {
           ]);
         }
 
-        if (err.response && 401 === err.response.data.code) {
+        if (err.response && 403 === err.response.data.code) {
+          setShow(false);
+
+          setVerified(true);
+
           addToast([
             {
               status: err.response.data.status,
@@ -114,9 +110,23 @@ export default function LoginIndex() {
           xxl={5}
           className="mx-auto my-5 bg-light border rounded p-3"
         >
-          {verified ? (
-            <VerifiedUser users_email={users_email} setVerified={setVerified} />
-          ) : (
+          {verified && (
+            <VerifiedUser
+              users_email={users_email}
+              setShow={setShow}
+              setVerified={setVerified}
+            />
+          )}
+
+          {authenticator2FA && (
+            <Authenticator2FA
+              users_email={users_email}
+              setShow={setShow}
+              setAuthenticator2FA={setAuthenticator2FA}
+            />
+          )}
+
+          {show && (
             <Fragment>
               <h4>Login</h4>
 

@@ -20,10 +20,12 @@ use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use PHPUnit\Framework\Attributes\TestWith;
 use PragmaRX\Google2FAQRCode\Google2FA;
+use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class AuthenticatorServiceTest extends Test
 {
+    use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
     private AuthenticatorService $authenticatorService;
@@ -75,7 +77,7 @@ class AuthenticatorServiceTest extends Test
         $users = $this->usersModel->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
@@ -103,7 +105,7 @@ class AuthenticatorServiceTest extends Test
                 $users = $this->usersModel->readUsersDB();
 
                 $this->assertIsArray($users);
-                $this->assertCount(2, $users);
+                $this->assertCount(self::AVAILABLE_USERS, $users);
 
                 $user = reset($users);
 
@@ -128,7 +130,7 @@ class AuthenticatorServiceTest extends Test
         $users = $this->usersModel->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
@@ -169,7 +171,7 @@ class AuthenticatorServiceTest extends Test
                 $users = $this->usersModel->readUsersDB();
 
                 $this->assertIsArray($users);
-                $this->assertCount(2, $users);
+                $this->assertCount(self::AVAILABLE_USERS, $users);
 
                 $user = reset($users);
 
@@ -231,7 +233,7 @@ class AuthenticatorServiceTest extends Test
             ->exception(ProcessException::class)
             ->exceptionMessage('failed to authenticate, the code is not valid')
             ->exceptionStatus(Status::ERROR)
-            ->exceptionCode(Http::INTERNAL_SERVER_ERROR)
+            ->exceptionCode(Http::FORBIDDEN)
             ->expectLionException(function (): void {
                 $qr = (new Auth2FA())->qr(env('APP_NAME'), env('MAIL_USER_NAME'));
 
@@ -259,7 +261,7 @@ class AuthenticatorServiceTest extends Test
         $users = $this->usersModel->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
@@ -308,7 +310,7 @@ class AuthenticatorServiceTest extends Test
                 $users = $this->usersModel->readUsersDB();
 
                 $this->assertIsArray($users);
-                $this->assertCount(2, $users);
+                $this->assertCount(self::AVAILABLE_USERS, $users);
 
                 $user = reset($users);
 

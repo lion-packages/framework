@@ -121,7 +121,7 @@ class AuthenticatorService
         $response = $this->auth2FA->verify($users_2fa_secret, $authenticator2FA->getUsersSecretCode());
 
         if (isError($response)) {
-            throw new ProcessException($response->message, Status::ERROR, Http::INTERNAL_SERVER_ERROR);
+            throw new ProcessException($response->message, Status::ERROR, Http::FORBIDDEN);
         }
     }
 

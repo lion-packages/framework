@@ -12,8 +12,8 @@ use Lion\Security\RSA;
 
 trait AuthJwtProviderTrait
 {
-    const int AVAILABLE_USERS = 2;
-    const int REMAINING_USERS = 1;
+    const int AVAILABLE_USERS = 3;
+    const int REMAINING_USERS = 2;
 
     private function generateKeys(string $path): void
     {

@@ -70,8 +70,6 @@ export default function Enable2FAModal({ show, setShow }) {
     try {
       const res = await axiosApi().get("/api/profile/2fa/qr");
 
-      console.log(res);
-
       if (200 === res.data.code) {
         setImg(decode(res.data.data.qr));
 

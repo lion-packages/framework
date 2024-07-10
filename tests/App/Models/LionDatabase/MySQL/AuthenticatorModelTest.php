@@ -14,10 +14,12 @@ use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class AuthenticatorModelTest extends Test
 {
+    use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
     private AuthenticatorModel $authenticatorModel;
@@ -43,7 +45,7 @@ class AuthenticatorModelTest extends Test
         $users = $this->usersModel->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
@@ -68,7 +70,7 @@ class AuthenticatorModelTest extends Test
         $users = $this->usersModel->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
@@ -91,7 +93,7 @@ class AuthenticatorModelTest extends Test
         $users = $this->usersModel->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 

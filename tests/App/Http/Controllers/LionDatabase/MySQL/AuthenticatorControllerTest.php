@@ -51,7 +51,7 @@ class AuthenticatorControllerTest extends Test
         $users = (new UsersModel())->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
@@ -97,7 +97,7 @@ class AuthenticatorControllerTest extends Test
         $users = (new UsersModel())->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
@@ -144,7 +144,7 @@ class AuthenticatorControllerTest extends Test
         $users = (new UsersModel())->readUsersDB();
 
         $this->assertIsArray($users);
-        $this->assertCount(2, $users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
 
         $user = reset($users);
 
