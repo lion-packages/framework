@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Fragment, useContext, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Container, Nav } from "react-bootstrap";

@@ -5,7 +5,13 @@ import useAES from "../../../../hooks/useAES";
 import axiosApi from "../../../../Api";
 import { ResponseContext } from "../../../../context/ResponseContext";
 
-export default function ConfirmPasswordModal({ show, setShow, setShow2FA }) {
+export default function ConfirmPasswordModal({
+  show,
+  setShow,
+  setShow2FA,
+  setShow2FADisable,
+  modalType,
+}) {
   const { encode } = useAES();
   const { addToast } = useContext(ResponseContext);
 
@@ -24,7 +30,11 @@ export default function ConfirmPasswordModal({ show, setShow, setShow2FA }) {
       if (200 === res.data.code) {
         setUsers_password("");
 
-        setShow2FA(true);
+        if (!modalType) {
+          setShow2FA(true);
+        } else {
+          setShow2FADisable(true);
+        }
 
         setShow(false);
       }

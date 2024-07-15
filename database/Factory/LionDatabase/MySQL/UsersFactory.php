@@ -127,7 +127,7 @@ class UsersFactory implements FactoryInterface
                 DocumentTypesEnum::CITIZENSHIP_CARD->value,
                 fake()->numerify('##########'),
                 'root',
-                'manager',
+                'security',
                 fake()->userName(),
                 'security@dev.com',
                 $validation->passwordHash(self::USERS_PASSWORD),

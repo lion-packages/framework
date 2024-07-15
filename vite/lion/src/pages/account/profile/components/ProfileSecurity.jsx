@@ -4,13 +4,16 @@ import ChangePasswordModal from "./ChangePasswordModal";
 import Enable2FAModal from "./Enable2FAModal";
 import ConfirmPasswordModal from "./ConfirmPasswordModal";
 import { AuthContext } from "../../../../context/AuthContext";
+import Disable2FAModal from "./Disable2FAModal";
 
 export default function ProfileSecurity() {
   const { auth_2fa } = useContext(AuthContext);
 
   const [show, setShow] = useState(false);
-  const [show2FA, setShow2FA] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [show2FA, setShow2FA] = useState(false);
+  const [show2FADisable, setShow2FADisable] = useState(false);
+  const [modalType, setModalType] = useState(auth_2fa);
 
   return (
     <Fragment>
@@ -24,9 +27,9 @@ export default function ProfileSecurity() {
 
           <ChangePasswordModal show={show} setShow={setShow} />
         </Fragment>
+      </div>
 
-        <hr />
-
+      <div className="p-4 border rounded my-3">
         <Fragment>
           <h5>AUTHENTICATOR APP</h5>
 
@@ -41,14 +44,27 @@ export default function ProfileSecurity() {
               type="button"
               variant="info"
               size="sm"
-              onClick={() => setShowConfirmPassword(true)}
+              onClick={() => {
+                setShowConfirmPassword(true);
+
+                setModalType(false);
+              }}
             >
               Enabled Authenticator App
             </Button>
           )}
 
           {auth_2fa && (
-            <Button type="button" variant="danger" size="sm">
+            <Button
+              type="button"
+              variant="danger"
+              size="sm"
+              onClick={() => {
+                setShowConfirmPassword(true);
+
+                setModalType(true);
+              }}
+            >
               Disabled Authenticator App
             </Button>
           )}
@@ -57,9 +73,13 @@ export default function ProfileSecurity() {
             show={showConfirmPassword}
             setShow={setShowConfirmPassword}
             setShow2FA={setShow2FA}
+            setShow2FADisable={setShow2FADisable}
+            modalType={modalType}
           />
 
           <Enable2FAModal show={show2FA} setShow={setShow2FA} />
+
+          <Disable2FAModal show={show2FADisable} setShow={setShow2FADisable} />
         </Fragment>
       </div>
     </Fragment>

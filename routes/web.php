@@ -40,10 +40,11 @@ Route::prefix('api', function (): void {
             Route::put('/', [ProfileController::class, 'updateProfile']);
             Route::post('password', [PasswordManagerController::class, 'updatePassword']);
 
-            Route::prefix('2fa', function (): void {
-                Route::post('verify', [AuthenticatorController::class, 'passwordVerify']);
-                Route::get('qr', [AuthenticatorController::class, 'qr']);
-                Route::post('enable', [AuthenticatorController::class, 'enable2FA']);
+            Route::controller(AuthenticatorController::class, function (): void {
+                Route::post('2fa/verify', [AuthenticatorController::class, 'passwordVerify']);
+                Route::get('2fa/qr', [AuthenticatorController::class, 'qr']);
+                Route::post('2fa/enable', [AuthenticatorController::class, 'enable2FA']);
+                Route::post('2fa/disable', [AuthenticatorController::class, 'disable2FA']);
             });
         });
 

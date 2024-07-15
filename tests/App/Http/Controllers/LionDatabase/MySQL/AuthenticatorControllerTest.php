@@ -22,6 +22,7 @@ use Lion\Security\JWT;
 use Lion\Security\RSA;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use PragmaRX\Google2FAQRCode\Google2FA;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
@@ -56,6 +57,7 @@ class AuthenticatorControllerTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
 
         $aesEncode = $this->AESEncode([
@@ -69,18 +71,20 @@ class AuthenticatorControllerTest extends Test
             'idusers' => $aesEncode['idusers'],
         ]);
 
-        $response = $this->authenticatorController->passwordVerify(
-            new Users(),
-            (new AuthenticatorService())
-                ->setAuthenticatorModel(new AuthenticatorModel()),
-            (new JWTService())
-                ->setRSA(new RSA())
-                ->setJWT(new JWT()),
-            (new AESService())
-                ->setAES(new AES())
-        );
+        $response = $this->authenticatorController
+            ->passwordVerify(
+                new Users(),
+                (new AuthenticatorService())
+                    ->setAuthenticatorModel(new AuthenticatorModel()),
+                (new JWTService())
+                    ->setRSA(new RSA())
+                    ->setJWT(new JWT()),
+                (new AESService())
+                    ->setAES(new AES())
+            );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
@@ -102,6 +106,7 @@ class AuthenticatorControllerTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
 
         $aesEncode = $this->AESEncode([
@@ -112,18 +117,20 @@ class AuthenticatorControllerTest extends Test
             'idusers' => $aesEncode['idusers'],
         ]);
 
-        $response = $this->authenticatorController->qr(
-            new Users(),
-            new Auth2FA(),
-            new UsersModel(),
-            (new AESService())
-                ->setAES(new AES()),
-            (new JWTService())
-                ->setRSA(new RSA())
-                ->setJWT(new JWT())
-        );
+        $response = $this->authenticatorController
+            ->qr(
+                new Users(),
+                new Auth2FA(),
+                new UsersModel(),
+                (new AESService())
+                    ->setAES(new AES()),
+                (new JWTService())
+                    ->setRSA(new RSA())
+                    ->setJWT(new JWT())
+            );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
@@ -141,14 +148,14 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function enable2FA(): void
     {
-        $users = (new UsersModel())->readUsersDB();
-
-        $this->assertIsArray($users);
-        $this->assertCount(self::AVAILABLE_USERS, $users);
-
-        $user = reset($users);
+        $user = (new UsersModel())
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
+            );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
 
         $aesEncode = $this->AESEncode([
@@ -159,18 +166,20 @@ class AuthenticatorControllerTest extends Test
             'idusers' => $aesEncode['idusers'],
         ]);
 
-        $response = $this->authenticatorController->qr(
-            new Users(),
-            new Auth2FA(),
-            new UsersModel(),
-            (new AESService())
-                ->setAES(new AES()),
-            (new JWTService())
-                ->setRSA(new RSA())
-                ->setJWT(new JWT())
-        );
+        $response = $this->authenticatorController
+            ->qr(
+                new Users(),
+                new Auth2FA(),
+                new UsersModel(),
+                (new AESService())
+                    ->setAES(new AES()),
+                (new JWTService())
+                    ->setRSA(new RSA())
+                    ->setJWT(new JWT())
+            );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
@@ -196,19 +205,21 @@ class AuthenticatorControllerTest extends Test
             'idusers' => $aesEncode['idusers'],
         ]);
 
-        $response = $this->authenticatorController->enable2FA(
-            new Authenticator2FA(),
-            (new AuthenticatorService())
-                ->setAuthenticatorModel(new AuthenticatorModel())
-                ->setAuth2FA(new Auth2FA()),
-            (new AESService())
-                ->setAES(new AES()),
-            (new JWTService())
-                ->setRSA(new RSA())
-                ->setJWT(new JWT())
-        );
+        $response = $this->authenticatorController
+            ->enable2FA(
+                new Authenticator2FA(),
+                (new AuthenticatorService())
+                    ->setAuthenticatorModel(new AuthenticatorModel())
+                    ->setAuth2FA(new Auth2FA()),
+                (new AESService())
+                    ->setAES(new AES()),
+                (new JWTService())
+                    ->setRSA(new RSA())
+                    ->setJWT(new JWT())
+            );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
@@ -225,9 +236,60 @@ class AuthenticatorControllerTest extends Test
             );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('users_2fa', $user);
         $this->assertObjectHasProperty('users_2fa_secret', $user);
         $this->assertSame(UsersFactory::ENABLED_2FA, $user->users_2fa);
         $this->assertSame($aesDecode['secret'], $user->users_2fa_secret);
+    }
+
+    #[Testing]
+    public function disable2FA(): void
+    {
+        $user = (new UsersModel())
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL_SECURITY)
+            );
+
+        $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $aesEncode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+        ]);
+
+        $_POST['users_secret_code'] = (new Google2FA())->getCurrentOtp($user->users_2fa_secret);
+
+        $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
+            'idusers' => $aesEncode['idusers'],
+        ]);
+
+        $response = $this->authenticatorController
+            ->disable2FA(
+                new Users(),
+                new Authenticator2FA(),
+                new UsersModel(),
+                (new AuthenticatorService())
+                    ->setAuthenticatorModel(new AuthenticatorModel())
+                    ->setAuth2FA(new Auth2FA()),
+                (new AESService())
+                    ->setAES(new AES()),
+                (new JWTService())
+                    ->setRSA(new RSA())
+                    ->setJWT(new JWT())
+            );
+
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('2FA authentication has been disabled', $response->message);
+        $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
+        $this->assertArrayNotHasKeyFromList($_POST, ['users_secret_code']);
     }
 }

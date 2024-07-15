@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Api\LionDatabase\MySQL;
 
 use App\Models\LionDatabase\MySQL\UsersModel;
+use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
@@ -38,14 +39,14 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function passwordVerify(): void
     {
-        $users = $this->usersModel->readUsersDB();
-
-        $this->assertIsArray($users);
-        $this->assertCount(self::AVAILABLE_USERS, $users);
-
-        $user = reset($users);
+        $user = $this->usersModel
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
+            );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
 
         $aesEncode = $this->AESEncode([
@@ -76,14 +77,14 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function passwordVerifyPasswordIsInvalid(): void
     {
-        $users = $this->usersModel->readUsersDB();
-
-        $this->assertIsArray($users);
-        $this->assertCount(self::AVAILABLE_USERS, $users);
-
-        $user = reset($users);
+        $user = $this->usersModel
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
+            );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
 
         $aesEncode = $this->AESEncode([
@@ -114,14 +115,14 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function qr(): void
     {
-        $users = $this->usersModel->readUsersDB();
-
-        $this->assertIsArray($users);
-        $this->assertCount(self::AVAILABLE_USERS, $users);
-
-        $user = reset($users);
+        $user = $this->usersModel
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
+            );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
 
         $response = json_decode(
@@ -137,6 +138,7 @@ class AuthenticatorControllerTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
@@ -153,14 +155,14 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function enable2FA(): void
     {
-        $users = $this->usersModel->readUsersDB();
-
-        $this->assertIsArray($users);
-        $this->assertCount(self::AVAILABLE_USERS, $users);
-
-        $user = reset($users);
+        $user = $this->usersModel
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
+            );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
 
         $aesEncode = $this->AESEncode([
@@ -187,5 +189,208 @@ class AuthenticatorControllerTest extends Test
 
         $this->assertIsObject($response);
         $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('2FA authentication has been enabled', $response->message);
+    }
+
+    #[Testing]
+    public function enable2FACheckStatusIsActive(): void
+    {
+        $user = $this->usersModel
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL_SECURITY)
+            );
+
+        $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $aesEncode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+            'users_2fa_secret' => UsersFactory::SECURITY_KEY_2FA,
+        ]);
+
+        $exception = $this->getExceptionFromApi(function () use ($aesEncode): void {
+            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $aesEncode['idusers'],
+                    ]),
+                ],
+                'json' => [
+                    'users_2fa_secret' => $aesEncode['users_2fa_secret'],
+                    'users_secret_code' => (new Google2FA())
+                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                ],
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Http::INTERNAL_SERVER_ERROR,
+            'status' => Status::ERROR,
+            'message' => '2FA security is active',
+        ]);
+    }
+
+    #[Testing]
+    public function enable2FAVerify2FAIsError(): void
+    {
+        $user = $this->usersModel
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
+            );
+
+        $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $aesEncode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+            'users_2fa_secret' => UsersFactory::SECURITY_KEY_2FA,
+        ]);
+
+        $exception = $this->getExceptionFromApi(function () use ($aesEncode): void {
+            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $aesEncode['idusers'],
+                    ]),
+                ],
+                'json' => [
+                    'users_2fa_secret' => $aesEncode['users_2fa_secret'],
+                    'users_secret_code' => '000000',
+                ],
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Http::FORBIDDEN,
+            'status' => Status::ERROR,
+            'message' => 'failed to authenticate, the code is not valid',
+        ]);
+    }
+
+    #[Testing]
+    public function disable2FA(): void
+    {
+        $user = $this->usersModel
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL_SECURITY)
+            );
+
+        $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $aesEncode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+        ]);
+
+        $response = json_decode(
+            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $aesEncode['idusers'],
+                    ]),
+                ],
+                'json' => [
+                    'users_secret_code' => (new Google2FA())
+                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                ],
+            ])
+                ->getBody()
+                ->getContents()
+        );
+
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('2FA authentication has been disabled', $response->message);
+    }
+
+    #[Testing]
+    public function disable2FACheckStatusIsInactive(): void
+    {
+        $user = $this->usersModel
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
+            );
+
+        $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $aesEncode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+        ]);
+
+        $exception = $this->getExceptionFromApi(function () use ($aesEncode): void {
+            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $aesEncode['idusers'],
+                    ]),
+                ],
+                'json' => [
+                    'users_secret_code' => (new Google2FA())
+                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                ],
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Http::INTERNAL_SERVER_ERROR,
+            'status' => Status::ERROR,
+            'message' => '2FA security is inactive',
+        ]);
+    }
+
+    #[Testing]
+    public function disable2FAVerify2FAIsError(): void
+    {
+        $user = $this->usersModel
+            ->readUsersByEmailDB(
+                (new Users())
+                    ->setUsersEmail(UsersFactory::USERS_EMAIL_SECURITY)
+            );
+
+        $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $aesEncode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+        ]);
+
+        $exception = $this->getExceptionFromApi(function () use ($aesEncode): void {
+            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $aesEncode['idusers'],
+                    ]),
+                ],
+                'json' => [
+                    'users_secret_code' => '000000',
+                ],
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Http::FORBIDDEN,
+            'status' => Status::ERROR,
+            'message' => 'failed to authenticate, the code is not valid',
+        ]);
     }
 }

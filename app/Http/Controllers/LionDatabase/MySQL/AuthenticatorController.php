@@ -11,6 +11,7 @@ use App\Http\Services\LionDatabase\MySQL\AuthenticatorService;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use App\Rules\Users2FASecretRule;
+use App\Rules\UsersSecretCodeRule;
 use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
@@ -120,7 +121,7 @@ class AuthenticatorController
      *
      * @throws ProcessException
      */
-    #[Rules(Users2FASecretRule::class)]
+    #[Rules(Users2FASecretRule::class, UsersSecretCodeRule::class)]
     public function enable2FA(
         Authenticator2FA $authenticator2FA,
         AuthenticatorService $authenticatorService,
@@ -148,5 +149,58 @@ class AuthenticatorController
         $authenticatorService->update2FA($authenticator2FA);
 
         return success('2FA authentication has been enabled');
+    }
+
+    /**
+     * Disable 2-step authentication with 2FA
+     *
+     * @route /api/profile/2fa/disable
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     * @param Authenticator2FA $authenticator2FA [Capsule for the
+     * 'Authenticator2FA' entity]
+     * @param UsersModel $usersModel [Model for the Users entity]
+     * @param AuthenticatorService $authenticatorService [Manage 2FA services]
+     * @param AESService $aESService [Encrypt and decrypt data with AES]
+     * @param JWTService $jWTService [Service to manipulate JWT tokens]
+     *
+     * @return stdClass
+     *
+     * @throws ProcessException
+     */
+    #[Rules(UsersSecretCodeRule::class)]
+    public function disable2FA(
+        Users $users,
+        Authenticator2FA $authenticator2FA,
+        UsersModel $usersModel,
+        AuthenticatorService $authenticatorService,
+        AESService $aESService,
+        JWTService $jWTService
+    ): stdClass {
+        $authenticator2FA->capsule();
+
+        $data = $jWTService->getTokenData(env('RSA_URL_PATH'));
+
+        $aesDecode = $aESService->decode([
+            'idusers' => $data->idusers,
+        ]);
+
+        $authenticator2FA
+            ->setIdusers((int) $aesDecode['idusers'])
+            ->setUsers2fa(UsersFactory::DISABLED_2FA)
+            ->setUsers2faSecret(null);
+
+        $authenticatorService->checkStatus(UsersFactory::DISABLED_2FA, $authenticator2FA);
+
+        $users_2fa = $usersModel->readUsers2FADB(
+            $users
+                ->setIdusers((int) $aesDecode['idusers'])
+        );
+
+        $authenticatorService->verify2FA($users_2fa->users_2fa_secret, $authenticator2FA);
+
+        $authenticatorService->update2FA($authenticator2FA);
+
+        return success('2FA authentication has been disabled');
     }
 }

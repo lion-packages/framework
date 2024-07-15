@@ -86,6 +86,21 @@ class UsersModel
     }
 
     /**
+     * Read the current 2fa security status of a user by id
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
+     * @return stdClass|array|DatabaseCapsuleInterface
+     */
+    public function readUsers2FADB(Users $users): stdClass|array|DatabaseCapsuleInterface
+    {
+        return DB::view('read_users_by_id')
+            ->select('users_2fa', 'users_2fa_secret')
+            ->where()->equalTo('idusers', $users->getIdusers())
+            ->get();
+    }
+
+    /**
      * Update users
      *
      * @param Users $users [Object of the Users entity]
