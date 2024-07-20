@@ -52,7 +52,9 @@ export function AuthProvider({ children }) {
 
   const refreshToken = async () => {
     try {
-      const form = { jwt_refresh: getRefresh() };
+      const form = {
+        jwt_refresh: getRefresh(),
+      };
 
       const res = await axios.post(
         import.meta.env.VITE_SERVER_URL_AUD + "/api/auth/refresh",
@@ -66,7 +68,11 @@ export function AuthProvider({ children }) {
       );
 
       if (res.data) {
-        login(res.data.data.jwt_access, res.data.data.jwt_refresh);
+        login(
+          res.data.data.jwt_access,
+          res.data.data.jwt_refresh,
+          res.data.data.auth_2fa
+        );
       }
 
       if (res.response) {

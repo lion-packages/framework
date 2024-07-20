@@ -252,6 +252,7 @@ class LoginControllerTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
@@ -262,7 +263,9 @@ class LoginControllerTest extends Test
         $this->assertIsObject($response->data);
         $this->assertObjectHasProperty('jwt_access', $response->data);
         $this->assertObjectHasProperty('jwt_refresh', $response->data);
+        $this->assertObjectHasProperty('auth_2fa', $response->data);
         $this->assertIsString($response->data->jwt_access);
         $this->assertIsString($response->data->jwt_refresh);
+        $this->assertIsBool($response->data->auth_2fa);
     }
 }

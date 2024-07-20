@@ -18,7 +18,7 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  */
 
-Route::get('/', fn(): stdClass => info('[index]'));
+Route::get('/', fn (): stdClass => info('[index]'));
 
 Route::prefix('api', function (): void {
     Route::prefix('auth', function (): void {

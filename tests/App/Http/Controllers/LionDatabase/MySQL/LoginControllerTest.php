@@ -281,11 +281,13 @@ class LoginControllerTest extends Test
 
         $response = $this->loginController
             ->refresh(
+                new Authenticator2FA(),
                 new Users(),
                 (new LoginService())
                     ->setJWT(new JWT())
                     ->setRSA(new RSA())
                     ->setLoginModel(new LoginModel())
+                    ->setAuthenticatorModel(new AuthenticatorModel())
                     ->setAESService(
                         (new AESService())
                             ->setAES(new AES())
@@ -314,8 +316,10 @@ class LoginControllerTest extends Test
         $this->assertIsArray($response->data);
         $this->assertArrayHasKey('jwt_access', $response->data);
         $this->assertArrayHasKey('jwt_refresh', $response->data);
+        $this->assertArrayHasKey('auth_2fa', $response->data);
         $this->assertIsString($response->data['jwt_access']);
         $this->assertIsString($response->data['jwt_refresh']);
+        $this->assertIsBool($response->data['auth_2fa']);
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
         $this->assertArrayNotHasKeyFromList($_POST, ['jwt_refresh']);
     }

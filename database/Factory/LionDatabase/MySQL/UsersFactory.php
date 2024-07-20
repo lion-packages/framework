@@ -63,7 +63,7 @@ class UsersFactory implements FactoryInterface
      *
      * @const SECURITY_KEY_2FA
      */
-    public const string SECURITY_KEY_2FA = 'QWTEQL5DKKZCF4KE';
+    public const string SECURITY_KEY_2FA = 'JDKGOCESC3ZSV25S';
 
     /**
      * {@inheritdoc}

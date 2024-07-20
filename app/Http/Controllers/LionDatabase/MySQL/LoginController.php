@@ -12,6 +12,7 @@ use App\Http\Services\LionDatabase\MySQL\AuthenticatorService;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\LoginModel;
+use App\Models\LionDatabase\MySQL\UsersModel;
 use App\Rules\JWTRefreshRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
@@ -159,6 +160,7 @@ class LoginController
      */
     #[Rules(JWTRefreshRule::class)]
     public function refresh(
+        Authenticator2FA $authenticator2FA,
         Users $users,
         LoginService $loginService,
         AESService $aESService,
@@ -175,6 +177,10 @@ class LoginController
         $loginService->validateRefreshToken($decode['jwt_refresh']);
 
         return success('successfully authenticated user', Http::OK, [
+            'auth_2fa' => $loginService->checkStatus2FA(
+                $authenticator2FA
+                    ->setIdusers((int) $decode['idusers'])
+            ),
             ...$loginService->generateTokens(
                 $users
                     ->setIdusers((int) $decode['idusers'])
