@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Bundle\Interface\Migrations\TableInterface;
 use Lion\Database\Drivers\Schema\MySQL as DB;
 
@@ -36,6 +37,8 @@ return new class implements TableInterface
                 DB::varchar('users_activation_code', 6)->null();
                 DB::varchar('users_recovery_code', 6)->null();
                 DB::varchar('users_code', 18)->notNull()->unique();
+                DB::tinyInt('users_2fa', 1)->notNull()->default(UsersFactory::DISABLED_2FA);
+                DB::varchar('users_2fa_secret', 16)->null();
             })
             ->execute();
     }

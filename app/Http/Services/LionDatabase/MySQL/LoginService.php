@@ -7,8 +7,11 @@ namespace App\Http\Services\LionDatabase\MySQL;
 use App\Exceptions\AuthenticationException;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
+use App\Models\LionDatabase\MySQL\AuthenticatorModel;
 use App\Models\LionDatabase\MySQL\LoginModel;
+use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\JWT;
@@ -23,6 +26,8 @@ use Lion\Security\RSA;
  * @property JWT $jwt [Allows you to generate the required configuration for JWT
  * tokens, has methods that allow you to encrypt and decrypt data with JWT]
  * @property LoginModel $loginModel [Model for user authentication]
+ * @property AuthenticatorModel $authenticatorModel [Perform queries to validate
+ * user authentication through 2FA]
  * @property AESService $aESService [Encrypt and decrypt data with AES]
  * @property JWTService $jWTService [Service to manipulate JWT tokens]
  *
@@ -52,6 +57,13 @@ class LoginService
      * @var LoginModel $loginModel
      */
     private LoginModel $loginModel;
+
+    /**
+     * [Perform queries to validate user authentication through 2FA]
+     *
+     * @var AuthenticatorModel $authenticatorModel
+     */
+    private AuthenticatorModel $authenticatorModel;
 
     /**
      * [Encrypt and decrypt data with AES]
@@ -93,6 +105,16 @@ class LoginService
     public function setLoginModel(LoginModel $loginModel): LoginService
     {
         $this->loginModel = $loginModel;
+
+        return $this;
+    }
+
+    /**
+     * @required
+     */
+    public function setAuthenticatorModel(AuthenticatorModel $authenticatorModel): LoginService
+    {
+        $this->authenticatorModel = $authenticatorModel;
 
         return $this;
     }
@@ -230,5 +252,20 @@ class LoginService
         if (isError($decode)) {
             throw new AuthenticationException('user not logged in, you must log in', Status::ERROR, Http::UNAUTHORIZED);
         };
+    }
+
+    /**
+     * Validates if the user has 2FA security activated
+     *
+     * @param Authenticator2FA $authenticator2FA [Capsule for the
+     * 'Authenticator2FA' entity]
+     *
+     * @return bool
+     */
+    public function checkStatus2FA(Authenticator2FA $authenticator2FA): bool
+    {
+        $status = $this->authenticatorModel->readCheckStatusDB($authenticator2FA);
+
+        return UsersFactory::ENABLED_2FA === $status->users_2fa;
     }
 }

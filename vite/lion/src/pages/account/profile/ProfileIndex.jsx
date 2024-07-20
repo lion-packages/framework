@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Fragment, useContext, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Container, Nav } from "react-bootstrap";
@@ -31,8 +32,8 @@ export default function ProfileIndex() {
         </Nav.Item>
 
         <Nav.Item>
-          <Nav.Link eventKey="change-password" className="text-warning">
-            Change Password
+          <Nav.Link eventKey="security" className="text-warning">
+            Security
           </Nav.Link>
         </Nav.Item>
       </Nav>

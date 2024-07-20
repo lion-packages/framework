@@ -37,6 +37,8 @@ class UsersModel
             $users->getUsersActivationCode(),
             $users->getUsersRecoveryCode(),
             $users->getUsersCode(),
+            $users->getUsers2fa(),
+            $users->getUsers2faSecret(),
         ])
             ->execute();
     }
@@ -80,6 +82,21 @@ class UsersModel
         return DB::view('read_users_by_id')
             ->select()
             ->where()->equalTo('users_email', $users->getUsersEmail())
+            ->get();
+    }
+
+    /**
+     * Read the current 2fa security status of a user by id
+     *
+     * @param Users $users [Capsule for the 'Users' entity]
+     *
+     * @return stdClass|array|DatabaseCapsuleInterface
+     */
+    public function readUsers2FADB(Users $users): stdClass|array|DatabaseCapsuleInterface
+    {
+        return DB::view('read_users_by_id')
+            ->select('users_2fa', 'users_2fa_secret')
+            ->where()->equalTo('idusers', $users->getIdusers())
             ->get();
     }
 

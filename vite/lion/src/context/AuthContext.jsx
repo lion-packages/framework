@@ -12,17 +12,22 @@ export function AuthProvider({ children }) {
   const [jwt, setJwt] = useState(null);
   const [refresh, setRefresh] = useState(null);
   const [loadingJWT, setLoadingJWT] = useState(true);
+  const [auth_2fa, setAuth_2fa] = useState(false);
 
-  const login = (tokan_access, token_refresh) => {
+  const login = (tokan_access, token_refresh, auth_2fa) => {
     setLoadingJWT(true);
 
     setJwt(tokan_access);
 
     setRefresh(token_refresh);
 
+    setAuth_2fa(auth_2fa.auth_2fa);
+
     sessionStorage.setItem("jwt", tokan_access);
 
     sessionStorage.setItem("refresh", token_refresh);
+
+    sessionStorage.setItem("auth_2fa", JSON.stringify(auth_2fa));
 
     setLoadingJWT(false);
   };
@@ -34,16 +39,22 @@ export function AuthProvider({ children }) {
 
     setRefresh(null);
 
+    setAuth_2fa(false);
+
     sessionStorage.removeItem("jwt");
 
     sessionStorage.removeItem("refresh");
+
+    sessionStorage.removeItem("auth_2fa");
 
     setLoadingJWT(false);
   };
 
   const refreshToken = async () => {
     try {
-      const form = { jwt_refresh: getRefresh() };
+      const form = {
+        jwt_refresh: getRefresh(),
+      };
 
       const res = await axios.post(
         import.meta.env.VITE_SERVER_URL_AUD + "/api/auth/refresh",
@@ -57,7 +68,11 @@ export function AuthProvider({ children }) {
       );
 
       if (res.data) {
-        login(res.data.data.jwt_access, res.data.data.jwt_refresh);
+        login(
+          res.data.data.jwt_access,
+          res.data.data.jwt_refresh,
+          res.data.data.auth_2fa
+        );
       }
 
       if (res.response) {
@@ -88,14 +103,21 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const storedJwt = sessionStorage.getItem("jwt");
-    const storedRefresh = sessionStorage.getItem("refresh");
 
     if (storedJwt) {
       setJwt(storedJwt);
     }
 
+    const storedRefresh = sessionStorage.getItem("refresh");
+
     if (storedRefresh) {
       setRefresh(storedRefresh);
+    }
+
+    const auth_2fa = sessionStorage.getItem("auth_2fa");
+
+    if (auth_2fa) {
+      setAuth_2fa(JSON.parse(auth_2fa).auth_2fa);
     }
 
     setLoadingJWT(false);
@@ -106,6 +128,7 @@ export function AuthProvider({ children }) {
       value={{
         jwt,
         refresh,
+        auth_2fa,
         loadingJWT,
         login,
         logout,

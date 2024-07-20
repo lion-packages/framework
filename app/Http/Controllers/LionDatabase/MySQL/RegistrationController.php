@@ -16,6 +16,7 @@ use App\Rules\LionDatabase\MySQL\Users\UsersActivationCodeRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Route\Attributes\Rules;
 use Lion\Security\Validation;
 use stdClass;
@@ -73,6 +74,8 @@ class RegistrationController
                 ->setUsersPassword($validation->passwordHash($decode['users_password']))
                 ->setUsersActivationCode(fake()->numerify('######'))
                 ->setUsersCode(uniqid('code-'))
+                ->setUsers2fa(UsersFactory::DISABLED_2FA)
+                ->setUsers2faSecret(null)
         );
 
         if (isSuccess($response)) {

@@ -6,22 +6,25 @@ namespace Tests\Database\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Bundle\Interface\CapsuleInterface;
+use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Test;
 
 class UsersTest extends Test
 {
-    const int IDUSERS = 1;
-    const int IDROLES = 1;
-    const int IDDOCUMENT_TYPES = 1;
-    const string USERS_CITIZEN_IDENTIFICATION = '1234567890';
-    const string USERS_NAME = 'Sergio';
-    const string USERS_LAST_NAME = 'Leon';
-    const string USERS_NICKNAME = 'Sleon';
-    const string USERS_EMAIL = 'sleon@dev.com';
-    const string USERS_PASSWORD = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
-    const string USERS_ACTIVATION_CODE = '######';
-    const string USERS_RECOVERY_CODE = '######';
-    const string USERS_CODE = 'code-65ca2d74ed1e1';
+    private const int IDUSERS = 1;
+    private const int IDROLES = 1;
+    private const int IDDOCUMENT_TYPES = 1;
+    private const string USERS_CITIZEN_IDENTIFICATION = '1234567890';
+    private const string USERS_NAME = 'Sergio';
+    private const string USERS_LAST_NAME = 'Leon';
+    private const string USERS_NICKNAME = 'Sleon';
+    private const string USERS_EMAIL = 'sleon@dev.com';
+    private const string USERS_PASSWORD = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
+    private const string USERS_ACTIVATION_CODE = '######';
+    private const string USERS_RECOVERY_CODE = '######';
+    private const string USERS_CODE = 'code-65ca2d74ed1e1';
+    private const int USERS_2FA = 0;
+    private const string USERS_2FA_SECRET = '################';
 
     private Users $users;
 
@@ -237,5 +240,43 @@ class UsersTest extends Test
         ]);
 
         $this->assertSame(self::USERS_CODE, $this->users->getUsersCode());
+    }
+
+    #[Testing]
+    public function getUsers2fa(): void
+    {
+        $this->users->setUsers2fa(self::USERS_2FA);
+
+        $this->assertSame(self::USERS_2FA, $this->users->getUsers2fa());
+    }
+
+    #[Testing]
+    public function setUsers2fa(): void
+    {
+        $this->assertInstances($this->users->setUsers2fa(self::USERS_2FA), [
+            Users::class,
+            CapsuleInterface::class,
+        ]);
+
+        $this->assertSame(self::USERS_2FA, $this->users->getUsers2fa());
+    }
+
+    #[Testing]
+    public function getUsers2faSecret(): void
+    {
+        $this->users->setUsers2faSecret(self::USERS_2FA_SECRET);
+
+        $this->assertSame(self::USERS_2FA_SECRET, $this->users->getUsers2faSecret());
+    }
+
+    #[Testing]
+    public function setUsers2faSecret(): void
+    {
+        $this->assertInstances($this->users->setUsers2faSecret(self::USERS_2FA_SECRET), [
+            Users::class,
+            CapsuleInterface::class,
+        ]);
+
+        $this->assertSame(self::USERS_2FA_SECRET, $this->users->getUsers2faSecret());
     }
 }

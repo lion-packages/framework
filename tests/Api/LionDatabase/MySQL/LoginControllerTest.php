@@ -12,6 +12,9 @@ use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use PragmaRX\Google2FAQRCode\Google2FA;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -51,6 +54,7 @@ class LoginControllerTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
@@ -61,6 +65,9 @@ class LoginControllerTest extends Test
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('successfully authenticated user', $response->message);
+        $this->assertIsString($response->data->full_name);
+        $this->assertIsString($response->data->jwt_access);
+        $this->assertIsString($response->data->jwt_refresh);
     }
 
     /**
@@ -134,6 +141,77 @@ class LoginControllerTest extends Test
         ]);
     }
 
+    #[Testing]
+    public function auth2FA(): void
+    {
+        $response = json_decode(
+            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/2fa'), [
+                'json' => [
+                    'users_email' => UsersFactory::USERS_EMAIL_SECURITY,
+                    'users_secret_code' => (new Google2FA())
+                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                ],
+            ])
+                ->getBody()
+                ->getContents()
+        );
+
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertObjectHasProperty('data', $response);
+        $this->assertObjectHasProperty('full_name', $response->data);
+        $this->assertObjectHasProperty('jwt_access', $response->data);
+        $this->assertObjectHasProperty('jwt_refresh', $response->data);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('successfully authenticated user', $response->message);
+        $this->assertIsString($response->data->full_name);
+        $this->assertIsString($response->data->jwt_access);
+        $this->assertIsString($response->data->jwt_refresh);
+    }
+
+    #[Testing]
+    public function auth2FAIsError(): void
+    {
+        $exception = $this->getExceptionFromApi(function (): void {
+            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/2fa'), [
+                'json' => [
+                    'users_email' => UsersFactory::USERS_EMAIL,
+                    'users_secret_code' => (new Google2FA())
+                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                ],
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Http::FORBIDDEN,
+            'status' => Status::ERROR,
+            'message' => '2FA security is not active for this user',
+        ]);
+    }
+
+    #[Testing]
+    public function auth2FAVerify2FAIsError(): void
+    {
+        $exception = $this->getExceptionFromApi(function (): void {
+            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/2fa'), [
+                'json' => [
+                    'users_email' => UsersFactory::USERS_EMAIL_SECURITY,
+                    'users_secret_code' => fake()->numerify('######'),
+                ],
+            ]);
+        });
+
+        $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
+            'code' => Http::FORBIDDEN,
+            'status' => Status::ERROR,
+            'message' => 'failed to authenticate, the code is not valid',
+        ]);
+    }
+
     /**
      * @throws GuzzleException
      */
@@ -174,6 +252,7 @@ class LoginControllerTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
@@ -184,7 +263,9 @@ class LoginControllerTest extends Test
         $this->assertIsObject($response->data);
         $this->assertObjectHasProperty('jwt_access', $response->data);
         $this->assertObjectHasProperty('jwt_refresh', $response->data);
+        $this->assertObjectHasProperty('auth_2fa', $response->data);
         $this->assertIsString($response->data->jwt_access);
         $this->assertIsString($response->data->jwt_refresh);
+        $this->assertIsBool($response->data->auth_2fa);
     }
 }

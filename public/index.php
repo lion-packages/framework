@@ -18,6 +18,7 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 use Dotenv\Dotenv;
 use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Exceptions\Serialize;
+use Lion\Files\Store;
 use Lion\Route\Route;
 
 /**
@@ -39,7 +40,9 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  **/
 
-Dotenv::createImmutable(__DIR__ . '/../')->load();
+if ((new Store())->exist(__DIR__ . '/../.env')) {
+    Dotenv::createMutable(__DIR__ . '/../')->load();
+}
 
 /**
  * -----------------------------------------------------------------------------

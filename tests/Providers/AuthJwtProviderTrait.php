@@ -12,19 +12,40 @@ use Lion\Security\RSA;
 
 trait AuthJwtProviderTrait
 {
-    const int AVAILABLE_USERS = 2;
-    const int REMAINING_USERS = 1;
+    const int AVAILABLE_USERS = 3;
+    const int REMAINING_USERS = 2;
 
     private function generateKeys(string $path): void
     {
         ProcessCommand::run("php lion new:rsa --path keys/{$path}/", false);
     }
 
-    private function AESEncode(array $rows): array
+    /**
+     * Encrypt the data list with AES
+     *
+     * @param array<string, string> $rows [List of data to encrypt]
+     *
+     * @return array|object
+     */
+    private function AESEncode(array $rows): array|object
     {
         return (new AESService())
             ->setAES(new AES())
             ->encode($rows);
+    }
+
+    /**
+     * Decrypt data list with AES
+     *
+     * @param array<string, string> $rows [List of data to decrypt]
+     *
+     * @return array|object
+     */
+    private function AESDecode(array $rows): array|object
+    {
+        return (new AESService())
+            ->setAES(new AES())
+            ->decode($rows);
     }
 
     private function getAuthorization(array $data = []): string

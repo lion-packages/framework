@@ -64,7 +64,9 @@ class LoginModel
                 'users_last_name',
                 'users_nickname',
                 'users_email',
-                'users_password'
+                'users_password',
+                'users_2fa',
+                'users_2fa_secret'
             )
             ->where()->equalTo('users_email', $users->getUsersEmail())
             ->fetchMode(PDO::FETCH_CLASS, Users::class)

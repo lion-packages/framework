@@ -9,7 +9,10 @@ use App\Exceptions\AuthenticationException;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
+use App\Models\LionDatabase\MySQL\AuthenticatorModel;
 use App\Models\LionDatabase\MySQL\LoginModel;
+use App\Models\LionDatabase\MySQL\UsersModel;
+use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
@@ -18,6 +21,7 @@ use Lion\Security\AES;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -26,18 +30,20 @@ class LoginServiceTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const string USERS_EMAIL = 'manager@dev.com';
+    private const string USERS_EMAIL = 'manager@dev.com';
 
     private LoginService $loginService;
+    private UsersModel $usersModel;
 
     protected function setUp(): void
     {
         $this->runMigrationsAndQueues();
 
         $this->loginService = (new LoginService())
-            ->setJWT(new JWT())
             ->setRSA(new RSA())
+            ->setJWT(new JWT())
             ->setLoginModel(new LoginModel())
+            ->setAuthenticatorModel(new AuthenticatorModel())
             ->setAESService(
                 (new AESService())
                     ->setAES(new AES())
@@ -47,6 +53,66 @@ class LoginServiceTest extends Test
                     ->setJWT(new JWT())
                     ->setRSA(new RSA())
             );
+
+        $this->usersModel = new UsersModel();
+    }
+
+    #[Testing]
+    public function setRSA(): void
+    {
+        $this->initReflection($this->loginService);
+
+        $this->assertInstanceOf(LoginService::class, $this->loginService->setRSA(new RSA()));
+        $this->assertInstanceOf(RSA::class, $this->getPrivateProperty('rsa'));
+    }
+
+    #[Testing]
+    public function setJWT(): void
+    {
+        $this->initReflection($this->loginService);
+
+        $this->assertInstanceOf(LoginService::class, $this->loginService->setJWT(new JWT()));
+        $this->assertInstanceOf(JWT::class, $this->getPrivateProperty('jwt'));
+    }
+
+    #[Testing]
+    public function setLoginModel(): void
+    {
+        $this->initReflection($this->loginService);
+
+        $this->assertInstanceOf(LoginService::class, $this->loginService->setLoginModel(new LoginModel()));
+        $this->assertInstanceOf(LoginModel::class, $this->getPrivateProperty('loginModel'));
+    }
+
+    #[Testing]
+    public function setAuthenticatorModel(): void
+    {
+        $this->initReflection($this->loginService);
+
+        $this->assertInstanceOf(
+            LoginService::class,
+            $this->loginService->setAuthenticatorModel(new AuthenticatorModel())
+        );
+
+        $this->assertInstanceOf(AuthenticatorModel::class, $this->getPrivateProperty('authenticatorModel'));
+    }
+
+    #[Testing]
+    public function setAESService(): void
+    {
+        $this->initReflection($this->loginService);
+
+        $this->assertInstanceOf(LoginService::class, $this->loginService->setAESService(new AESService()));
+        $this->assertInstanceOf(AESService::class, $this->getPrivateProperty('aESService'));
+    }
+
+    #[Testing]
+    public function setJWTService(): void
+    {
+        $this->initReflection($this->loginService);
+
+        $this->assertInstanceOf(LoginService::class, $this->loginService->setJWTService(new JWTService()));
+        $this->assertInstanceOf(JWTService::class, $this->getPrivateProperty('jWTService'));
     }
 
     /**
@@ -121,5 +187,27 @@ class LoginServiceTest extends Test
             ->expectLionException(function (): void {
                 $this->loginService->validateRefreshToken(uniqid());
             });
+    }
+
+    #[Testing]
+    public function checkStatus2FA(): void
+    {
+        $users = $this->usersModel->readUsersDB();
+
+        $this->assertIsArray($users);
+        $this->assertCount(self::AVAILABLE_USERS, $users);
+
+        $user = reset($users);
+
+        $this->assertIsObject($user);
+        $this->assertObjectHasProperty('idusers', $user);
+
+        $response = $this->loginService
+            ->checkStatus2FA(
+                (new Authenticator2FA())->setIdusers($user->idusers)
+            );
+
+        $this->assertIsBool($response);
+        $this->assertFalse($response);
     }
 }

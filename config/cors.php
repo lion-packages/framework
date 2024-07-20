@@ -23,7 +23,7 @@ Request::header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Conte
 
 Request::header('Access-Control-Max-Age', '3600');
 
-if (Http::OPTIONS === str->of($_SERVER['REQUEST_METHOD'])->lower()->get()) {
+if (Http::OPTIONS === $_SERVER['REQUEST_METHOD']) {
     http_response_code(Http::OK);
 
     exit(0);
