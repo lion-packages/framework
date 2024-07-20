@@ -4,6 +4,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import useAES from "../../../../hooks/useAES";
 import axiosApi from "../../../../Api";
 import { ResponseContext } from "../../../../context/ResponseContext";
+import { AuthContext } from "../../../../context/AuthContext";
 
 export default function ConfirmPasswordModal({
   show,
@@ -14,6 +15,7 @@ export default function ConfirmPasswordModal({
 }) {
   const { encode } = useAES();
   const { addToast } = useContext(ResponseContext);
+  const { refreshToken } = useContext(AuthContext);
 
   const [users_password, setUsers_password] = useState("");
 
@@ -25,7 +27,10 @@ export default function ConfirmPasswordModal({
     };
 
     try {
-      const res = await axiosApi().post("/api/profile/2fa/verify", form);
+      const res = await axiosApi(refreshToken).post(
+        "/api/profile/2fa/verify",
+        form
+      );
 
       if (200 === res.data.code) {
         setUsers_password("");
