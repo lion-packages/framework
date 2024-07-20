@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Enable2FAModal({ show, setShow }) {
   const navigate = useNavigate();
-  const { logout } = useContext(AuthContext);
+  const { logout, refreshToken } = useContext(AuthContext);
   const { decode, encode } = useAES();
   const { addToast } = useContext(ResponseContext);
 
@@ -29,7 +29,10 @@ export default function Enable2FAModal({ show, setShow }) {
     };
 
     try {
-      const res = await axiosApi().post("/api/profile/2fa/enable", form);
+      const res = await axiosApi(refreshToken).post(
+        "/api/profile/2fa/enable",
+        form
+      );
 
       if (200 === res.data.code) {
         setUsers_secret_code("");
@@ -68,7 +71,7 @@ export default function Enable2FAModal({ show, setShow }) {
 
   const handleQR = async () => {
     try {
-      const res = await axiosApi().get("/api/profile/2fa/qr");
+      const res = await axiosApi(refreshToken).get("/api/profile/2fa/qr");
 
       if (200 === res.data.code) {
         setImg(decode(res.data.data.qr));

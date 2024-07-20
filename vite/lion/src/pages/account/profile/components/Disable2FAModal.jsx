@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 export default function Disable2FAModal({ show, setShow }) {
   const navigate = useNavigate();
   const { addToast } = useContext(ResponseContext);
-  const { logout } = useContext(AuthContext);
+  const { logout, refreshToken } = useContext(AuthContext);
 
   const [users_secret_code, setUsers_secret_code] = useState("");
 
@@ -21,7 +21,10 @@ export default function Disable2FAModal({ show, setShow }) {
     };
 
     try {
-      const res = await axiosApi().post("/api/profile/2fa/disable", form);
+      const res = await axiosApi(refreshToken).post(
+        "/api/profile/2fa/disable",
+        form
+      );
 
       if (200 === res.data.code) {
         setUsers_secret_code("");
