@@ -10,9 +10,10 @@ use Tests\Test;
 
 class RolesTest extends Test
 {
-    const int IDROLES = 1;
-    const string ROLES_NAME = 'Administrator';
-    const string ROLES_DESCRIPTION = 'Administrator description';
+    private const string ENTITY = 'roles';
+    private const int IDROLES = 1;
+    private const string ROLES_NAME = 'Administrator';
+    private const string ROLES_DESCRIPTION = 'Administrator description';
 
     private Roles $roles;
 
@@ -23,7 +24,7 @@ class RolesTest extends Test
 
     public function testCapsule(): void
     {
-        $this->assertCapsule($this->roles);
+        $this->assertCapsule($this->roles, self::ENTITY);
     }
 
     public function testGetIdroles(): void

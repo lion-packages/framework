@@ -22,7 +22,7 @@ class PasswordManagerTest extends Test
 
     public function testCapsule(): void
     {
-        $this->assertCapsule($this->passwordManager);
+        $this->assertCapsule($this->passwordManager, '');
     }
 
     public function testGetIdusers(): void

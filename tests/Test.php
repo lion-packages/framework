@@ -74,9 +74,11 @@ class Test extends TestTest
      *
      * @return void
      */
-    public function assertCapsule(CapsuleInterface $capsuleInterface): void
+    public function assertCapsule(CapsuleInterface $capsuleInterface, string $entity): void
     {
         $this->assertInstanceOf(CapsuleInterface::class, $capsuleInterface->capsule());
         $this->assertIsArray($capsuleInterface->jsonSerialize());
+        $this->assertIsString($capsuleInterface->getTableName());
+        $this->assertSame($entity, $capsuleInterface->getTableName());
     }
 }

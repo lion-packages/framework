@@ -5,17 +5,28 @@ declare(strict_types=1);
 namespace Database\Class\LionDatabase\MySQL;
 
 use Lion\Bundle\Interface\CapsuleInterface;
+use Lion\Bundle\Traits\CapsuleTrait;
 
 /**
  * Capsule for the 'DocumentTypes' entity
  *
- * @property int $iddocument_types [Property for iddocument_types]
- * @property string $document_types_name [Property for document_types_name]
+ * @property string $entity [Entity name]
+ * @property int|null $iddocument_types [Property for iddocument_types]
+ * @property string|null $document_types_name [Property for document_types_name]
  *
  * @package Database\Class\LionDatabase\MySQL
  */
 class DocumentTypes implements CapsuleInterface
 {
+	use CapsuleTrait;
+
+	/**
+     * [Entity name]
+     *
+     * @var string $entity
+     */
+    private string $entity = 'document_types';
+
 	/**
 	 * [Property for iddocument_types]
 	 *
@@ -29,14 +40,6 @@ class DocumentTypes implements CapsuleInterface
 	 * @var string|null $document_types_name
 	 */
 	private ?string $document_types_name = null;
-
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function jsonSerialize(): array
-	{
-		return get_object_vars($this);
-	}
 
 	/**
 	 * {@inheritdoc}

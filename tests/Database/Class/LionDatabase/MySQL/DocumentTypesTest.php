@@ -10,8 +10,9 @@ use Tests\Test;
 
 class DocumentTypesTest extends Test
 {
-    const int IDDOCUMENT_TYPES = 1;
-    const string DOCUMENT_TYPES_NAME = 'Passport';
+    private const string ENTITY = 'document_types';
+    private const int IDDOCUMENT_TYPES = 1;
+    private const string DOCUMENT_TYPES_NAME = 'Passport';
 
     private DocumentTypes $documentTypes;
 
@@ -22,7 +23,7 @@ class DocumentTypesTest extends Test
 
     public function testCapsule(): void
     {
-        $this->assertCapsule($this->documentTypes);
+        $this->assertCapsule($this->documentTypes, self::ENTITY);
     }
 
     public function testGetIddocumentTypes(): void

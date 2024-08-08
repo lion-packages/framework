@@ -11,6 +11,7 @@ use Tests\Test;
 
 class UsersTest extends Test
 {
+    private const string ENTITY = 'users';
     private const int IDUSERS = 1;
     private const int IDROLES = 1;
     private const int IDDOCUMENT_TYPES = 1;
@@ -35,7 +36,7 @@ class UsersTest extends Test
 
     public function testCapsule(): void
     {
-        $this->assertCapsule($this->users);
+        $this->assertCapsule($this->users, self::ENTITY);
     }
 
     public function testGetIdusers(): void

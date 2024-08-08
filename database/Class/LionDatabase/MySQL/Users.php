@@ -5,29 +5,40 @@ declare(strict_types=1);
 namespace Database\Class\LionDatabase\MySQL;
 
 use Lion\Bundle\Interface\CapsuleInterface;
+use Lion\Bundle\Traits\CapsuleTrait;
 
 /**
  * Capsule for the 'Users' entity
  *
- * @property int $idusers [Property for idusers]
- * @property int $idroles [Property for idroles]
- * @property int $iddocument_types [Property for iddocument_types]
- * @property string $users_citizen_identification [Property for users_citizen_identification]
- * @property string $users_name [Property for users_name]
- * @property string $users_last_name [Property for users_last_name]
- * @property string $users_nickname [Property for users_nickname]
- * @property string $users_email [Property for users_email]
- * @property string $users_password [Property for users_password]
- * @property string $users_activation_code [Property for users_activation_code]
- * @property string $users_recovery_code [Property for users_recovery_code]
- * @property string $users_code [Property for users_code]
- * @property int $users_2fa [Property for users_2fa]
- * @property string $users_2fa_secret [Property for users_2fa_secret]
+ * @property string $entity [Entity name]
+ * @property int|null $idusers [Property for idusers]
+ * @property int|null $idroles [Property for idroles]
+ * @property int|null $iddocument_types [Property for iddocument_types]
+ * @property string|null $users_citizen_identification [Property for users_citizen_identification]
+ * @property string|null $users_name [Property for users_name]
+ * @property string|null $users_last_name [Property for users_last_name]
+ * @property string|null $users_nickname [Property for users_nickname]
+ * @property string|null $users_email [Property for users_email]
+ * @property string|null $users_password [Property for users_password]
+ * @property string|null $users_activation_code [Property for users_activation_code]
+ * @property string|null $users_recovery_code [Property for users_recovery_code]
+ * @property string|null $users_code [Property for users_code]
+ * @property int|null $users_2fa [Property for users_2fa]
+ * @property string|null $users_2fa_secret [Property for users_2fa_secret]
  *
  * @package Database\Class\LionDatabase\MySQL
  */
 class Users implements CapsuleInterface
 {
+	use CapsuleTrait;
+
+	/**
+     * [Entity name]
+     *
+     * @var string $entity
+     */
+    private string $entity = 'users';
+
 	/**
 	 * [Property for idusers]
 	 *
@@ -125,14 +136,6 @@ class Users implements CapsuleInterface
 	 * @var string|null $users_2fa_secret
 	 */
 	private ?string $users_2fa_secret = null;
-
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function jsonSerialize(): array
-	{
-		return get_object_vars($this);
-	}
 
 	/**
 	 * {@inheritdoc}
