@@ -27,7 +27,7 @@
     "require": {
         "php": ">=8.3",
         "lion/authentication": "^4.0",
-        "lion/bundle": "^17.9"
+        "lion/bundle": "^17.10"
     },
     "require-dev": {
         "lion/test": "^2.0",
