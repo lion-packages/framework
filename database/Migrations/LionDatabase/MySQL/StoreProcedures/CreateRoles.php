@@ -7,7 +7,7 @@ use Lion\Database\Drivers\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 
 /**
- * Create document types
+ * Create roles
  */
 return new class implements StoreProcedureInterface
 {
@@ -16,14 +16,16 @@ return new class implements StoreProcedureInterface
      * */
     public function up(): stdClass
     {
-        return Schema::connection('lion_database')
-            ->createStoreProcedure('create_document_types', function (): void {
-                Schema::in()->varchar('_document_types_name', 22);
+        return Schema::connection(env('DB_NAME', 'lion_database'))
+            ->createStoreProcedure('create_roles', function (): void {
+                Schema::in()->varchar('_roles_name', 25);
+                Schema::in()->varchar('_roles_description', 30);
             }, function (MySQL $db): void {
                 $db
-                    ->table('document_types_name')
+                    ->table('roles')
                     ->insert([
-                        'document_types_name' => '_document_types_name',
+                        'roles_name' => '_roles_name',
+                        'roles_description' => '_roles_description',
                     ]);
             })
             ->execute();

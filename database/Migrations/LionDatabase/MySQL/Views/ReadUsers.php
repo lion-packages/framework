@@ -16,7 +16,7 @@ return new class implements ViewInterface
      * */
     public function up(): stdClass
     {
-        return Schema::connection('lion_database')
+        return Schema::connection(env('DB_NAME', 'lion_database'))
             ->createView('read_users', function (MySQL $db): void {
                 $db
                     ->table($db->as('users', 'usr'))
