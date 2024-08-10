@@ -6,11 +6,14 @@ namespace Tests\Api\LionDatabase\MySQL;
 
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -18,8 +21,6 @@ class RegistrationControllerTest extends Test
 {
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
-
-    const string API_URL = 'http://127.0.0.1:8000/api/auth';
 
     protected function setUp(): void
     {
@@ -35,11 +36,15 @@ class RegistrationControllerTest extends Test
         Schema::truncateTable('task_queue')->execute();
     }
 
-    public function testRegister(): void
+    /**
+     * @throws GuzzleException
+     */
+    #[Testing]
+    public function register(): void
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $response = fetch(Http::POST, (self::API_URL . '/register'), [
+        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
             'json' => [
                 'users_email' => UsersFactory::USERS_EMAIL,
                 'users_password' => $encode['users_password'],
@@ -57,12 +62,14 @@ class RegistrationControllerTest extends Test
 
     /**
      * @throws Exception
+     * @throws GuzzleException
      */
-    public function testRegisterRegistered(): void
+    #[Testing]
+    public function registerRegistered(): void
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $response = fetch(Http::POST, (self::API_URL . '/register'), [
+        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
             'json' => [
                 'users_email' => UsersFactory::USERS_EMAIL,
                 'users_password' => $encode['users_password'],
@@ -78,7 +85,7 @@ class RegistrationControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function () use ($encode): void {
-            fetch(Http::POST, (self::API_URL . '/register'), [
+            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
                 'json' => [
                     'users_email' => UsersFactory::USERS_EMAIL,
                     'users_password' => $encode['users_password'],
@@ -93,11 +100,15 @@ class RegistrationControllerTest extends Test
         ]);
     }
 
-    public function testVerifyAccount(): void
+    /**
+     * @throws GuzzleException
+     */
+    #[Testing]
+    public function verifyAccount(): void
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $response = fetch(Http::POST, (self::API_URL . '/register'), [
+        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
             'json' => [
                 'users_email' => UsersFactory::USERS_EMAIL,
                 'users_password' => $encode['users_password'],
@@ -117,7 +128,11 @@ class RegistrationControllerTest extends Test
             ->where()->equalTo('users_email', UsersFactory::USERS_EMAIL)
             ->get();
 
-        $response = fetch(Http::POST, (self::API_URL . '/verify'), [
+        $this->assertIsObject($users_activation_code);
+        $this->assertInstanceOf(stdClass::class, $users_activation_code);
+        $this->assertIsString($users_activation_code->users_activation_code);
+
+        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/verify'), [
             'json' => [
                 'users_email' => UsersFactory::USERS_EMAIL,
                 'users_activation_code' => $users_activation_code->users_activation_code
@@ -135,12 +150,14 @@ class RegistrationControllerTest extends Test
 
     /**
      * @throws Exception
+     * @throws GuzzleException
      */
-    public function testVerifyAccountInvalid1(): void
+    #[Testing]
+    public function verifyAccountInvalid1(): void
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $response = fetch(Http::POST, (self::API_URL . '/register'), [
+        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
             'json' => [
                 'users_email' => UsersFactory::USERS_EMAIL,
                 'users_password' => $encode['users_password'],
@@ -156,7 +173,7 @@ class RegistrationControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function (): void {
-            fetch(Http::POST, (self::API_URL . '/verify'), [
+            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/verify'), [
                 'json' => [
                     'users_activation_code' => fake()->numerify('######'),
                     'users_email' => fake()->email()
@@ -173,12 +190,14 @@ class RegistrationControllerTest extends Test
 
     /**
      * @throws Exception
+     * @throws GuzzleException
      */
-    public function testVerifyAccountInvalid2(): void
+    #[Testing]
+    public function verifyAccountInvalid2(): void
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $response = fetch(Http::POST, (self::API_URL . '/register'), [
+        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
             'json' => [
                 'users_email' => UsersFactory::USERS_EMAIL,
                 'users_password' => $encode['users_password'],
@@ -194,7 +213,7 @@ class RegistrationControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function (): void {
-            fetch(Http::POST, (self::API_URL . '/verify'), [
+            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/verify'), [
                 'json' => [
                     'users_email' => UsersFactory::USERS_EMAIL,
                     'users_activation_code' => fake()->numerify('######'),

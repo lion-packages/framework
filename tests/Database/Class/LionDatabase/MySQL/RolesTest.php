@@ -6,6 +6,7 @@ namespace Tests\Database\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\Roles;
 use Lion\Bundle\Interface\CapsuleInterface;
+use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Test;
 
 class RolesTest extends Test
@@ -22,19 +23,22 @@ class RolesTest extends Test
         $this->roles = new Roles();
     }
 
-    public function testCapsule(): void
+    #[Testing]
+    public function capsule(): void
     {
         $this->assertCapsule($this->roles, self::ENTITY);
     }
 
-    public function testGetIdroles(): void
+    #[Testing]
+    public function getIdroles(): void
     {
         $this->roles->setIdroles(self::IDROLES);
 
         $this->assertSame(self::IDROLES, $this->roles->getIdroles());
     }
 
-    public function testSetIdroles(): void
+    #[Testing]
+    public function setIdroles(): void
     {
         $this->assertInstances($this->roles->setIdroles(self::IDROLES), [
             Roles::class,
@@ -44,14 +48,16 @@ class RolesTest extends Test
         $this->assertSame(self::IDROLES, $this->roles->getIdroles());
     }
 
-    public function testGetRolesName(): void
+    #[Testing]
+    public function getRolesName(): void
     {
         $this->roles->setRolesName(self::ROLES_NAME);
 
         $this->assertSame(self::ROLES_NAME, $this->roles->getRolesName());
     }
 
-    public function testSetRolesName(): void
+    #[Testing]
+    public function setRolesName(): void
     {
         $this->assertInstances($this->roles->setRolesName(self::ROLES_NAME), [
             Roles::class,
@@ -61,14 +67,16 @@ class RolesTest extends Test
         $this->assertSame(self::ROLES_NAME, $this->roles->getRolesName());
     }
 
-    public function testGetRolesDescription(): void
+    #[Testing]
+    public function getRolesDescription(): void
     {
         $this->roles->setRolesDescription(self::ROLES_DESCRIPTION);
 
         $this->assertSame(self::ROLES_DESCRIPTION, $this->roles->getRolesDescription());
     }
 
-    public function testSetRolesDescription(): void
+    #[Testing]
+    public function setRolesDescription(): void
     {
         $this->assertInstances($this->roles->setRolesDescription(self::ROLES_DESCRIPTION), [
             Roles::class,

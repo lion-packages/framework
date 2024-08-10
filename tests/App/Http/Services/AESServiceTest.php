@@ -7,6 +7,7 @@ namespace Tests\App\Http\Services;
 use App\Http\Services\AESService;
 use Lion\Security\AES;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
 
 class AESServiceTest extends Test
 {
@@ -20,13 +21,15 @@ class AESServiceTest extends Test
         $this->initReflection($this->aESService);
     }
 
-    public function testSetAES(): void
+    #[Testing]
+    public function setAES(): void
     {
         $this->assertInstanceOf(AESService::class, $this->aESService->setAES(new AES()));
         $this->assertInstanceOf(AES::class, $this->getPrivateProperty('aes'));
     }
 
-    public function testEncode(): void
+    #[Testing]
+    public function encode(): void
     {
         $encode = $this->aESService->encode(['key' => 'example']);
 
@@ -35,7 +38,8 @@ class AESServiceTest extends Test
         $this->assertIsString($encode['key']);
     }
 
-    public function testDecode(): void
+    #[Testing]
+    public function decode(): void
     {
         $encode = $this->aESService->encode(['key' => 'example']);
 

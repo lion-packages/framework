@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\App\Exceptions;
 
 use App\Exceptions\ProcessException;
+use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
@@ -14,7 +15,8 @@ class ProcessExceptionTest extends Test
 {
     /**
      * @throws Exception
-     * @throws PasswordException
+     * @throws ProcessException
+     * @throws Exception
      */
     #[Testing]
     public function processException(): void

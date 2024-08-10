@@ -7,9 +7,10 @@ namespace Tests\App\Console\Commands;
 use App\Console\Commands\EncryptValueAESCommand;
 use App\Http\Services\AESService;
 use Lion\Command\Command;
-use Lion\Command\Kernel;
 use Lion\Security\AES;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class EncryptValueAESCommandTest extends Test
@@ -25,14 +26,15 @@ class EncryptValueAESCommandTest extends Test
         $command = (new EncryptValueAESCommand())
             ->setAESService($this->aESService);
 
-        $application = (new Kernel())->getApplication();
+        $application = new Application();
 
         $application->add($command);
 
         $this->commandTester = new CommandTester($application->find('aes:encode'));
     }
 
-    public function testExecute(): void
+    #[Testing]
+    public function execute(): void
     {
         $code = uniqid();
 
@@ -45,10 +47,10 @@ class EncryptValueAESCommandTest extends Test
         $this->assertStringContainsString($encode['code'], $this->commandTester->getDisplay());
     }
 
-    public function testExecuteWithEmptyValue(): void
+    #[Testing]
+    public function executeWithEmptyValue(): void
     {
         $this->assertSame(Command::INVALID, $this->commandTester->setInputs([""])->execute([]));
-
         $this->assertStringContainsString('you must enter a value for encryption', $this->commandTester->getDisplay());
     }
 }

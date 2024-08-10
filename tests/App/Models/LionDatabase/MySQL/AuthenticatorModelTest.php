@@ -14,6 +14,7 @@ use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -50,7 +51,9 @@ class AuthenticatorModelTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $capsule = (new Users())
             ->setIdusers($user->idusers)
@@ -60,7 +63,7 @@ class AuthenticatorModelTest extends Test
         $databaseCapsule = $this->authenticatorModel->readUsersPasswordDB($capsule);
 
         $this->assertIsObject($databaseCapsule);
-        $this->assertInstances($databaseCapsule, [Users::class]);
+        $this->assertInstanceOf(Users::class, $databaseCapsule);
         $this->assertIsString($databaseCapsule->getUsersPassword());
     }
 
@@ -75,7 +78,9 @@ class AuthenticatorModelTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $status = $this->authenticatorModel->readCheckStatusDB(
             (new Authenticator2FA())
@@ -83,6 +88,7 @@ class AuthenticatorModelTest extends Test
         );
 
         $this->assertIsObject($status);
+        $this->assertInstanceOf(stdClass::class, $status);
         $this->assertObjectHasProperty('users_2fa', $status);
         $this->assertSame(UsersFactory::DISABLED_2FA, $status->users_2fa);
     }
@@ -98,7 +104,9 @@ class AuthenticatorModelTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $capsule = (new Authenticator2FA())
             ->setIdusers($user->idusers)
@@ -107,11 +115,15 @@ class AuthenticatorModelTest extends Test
         $response = $this->authenticatorModel->update2FADB($capsule);
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertIsString($response->message);
         $this->assertSame('execution finished', $response->message);
 
         $response = $this->usersModel->readUsersByIdDB(
@@ -120,6 +132,7 @@ class AuthenticatorModelTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('users_2fa', $response);
         $this->assertSame($capsule->getUsers2fa(), $response->users_2fa);
     }

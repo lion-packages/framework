@@ -13,6 +13,7 @@ use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Providers\App\Http\Services\LionDatabase\MySQL\RegistrationServiceProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -38,8 +39,9 @@ class RegistrationServiceTest extends Test
     /**
      * @throws Exception
      */
+    #[Testing]
     #[DataProvider('verifyAccountProvider')]
-    public function testVerifyAccount(string $message, object $data, Users $users): void
+    public function verifyAccount(string $message, object $data, Users $users): void
     {
         $this
             ->exception(AuthenticationException::class)

@@ -8,6 +8,8 @@ use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class RegistrationModelTest extends Test
@@ -26,7 +28,8 @@ class RegistrationModelTest extends Test
         $this->usersModel = new UsersModel();
     }
 
-    public function testVerifyAccountDB(): void
+    #[Testing]
+    public function verifyAccountDB(): void
     {
         $users = $this->usersModel->readUsersDB();
 
@@ -34,10 +37,20 @@ class RegistrationModelTest extends Test
 
         $row = reset($users);
 
+        $this->assertIsObject($row);
+        $this->assertInstanceOf(stdClass::class, $row);
+        $this->assertObjectHasProperty('idusers', $row);
+        $this->assertIsInt($row->idusers);
+
         $user = $this->usersModel->readUsersByIdDB(
             (new Users())
                 ->setIdusers($row->idusers)
         );
+
+        $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
+        $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsString($user->users_email);
 
         $data = $this->registrationModel->verifyAccountDB(
             (new Users())
@@ -45,13 +58,16 @@ class RegistrationModelTest extends Test
         );
 
         $this->assertIsObject($data);
+        $this->assertInstanceOf(stdClass::class, $data);
         $this->assertObjectHasProperty('idusers', $data);
         $this->assertObjectHasProperty('users_activation_code', $data);
+        $this->assertIsInt($data->idusers);
         $this->assertSame($user->idusers, $data->idusers);
         $this->assertSame($user->users_activation_code, $data->users_activation_code);
     }
 
-    public function testValidateAccountExistsDB(): void
+    #[Testing]
+    public function validateAccountExistsDB(): void
     {
         $users = $this->usersModel->readUsersDB();
 
@@ -59,10 +75,20 @@ class RegistrationModelTest extends Test
 
         $row = reset($users);
 
+        $this->assertIsObject($row);
+        $this->assertInstanceOf(stdClass::class, $row);
+        $this->assertObjectHasProperty('idusers', $row);
+        $this->assertIsInt($row->idusers);
+
         $user = $this->usersModel->readUsersByIdDB(
             (new Users())
                 ->setIdusers($row->idusers)
         );
+
+        $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
+        $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsString($user->users_email);
 
         $cont = $this->registrationModel->validateAccountExistsDB(
             (new Users())
@@ -70,7 +96,9 @@ class RegistrationModelTest extends Test
         );
 
         $this->assertIsObject($cont);
+        $this->assertInstanceOf(stdClass::class, $cont);
         $this->assertObjectHasProperty('cont', $cont);
+        $this->assertIsInt($cont->cont);
         $this->assertSame(1, $cont->cont);
     }
 }

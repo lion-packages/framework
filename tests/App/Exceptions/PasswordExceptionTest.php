@@ -9,6 +9,7 @@ use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
 
 class PasswordExceptionTest extends Test
 {
@@ -16,7 +17,8 @@ class PasswordExceptionTest extends Test
      * @throws Exception
      * @throws PasswordException
      */
-    public function testPasswordException(): void
+    #[Testing]
+    public function passwordException(): void
     {
         $this
             ->exception(PasswordException::class)

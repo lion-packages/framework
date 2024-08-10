@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Tests\Database\Class;
 
 use Database\Class\PasswordManager;
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Bundle\Interface\CapsuleInterface;
+use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Test;
 
 class PasswordManagerTest extends Test
 {
-    const int IDUSERS = 1;
-    const string USERS_PASSWORD = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
+    private const int IDUSERS = 1;
 
     private PasswordManager $passwordManager;
 
@@ -25,14 +26,16 @@ class PasswordManagerTest extends Test
         $this->assertCapsule($this->passwordManager, '');
     }
 
-    public function testGetIdusers(): void
+    #[Testing]
+    public function getIdusers(): void
     {
         $this->passwordManager->setIdusers(self::IDUSERS);
 
         $this->assertSame(self::IDUSERS, $this->passwordManager->getIdusers());
     }
 
-    public function testSetIdusers(): void
+    #[Testing]
+    public function setIdusers(): void
     {
         $this->assertInstances($this->passwordManager->setIdusers(self::IDUSERS), [
             PasswordManager::class,
@@ -42,54 +45,60 @@ class PasswordManagerTest extends Test
         $this->assertSame(self::IDUSERS, $this->passwordManager->getIdusers());
     }
 
-    public function testGetUsersPassword(): void
+    #[Testing]
+    public function getUsersPassword(): void
     {
-        $this->passwordManager->setUsersPassword(self::USERS_PASSWORD);
+        $this->passwordManager->setUsersPassword(UsersFactory::USERS_PASSWORD_HASH);
 
-        $this->assertSame(self::USERS_PASSWORD, $this->passwordManager->getUsersPassword());
+        $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPassword());
     }
 
-    public function testSetUsersPassword(): void
+    #[Testing]
+    public function setUsersPassword(): void
     {
-        $this->assertInstances($this->passwordManager->setUsersPassword(self::USERS_PASSWORD), [
+        $this->assertInstances($this->passwordManager->setUsersPassword(UsersFactory::USERS_PASSWORD_HASH), [
             PasswordManager::class,
             CapsuleInterface::class,
         ]);
 
-        $this->assertSame(self::USERS_PASSWORD, $this->passwordManager->getUsersPassword());
+        $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPassword());
     }
 
-    public function testGetUsersPasswordNew(): void
+    #[Testing]
+    public function getUsersPasswordNew(): void
     {
-        $this->passwordManager->setUsersPasswordNew(self::USERS_PASSWORD);
+        $this->passwordManager->setUsersPasswordNew(UsersFactory::USERS_PASSWORD_HASH);
 
-        $this->assertSame(self::USERS_PASSWORD, $this->passwordManager->getUsersPasswordNew());
+        $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPasswordNew());
     }
 
-    public function testSetUsersPasswordNew(): void
+    #[Testing]
+    public function setUsersPasswordNew(): void
     {
-        $this->assertInstances($this->passwordManager->setUsersPasswordNew(self::USERS_PASSWORD), [
+        $this->assertInstances($this->passwordManager->setUsersPasswordNew(UsersFactory::USERS_PASSWORD_HASH), [
             PasswordManager::class,
             CapsuleInterface::class,
         ]);
 
-        $this->assertSame(self::USERS_PASSWORD, $this->passwordManager->getUsersPasswordNew());
+        $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPasswordNew());
     }
 
-    public function testGetUsersPasswordConfirm(): void
+    #[Testing]
+    public function getUsersPasswordConfirm(): void
     {
-        $this->passwordManager->setUsersPasswordConfirm(self::USERS_PASSWORD);
+        $this->passwordManager->setUsersPasswordConfirm(UsersFactory::USERS_PASSWORD_HASH);
 
-        $this->assertSame(self::USERS_PASSWORD, $this->passwordManager->getUsersPasswordConfirm());
+        $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPasswordConfirm());
     }
 
-    public function testSetUsersPasswordConfirm(): void
+    #[Testing]
+    public function setUsersPasswordConfirm(): void
     {
-        $this->assertInstances($this->passwordManager->setUsersPasswordConfirm(self::USERS_PASSWORD), [
+        $this->assertInstances($this->passwordManager->setUsersPasswordConfirm(UsersFactory::USERS_PASSWORD_HASH), [
             PasswordManager::class,
             CapsuleInterface::class,
         ]);
 
-        $this->assertSame(self::USERS_PASSWORD, $this->passwordManager->getUsersPasswordConfirm());
+        $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPasswordConfirm());
     }
 }

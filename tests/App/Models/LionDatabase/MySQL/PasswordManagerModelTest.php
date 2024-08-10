@@ -12,6 +12,8 @@ use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Status;
 use Lion\Security\Validation;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -39,7 +41,8 @@ class PasswordManagerModelTest extends Test
         Schema::truncateTable('users')->execute();
     }
 
-    public function testGetPasswordDB(): void
+    #[Testing]
+    public function getPasswordDB(): void
     {
         $users = (new UsersModel())->readUsersDB();
 
@@ -48,7 +51,9 @@ class PasswordManagerModelTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $hash = $this->passwordManagerModel->getPasswordDB(
             (new PasswordManager())
@@ -56,12 +61,14 @@ class PasswordManagerModelTest extends Test
         );
 
         $this->assertIsObject($hash);
+        $this->assertInstanceOf(stdClass::class, $hash);
         $this->assertObjectHasProperty('users_password', $hash);
-
+        $this->assertIsString($hash->users_password);
         $this->assertTrue(password_verify(UsersFactory::USERS_PASSWORD, $hash->users_password));
     }
 
-    public function testUpdatePasswordDB(): void
+    #[Testing]
+    public function updatePasswordDB(): void
     {
         $users = (new UsersModel())->readUsersDB();
 
@@ -70,7 +77,9 @@ class PasswordManagerModelTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $encode = $this->AESEncode(['users_password_confirm' => self::USERS_PASSWORD]);
 
@@ -81,7 +90,9 @@ class PasswordManagerModelTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('status', $response);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
     }
 }

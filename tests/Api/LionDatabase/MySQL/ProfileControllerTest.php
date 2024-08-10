@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Tests\Api\LionDatabase\MySQL;
 
 use App\Enums\DocumentTypesEnum;
+use GuzzleHttp\Exception\GuzzleException;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -17,7 +20,7 @@ class ProfileControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const int IDUSERS = 1;
+    private const int IDUSERS = 1;
 
     protected function setUp(): void
     {
@@ -29,7 +32,11 @@ class ProfileControllerTest extends Test
         Schema::truncateTable('users')->execute();
     }
 
-    public function testReadProfile(): void
+    /**
+     * @throws GuzzleException
+     */
+    #[Testing]
+    public function readProfile(): void
     {
         $encode = $this->AESEncode(['idusers' => (string) self::IDUSERS]);
 
@@ -46,6 +53,7 @@ class ProfileControllerTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('idusers', $response);
         $this->assertObjectHasProperty('idroles', $response);
         $this->assertObjectHasProperty('iddocument_types', $response);
@@ -54,9 +62,21 @@ class ProfileControllerTest extends Test
         $this->assertObjectHasProperty('users_last_name', $response);
         $this->assertObjectHasProperty('users_nickname', $response);
         $this->assertObjectHasProperty('users_email', $response);
+        $this->assertIsInt($response->idusers);
+        $this->assertIsInt($response->idroles);
+        $this->assertIsInt($response->iddocument_types);
+        $this->assertIsString($response->users_citizen_identification);
+        $this->assertIsString($response->users_name);
+        $this->assertIsString($response->users_last_name);
+        $this->assertIsString($response->users_nickname);
+        $this->assertIsString($response->users_email);
     }
 
-    public function testUpdateProfile(): void
+    /**
+     * @throws GuzzleException
+     */
+    #[Testing]
+    public function updateProfile(): void
     {
         $encode = $this->AESEncode(['idusers' => (string) self::IDUSERS]);
 

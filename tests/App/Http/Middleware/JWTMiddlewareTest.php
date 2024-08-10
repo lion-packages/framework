@@ -13,13 +13,14 @@ use Lion\Request\Status;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Providers\AuthJwtProviderTrait;
 
 class JWTMiddlewareTest extends Test
 {
     use AuthJwtProviderTrait;
 
-    const string MESSAGE = 'ERR';
+    private const string MESSAGE = 'ERR';
 
     private JWTMiddleware $jWTMiddleware;
     private string $users_code;
@@ -43,7 +44,8 @@ class JWTMiddlewareTest extends Test
         unset($_SERVER['HTTP_AUTHORIZATION']);
     }
 
-    public function testInitRSA(): void
+    #[Testing]
+    public function initRSA(): void
     {
         $this->getPrivateMethod('initRSA', [env('RSA_URL_PATH')]);
 
@@ -57,7 +59,8 @@ class JWTMiddlewareTest extends Test
      * @throws Exception
      * @throws MiddlewareException
      */
-    public function testValidateSessionIsError(): void
+    #[Testing]
+    public function validateSessionIsError(): void
     {
         $this
             ->exception(MiddlewareException::class)
@@ -73,7 +76,8 @@ class JWTMiddlewareTest extends Test
      * @throws Exception
      * @throws MiddlewareException
      */
-    public function testValidateSessionNotSession(): void
+    #[Testing]
+    public function validateSessionNotSession(): void
     {
         $this
             ->exception(MiddlewareException::class)
@@ -89,7 +93,8 @@ class JWTMiddlewareTest extends Test
      * @throws Exception
      * @throws MiddlewareException
      */
-    public function testExistence(): void
+    #[Testing]
+    public function existence(): void
     {
         $this
             ->exception(MiddlewareException::class)
@@ -105,7 +110,8 @@ class JWTMiddlewareTest extends Test
      * @throws Exception
      * @throws MiddlewareException
      */
-    public function testAuthorizeWithoutSignatureInvalidJWT(): void
+    #[Testing]
+    public function authorizeWithoutSignatureInvalidJWT(): void
     {
         $this
             ->exception(MiddlewareException::class)
@@ -123,7 +129,8 @@ class JWTMiddlewareTest extends Test
      * @throws Exception
      * @throws MiddlewareException
      */
-    public function testAuthorizeWithoutSignatureWithoutUsersCode(): void
+    #[Testing]
+    public function authorizeWithoutSignatureWithoutUsersCode(): void
     {
         $this
             ->exception(MiddlewareException::class)
@@ -141,7 +148,8 @@ class JWTMiddlewareTest extends Test
      * @throws Exception
      * @throws MiddlewareException
      */
-    public function testAuthorizeWithoutSignaturePathNotExist(): void
+    #[Testing]
+    public function authorizeWithoutSignaturePathNotExist(): void
     {
         $this
             ->exception(MiddlewareException::class)
@@ -165,7 +173,8 @@ class JWTMiddlewareTest extends Test
      * @throws Exception
      * @throws MiddlewareException
      */
-    public function testAuthorizeWithoutSignatureNotAuthorize(): void
+    #[Testing]
+    public function authorizeWithoutSignatureNotAuthorize(): void
     {
         $this
             ->exception(MiddlewareException::class)
@@ -188,7 +197,8 @@ class JWTMiddlewareTest extends Test
      * @throws Exception
      * @throws MiddlewareException
      */
-    public function testAuthorize(): void
+    #[Testing]
+    public function authorize(): void
     {
         $this
             ->exception(MiddlewareException::class)
@@ -206,7 +216,8 @@ class JWTMiddlewareTest extends Test
      * @throws Exception
      * @throws MiddlewareException
      */
-    public function testNotAuthorize(): void
+    #[Testing]
+    public function notAuthorize(): void
     {
         $this
             ->exception(MiddlewareException::class)

@@ -66,6 +66,13 @@ class UsersFactory implements FactoryInterface
     public const string SECURITY_KEY_2FA = 'JDKGOCESC3ZSV25S';
 
     /**
+     * [Default password for users]
+     *
+     * @const USERS_PASSWORD_HASH
+     */
+    public const string USERS_PASSWORD_HASH = 'fc59487712bbe89b488847b77b5744fb6b815b8fc65ef2ab18149958edb61464';
+
+    /**
      * {@inheritdoc}
      */
     public static function columns(): array

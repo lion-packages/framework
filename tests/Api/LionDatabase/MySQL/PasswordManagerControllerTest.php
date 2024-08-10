@@ -8,10 +8,13 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -20,8 +23,8 @@ class PasswordManagerControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const string USERS_EMAIL = 'root@dev.com';
-    const string USERS_PASSWORD = 'lion-password';
+    private const string USERS_EMAIL = 'root@dev.com';
+    private const string USERS_PASSWORD = 'lion-password';
 
     protected function setUp(): void
     {
@@ -35,7 +38,11 @@ class PasswordManagerControllerTest extends Test
         Schema::truncateTable('task_queue')->execute();
     }
 
-    public function testRecoveryPassword(): void
+    /**
+     * @throws GuzzleException
+     */
+    #[Testing]
+    public function recoveryPassword(): void
     {
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
@@ -53,9 +60,11 @@ class PasswordManagerControllerTest extends Test
     }
 
     /**
+     * @throws GuzzleException
      * @throws Exception
      */
-    public function testRecoveryPasswordCodeNotNull(): void
+    #[Testing]
+    public function recoveryPasswordCodeNotNull(): void
     {
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
@@ -89,7 +98,8 @@ class PasswordManagerControllerTest extends Test
     /**
      * @throws Exception
      */
-    public function testRecoveryPasswordIncorrect1(): void
+    #[Testing]
+    public function recoveryPasswordIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function () {
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
@@ -106,7 +116,11 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
-    public function testUpdateLostPassword(): void
+    /**
+     * @throws GuzzleException
+     */
+    #[Testing]
+    public function updateLostPassword(): void
     {
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
@@ -128,7 +142,9 @@ class PasswordManagerControllerTest extends Test
         );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('users_recovery_code', $user);
+        $this->assertIsString($user->users_recovery_code);
 
         $encode = $this->AESEncode([
             'users_password_new' => self::USERS_PASSWORD,
@@ -158,6 +174,7 @@ class PasswordManagerControllerTest extends Test
         );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('users_recovery_code', $user);
         $this->assertNull($user->users_recovery_code);
     }
@@ -165,7 +182,8 @@ class PasswordManagerControllerTest extends Test
     /**
      * @throws Exception
      */
-    public function testUpdateLostPasswordIncorrect1(): void
+    #[Testing]
+    public function updateLostPasswordIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function () {
             $encode = $this->AESEncode([
@@ -192,8 +210,10 @@ class PasswordManagerControllerTest extends Test
 
     /**
      * @throws Exception
+     * @throws GuzzleException
      */
-    public function testUpdateLostPasswordInvalid1(): void
+    #[Testing]
+    public function updateLostPasswordInvalid1(): void
     {
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
@@ -215,7 +235,9 @@ class PasswordManagerControllerTest extends Test
         );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('users_recovery_code', $user);
+        $this->assertIsString($user->users_recovery_code);
 
         $exception = $this->getExceptionFromApi(function () {
             $encode = $this->AESEncode([
@@ -242,8 +264,10 @@ class PasswordManagerControllerTest extends Test
 
     /**
      * @throws Exception
+     * @throws GuzzleException
      */
-    public function testUpdateLostPasswordIncorrect2(): void
+    #[Testing]
+    public function updateLostPasswordIncorrect2(): void
     {
         $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
             'json' => [
@@ -265,7 +289,9 @@ class PasswordManagerControllerTest extends Test
         );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('users_recovery_code', $user);
+        $this->assertIsString($user->users_recovery_code);
 
         $exception = $this->getExceptionFromApi(function () use ($user) {
             $encode = $this->AESEncode([
@@ -290,7 +316,11 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
-    public function testUpdatePassword(): void
+    /**
+     * @throws GuzzleException
+     */
+    #[Testing]
+    public function updatePassword(): void
     {
         $users = (new UsersModel())->readUsersDB();
 
@@ -299,7 +329,9 @@ class PasswordManagerControllerTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $encode = $this->AESEncode([
             'idusers' => (string) $user->idusers,
@@ -333,7 +365,8 @@ class PasswordManagerControllerTest extends Test
     /**
      * @throws Exception
      */
-    public function testUpdatePasswordIncorrect1(): void
+    #[Testing]
+    public function updatePasswordIncorrect1(): void
     {
         $users = (new UsersModel())->readUsersDB();
 
@@ -342,7 +375,9 @@ class PasswordManagerControllerTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $exception = $this->getExceptionFromApi(function () use ($user) {
             $encode = $this->AESEncode([
@@ -376,7 +411,8 @@ class PasswordManagerControllerTest extends Test
     /**
      * @throws Exception
      */
-    public function testUpdatePasswordIncorrect2(): void
+    #[Testing]
+    public function updatePasswordIncorrect2(): void
     {
         $users = (new UsersModel())->readUsersDB();
 
@@ -385,7 +421,9 @@ class PasswordManagerControllerTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $exception = $this->getExceptionFromApi(function () use ($user) {
             $encode = $this->AESEncode([

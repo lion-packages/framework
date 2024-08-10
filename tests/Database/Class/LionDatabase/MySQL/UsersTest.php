@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Database\Class\LionDatabase\MySQL;
 
+use App\Enums\DocumentTypesEnum;
+use App\Enums\RolesEnum;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Bundle\Interface\CapsuleInterface;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Test;
@@ -13,19 +16,13 @@ class UsersTest extends Test
 {
     private const string ENTITY = 'users';
     private const int IDUSERS = 1;
-    private const int IDROLES = 1;
-    private const int IDDOCUMENT_TYPES = 1;
     private const string USERS_CITIZEN_IDENTIFICATION = '1234567890';
     private const string USERS_NAME = 'Sergio';
     private const string USERS_LAST_NAME = 'Leon';
     private const string USERS_NICKNAME = 'Sleon';
-    private const string USERS_EMAIL = 'sleon@dev.com';
-    private const string USERS_PASSWORD = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
     private const string USERS_ACTIVATION_CODE = '######';
     private const string USERS_RECOVERY_CODE = '######';
     private const string USERS_CODE = 'code-65ca2d74ed1e1';
-    private const int USERS_2FA = 0;
-    private const string USERS_2FA_SECRET = '################';
 
     private Users $users;
 
@@ -34,19 +31,22 @@ class UsersTest extends Test
         $this->users = new Users();
     }
 
-    public function testCapsule(): void
+    #[Testing]
+    public function capsule(): void
     {
         $this->assertCapsule($this->users, self::ENTITY);
     }
 
-    public function testGetIdusers(): void
+    #[Testing]
+    public function getIdusers(): void
     {
         $this->users->setIdusers(self::IDUSERS);
 
         $this->assertSame(self::IDUSERS, $this->users->getIdusers());
     }
 
-    public function testSetIdusers(): void
+    #[Testing]
+    public function setIdusers(): void
     {
         $this->assertInstances($this->users->setIdusers(self::IDUSERS), [
             Users::class,
@@ -56,48 +56,54 @@ class UsersTest extends Test
         $this->assertSame(self::IDUSERS, $this->users->getIdusers());
     }
 
-    public function testGetIdroles(): void
+    #[Testing]
+    public function getIdroles(): void
     {
-        $this->users->setIdroles(self::IDROLES);
+        $this->users->setIdroles(RolesEnum::ADMINISTRATOR->value);
 
-        $this->assertSame(self::IDROLES, $this->users->getIdroles());
+        $this->assertSame(RolesEnum::ADMINISTRATOR->value, $this->users->getIdroles());
     }
 
-    public function testSetIdroles(): void
+    #[Testing]
+    public function setIdroles(): void
     {
-        $this->assertInstances($this->users->setIdroles(self::IDROLES), [
+        $this->assertInstances($this->users->setIdroles(RolesEnum::ADMINISTRATOR->value), [
             Users::class,
             CapsuleInterface::class,
         ]);
 
-        $this->assertSame(self::IDROLES, $this->users->getIdroles());
+        $this->assertSame(RolesEnum::ADMINISTRATOR->value, $this->users->getIdroles());
     }
 
-    public function testGetIddocumentTypes(): void
+    #[Testing]
+    public function getIddocumentTypes(): void
     {
-        $this->users->setIddocumentTypes(self::IDDOCUMENT_TYPES);
+        $this->users->setIddocumentTypes(DocumentTypesEnum::CITIZENSHIP_CARD->value);
 
-        $this->assertSame(self::IDDOCUMENT_TYPES, $this->users->getIddocumentTypes());
+        $this->assertSame(DocumentTypesEnum::CITIZENSHIP_CARD->value, $this->users->getIddocumentTypes());
     }
 
-    public function testSetIddocumentTypes(): void
+    #[Testing]
+    public function setIddocumentTypes(): void
     {
-        $this->assertInstances($this->users->setIddocumentTypes(self::IDDOCUMENT_TYPES), [
+        $this->assertInstances($this->users->setIddocumentTypes(DocumentTypesEnum::CITIZENSHIP_CARD->value), [
             Users::class,
             CapsuleInterface::class,
         ]);
 
-        $this->assertSame(self::IDDOCUMENT_TYPES, $this->users->getIddocumentTypes());
+        $this->assertSame(DocumentTypesEnum::CITIZENSHIP_CARD->value, $this->users->getIddocumentTypes());
     }
 
-    public function testGetUsersCitizenIdentification(): void
+    #[Testing]
+    public function getUsersCitizenIdentification(): void
     {
         $this->users->setUsersCitizenIdentification(self::USERS_CITIZEN_IDENTIFICATION);
 
         $this->assertSame(self::USERS_CITIZEN_IDENTIFICATION, $this->users->getUsersCitizenIdentification());
     }
 
-    public function testSetUsersCitizenIdentification(): void
+    #[Testing]
+    public function setUsersCitizenIdentification(): void
     {
         $this->assertInstances($this->users->setUsersCitizenIdentification(self::USERS_CITIZEN_IDENTIFICATION), [
             Users::class,
@@ -107,14 +113,16 @@ class UsersTest extends Test
         $this->assertSame(self::USERS_CITIZEN_IDENTIFICATION, $this->users->getUsersCitizenIdentification());
     }
 
-    public function testGetUsersName(): void
+    #[Testing]
+    public function getUsersName(): void
     {
         $this->users->setUsersName(self::USERS_NAME);
 
         $this->assertSame(self::USERS_NAME, $this->users->getUsersName());
     }
 
-    public function testSetUsersName(): void
+    #[Testing]
+    public function setUsersName(): void
     {
         $this->assertInstances($this->users->setUsersName(self::USERS_NAME), [
             Users::class,
@@ -124,14 +132,16 @@ class UsersTest extends Test
         $this->assertSame(self::USERS_NAME, $this->users->getUsersName());
     }
 
-    public function testGetUsersLastName(): void
+    #[Testing]
+    public function getUsersLastName(): void
     {
         $this->users->setUsersLastName(self::USERS_LAST_NAME);
 
         $this->assertSame(self::USERS_LAST_NAME, $this->users->getUsersLastName());
     }
 
-    public function testSetUsersLastName(): void
+    #[Testing]
+    public function setUsersLastName(): void
     {
         $this->assertInstances($this->users->setUsersLastName(self::USERS_LAST_NAME), [
             Users::class,
@@ -141,14 +151,16 @@ class UsersTest extends Test
         $this->assertSame(self::USERS_LAST_NAME, $this->users->getUsersLastName());
     }
 
-    public function testGetUsersNickname(): void
+    #[Testing]
+    public function getUsersNickname(): void
     {
         $this->users->setUsersNickname(self::USERS_NICKNAME);
 
         $this->assertSame(self::USERS_NICKNAME, $this->users->getUsersNickname());
     }
 
-    public function testSetUsersNickname(): void
+    #[Testing]
+    public function setUsersNickname(): void
     {
         $this->assertInstances($this->users->setUsersNickname(self::USERS_NICKNAME), [
             Users::class,
@@ -158,48 +170,54 @@ class UsersTest extends Test
         $this->assertSame(self::USERS_NICKNAME, $this->users->getUsersNickname());
     }
 
-    public function testGetUsersEmail(): void
+    #[Testing]
+    public function getUsersEmail(): void
     {
-        $this->users->setUsersEmail(self::USERS_EMAIL);
+        $this->users->setUsersEmail(UsersFactory::USERS_EMAIL);
 
-        $this->assertSame(self::USERS_EMAIL, $this->users->getUsersEmail());
+        $this->assertSame(UsersFactory::USERS_EMAIL, $this->users->getUsersEmail());
     }
 
-    public function testSetUsersEmail(): void
+    #[Testing]
+    public function setUsersEmail(): void
     {
-        $this->assertInstances($this->users->setUsersEmail(self::USERS_EMAIL), [
+        $this->assertInstances($this->users->setUsersEmail(UsersFactory::USERS_EMAIL), [
             Users::class,
             CapsuleInterface::class,
         ]);
 
-        $this->assertSame(self::USERS_EMAIL, $this->users->getUsersEmail());
+        $this->assertSame(UsersFactory::USERS_EMAIL, $this->users->getUsersEmail());
     }
 
-    public function testGetUsersPassword(): void
+    #[Testing]
+    public function getUsersPassword(): void
     {
-        $this->users->setUsersPassword(self::USERS_PASSWORD);
+        $this->users->setUsersPassword(UsersFactory::USERS_PASSWORD_HASH);
 
-        $this->assertSame(self::USERS_PASSWORD, $this->users->getUsersPassword());
+        $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->users->getUsersPassword());
     }
 
-    public function testSetUsersPassword(): void
+    #[Testing]
+    public function setUsersPassword(): void
     {
-        $this->assertInstances($this->users->setUsersPassword(self::USERS_PASSWORD), [
+        $this->assertInstances($this->users->setUsersPassword(UsersFactory::USERS_PASSWORD_HASH), [
             Users::class,
             CapsuleInterface::class,
         ]);
 
-        $this->assertSame(self::USERS_PASSWORD, $this->users->getUsersPassword());
+        $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->users->getUsersPassword());
     }
 
-    public function testGetUsersActivationCode(): void
+    #[Testing]
+    public function getUsersActivationCode(): void
     {
         $this->users->setUsersActivationCode(self::USERS_ACTIVATION_CODE);
 
         $this->assertSame(self::USERS_ACTIVATION_CODE, $this->users->getUsersActivationCode());
     }
 
-    public function testSetUsersActivationCode(): void
+    #[Testing]
+    public function setUsersActivationCode(): void
     {
         $this->assertInstances($this->users->setUsersActivationCode(self::USERS_ACTIVATION_CODE), [
             Users::class,
@@ -209,14 +227,16 @@ class UsersTest extends Test
         $this->assertSame(self::USERS_ACTIVATION_CODE, $this->users->getUsersActivationCode());
     }
 
-    public function testGetUsersRecoveryCode(): void
+    #[Testing]
+    public function getUsersRecoveryCode(): void
     {
         $this->users->setUsersRecoveryCode(self::USERS_RECOVERY_CODE);
 
         $this->assertSame(self::USERS_RECOVERY_CODE, $this->users->getUsersRecoveryCode());
     }
 
-    public function testSetUsersRecoveryCode(): void
+    #[Testing]
+    public function setUsersRecoveryCode(): void
     {
         $this->assertInstances($this->users->setUsersRecoveryCode(self::USERS_RECOVERY_CODE), [
             Users::class,
@@ -226,14 +246,16 @@ class UsersTest extends Test
         $this->assertSame(self::USERS_RECOVERY_CODE, $this->users->getUsersRecoveryCode());
     }
 
-    public function testGetUsersCode(): void
+    #[Testing]
+    public function getUsersCode(): void
     {
         $this->users->setUsersCode(self::USERS_CODE);
 
         $this->assertSame(self::USERS_CODE, $this->users->getUsersCode());
     }
 
-    public function testSetUsersCode(): void
+    #[Testing]
+    public function setUsersCode(): void
     {
         $this->assertInstances($this->users->setUsersCode(self::USERS_CODE), [
             Users::class,
@@ -246,38 +268,38 @@ class UsersTest extends Test
     #[Testing]
     public function getUsers2fa(): void
     {
-        $this->users->setUsers2fa(self::USERS_2FA);
+        $this->users->setUsers2fa(UsersFactory::ENABLED_2FA);
 
-        $this->assertSame(self::USERS_2FA, $this->users->getUsers2fa());
+        $this->assertSame(UsersFactory::ENABLED_2FA, $this->users->getUsers2fa());
     }
 
     #[Testing]
     public function setUsers2fa(): void
     {
-        $this->assertInstances($this->users->setUsers2fa(self::USERS_2FA), [
+        $this->assertInstances($this->users->setUsers2fa(UsersFactory::ENABLED_2FA), [
             Users::class,
             CapsuleInterface::class,
         ]);
 
-        $this->assertSame(self::USERS_2FA, $this->users->getUsers2fa());
+        $this->assertSame(UsersFactory::ENABLED_2FA, $this->users->getUsers2fa());
     }
 
     #[Testing]
     public function getUsers2faSecret(): void
     {
-        $this->users->setUsers2faSecret(self::USERS_2FA_SECRET);
+        $this->users->setUsers2faSecret(UsersFactory::SECURITY_KEY_2FA);
 
-        $this->assertSame(self::USERS_2FA_SECRET, $this->users->getUsers2faSecret());
+        $this->assertSame(UsersFactory::SECURITY_KEY_2FA, $this->users->getUsers2faSecret());
     }
 
     #[Testing]
     public function setUsers2faSecret(): void
     {
-        $this->assertInstances($this->users->setUsers2faSecret(self::USERS_2FA_SECRET), [
+        $this->assertInstances($this->users->setUsers2faSecret(UsersFactory::SECURITY_KEY_2FA), [
             Users::class,
             CapsuleInterface::class,
         ]);
 
-        $this->assertSame(self::USERS_2FA_SECRET, $this->users->getUsers2faSecret());
+        $this->assertSame(UsersFactory::SECURITY_KEY_2FA, $this->users->getUsers2faSecret());
     }
 }

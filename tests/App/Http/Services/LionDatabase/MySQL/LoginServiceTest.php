@@ -22,6 +22,7 @@ use Lion\Security\JWT;
 use Lion\Security\RSA;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -118,7 +119,8 @@ class LoginServiceTest extends Test
     /**
      * @throws Exception
      */
-    public function testValidateSession(): void
+    #[Testing]
+    public function validateSession(): void
     {
         $this
             ->exception(AuthenticationException::class)
@@ -136,7 +138,8 @@ class LoginServiceTest extends Test
     /**
      * @throws Exception
      */
-    public function testVerifyAccountActivation(): void
+    #[Testing]
+    public function verifyAccountActivation(): void
     {
         $this
             ->exception(AuthenticationException::class)
@@ -151,7 +154,8 @@ class LoginServiceTest extends Test
             });
     }
 
-    public function testGetToken(): void
+    #[Testing]
+    public function getToken(): void
     {
         $token = $this->loginService->getToken(env('JWT_EXP'), [
             'session' => true,
@@ -160,7 +164,8 @@ class LoginServiceTest extends Test
         $this->assertIsString($token);
     }
 
-    public function testGenerateTokens(): void
+    #[Testing]
+    public function generateTokens(): void
     {
         $users = (new Users())
             ->setIdusers(1)
@@ -178,7 +183,8 @@ class LoginServiceTest extends Test
     /**
      * @throws Exception
      */
-    public function testValidateRefreshToken(): void
+    #[Testing]
+    public function validateRefreshToken(): void
     {
         $this->exception(AuthenticationException::class)
             ->exceptionMessage('user not logged in, you must log in')
@@ -200,7 +206,9 @@ class LoginServiceTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $response = $this->loginService
             ->checkStatus2FA(
