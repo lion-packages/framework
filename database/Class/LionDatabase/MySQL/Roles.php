@@ -5,18 +5,29 @@ declare(strict_types=1);
 namespace Database\Class\LionDatabase\MySQL;
 
 use Lion\Bundle\Interface\CapsuleInterface;
+use Lion\Bundle\Traits\CapsuleTrait;
 
 /**
  * Capsule for the 'Roles' entity
  *
- * @property int $idroles [Property for idroles]
- * @property string $roles_name [Property for roles_name]
- * @property string $roles_description [Property for roles_description]
+ * @property string $entity [Entity name]
+ * @property int|null $idroles [Property for idroles]
+ * @property string|null $roles_name [Property for roles_name]
+ * @property string|null $roles_description [Property for roles_description]
  *
  * @package Database\Class\LionDatabase\MySQL
  */
 class Roles implements CapsuleInterface
 {
+	use CapsuleTrait;
+
+	/**
+     * [Entity name]
+     *
+     * @var string $entity
+     */
+    private string $entity = 'roles';
+
 	/**
 	 * [Property for idroles]
 	 *
@@ -37,14 +48,6 @@ class Roles implements CapsuleInterface
 	 * @var string|null $roles_description
 	 */
 	private ?string $roles_description = null;
-
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function jsonSerialize(): array
-	{
-		return get_object_vars($this);
-	}
 
 	/**
 	 * {@inheritdoc}

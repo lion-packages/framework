@@ -6,12 +6,14 @@ namespace Tests\Database\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\DocumentTypes;
 use Lion\Bundle\Interface\CapsuleInterface;
+use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Test;
 
 class DocumentTypesTest extends Test
 {
-    const int IDDOCUMENT_TYPES = 1;
-    const string DOCUMENT_TYPES_NAME = 'Passport';
+    private const string ENTITY = 'document_types';
+    private const int IDDOCUMENT_TYPES = 1;
+    private const string DOCUMENT_TYPES_NAME = 'Passport';
 
     private DocumentTypes $documentTypes;
 
@@ -20,19 +22,22 @@ class DocumentTypesTest extends Test
         $this->documentTypes = new DocumentTypes();
     }
 
-    public function testCapsule(): void
+    #[Testing]
+    public function capsule(): void
     {
-        $this->assertCapsule($this->documentTypes);
+        $this->assertCapsule($this->documentTypes, self::ENTITY);
     }
 
-    public function testGetIddocumentTypes(): void
+    #[Testing]
+    public function getIddocumentTypes(): void
     {
         $this->documentTypes->setIddocumentTypes(self::IDDOCUMENT_TYPES);
 
         $this->assertSame(self::IDDOCUMENT_TYPES, $this->documentTypes->getIddocumentTypes());
     }
 
-    public function testSetIddocumentTypes(): void
+    #[Testing]
+    public function setIddocumentTypes(): void
     {
         $this->assertInstances($this->documentTypes->setIddocumentTypes(self::IDDOCUMENT_TYPES), [
             DocumentTypes::class,
@@ -42,14 +47,16 @@ class DocumentTypesTest extends Test
         $this->assertSame(self::IDDOCUMENT_TYPES, $this->documentTypes->getIddocumentTypes());
     }
 
-    public function testGetDocumentTypesName(): void
+    #[Testing]
+    public function getDocumentTypesName(): void
     {
         $this->documentTypes->setDocumentTypesName(self::DOCUMENT_TYPES_NAME);
 
         $this->assertSame(self::DOCUMENT_TYPES_NAME, $this->documentTypes->getDocumentTypesName());
     }
 
-    public function testSetDocumentTypesName(): void
+    #[Testing]
+    public function setDocumentTypesName(): void
     {
         $this->assertInstances($this->documentTypes->setDocumentTypesName(self::DOCUMENT_TYPES_NAME), [
             DocumentTypes::class,

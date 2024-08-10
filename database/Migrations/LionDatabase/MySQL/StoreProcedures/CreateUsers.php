@@ -16,7 +16,7 @@ return new class implements StoreProcedureInterface
      * */
     public function up(): stdClass
     {
-        return Schema::connection('lion_database')
+        return Schema::connection(env('DB_NAME', 'lion_database'))
             ->createStoreProcedure('create_users', function (): void {
                 Schema::in()->int('_idroles')->null();
                 Schema::in()->int('_iddocument_types')->null();

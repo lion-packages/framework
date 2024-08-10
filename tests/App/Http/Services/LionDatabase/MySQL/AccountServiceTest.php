@@ -18,6 +18,8 @@ use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\App\Http\Services\LionDatabase\MySQL\AccountServiceProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -46,10 +48,11 @@ class AccountServiceTest extends Test
     }
 
     /**
-     * @throws Exception
      * @throws AccountException
+     * @throws Exception
      */
-    public function testCheckRecoveryCodeInactive(): void
+    #[Testing]
+    public function checkRecoveryCodeInactive(): void
     {
         $this
             ->exception(AccountException::class)
@@ -67,7 +70,8 @@ class AccountServiceTest extends Test
     /**
      * @throws ExceptionGlobal
      */
-    public function testSendVerifyCodeEmail(): void
+    #[Testing]
+    public function sendVerifyCodeEmail(): void
     {
         $account = fake()->email();
 
@@ -86,10 +90,12 @@ class AccountServiceTest extends Test
         $row = reset($taskQueue);
 
         $this->assertIsObject($row);
+        $this->assertInstanceOf(stdClass::class, $row);
         $this->assertObjectHasProperty('task_queue_data', $row);
         $this->assertObjectHasProperty('task_queue_status', $row);
-        $this->assertSame(TaskStatusEnum::PENDING->value, $row->task_queue_status);
         $this->assertIsString($row->task_queue_data);
+        $this->assertIsString($row->task_queue_status);
+        $this->assertSame(TaskStatusEnum::PENDING->value, $row->task_queue_status);
 
         $this->assertJsonContent($row->task_queue_data, [
             'code' => $code,
@@ -100,7 +106,8 @@ class AccountServiceTest extends Test
     /**
      * @throws ExceptionGlobal
      */
-    public function testSendRecoveryCodeEmail(): void
+    #[Testing]
+    public function sendRecoveryCodeEmail(): void
     {
         $account = fake()->email();
 
@@ -119,10 +126,12 @@ class AccountServiceTest extends Test
         $row = reset($taskQueue);
 
         $this->assertIsObject($row);
+        $this->assertInstanceOf(stdClass::class, $row);
         $this->assertObjectHasProperty('task_queue_data', $row);
         $this->assertObjectHasProperty('task_queue_status', $row);
-        $this->assertSame(TaskStatusEnum::PENDING->value, $row->task_queue_status);
         $this->assertIsString($row->task_queue_data);
+        $this->assertIsString($row->task_queue_status);
+        $this->assertSame(TaskStatusEnum::PENDING->value, $row->task_queue_status);
 
         $this->assertJsonContent($row->task_queue_data, [
             'code' => $code,
@@ -131,10 +140,12 @@ class AccountServiceTest extends Test
     }
 
     /**
+     * @throws AccountException
      * @throws Exception
      */
+    #[Testing]
     #[DataProvider('verifyRecoveryCodeProvider')]
-    public function testVerifyRecoveryCode(Users $users, object $data, string $exceptionMessage): void
+    public function verifyRecoveryCode(Users $users, object $data, string $exceptionMessage): void
     {
         $this
             ->exception(AccountException::class)
@@ -147,10 +158,12 @@ class AccountServiceTest extends Test
     }
 
     /**
+     * @throws AccountException
      * @throws Exception
      */
+    #[Testing]
     #[DataProvider('verifyActivationCodeProvider')]
-    public function testVerifyActivationCode(Users $users, object $data, string $exceptionMessage): void
+    public function verifyActivationCode(Users $users, object $data, string $exceptionMessage): void
     {
         $this
             ->exception(AccountException::class)
@@ -163,9 +176,11 @@ class AccountServiceTest extends Test
     }
 
     /**
+     * @throws AccountException
      * @throws Exception
      */
-    public function testUpdateRecoveryCode(): void
+    #[Testing]
+    public function updateRecoveryCode(): void
     {
         $this
             ->exception(AccountException::class)
@@ -189,9 +204,11 @@ class AccountServiceTest extends Test
     }
 
     /**
+     * @throws AccountException
      * @throws Exception
      */
-    public function testUpdateActivationCode(): void
+    #[Testing]
+    public function updateActivationCode(): void
     {
         $this
             ->exception(AccountException::class)
@@ -213,9 +230,11 @@ class AccountServiceTest extends Test
     }
 
     /**
+     * @throws AccountException
      * @throws Exception
      */
-    public function testValidateAccountExists(): void
+    #[Testing]
+    public function validateAccountExists(): void
     {
         $this
             ->exception(AccountException::class)

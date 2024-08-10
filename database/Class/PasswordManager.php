@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Database\Class;
 
 use Lion\Bundle\Interface\CapsuleInterface;
+use Lion\Bundle\Traits\CapsuleTrait;
 
 /**
  * Capsule for the 'PasswordManager' entity
  *
+ * @property string $entity [Entity name]
  * @property int $idusers [Property for idusers]
  * @property string $users_password [Property for users_password]
  * @property string $users_password_new [Property for users_password_new]
@@ -18,6 +20,15 @@ use Lion\Bundle\Interface\CapsuleInterface;
  */
 class PasswordManager implements CapsuleInterface
 {
+    use CapsuleTrait;
+
+    /**
+     * [Entity name]
+     *
+     * @var string $entity
+     */
+    private string $entity = '';
+
 	/**
 	 * [Property for idusers]
 	 *
@@ -45,14 +56,6 @@ class PasswordManager implements CapsuleInterface
 	 * @var string|null $users_password_confirm
 	 */
 	private ?string $users_password_confirm = null;
-
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function jsonSerialize(): array
-	{
-		return get_object_vars($this);
-	}
 
 	/**
 	 * {@inheritdoc}

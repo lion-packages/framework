@@ -31,21 +31,6 @@ services:
         networks:
             - lion
 
-    redis:
-        image: redis
-        container_name: framework-redis
-        restart: always
-        ports:
-            - "6379:6379"
-        volumes:
-            - redis_data:/var/lib/redis
-        environment:
-            REDIS_HOST: redis
-            REDIS_PASSWORD: lion
-            REDIS_DATABASES: 1
-        networks:
-            - lion
-
     mailhog:
         image: mailhog/mailhog
         container_name: framework-mailhog
@@ -53,6 +38,21 @@ services:
         ports:
             - "8025:8025"
             - "1025:1025"
+        networks:
+            - lion
+
+    redis:
+        image: redis
+        container_name: framework-redis
+        restart: always
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+        environment:
+            REDIS_HOST: redis
+            REDIS_PASSWORD: lion
+            REDIS_DATABASES: 1
         networks:
             - lion
 
@@ -85,8 +85,36 @@ services:
         networks:
             - lion
 
+    # postgres:
+    #     image: postgres
+    #     container_name: database-postgres
+    #     ports:
+    #         - "5432:5432"
+    #     environment:
+    #         POSTGRES_DB: lion_database
+    #         POSTGRES_USER: root
+    #         POSTGRES_PASSWORD: lion
+    #     volumes:
+    #         - postgres_data:/var/lib/postgresql/data
+    #     networks:
+    #         - lion
+
+    # pgadmin:
+    #     image: dpage/pgadmin4
+    #     container_name: database-pgadmin4
+    #     ports:
+    #         - "5050:80"
+    #     environment:
+    #         PGADMIN_DEFAULT_EMAIL: root@dev.com
+    #         PGADMIN_DEFAULT_PASSWORD: lion
+    #     depends_on:
+    #         - postgres
+    #     networks:
+    #         - lion
+
 volumes:
     mysql_data:
+    postgres_data:
     redis_data:
         driver: local
 

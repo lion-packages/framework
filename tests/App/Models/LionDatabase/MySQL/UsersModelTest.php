@@ -34,7 +34,7 @@ class UsersModelTest extends Test
             ->setUsersName('Sergio')
             ->setUsersLastName('Leon')
             ->setUsersEmail(fake()->email())
-            ->setUsersPassword('cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481')
+            ->setUsersPassword(UsersFactory::USERS_PASSWORD_HASH)
             ->setUsersActivationCode(fake()->numerify('######'))
             ->setUsersRecoveryCode(null)
             ->setUsersCode(uniqid('code-'))
@@ -46,7 +46,8 @@ class UsersModelTest extends Test
         Schema::truncateTable('users')->execute();
     }
 
-    public function testCreateUsersDB(): void
+    #[Testing]
+    public function createUsersDB(): void
     {
         $response = $this->usersModel->createUsersDB($this->users);
 
@@ -55,27 +56,44 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = DB::table('users')
             ->select()
             ->where()->equalTo('users_code', $this->users->getUsersCode())
             ->get();
 
+        $this->assertIsObject($users);
+        $this->assertInstanceOf(stdClass::class, $users);
+        $this->assertIsInt($users->idroles);
         $this->assertSame($this->users->getIdroles(), $users->idroles);
+        $this->assertIsInt($users->iddocument_types);
         $this->assertSame($this->users->getIddocumentTypes(), $users->iddocument_types);
+        $this->assertIsString($users->users_citizen_identification);
         $this->assertSame($this->users->getUsersCitizenIdentification(), $users->users_citizen_identification);
+        $this->assertIsString($users->users_name);
         $this->assertSame($this->users->getUsersName(), $users->users_name);
+        $this->assertIsString($users->users_last_name);
         $this->assertSame($this->users->getUsersLastName(), $users->users_last_name);
+        $this->assertIsString($users->users_email);
         $this->assertSame($this->users->getUsersEmail(), $users->users_email);
+        $this->assertIsString($users->users_password);
         $this->assertSame($this->users->getUsersPassword(), $users->users_password);
+        $this->assertIsString($users->users_activation_code);
         $this->assertSame($this->users->getUsersActivationCode(), $users->users_activation_code);
+        $this->assertNull($users->users_recovery_code);
+        $this->assertSame($this->users->getUsersRecoveryCode(), $users->users_recovery_code);
+        $this->assertIsString($users->users_code);
         $this->assertSame($this->users->getUsersCode(), $users->users_code);
     }
 
-    public function testReadUsersDB(): void
+    #[Testing]
+    public function readUsersDB(): void
     {
         $response = $this->usersModel->createUsersDB($this->users);
 
@@ -84,9 +102,12 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersDB();
 
@@ -94,20 +115,36 @@ class UsersModelTest extends Test
 
         $firstUser = reset($users);
 
+        $this->assertIsObject($firstUser);
+        $this->assertInstanceOf(stdClass::class, $firstUser);
+        $this->assertObjectHasProperty('users_name', $firstUser);
+        $this->assertObjectHasProperty('users_last_name', $firstUser);
+        $this->assertIsString($firstUser->users_name);
+        $this->assertIsString($firstUser->users_last_name);
         $this->assertSame($this->users->getUsersName(), $firstUser->users_name);
         $this->assertSame($this->users->getUsersLastName(), $firstUser->users_last_name);
     }
 
-    public function testReadUsersDBNotAvailableData(): void
+    #[Testing]
+    public function readUsersDBNotAvailableData(): void
     {
         $response = $this->usersModel->readUsersDB();
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('no data available', $response->message);
     }
 
-    public function testReadUsersByIdDB(): void
+    #[Testing]
+    public function readUsersByIdDB(): void
     {
         $response = $this->usersModel->createUsersDB($this->users);
 
@@ -116,28 +153,45 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersByIdDB($this->users);
 
         $this->assertIsObject($users);
-
+        $this->assertInstanceOf(stdClass::class, $users);
+        $this->assertObjectHasProperty('users_name', $users);
+        $this->assertObjectHasProperty('users_last_name', $users);
+        $this->assertIsString($users->users_name);
+        $this->assertIsString($users->users_last_name);
         $this->assertSame($this->users->getUsersName(), $users->users_name);
         $this->assertSame($this->users->getUsersLastName(), $users->users_last_name);
     }
 
-    public function testReadUsersByIdDBNotAvailableData(): void
+    #[Testing]
+    public function readUsersByIdDBNotAvailableData(): void
     {
         $response = $this->usersModel->readUsersByIdDB($this->users);
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('no data available', $response->message);
     }
 
-    public function testReadUsersByEmailDB(): void
+    #[Testing]
+    public function readUsersByEmailDB(): void
     {
         $response = $this->usersModel->createUsersDB($this->users);
 
@@ -146,25 +200,41 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersByEmailDB($this->users);
 
         $this->assertIsObject($users);
-
+        $this->assertInstanceOf(stdClass::class, $users);
+        $this->assertObjectHasProperty('users_name', $users);
+        $this->assertObjectHasProperty('users_last_name', $users);
+        $this->assertIsString($users->users_name);
+        $this->assertIsString($users->users_last_name);
         $this->assertSame($this->users->getUsersName(), $users->users_name);
         $this->assertSame($this->users->getUsersLastName(), $users->users_last_name);
     }
 
-    public function testReadUsersByEmailDBNotAvailableData(): void
+    #[Testing]
+    public function readUsersByEmailDBNotAvailableData(): void
     {
         $response = $this->usersModel->readUsersByEmailDB($this->users);
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('no data available', $response->message);
     }
 
     #[Testing]
@@ -177,19 +247,24 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $response = $this->usersModel->readUsers2FADB($this->users);
 
         $this->assertIsObject($response);
         $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertIsInt($response->users_2fa);
         $this->assertSame(UsersFactory::DISABLED_2FA, $response->users_2fa);
         $this->assertNull($response->users_2fa_secret);
     }
 
-    public function testUpdateUsersDB(): void
+    #[Testing]
+    public function updateUsersDB(): void
     {
         $response = $this->usersModel->createUsersDB($this->users);
 
@@ -198,9 +273,12 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersDB();
 
@@ -208,7 +286,24 @@ class UsersModelTest extends Test
 
         $firstUser = reset($users);
 
-        $this->assertTrue(isSuccess($this->usersModel->updateUsersDB($this->users->setIdusers($firstUser->idusers))));
+        $this->assertIsObject($firstUser);
+        $this->assertInstanceOf(stdClass::class, $firstUser);
+        $this->assertObjectHasProperty('idusers', $firstUser);
+        $this->assertIsInt($firstUser->idusers);
+
+        $response = $this->usersModel->updateUsersDB($this->users->setIdusers($firstUser->idusers));
+
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersDB();
 
@@ -216,11 +311,18 @@ class UsersModelTest extends Test
 
         $firstUser = reset($users);
 
+        $this->assertIsObject($firstUser);
+        $this->assertInstanceOf(stdClass::class, $firstUser);
+        $this->assertObjectHasProperty('users_name', $firstUser);
+        $this->assertObjectHasProperty('users_last_name', $firstUser);
+        $this->assertIsString($firstUser->users_name);
+        $this->assertIsString($firstUser->users_last_name);
         $this->assertSame($this->users->getUsersName(), $firstUser->users_name);
         $this->assertSame($this->users->getUsersLastName(), $firstUser->users_last_name);
     }
 
-    public function testUpdateActivationCodeDB(): void
+    #[Testing]
+    public function updateActivationCodeDB(): void
     {
         $response = $this->usersModel->createUsersDB($this->users);
 
@@ -229,14 +331,19 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $user = $this->usersModel->readUsersByEmailDB($this->users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $code = fake()->numerify('######');
 
@@ -247,18 +354,30 @@ class UsersModelTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $user = $this->usersModel->readUsersByEmailDB($this->users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
         $this->assertObjectHasProperty('users_activation_code', $user);
+        $this->assertIsInt($user->idusers);
+        $this->assertIsString($user->users_activation_code);
         $this->assertSame($code, $user->users_activation_code);
     }
 
-    public function testUpdateRecoveryCodeDB(): void
+    #[Testing]
+    public function updateRecoveryCodeDB(): void
     {
         $response = $this->usersModel->createUsersDB($this->users);
 
@@ -267,14 +386,19 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $user = $this->usersModel->readUsersByEmailDB($this->users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $code = fake()->numerify('######');
 
@@ -285,18 +409,30 @@ class UsersModelTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $user = $this->usersModel->readUsersByEmailDB($this->users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
         $this->assertObjectHasProperty('users_recovery_code', $user);
+        $this->assertIsInt($user->idusers);
+        $this->assertIsString($user->users_recovery_code);
         $this->assertSame($code, $user->users_recovery_code);
     }
 
-    public function testDeleteUsersDB(): void
+    #[Testing]
+    public function deleteUsersDB(): void
     {
         $response = $this->usersModel->createUsersDB($this->users);
 
@@ -305,9 +441,12 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersDB();
 
@@ -315,12 +454,37 @@ class UsersModelTest extends Test
 
         $firstUser = reset($users);
 
-        $this->assertTrue(isSuccess($this->usersModel->deleteUsersDB($this->users->setIdusers($firstUser->idusers))));
+        $this->assertIsObject($firstUser);
+        $this->assertInstanceOf(stdClass::class, $firstUser);
+        $this->assertObjectHasProperty('idusers', $firstUser);
+        $this->assertIsInt($firstUser->idusers);
+
+        $response = $this->usersModel->deleteUsersDB($this->users->setIdusers($firstUser->idusers));
+
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertIsString($response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersDB();
 
         $this->assertIsObject($users);
+        $this->assertInstanceOf(stdClass::class, $users);
+        $this->assertObjectHasProperty('code', $users);
         $this->assertObjectHasProperty('status', $users);
         $this->assertObjectHasProperty('message', $users);
+        $this->assertIsInt($users->code);
+        $this->assertIsString($users->status);
+        $this->assertIsString($users->message);
+        $this->assertSame(Http::OK, $users->code);
+        $this->assertSame(Status::SUCCESS, $users->status);
+        $this->assertSame('no data available', $users->message);
     }
 }

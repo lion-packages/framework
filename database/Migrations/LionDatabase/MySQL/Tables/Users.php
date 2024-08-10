@@ -23,7 +23,7 @@ return new class implements TableInterface
      * */
     public function up(): stdClass
     {
-        return DB::connection('lion_database')
+        return DB::connection(env('DB_NAME', 'lion_database'))
             ->createTable('users', function (): void {
                 DB::int('idusers')->notNull()->autoIncrement()->primaryKey();
                 DB::int('idroles')->null()->foreign('roles', 'idroles');

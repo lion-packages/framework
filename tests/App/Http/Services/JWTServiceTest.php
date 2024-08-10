@@ -7,6 +7,8 @@ namespace Tests\App\Http\Services;
 use App\Http\Services\JWTService;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Test;
 
@@ -21,54 +23,82 @@ class JWTServiceTest extends Test
         $this->jWTService = (new JWTService())
             ->setRSA(new RSA())
             ->setJWT(new JWT());
+
+        $this->initReflection($this->jWTService);
     }
 
-    public function testGetTokenData(): void
+    #[Testing]
+    public function setRSA(): void
+    {
+        $this->assertInstanceOf(JWTService::class, $this->jWTService->setRSA(new RSA()));
+        $this->assertInstanceOf(RSA::class, $this->getPrivateProperty('rsa'));
+    }
+
+    #[Testing]
+    public function setJWT(): void
+    {
+        $this->assertInstanceOf(JWTService::class, $this->jWTService->setJWT(new JWT()));
+        $this->assertInstanceOf(JWT::class, $this->getPrivateProperty('jwt'));
+    }
+
+    #[Testing]
+    public function getTokenData(): void
     {
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization();
 
         $data = $this->jWTService->getTokenData(env('RSA_URL_PATH'));
 
         $this->assertIsObject($data);
+        $this->assertInstanceOf(stdClass::class, $data);
         $this->assertObjectHasProperty('session', $data);
+        $this->assertIsBool($data->session);
         $this->assertTrue($data->session);
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
     }
 
-    public function testGetToken(): void
+    #[Testing]
+    public function getToken(): void
     {
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization();
 
         $data = $this->jWTService->getToken();
 
         $this->assertIsObject($data);
+        $this->assertInstanceOf(stdClass::class, $data);
         $this->assertObjectHasProperty('data', $data);
         $this->assertObjectHasProperty('session', $data->data);
+        $this->assertIsBool($data->data->session);
         $this->assertTrue($data->data->session);
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
     }
 
-    public function testDecode(): void
+    #[Testing]
+    public function decode(): void
     {
         $token = str->of($this->getAuthorization())->replace('Bearer', '')->trim()->get();
 
         $data = $this->jWTService->decode(env('RSA_URL_PATH'), $token);
 
         $this->assertIsObject($data);
+        $this->assertInstanceOf(stdClass::class, $data);
         $this->assertObjectHasProperty('data', $data);
         $this->assertObjectHasProperty('session', $data->data);
+        $this->assertIsBool($data->data->session);
         $this->assertTrue($data->data->session);
     }
 
-    public function testDecodeWithAuthorization(): void
+    #[Testing]
+    public function decodeWithAuthorization(): void
     {
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization();
 
         $data = $this->jWTService->decode(env('RSA_URL_PATH'));
 
         $this->assertIsObject($data);
+        $this->assertInstanceOf(stdClass::class, $data);
         $this->assertObjectHasProperty('data', $data);
         $this->assertObjectHasProperty('session', $data->data);
+        $this->assertIsBool($data->data->session);
         $this->assertTrue($data->data->session);
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
     }

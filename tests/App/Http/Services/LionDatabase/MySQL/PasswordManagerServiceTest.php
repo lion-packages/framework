@@ -14,6 +14,7 @@ use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\Validation;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class PasswordManagerServiceTest extends Test
@@ -36,7 +37,8 @@ class PasswordManagerServiceTest extends Test
     /**
      * @throws Exception
      */
-    public function testVerifyPasswords(): void
+    #[Testing]
+    public function verifyPasswords(): void
     {
         $this
             ->exception(PasswordException::class)
@@ -57,7 +59,8 @@ class PasswordManagerServiceTest extends Test
     /**
      * @throws Exception
      */
-    public function testComparePasswords(): void
+    #[Testing]
+    public function comparePasswords(): void
     {
         $this
             ->exception(PasswordException::class)
@@ -76,7 +79,8 @@ class PasswordManagerServiceTest extends Test
     /**
      * @throws Exception
      */
-    public function testUpdatePassword(): void
+    #[Testing]
+    public function updatePassword(): void
     {
         $this
             ->exception(PasswordException::class)

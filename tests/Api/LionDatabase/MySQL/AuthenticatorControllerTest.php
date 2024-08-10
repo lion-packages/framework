@@ -7,11 +7,16 @@ namespace Tests\Api\LionDatabase\MySQL;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
+use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
+use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FAQRCode\Google2FA;
 use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
@@ -36,6 +41,9 @@ class AuthenticatorControllerTest extends Test
         Schema::truncateTable('users')->execute();
     }
 
+    /**
+     * @throws GuzzleException
+     */
     #[Testing]
     public function passwordVerify(): void
     {
@@ -48,6 +56,7 @@ class AuthenticatorControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $aesEncode = $this->AESEncode([
             'idusers' => (string) $user->idusers,
@@ -74,6 +83,9 @@ class AuthenticatorControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Testing]
     public function passwordVerifyPasswordIsInvalid(): void
     {
@@ -86,6 +98,7 @@ class AuthenticatorControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $aesEncode = $this->AESEncode([
             'idusers' => (string) $user->idusers,
@@ -112,6 +125,9 @@ class AuthenticatorControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws GuzzleException
+     */
     #[Testing]
     public function qr(): void
     {
@@ -124,6 +140,7 @@ class AuthenticatorControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $response = json_decode(
             fetch(Http::GET, (env('SERVER_URL') . '/api/profile/2fa/qr'), [
@@ -145,13 +162,21 @@ class AuthenticatorControllerTest extends Test
         $this->assertObjectHasProperty('data', $response);
         $this->assertObjectHasProperty('qr', $response->data);
         $this->assertObjectHasProperty('secret', $response->data);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertNull($response->message);
         $this->assertIsString($response->data->qr);
         $this->assertIsString($response->data->secret);
     }
 
+    /**
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws InvalidCharactersException
+     * @throws GuzzleException
+     * @throws SecretKeyTooShortException
+     */
     #[Testing]
     public function enable2FA(): void
     {
@@ -164,6 +189,7 @@ class AuthenticatorControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $aesEncode = $this->AESEncode([
             'idusers' => (string) $user->idusers,
@@ -192,11 +218,17 @@ class AuthenticatorControllerTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertIsString($response->message);
         $this->assertSame('2FA authentication has been enabled', $response->message);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Testing]
     public function enable2FACheckStatusIsActive(): void
     {
@@ -209,6 +241,7 @@ class AuthenticatorControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $aesEncode = $this->AESEncode([
             'idusers' => (string) $user->idusers,
@@ -237,6 +270,9 @@ class AuthenticatorControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Testing]
     public function enable2FAVerify2FAIsError(): void
     {
@@ -249,6 +285,7 @@ class AuthenticatorControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $aesEncode = $this->AESEncode([
             'idusers' => (string) $user->idusers,
@@ -276,6 +313,12 @@ class AuthenticatorControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws InvalidCharactersException
+     * @throws GuzzleException
+     * @throws SecretKeyTooShortException
+     */
     #[Testing]
     public function disable2FA(): void
     {
@@ -288,6 +331,7 @@ class AuthenticatorControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $aesEncode = $this->AESEncode([
             'idusers' => (string) $user->idusers,
@@ -314,11 +358,17 @@ class AuthenticatorControllerTest extends Test
         $this->assertObjectHasProperty('code', $response);
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertIsString($response->message);
         $this->assertSame('2FA authentication has been disabled', $response->message);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Testing]
     public function disable2FACheckStatusIsInactive(): void
     {
@@ -331,6 +381,7 @@ class AuthenticatorControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $aesEncode = $this->AESEncode([
             'idusers' => (string) $user->idusers,
@@ -357,6 +408,9 @@ class AuthenticatorControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Testing]
     public function disable2FAVerify2FAIsError(): void
     {
@@ -369,6 +423,7 @@ class AuthenticatorControllerTest extends Test
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $aesEncode = $this->AESEncode([
             'idusers' => (string) $user->idusers,

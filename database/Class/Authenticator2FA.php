@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Database\Class;
 
 use Lion\Bundle\Interface\CapsuleInterface;
+use Lion\Bundle\Traits\CapsuleTrait;
 
 /**
  * Capsule for the 'Authenticator2FA' entity
  *
+ * @property string $entity [Entity name]
  * @property int $idusers [Property for idusers]
  * @property int $users_2fa [Property for users_2fa]
  * @property string $users_2fa_secret [Property for users_2fa_secret]
@@ -18,6 +20,15 @@ use Lion\Bundle\Interface\CapsuleInterface;
  */
 class Authenticator2FA implements CapsuleInterface
 {
+    use CapsuleTrait;
+
+    /**
+     * [Entity name]
+     *
+     * @var string $entity
+     */
+    private string $entity = '';
+
 	/**
 	 * [Property for idusers]
 	 *
@@ -45,14 +56,6 @@ class Authenticator2FA implements CapsuleInterface
 	 * @var string|null $users_secret_code
 	 */
 	private ?string $users_secret_code = null;
-
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function jsonSerialize(): array
-	{
-		return get_object_vars($this);
-	}
 
 	/**
 	 * {@inheritdoc}

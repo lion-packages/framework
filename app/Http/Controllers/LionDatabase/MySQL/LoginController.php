@@ -148,6 +148,8 @@ class LoginController
      *
      * @route /api/auth/refresh
      *
+     * @param Authenticator2FA $authenticator2FA [Capsule for the
+     * 'Authenticator2FA' entity]
      * @param Users $users [Capsule for the 'Users' entity]
      * @param LoginService $loginService [Allows you to manage the user
      * authentication process]

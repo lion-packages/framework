@@ -9,6 +9,7 @@ use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
+use PHPUnit\Framework\Attributes\Test as Testing;
 
 class AuthenticationExceptionTest extends Test
 {
@@ -16,7 +17,8 @@ class AuthenticationExceptionTest extends Test
      * @throws Exception
      * @throws AuthenticationException
      */
-    public function testAuthenticationException(): void
+    #[Testing]
+    public function authenticationException(): void
     {
         $this
             ->exception(AuthenticationException::class)

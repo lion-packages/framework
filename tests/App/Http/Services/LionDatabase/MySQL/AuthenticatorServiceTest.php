@@ -14,12 +14,17 @@ use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Authentication\Auth2FA;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
+use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use PHPUnit\Framework\Attributes\TestWith;
+use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
+use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
+use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FAQRCode\Google2FA;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
@@ -71,6 +76,9 @@ class AuthenticatorServiceTest extends Test
         $this->assertInstanceOf(Auth2FA::class, $this->getPrivateProperty('auth2FA'));
     }
 
+    /**
+     * @throws PasswordException
+     */
     #[Testing]
     public function passwordVerify(): void
     {
@@ -82,7 +90,9 @@ class AuthenticatorServiceTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $capsule = (new Users())
             ->setIdusers($user->idusers)
@@ -93,6 +103,10 @@ class AuthenticatorServiceTest extends Test
             ->passwordVerify($capsule);
     }
 
+    /**
+     * @throws Exception
+     * @throws PasswordException
+     */
     #[Testing]
     public function passwordVerifyIsError(): void
     {
@@ -110,7 +124,9 @@ class AuthenticatorServiceTest extends Test
                 $user = reset($users);
 
                 $this->assertIsObject($user);
+                $this->assertInstanceOf(stdClass::class, $user);
                 $this->assertObjectHasProperty('idusers', $user);
+                $this->assertIsInt($user->idusers);
 
                 $capsule = (new Users())
                     ->setIdusers($user->idusers)
@@ -122,6 +138,9 @@ class AuthenticatorServiceTest extends Test
             });
     }
 
+    /**
+     * @throws ProcessException
+     */
     #[Testing]
     #[TestWith(['users_2fa' => UsersFactory::ENABLED_2FA, 'users_2fa_update' => UsersFactory::DISABLED_2FA])]
     #[TestWith(['users_2fa' => UsersFactory::DISABLED_2FA, 'users_2fa_update' => UsersFactory::ENABLED_2FA])]
@@ -135,7 +154,9 @@ class AuthenticatorServiceTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $this->authenticatorService->setAuthenticatorModel(new AuthenticatorModel());
 
@@ -151,12 +172,18 @@ class AuthenticatorServiceTest extends Test
         );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('users_2fa', $user);
+        $this->assertIsInt($user->users_2fa);
         $this->assertSame($users_2fa_update, $user->users_2fa);
 
         $this->authenticatorService->checkStatus($users_2fa, $capsule);
     }
 
+    /**
+     * @throws Exception
+     * @throws ProcessException
+     */
     #[Testing]
     #[TestWith(['users_2fa' => UsersFactory::ENABLED_2FA, 'message' => '2FA security is active'])]
     #[TestWith(['users_2fa' => UsersFactory::DISABLED_2FA, 'message' => '2FA security is inactive'])]
@@ -176,7 +203,9 @@ class AuthenticatorServiceTest extends Test
                 $user = reset($users);
 
                 $this->assertIsObject($user);
+                $this->assertInstanceOf(stdClass::class, $user);
                 $this->assertObjectHasProperty('idusers', $user);
+                $this->assertIsInt($user->idusers);
 
                 $this->authenticatorService
                     ->setAuthenticatorModel(new AuthenticatorModel());
@@ -193,24 +222,37 @@ class AuthenticatorServiceTest extends Test
                 );
 
                 $this->assertIsObject($user);
+                $this->assertInstanceOf(stdClass::class, $user);
                 $this->assertObjectHasProperty('users_2fa', $user);
+                $this->assertIsInt($user->users_2fa);
                 $this->assertSame($users_2fa, $user->users_2fa);
 
                 $this->authenticatorService->checkStatus($users_2fa, $capsule);
             });
     }
 
+    /**
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws InvalidCharactersException
+     * @throws ProcessException
+     * @throws SecretKeyTooShortException
+     */
     #[Testing]
     public function verify2FA(): void
     {
         $qr = (new Auth2FA())->qr(env('APP_NAME'), env('MAIL_USER_NAME'));
 
         $this->assertIsObject($qr);
+        $this->assertInstanceOf(stdClass::class, $qr);
         $this->assertObjectHasProperty('status', $qr);
         $this->assertObjectHasProperty('message', $qr);
         $this->assertObjectHasProperty('data', $qr);
         $this->assertObjectHasProperty('secretKey', $qr->data);
+        $this->assertIsString($qr->status);
         $this->assertSame(Status::SUCCESS, $qr->status);
+        $this->assertIsString($qr->message);
+        $this->assertIsObject($qr->data);
+        $this->assertInstanceOf(stdClass::class, $qr->data);
         $this->assertIsString($qr->data->secretKey);
 
         $code = (new Google2FA())->getCurrentOtp($qr->data->secretKey);
@@ -226,6 +268,9 @@ class AuthenticatorServiceTest extends Test
             );
     }
 
+    /**
+     * @throws Exception
+     */
     #[Testing]
     public function verify2FAIsError(): void
     {
@@ -238,11 +283,16 @@ class AuthenticatorServiceTest extends Test
                 $qr = (new Auth2FA())->qr(env('APP_NAME'), env('MAIL_USER_NAME'));
 
                 $this->assertIsObject($qr);
+                $this->assertInstanceOf(stdClass::class, $qr);
                 $this->assertObjectHasProperty('status', $qr);
                 $this->assertObjectHasProperty('message', $qr);
                 $this->assertObjectHasProperty('data', $qr);
                 $this->assertObjectHasProperty('secretKey', $qr->data);
+                $this->assertIsString($qr->status);
                 $this->assertSame(Status::SUCCESS, $qr->status);
+                $this->assertIsString($qr->message);
+                $this->assertIsObject($qr->data);
+                $this->assertInstanceOf(stdClass::class, $qr->data);
                 $this->assertIsString($qr->data->secretKey);
 
                 $this->authenticatorService
@@ -255,6 +305,9 @@ class AuthenticatorServiceTest extends Test
             });
     }
 
+    /**
+     * @throws ProcessException
+     */
     #[Testing]
     public function update2FA(): void
     {
@@ -266,16 +319,23 @@ class AuthenticatorServiceTest extends Test
         $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $qr = (new Auth2FA())->qr(env('APP_NAME'), env('MAIL_USER_NAME'));
 
         $this->assertIsObject($qr);
+        $this->assertInstanceOf(stdClass::class, $qr);
         $this->assertObjectHasProperty('status', $qr);
         $this->assertObjectHasProperty('message', $qr);
         $this->assertObjectHasProperty('data', $qr);
         $this->assertObjectHasProperty('secretKey', $qr->data);
+        $this->assertIsString($qr->status);
         $this->assertSame(Status::SUCCESS, $qr->status);
+        $this->assertIsString($qr->message);
+        $this->assertIsObject($qr->data);
+        $this->assertInstanceOf(stdClass::class, $qr->data);
         $this->assertIsString($qr->data->secretKey);
 
         $this->authenticatorService
@@ -292,12 +352,19 @@ class AuthenticatorServiceTest extends Test
                 ->setIdusers($user->idusers)
         );
 
+        $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('users_2fa', $user);
         $this->assertObjectHasProperty('users_2fa_secret', $user);
+        $this->assertIsInt($user->users_2fa);
         $this->assertSame(UsersFactory::ENABLED_2FA, $user->users_2fa);
+        $this->assertIsString($user->users_2fa_secret);
         $this->assertSame($qr->data->secretKey, $user->users_2fa_secret);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Testing]
     public function update2FAIsError(): void
     {
@@ -315,16 +382,23 @@ class AuthenticatorServiceTest extends Test
                 $user = reset($users);
 
                 $this->assertIsObject($user);
+                $this->assertInstanceOf(stdClass::class, $user);
                 $this->assertObjectHasProperty('idusers', $user);
+                $this->assertIsInt($user->idusers);
 
                 $qr = (new Auth2FA())->qr(env('APP_NAME'), env('MAIL_USER_NAME'));
 
                 $this->assertIsObject($qr);
+                $this->assertInstanceOf(stdClass::class, $qr);
                 $this->assertObjectHasProperty('status', $qr);
                 $this->assertObjectHasProperty('message', $qr);
                 $this->assertObjectHasProperty('data', $qr);
                 $this->assertObjectHasProperty('secretKey', $qr->data);
+                $this->assertIsString($qr->status);
                 $this->assertSame(Status::SUCCESS, $qr->status);
+                $this->assertIsString($qr->message);
+                $this->assertIsObject($qr->data);
+                $this->assertInstanceOf(stdClass::class, $qr->data);
                 $this->assertIsString($qr->data->secretKey);
 
                 $this->authenticatorService

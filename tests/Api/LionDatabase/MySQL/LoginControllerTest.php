@@ -13,6 +13,9 @@ use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
+use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
+use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FAQRCode\Google2FA;
 use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
@@ -23,7 +26,7 @@ class LoginControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const string USERS_EMAIL_MANAGER = 'manager@dev.com';
+    private const string USERS_EMAIL_MANAGER = 'manager@dev.com';
 
     protected function setUp(): void
     {
@@ -38,7 +41,8 @@ class LoginControllerTest extends Test
     /**
      * @throws GuzzleException
      */
-    public function testAuth(): void
+    #[Testing]
+    public function auth(): void
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
@@ -62,8 +66,11 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('full_name', $response->data);
         $this->assertObjectHasProperty('jwt_access', $response->data);
         $this->assertObjectHasProperty('jwt_refresh', $response->data);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertIsString($response->message);
         $this->assertSame('successfully authenticated user', $response->message);
         $this->assertIsString($response->data->full_name);
         $this->assertIsString($response->data->jwt_access);
@@ -73,7 +80,8 @@ class LoginControllerTest extends Test
     /**
      * @throws Exception
      */
-    public function testAuthIncorrect1(): void
+    #[Testing]
+    public function authIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function (): void {
             $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
@@ -96,7 +104,8 @@ class LoginControllerTest extends Test
     /**
      * @throws Exception
      */
-    public function testAuthIncorrect2(): void
+    #[Testing]
+    public function authIncorrect2(): void
     {
         $exception = $this->getExceptionFromApi(function (): void {
             $encode = $this->AESEncode([
@@ -121,7 +130,8 @@ class LoginControllerTest extends Test
     /**
      * @throws Exception
      */
-    public function testAuthVerifyAccount(): void
+    #[Testing]
+    public function authVerifyAccount(): void
     {
         $exception = $this->getExceptionFromApi(function () {
             $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
@@ -141,6 +151,12 @@ class LoginControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws InvalidCharactersException
+     * @throws GuzzleException
+     * @throws SecretKeyTooShortException
+     */
     #[Testing]
     public function auth2FA(): void
     {
@@ -165,14 +181,20 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('full_name', $response->data);
         $this->assertObjectHasProperty('jwt_access', $response->data);
         $this->assertObjectHasProperty('jwt_refresh', $response->data);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertIsString($response->message);
         $this->assertSame('successfully authenticated user', $response->message);
         $this->assertIsString($response->data->full_name);
         $this->assertIsString($response->data->jwt_access);
         $this->assertIsString($response->data->jwt_refresh);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Testing]
     public function auth2FAIsError(): void
     {
@@ -193,6 +215,9 @@ class LoginControllerTest extends Test
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Testing]
     public function auth2FAVerify2FAIsError(): void
     {
@@ -215,7 +240,8 @@ class LoginControllerTest extends Test
     /**
      * @throws GuzzleException
      */
-    public function testRefresh(): void
+    #[Testing]
+    public function refresh(): void
     {
         $encode = $this->AESEncode([
             'idusers' => "1",
@@ -257,8 +283,11 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
         $this->assertObjectHasProperty('data', $response);
+        $this->assertIsInt($response->code);
         $this->assertSame(Http::OK, $response->code);
+        $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertIsString($response->message);
         $this->assertSame('successfully authenticated user', $response->message);
         $this->assertIsObject($response->data);
         $this->assertObjectHasProperty('jwt_access', $response->data);
