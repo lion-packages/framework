@@ -112,7 +112,7 @@ class AuthenticatorModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $response = $this->usersModel->readUsersByIdDB(
             (new Users())

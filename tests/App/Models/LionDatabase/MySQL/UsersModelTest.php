@@ -57,7 +57,7 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = DB::table('users')
             ->select()
@@ -86,7 +86,7 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersDB();
 
@@ -118,7 +118,7 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersByIdDB($this->users);
 
@@ -148,7 +148,7 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersByEmailDB($this->users);
 
@@ -179,7 +179,7 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $response = $this->usersModel->readUsers2FADB($this->users);
 
@@ -200,7 +200,7 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersDB();
 
@@ -231,7 +231,7 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $user = $this->usersModel->readUsersByEmailDB($this->users);
 
@@ -269,7 +269,7 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $user = $this->usersModel->readUsersByEmailDB($this->users);
 
@@ -307,7 +307,7 @@ class UsersModelTest extends Test
         $this->assertObjectHasProperty('message', $response);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertSame('Execution finished', $response->message);
+        $this->assertSame('execution finished', $response->message);
 
         $users = $this->usersModel->readUsersDB();
 
