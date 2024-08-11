@@ -17,6 +17,7 @@ use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Exception;
 use Lion\Route\Attributes\Rules;
 use Lion\Security\Validation;
 use stdClass;
@@ -31,7 +32,7 @@ class RegistrationController
     /**
      * Register users with their basic data to create a user account
      *
-     * @api /api/auth/register
+     * @route /api/auth/register
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
@@ -45,6 +46,7 @@ class RegistrationController
      * @return stdClass
      *
      * @throws AccountException
+     * @throws Exception
      */
     #[Rules(UsersEmailRule::class, UsersPasswordRule::class)]
     public function register(

@@ -16,7 +16,6 @@ use App\Rules\LionDatabase\MySQL\Users\UsersNicknameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
-use Exception;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -43,7 +42,7 @@ class UsersController
      *
      * @return stdClass
      *
-     * @throws Exception
+     * @throws ProcessException
      */
     #[Rules(
         IdrolesRule::class,
@@ -90,13 +89,7 @@ class UsersController
      */
     public function readUsers(UsersModel $usersModel): stdClass|array|DatabaseCapsuleInterface
     {
-        $data = $usersModel->readUsersDB();
-
-        if (isSuccess($data)) {
-            return success($data->message);
-        }
-
-        return $data;
+        return $usersModel->readUsersDB();
     }
 
     /**
@@ -115,16 +108,10 @@ class UsersController
         UsersModel $usersModel,
         string $idusers
     ): stdClass|array|DatabaseCapsuleInterface {
-        $data = $usersModel->readUsersByIdDB(
+        return $usersModel->readUsersByIdDB(
             $users
                 ->setIdusers((int) $idusers)
         );
-
-        if (isSuccess($data)) {
-            return success($data->message);
-        }
-
-        return $data;
     }
 
     /**
@@ -138,7 +125,7 @@ class UsersController
      *
      * @return stdClass
      *
-     * @throws Exception
+     * @throws ProcessException
      */
     #[Rules(
         IdrolesRule::class,
@@ -157,7 +144,11 @@ class UsersController
         );
 
         if (isError($response)) {
-            throw new Exception('an error occurred while updating the user', Http::INTERNAL_SERVER_ERROR);
+            throw new ProcessException(
+                'an error occurred while updating the user',
+                Status::ERROR,
+                Http::INTERNAL_SERVER_ERROR
+            );
         }
 
         return success('the registered user has been successfully updated');
@@ -174,7 +165,7 @@ class UsersController
      *
      * @return stdClass
      *
-     * @throws Exception
+     * @throws ProcessException
      */
     public function deleteUsers(Users $users, UsersModel $usersModel, string $idusers): stdClass
     {
@@ -184,7 +175,11 @@ class UsersController
         );
 
         if (isError($response)) {
-            throw new Exception('an error occurred while deleting the user', Http::INTERNAL_SERVER_ERROR);
+            throw new ProcessException(
+                'an error occurred while deleting the user',
+                Status::ERROR,
+                Http::INTERNAL_SERVER_ERROR
+            );
         }
 
         return success('the registered user has been successfully deleted');

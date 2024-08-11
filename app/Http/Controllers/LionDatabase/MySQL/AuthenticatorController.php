@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Exceptions\PasswordException;
+use App\Exceptions\ProcessException;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Http\Services\LionDatabase\MySQL\AuthenticatorService;
@@ -35,6 +36,7 @@ class AuthenticatorController
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param AuthenticatorService $authenticatorService [Manage 2FA services]
+     * @param JWTService $jWTService [Service to manipulate JWT tokens]
      * @param AESService $aESService [Encrypt and decrypt data with AES]
      *
      * @return stdClass
