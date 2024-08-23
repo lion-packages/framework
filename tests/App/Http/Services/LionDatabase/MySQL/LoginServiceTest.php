@@ -38,7 +38,7 @@ class LoginServiceTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->loginService = (new LoginService())
             ->setRSA(new RSA())

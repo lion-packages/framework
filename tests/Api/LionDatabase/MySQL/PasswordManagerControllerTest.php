@@ -28,7 +28,7 @@ class PasswordManagerControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
     }
 
     protected function tearDown(): void

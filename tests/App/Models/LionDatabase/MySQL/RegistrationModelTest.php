@@ -21,7 +21,7 @@ class RegistrationModelTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->registrationModel = new RegistrationModel();
 

@@ -24,7 +24,7 @@ class ProfileModelTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->profileModel = new ProfileModel();
 

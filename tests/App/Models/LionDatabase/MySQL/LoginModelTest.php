@@ -23,7 +23,7 @@ class LoginModelTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->loginModel = new LoginModel();
     }

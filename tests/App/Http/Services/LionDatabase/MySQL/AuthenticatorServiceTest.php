@@ -38,7 +38,7 @@ class AuthenticatorServiceTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->authenticatorService = new AuthenticatorService();
 

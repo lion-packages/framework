@@ -42,7 +42,7 @@ class LoginControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->loginController = new LoginController();
     }

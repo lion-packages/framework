@@ -28,7 +28,7 @@ class AuthenticatorModelTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->authenticatorModel = new AuthenticatorModel();
 

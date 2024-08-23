@@ -29,7 +29,7 @@ class PasswordManagerModelTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->passwordManagerModel = new PasswordManagerModel();
 

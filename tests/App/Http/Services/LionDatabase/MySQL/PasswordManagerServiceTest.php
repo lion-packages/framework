@@ -26,7 +26,7 @@ class PasswordManagerServiceTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->validation = new Validation();
 

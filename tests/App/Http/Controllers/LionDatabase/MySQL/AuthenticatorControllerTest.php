@@ -36,7 +36,7 @@ class AuthenticatorControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->authenticatorController = new AuthenticatorController();
     }

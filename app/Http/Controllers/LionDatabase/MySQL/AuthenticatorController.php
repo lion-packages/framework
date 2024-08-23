@@ -95,12 +95,13 @@ class AuthenticatorController
             'idusers' => $data->idusers,
         ]);
 
-        $users = $usersModel->readUsersByIdDB(
+        /** @var stdClass $user */
+        $user = $usersModel->readUsersByIdDB(
             $users
                 ->setIdusers((int) $aesDecode['idusers'])
         );
 
-        $qr2fa = $auth2FA->qr(env('APP_NAME'), $users->users_email);
+        $qr2fa = $auth2FA->qr(env('APP_NAME'), $user->users_email);
 
         return success(null, Http::OK, (object) $aESService->encode([
             'qr' => $qr2fa->data->qr,

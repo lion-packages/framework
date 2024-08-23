@@ -32,7 +32,7 @@ class ProfileControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->profileController = new ProfileController();
     }

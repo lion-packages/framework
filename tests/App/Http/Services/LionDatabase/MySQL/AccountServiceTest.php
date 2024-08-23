@@ -34,7 +34,7 @@ class AccountServiceTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->accountService = (new AccountService())
             ->setUsersModel(new UsersModel());

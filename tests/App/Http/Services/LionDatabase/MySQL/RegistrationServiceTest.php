@@ -26,7 +26,7 @@ class RegistrationServiceTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->registrationService = new RegistrationService();
     }

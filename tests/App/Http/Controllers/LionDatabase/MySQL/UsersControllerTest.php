@@ -30,7 +30,7 @@ class UsersControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->usersController = new UsersController();
     }

@@ -24,7 +24,7 @@ class RegistrationControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues(true);
+        $this->runMigrations(true);
 
         Schema::truncateTable('users')->execute();
     }
