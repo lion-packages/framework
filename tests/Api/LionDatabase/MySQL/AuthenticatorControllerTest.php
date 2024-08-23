@@ -9,7 +9,6 @@ use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
@@ -36,22 +35,17 @@ class AuthenticatorControllerTest extends Test
         $this->usersModel = new UsersModel();
     }
 
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
-    }
-
     /**
      * @throws GuzzleException
      */
     #[Testing]
     public function passwordVerify(): void
     {
-        $user = $this->usersModel
-            ->readUsersByEmailDB(
-                (new Users())
-                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
-            );
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
@@ -89,11 +83,11 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function passwordVerifyPasswordIsInvalid(): void
     {
-        $user = $this->usersModel
-            ->readUsersByEmailDB(
-                (new Users())
-                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
-            );
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
@@ -131,11 +125,11 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function qr(): void
     {
-        $user = $this->usersModel
-            ->readUsersByEmailDB(
-                (new Users())
-                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
-            );
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
@@ -145,9 +139,11 @@ class AuthenticatorControllerTest extends Test
         $response = json_decode(
             fetch(Http::GET, (env('SERVER_URL') . '/api/profile/2fa/qr'), [
                 'headers' => [
-                    'Authorization' => $this->getAuthorization($this->AESEncode([
-                        'idusers' => (string) $user->idusers,
-                    ])),
+                    'Authorization' => $this->getAuthorization(
+                        $this->AESEncode([
+                            'idusers' => (string) $user->idusers,
+                        ])
+                    ),
                 ],
             ])
                 ->getBody()
@@ -163,12 +159,15 @@ class AuthenticatorControllerTest extends Test
         $this->assertObjectHasProperty('qr', $response->data);
         $this->assertObjectHasProperty('secret', $response->data);
         $this->assertIsInt($response->code);
-        $this->assertSame(Http::OK, $response->code);
         $this->assertIsString($response->status);
-        $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertNull($response->message);
+        $this->assertIsObject($response->data);
+        $this->assertInstanceOf(stdClass::class, $response->data);
         $this->assertIsString($response->data->qr);
         $this->assertIsString($response->data->secret);
+        $this->assertNull($response->message);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
     }
 
     /**
@@ -180,11 +179,11 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function enable2FA(): void
     {
-        $user = $this->usersModel
-            ->readUsersByEmailDB(
-                (new Users())
-                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
-            );
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
@@ -196,34 +195,26 @@ class AuthenticatorControllerTest extends Test
             'users_2fa_secret' => UsersFactory::SECURITY_KEY_2FA,
         ]);
 
-        $response = json_decode(
-            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $aesEncode['idusers'],
-                    ]),
-                ],
-                'json' => [
-                    'users_2fa_secret' => $aesEncode['users_2fa_secret'],
-                    'users_secret_code' => (new Google2FA())
-                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
-                ],
-            ])
-                ->getBody()
-                ->getContents()
-        );
+        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
+            'headers' => [
+                'Authorization' => $this->getAuthorization([
+                    'idusers' => $aesEncode['idusers'],
+                ]),
+            ],
+            'json' => [
+                'users_2fa_secret' => $aesEncode['users_2fa_secret'],
+                'users_secret_code' => (new Google2FA())
+                    ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+            ],
+        ])
+            ->getBody()
+            ->getContents();
 
-        $this->assertIsObject($response);
-        $this->assertInstanceOf(stdClass::class, $response);
-        $this->assertObjectHasProperty('code', $response);
-        $this->assertObjectHasProperty('status', $response);
-        $this->assertObjectHasProperty('message', $response);
-        $this->assertIsInt($response->code);
-        $this->assertSame(Http::OK, $response->code);
-        $this->assertIsString($response->status);
-        $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertIsString($response->message);
-        $this->assertSame('2FA authentication has been enabled', $response->message);
+        $this->assertJsonContent($response, [
+            'code' => Http::OK,
+            'status' => Status::SUCCESS,
+            'message' => '2FA authentication has been enabled',
+        ]);
     }
 
     /**
@@ -232,11 +223,11 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function enable2FACheckStatusIsActive(): void
     {
-        $user = $this->usersModel
-            ->readUsersByEmailDB(
-                (new Users())
-                    ->setUsersEmail(UsersFactory::USERS_EMAIL_SECURITY)
-            );
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL_SECURITY)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
@@ -276,11 +267,11 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function enable2FAVerify2FAIsError(): void
     {
-        $user = $this->usersModel
-            ->readUsersByEmailDB(
-                (new Users())
-                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
-            );
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
@@ -322,11 +313,11 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function disable2FA(): void
     {
-        $user = $this->usersModel
-            ->readUsersByEmailDB(
-                (new Users())
-                    ->setUsersEmail(UsersFactory::USERS_EMAIL_SECURITY)
-            );
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL_SECURITY)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
@@ -337,33 +328,25 @@ class AuthenticatorControllerTest extends Test
             'idusers' => (string) $user->idusers,
         ]);
 
-        $response = json_decode(
-            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $aesEncode['idusers'],
-                    ]),
-                ],
-                'json' => [
-                    'users_secret_code' => (new Google2FA())
-                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
-                ],
-            ])
-                ->getBody()
-                ->getContents()
-        );
+        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
+            'headers' => [
+                'Authorization' => $this->getAuthorization([
+                    'idusers' => $aesEncode['idusers'],
+                ]),
+            ],
+            'json' => [
+                'users_secret_code' => (new Google2FA())
+                    ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+            ],
+        ])
+            ->getBody()
+            ->getContents();
 
-        $this->assertIsObject($response);
-        $this->assertInstanceOf(stdClass::class, $response);
-        $this->assertObjectHasProperty('code', $response);
-        $this->assertObjectHasProperty('status', $response);
-        $this->assertObjectHasProperty('message', $response);
-        $this->assertIsInt($response->code);
-        $this->assertSame(Http::OK, $response->code);
-        $this->assertIsString($response->status);
-        $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertIsString($response->message);
-        $this->assertSame('2FA authentication has been disabled', $response->message);
+        $this->assertJsonContent($this->getResponse($response, 'response:'), [
+            'code' => Http::OK,
+            'status' => Status::SUCCESS,
+            'message' => '2FA authentication has been disabled',
+        ]);
     }
 
     /**
@@ -372,11 +355,11 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function disable2FACheckStatusIsInactive(): void
     {
-        $user = $this->usersModel
-            ->readUsersByEmailDB(
-                (new Users())
-                    ->setUsersEmail(UsersFactory::USERS_EMAIL)
-            );
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
@@ -414,11 +397,11 @@ class AuthenticatorControllerTest extends Test
     #[Testing]
     public function disable2FAVerify2FAIsError(): void
     {
-        $user = $this->usersModel
-            ->readUsersByEmailDB(
-                (new Users())
-                    ->setUsersEmail(UsersFactory::USERS_EMAIL_SECURITY)
-            );
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL_SECURITY)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);

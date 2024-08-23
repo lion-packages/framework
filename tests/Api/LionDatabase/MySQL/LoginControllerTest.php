@@ -8,7 +8,6 @@ use App\Enums\RolesEnum;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
@@ -33,18 +32,15 @@ class LoginControllerTest extends Test
         $this->runMigrations();
     }
 
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
-    }
-
     /**
      * @throws GuzzleException
      */
     #[Testing]
     public function auth(): void
     {
-        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+        $encode = $this->AESEncode([
+            'users_password' => UsersFactory::USERS_PASSWORD,
+        ]);
 
         $response = json_decode(
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
@@ -67,14 +63,16 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('jwt_access', $response->data);
         $this->assertObjectHasProperty('jwt_refresh', $response->data);
         $this->assertIsInt($response->code);
-        $this->assertSame(Http::OK, $response->code);
         $this->assertIsString($response->status);
-        $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertIsString($response->message);
-        $this->assertSame('successfully authenticated user', $response->message);
+        $this->assertIsObject($response->data);
+        $this->assertInstanceOf(stdClass::class, $response->data);
         $this->assertIsString($response->data->full_name);
         $this->assertIsString($response->data->jwt_access);
         $this->assertIsString($response->data->jwt_refresh);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('successfully authenticated user', $response->message);
     }
 
     /**
@@ -134,7 +132,9 @@ class LoginControllerTest extends Test
     public function authVerifyAccount(): void
     {
         $exception = $this->getExceptionFromApi(function () {
-            $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+            $encode = $this->AESEncode([
+                'users_password' => UsersFactory::USERS_PASSWORD,
+            ]);
 
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
                 'json' => [
@@ -182,14 +182,14 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('jwt_access', $response->data);
         $this->assertObjectHasProperty('jwt_refresh', $response->data);
         $this->assertIsInt($response->code);
-        $this->assertSame(Http::OK, $response->code);
         $this->assertIsString($response->status);
-        $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertIsString($response->message);
-        $this->assertSame('successfully authenticated user', $response->message);
         $this->assertIsString($response->data->full_name);
         $this->assertIsString($response->data->jwt_access);
         $this->assertIsString($response->data->jwt_refresh);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('successfully authenticated user', $response->message);
     }
 
     /**
@@ -283,18 +283,19 @@ class LoginControllerTest extends Test
         $this->assertObjectHasProperty('status', $response);
         $this->assertObjectHasProperty('message', $response);
         $this->assertObjectHasProperty('data', $response);
-        $this->assertIsInt($response->code);
-        $this->assertSame(Http::OK, $response->code);
-        $this->assertIsString($response->status);
-        $this->assertSame(Status::SUCCESS, $response->status);
-        $this->assertIsString($response->message);
-        $this->assertSame('successfully authenticated user', $response->message);
-        $this->assertIsObject($response->data);
         $this->assertObjectHasProperty('jwt_access', $response->data);
         $this->assertObjectHasProperty('jwt_refresh', $response->data);
         $this->assertObjectHasProperty('auth_2fa', $response->data);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
+        $this->assertIsObject($response->data);
+        $this->assertInstanceOf(stdClass::class, $response->data);
         $this->assertIsString($response->data->jwt_access);
         $this->assertIsString($response->data->jwt_refresh);
         $this->assertIsBool($response->data->auth_2fa);
+        $this->assertSame(Http::OK, $response->code);
+        $this->assertSame(Status::SUCCESS, $response->status);
+        $this->assertSame('successfully authenticated user', $response->message);
     }
 }

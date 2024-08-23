@@ -9,7 +9,6 @@ use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
@@ -29,13 +28,6 @@ class PasswordManagerControllerTest extends Test
     protected function setUp(): void
     {
         $this->runMigrations();
-    }
-
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
-
-        Schema::truncateTable('task_queue')->execute();
     }
 
     /**
@@ -80,7 +72,7 @@ class PasswordManagerControllerTest extends Test
             'message' => 'confirmation code sent, check your email inbox to see your verification code',
         ]);
 
-        $exception = $this->getExceptionFromApi(function () {
+        $exception = $this->getExceptionFromApi(function (): void {
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
                 'json' => [
                     'users_email' => self::USERS_EMAIL,
@@ -101,7 +93,7 @@ class PasswordManagerControllerTest extends Test
     #[Testing]
     public function recoveryPasswordIncorrect1(): void
     {
-        $exception = $this->getExceptionFromApi(function () {
+        $exception = $this->getExceptionFromApi(function (): void {
             fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
                 'json' => [
                     'users_email' => fake()->email(),
@@ -136,6 +128,7 @@ class PasswordManagerControllerTest extends Test
             'message' => 'confirmation code sent, check your email inbox to see your verification code',
         ]);
 
+        /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
             (new Users)
                 ->setUsersEmail(self::USERS_EMAIL)
@@ -168,6 +161,7 @@ class PasswordManagerControllerTest extends Test
             'message' => 'the recovery code is valid, your password has been updated successfully',
         ]);
 
+        /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
             (new Users)
                 ->setUsersEmail(self::USERS_EMAIL)
@@ -185,7 +179,7 @@ class PasswordManagerControllerTest extends Test
     #[Testing]
     public function updateLostPasswordIncorrect1(): void
     {
-        $exception = $this->getExceptionFromApi(function () {
+        $exception = $this->getExceptionFromApi(function (): void {
             $encode = $this->AESEncode([
                 'users_password_new' => self::USERS_PASSWORD,
                 'users_password_confirm' => self::USERS_PASSWORD,
@@ -229,6 +223,7 @@ class PasswordManagerControllerTest extends Test
             'message' => 'confirmation code sent, check your email inbox to see your verification code',
         ]);
 
+        /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
             (new Users)
                 ->setUsersEmail(self::USERS_EMAIL)
@@ -239,7 +234,7 @@ class PasswordManagerControllerTest extends Test
         $this->assertObjectHasProperty('users_recovery_code', $user);
         $this->assertIsString($user->users_recovery_code);
 
-        $exception = $this->getExceptionFromApi(function () {
+        $exception = $this->getExceptionFromApi(function (): void {
             $encode = $this->AESEncode([
                 'users_password_new' => self::USERS_PASSWORD,
                 'users_password_confirm' => self::USERS_PASSWORD,
@@ -283,6 +278,7 @@ class PasswordManagerControllerTest extends Test
             'message' => 'confirmation code sent, check your email inbox to see your verification code',
         ]);
 
+        /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
             (new Users)
                 ->setUsersEmail(self::USERS_EMAIL)
@@ -322,11 +318,11 @@ class PasswordManagerControllerTest extends Test
     #[Testing]
     public function updatePassword(): void
     {
-        $users = (new UsersModel())->readUsersDB();
-
-        $this->assertIsArray($users);
-
-        $user = reset($users);
+        /** @var stdClass $user */
+        $user = (new UsersModel())->readUsersByEmailDB(
+            (new Users)
+                ->setUsersEmail(self::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
@@ -368,18 +364,18 @@ class PasswordManagerControllerTest extends Test
     #[Testing]
     public function updatePasswordIncorrect1(): void
     {
-        $users = (new UsersModel())->readUsersDB();
-
-        $this->assertIsArray($users);
-
-        $user = reset($users);
+        /** @var stdClass $user */
+        $user = (new UsersModel())->readUsersByEmailDB(
+            (new Users)
+                ->setUsersEmail(self::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
         $this->assertIsInt($user->idusers);
 
-        $exception = $this->getExceptionFromApi(function () use ($user) {
+        $exception = $this->getExceptionFromApi(function () use ($user): void {
             $encode = $this->AESEncode([
                 'idusers' => (string) $user->idusers,
                 'users_password' => self::USERS_PASSWORD,
@@ -414,11 +410,11 @@ class PasswordManagerControllerTest extends Test
     #[Testing]
     public function updatePasswordIncorrect2(): void
     {
-        $users = (new UsersModel())->readUsersDB();
-
-        $this->assertIsArray($users);
-
-        $user = reset($users);
+        /** @var stdClass $user */
+        $user = (new UsersModel())->readUsersByEmailDB(
+            (new Users)
+                ->setUsersEmail(self::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
         $this->assertInstanceOf(stdClass::class, $user);

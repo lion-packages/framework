@@ -29,13 +29,6 @@ class RegistrationControllerTest extends Test
         Schema::truncateTable('users')->execute();
     }
 
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
-
-        Schema::truncateTable('task_queue')->execute();
-    }
-
     /**
      * @throws GuzzleException
      */
@@ -123,6 +116,7 @@ class RegistrationControllerTest extends Test
             'message' => 'user successfully registered, check your mailbox to obtain the account activation code',
         ]);
 
+        /** @var stdClass $users_activation_code */
         $users_activation_code = DB::table('users')
             ->select('users_activation_code')
             ->where()->equalTo('users_email', UsersFactory::USERS_EMAIL)

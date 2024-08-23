@@ -36,18 +36,15 @@ class UsersControllerTest extends Test
         $this->runMigrations();
     }
 
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
-    }
-
     /**
      * @throws GuzzleException
      */
     #[Testing]
     public function createUsers(): void
     {
-        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+        $encode = $this->AESEncode([
+            'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
+        ]);
 
         $response = fetch(Http::POST, env('SERVER_URL') . '/api/users', [
             'headers' => [
@@ -82,7 +79,9 @@ class UsersControllerTest extends Test
     #[Testing]
     public function readUsers(): void
     {
-        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+        $encode = $this->AESEncode([
+            'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
+        ]);
 
         $users = json_decode(
             fetch(Http::GET, env('SERVER_URL') . '/api/users', [
@@ -109,7 +108,9 @@ class UsersControllerTest extends Test
     {
         Schema::truncateTable('users')->execute();
 
-        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+        $encode = $this->AESEncode([
+            'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
+        ]);
 
         $users = fetch(Http::GET, env('SERVER_URL') . '/api/users', [
             'headers' => [
@@ -134,7 +135,9 @@ class UsersControllerTest extends Test
     #[Testing]
     public function readUsersById(): void
     {
-        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+        $encode = $this->AESEncode([
+            'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
+        ]);
 
         $users = json_decode(
             fetch(Http::GET, env('SERVER_URL') . '/api/users', [
@@ -173,8 +176,8 @@ class UsersControllerTest extends Test
 
         $this->assertIsArray($user);
         $this->assertIsString($user['users_name']);
-        $this->assertSame('root', $user['users_name']);
         $this->assertIsString($user['users_last_name']);
+        $this->assertSame('root', $user['users_name']);
         $this->assertSame('lion', $user['users_last_name']);
     }
 
@@ -186,7 +189,9 @@ class UsersControllerTest extends Test
     {
         Schema::truncateTable('users')->execute();
 
-        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+        $encode = $this->AESEncode([
+            'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
+        ]);
 
         $users = fetch(Http::GET, (env('SERVER_URL') . '/api/users/1'), [
             'headers' => [
@@ -211,7 +216,9 @@ class UsersControllerTest extends Test
     #[Testing]
     public function updateUsers(): void
     {
-        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+        $encode = $this->AESEncode([
+            'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
+        ]);
 
         $token = $this->getAuthorization([
             'idroles' => $encode['idroles'],
@@ -283,7 +290,9 @@ class UsersControllerTest extends Test
     #[Testing]
     public function deleteUsers(): void
     {
-        $encode = $this->AESEncode(['idroles' => (string) RolesEnum::ADMINISTRATOR->value]);
+        $encode = $this->AESEncode([
+            'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
+        ]);
 
         $token = $this->getAuthorization([
             'idroles' => $encode['idroles'],

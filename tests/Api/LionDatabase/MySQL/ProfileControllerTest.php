@@ -27,11 +27,6 @@ class ProfileControllerTest extends Test
         $this->runMigrations();
     }
 
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
-    }
-
     /**
      * @throws GuzzleException
      */
