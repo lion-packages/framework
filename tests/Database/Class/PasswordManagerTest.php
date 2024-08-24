@@ -31,6 +31,7 @@ class PasswordManagerTest extends Test
     {
         $this->passwordManager->setIdusers(self::IDUSERS);
 
+        $this->assertIsInt($this->passwordManager->getIdusers());
         $this->assertSame(self::IDUSERS, $this->passwordManager->getIdusers());
     }
 
@@ -42,6 +43,7 @@ class PasswordManagerTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsInt($this->passwordManager->getIdusers());
         $this->assertSame(self::IDUSERS, $this->passwordManager->getIdusers());
     }
 
@@ -50,6 +52,7 @@ class PasswordManagerTest extends Test
     {
         $this->passwordManager->setUsersPassword(UsersFactory::USERS_PASSWORD_HASH);
 
+        $this->assertIsString($this->passwordManager->getUsersPassword());
         $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPassword());
     }
 
@@ -61,6 +64,7 @@ class PasswordManagerTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->passwordManager->getUsersPassword());
         $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPassword());
     }
 
@@ -69,6 +73,7 @@ class PasswordManagerTest extends Test
     {
         $this->passwordManager->setUsersPasswordNew(UsersFactory::USERS_PASSWORD_HASH);
 
+        $this->assertIsString($this->passwordManager->getUsersPasswordNew());
         $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPasswordNew());
     }
 
@@ -80,6 +85,7 @@ class PasswordManagerTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->passwordManager->getUsersPasswordNew());
         $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPasswordNew());
     }
 
@@ -88,6 +94,7 @@ class PasswordManagerTest extends Test
     {
         $this->passwordManager->setUsersPasswordConfirm(UsersFactory::USERS_PASSWORD_HASH);
 
+        $this->assertIsString($this->passwordManager->getUsersPasswordConfirm());
         $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPasswordConfirm());
     }
 
@@ -99,6 +106,7 @@ class PasswordManagerTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->passwordManager->getUsersPasswordConfirm());
         $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->passwordManager->getUsersPasswordConfirm());
     }
 }
