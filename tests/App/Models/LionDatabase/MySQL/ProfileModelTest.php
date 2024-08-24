@@ -8,7 +8,6 @@ use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
 use App\Models\LionDatabase\MySQL\ProfileModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Status;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
@@ -37,14 +36,10 @@ class ProfileModelTest extends Test
             ->setUsersLastName(fake()->lastName());
     }
 
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
-    }
-
     #[Testing]
     public function readProfileDB(): void
     {
+        /** @var stdClass $response */
         $response = $this->profileModel->readProfileDB($this->users);
 
         $this->assertIsObject($response);
@@ -78,6 +73,7 @@ class ProfileModelTest extends Test
         $this->assertIsString($response->status);
         $this->assertSame(Status::SUCCESS, $response->status);
 
+        /** @var stdClass $response */
         $response = $this->profileModel->readProfileDB(
             $this->users
                 ->setIdusers(2)

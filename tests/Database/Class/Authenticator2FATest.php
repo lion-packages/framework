@@ -23,7 +23,8 @@ class Authenticator2FATest extends Test
         $this->authenticator2FA = new Authenticator2FA();
     }
 
-    public function testCapsule(): void
+    #[Testing]
+    public function capsule(): void
     {
         $this->assertCapsule($this->authenticator2FA, '');
     }

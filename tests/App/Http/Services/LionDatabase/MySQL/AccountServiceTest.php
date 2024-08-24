@@ -12,7 +12,6 @@ use Database\Class\LionDatabase\MySQL\Users;
 use Exception as ExceptionGlobal;
 use Lion\Bundle\Enums\TaskStatusEnum;
 use Lion\Database\Drivers\MySQL as DB;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -38,13 +37,6 @@ class AccountServiceTest extends Test
 
         $this->accountService = (new AccountService())
             ->setUsersModel(new UsersModel());
-    }
-
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
-
-        Schema::truncateTable('task_queue')->execute();
     }
 
     /**
@@ -83,7 +75,9 @@ class AccountServiceTest extends Test
                 ->setUsersActivationCode($code)
         );
 
-        $taskQueue = DB::table('task_queue')->select()->getAll();
+        $taskQueue = DB::table('task_queue')
+            ->select()
+            ->getAll();
 
         $this->assertIsArray($taskQueue);
 
@@ -119,7 +113,9 @@ class AccountServiceTest extends Test
                 ->setUsersRecoveryCode($code)
         );
 
-        $taskQueue = DB::table('task_queue')->select()->getAll();
+        $taskQueue = DB::table('task_queue')
+            ->select()
+            ->getAll();
 
         $this->assertIsArray($taskQueue);
 
@@ -191,6 +187,7 @@ class AccountServiceTest extends Test
                 $users = (new Users())
                     ->setUsersEmail(self::USERS_EMAIL);
 
+                /** @var stdClass $user */
                 $user = (new UsersModel())->readUsersByEmailDB($users);
 
                 $code = fake()->numerify('##########');
@@ -219,6 +216,7 @@ class AccountServiceTest extends Test
                 $users = (new Users())
                     ->setUsersEmail(self::USERS_EMAIL);
 
+                /** @var stdClass $user */
                 $user = (new UsersModel())->readUsersByEmailDB($users);
 
                 $users

@@ -56,13 +56,13 @@ class LoginServiceTest extends Test
             );
 
         $this->usersModel = new UsersModel();
+
+        $this->initReflection($this->loginService);
     }
 
     #[Testing]
     public function setRSA(): void
     {
-        $this->initReflection($this->loginService);
-
         $this->assertInstanceOf(LoginService::class, $this->loginService->setRSA(new RSA()));
         $this->assertInstanceOf(RSA::class, $this->getPrivateProperty('rsa'));
     }
@@ -70,8 +70,6 @@ class LoginServiceTest extends Test
     #[Testing]
     public function setJWT(): void
     {
-        $this->initReflection($this->loginService);
-
         $this->assertInstanceOf(LoginService::class, $this->loginService->setJWT(new JWT()));
         $this->assertInstanceOf(JWT::class, $this->getPrivateProperty('jwt'));
     }
@@ -79,8 +77,6 @@ class LoginServiceTest extends Test
     #[Testing]
     public function setLoginModel(): void
     {
-        $this->initReflection($this->loginService);
-
         $this->assertInstanceOf(LoginService::class, $this->loginService->setLoginModel(new LoginModel()));
         $this->assertInstanceOf(LoginModel::class, $this->getPrivateProperty('loginModel'));
     }
@@ -88,8 +84,6 @@ class LoginServiceTest extends Test
     #[Testing]
     public function setAuthenticatorModel(): void
     {
-        $this->initReflection($this->loginService);
-
         $this->assertInstanceOf(
             LoginService::class,
             $this->loginService->setAuthenticatorModel(new AuthenticatorModel())
@@ -101,8 +95,6 @@ class LoginServiceTest extends Test
     #[Testing]
     public function setAESService(): void
     {
-        $this->initReflection($this->loginService);
-
         $this->assertInstanceOf(LoginService::class, $this->loginService->setAESService(new AESService()));
         $this->assertInstanceOf(AESService::class, $this->getPrivateProperty('aESService'));
     }
@@ -110,8 +102,6 @@ class LoginServiceTest extends Test
     #[Testing]
     public function setJWTService(): void
     {
-        $this->initReflection($this->loginService);
-
         $this->assertInstanceOf(LoginService::class, $this->loginService->setJWTService(new JWTService()));
         $this->assertInstanceOf(JWTService::class, $this->getPrivateProperty('jWTService'));
     }
@@ -181,6 +171,7 @@ class LoginServiceTest extends Test
     }
 
     /**
+     * @throws AuthenticationException
      * @throws Exception
      */
     #[Testing]

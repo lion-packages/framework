@@ -21,7 +21,8 @@ class PasswordManagerTest extends Test
         $this->passwordManager = new PasswordManager();
     }
 
-    public function testCapsule(): void
+    #[Testing]
+    public function capsule(): void
     {
         $this->assertCapsule($this->passwordManager, '');
     }

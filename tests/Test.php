@@ -16,18 +16,6 @@ use Lion\Test\Test as TestTest;
 class Test extends TestTest
 {
     /**
-     * Asserts a response to be of type success
-     *
-     * @param array|object $response [Response object]
-     *
-     * @return void
-     */
-    final public function assertIsSuccess(array|object $response): void
-    {
-        $this->assertTrue(isSuccess($response));
-    }
-
-    /**
      * Removes properties from an array and asserts whether they were completely
      * removed
      *
@@ -71,6 +59,7 @@ class Test extends TestTest
      *
      * @param CapsuleInterface $capsuleInterface [Implement abstract methods for
      * capsule classes]
+     * @param string $entity [Entity name]
      *
      * @return void
      */
