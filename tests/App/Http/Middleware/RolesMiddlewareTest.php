@@ -56,8 +56,8 @@ class RolesMiddlewareTest extends Test
     }
 
     /**
-     * @throws MiddlewareException
      * @throws Exception
+     * @throws MiddlewareException
      */
     #[Testing]
     public function access(): void

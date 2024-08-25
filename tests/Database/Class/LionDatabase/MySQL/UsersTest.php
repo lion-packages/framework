@@ -42,6 +42,7 @@ class UsersTest extends Test
     {
         $this->users->setIdusers(self::IDUSERS);
 
+        $this->assertIsInt($this->users->getIdusers());
         $this->assertSame(self::IDUSERS, $this->users->getIdusers());
     }
 
@@ -53,6 +54,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsInt($this->users->getIdusers());
         $this->assertSame(self::IDUSERS, $this->users->getIdusers());
     }
 
@@ -61,6 +63,7 @@ class UsersTest extends Test
     {
         $this->users->setIdroles(RolesEnum::ADMINISTRATOR->value);
 
+        $this->assertIsInt($this->users->getIdroles());
         $this->assertSame(RolesEnum::ADMINISTRATOR->value, $this->users->getIdroles());
     }
 
@@ -72,6 +75,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsInt($this->users->getIdroles());
         $this->assertSame(RolesEnum::ADMINISTRATOR->value, $this->users->getIdroles());
     }
 
@@ -80,6 +84,7 @@ class UsersTest extends Test
     {
         $this->users->setIddocumentTypes(DocumentTypesEnum::CITIZENSHIP_CARD->value);
 
+        $this->assertIsInt($this->users->getIddocumentTypes());
         $this->assertSame(DocumentTypesEnum::CITIZENSHIP_CARD->value, $this->users->getIddocumentTypes());
     }
 
@@ -91,6 +96,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsInt($this->users->getIddocumentTypes());
         $this->assertSame(DocumentTypesEnum::CITIZENSHIP_CARD->value, $this->users->getIddocumentTypes());
     }
 
@@ -99,6 +105,7 @@ class UsersTest extends Test
     {
         $this->users->setUsersCitizenIdentification(self::USERS_CITIZEN_IDENTIFICATION);
 
+        $this->assertIsString($this->users->getUsersCitizenIdentification());
         $this->assertSame(self::USERS_CITIZEN_IDENTIFICATION, $this->users->getUsersCitizenIdentification());
     }
 
@@ -110,6 +117,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->users->getUsersCitizenIdentification());
         $this->assertSame(self::USERS_CITIZEN_IDENTIFICATION, $this->users->getUsersCitizenIdentification());
     }
 
@@ -118,6 +126,7 @@ class UsersTest extends Test
     {
         $this->users->setUsersName(self::USERS_NAME);
 
+        $this->assertIsString($this->users->getUsersName());
         $this->assertSame(self::USERS_NAME, $this->users->getUsersName());
     }
 
@@ -129,6 +138,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->users->getUsersName());
         $this->assertSame(self::USERS_NAME, $this->users->getUsersName());
     }
 
@@ -137,6 +147,7 @@ class UsersTest extends Test
     {
         $this->users->setUsersLastName(self::USERS_LAST_NAME);
 
+        $this->assertIsString($this->users->getUsersLastName());
         $this->assertSame(self::USERS_LAST_NAME, $this->users->getUsersLastName());
     }
 
@@ -148,6 +159,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->users->getUsersLastName());
         $this->assertSame(self::USERS_LAST_NAME, $this->users->getUsersLastName());
     }
 
@@ -156,6 +168,7 @@ class UsersTest extends Test
     {
         $this->users->setUsersNickname(self::USERS_NICKNAME);
 
+        $this->assertIsString($this->users->getUsersNickname());
         $this->assertSame(self::USERS_NICKNAME, $this->users->getUsersNickname());
     }
 
@@ -167,6 +180,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->users->getUsersNickname());
         $this->assertSame(self::USERS_NICKNAME, $this->users->getUsersNickname());
     }
 
@@ -175,6 +189,7 @@ class UsersTest extends Test
     {
         $this->users->setUsersEmail(UsersFactory::USERS_EMAIL);
 
+        $this->assertIsString($this->users->getUsersEmail());
         $this->assertSame(UsersFactory::USERS_EMAIL, $this->users->getUsersEmail());
     }
 
@@ -186,6 +201,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->users->getUsersEmail());
         $this->assertSame(UsersFactory::USERS_EMAIL, $this->users->getUsersEmail());
     }
 
@@ -194,6 +210,7 @@ class UsersTest extends Test
     {
         $this->users->setUsersPassword(UsersFactory::USERS_PASSWORD_HASH);
 
+        $this->assertIsString($this->users->getUsersPassword());
         $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->users->getUsersPassword());
     }
 
@@ -205,6 +222,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->users->getUsersPassword());
         $this->assertSame(UsersFactory::USERS_PASSWORD_HASH, $this->users->getUsersPassword());
     }
 
@@ -213,6 +231,7 @@ class UsersTest extends Test
     {
         $this->users->setUsersActivationCode(self::USERS_ACTIVATION_CODE);
 
+        $this->assertIsString($this->users->getUsersActivationCode());
         $this->assertSame(self::USERS_ACTIVATION_CODE, $this->users->getUsersActivationCode());
     }
 
@@ -224,6 +243,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->users->getUsersActivationCode());
         $this->assertSame(self::USERS_ACTIVATION_CODE, $this->users->getUsersActivationCode());
     }
 
@@ -232,6 +252,7 @@ class UsersTest extends Test
     {
         $this->users->setUsersRecoveryCode(self::USERS_RECOVERY_CODE);
 
+        $this->assertIsString($this->users->getUsersRecoveryCode());
         $this->assertSame(self::USERS_RECOVERY_CODE, $this->users->getUsersRecoveryCode());
     }
 
@@ -243,6 +264,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->users->getUsersRecoveryCode());
         $this->assertSame(self::USERS_RECOVERY_CODE, $this->users->getUsersRecoveryCode());
     }
 
@@ -251,6 +273,7 @@ class UsersTest extends Test
     {
         $this->users->setUsersCode(self::USERS_CODE);
 
+        $this->assertIsString($this->users->getUsersCode());
         $this->assertSame(self::USERS_CODE, $this->users->getUsersCode());
     }
 
@@ -262,6 +285,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->users->getUsersCode());
         $this->assertSame(self::USERS_CODE, $this->users->getUsersCode());
     }
 
@@ -270,6 +294,7 @@ class UsersTest extends Test
     {
         $this->users->setUsers2fa(UsersFactory::ENABLED_2FA);
 
+        $this->assertIsInt($this->users->getUsers2fa());
         $this->assertSame(UsersFactory::ENABLED_2FA, $this->users->getUsers2fa());
     }
 
@@ -281,6 +306,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsInt($this->users->getUsers2fa());
         $this->assertSame(UsersFactory::ENABLED_2FA, $this->users->getUsers2fa());
     }
 
@@ -289,6 +315,7 @@ class UsersTest extends Test
     {
         $this->users->setUsers2faSecret(UsersFactory::SECURITY_KEY_2FA);
 
+        $this->assertIsString($this->users->getUsers2faSecret());
         $this->assertSame(UsersFactory::SECURITY_KEY_2FA, $this->users->getUsers2faSecret());
     }
 
@@ -300,6 +327,7 @@ class UsersTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->users->getUsers2faSecret());
         $this->assertSame(UsersFactory::SECURITY_KEY_2FA, $this->users->getUsers2faSecret());
     }
 }

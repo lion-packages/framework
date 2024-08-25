@@ -21,7 +21,7 @@ class RegistrationModelTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->registrationModel = new RegistrationModel();
 
@@ -42,6 +42,7 @@ class RegistrationModelTest extends Test
         $this->assertObjectHasProperty('idusers', $row);
         $this->assertIsInt($row->idusers);
 
+        /** @var stdClass $user */
         $user = $this->usersModel->readUsersByIdDB(
             (new Users())
                 ->setIdusers($row->idusers)
@@ -52,6 +53,7 @@ class RegistrationModelTest extends Test
         $this->assertObjectHasProperty('idusers', $user);
         $this->assertIsString($user->users_email);
 
+        /** @var stdClass $data */
         $data = $this->registrationModel->verifyAccountDB(
             (new Users())
                 ->setUsersEmail($user->users_email)
@@ -80,6 +82,7 @@ class RegistrationModelTest extends Test
         $this->assertObjectHasProperty('idusers', $row);
         $this->assertIsInt($row->idusers);
 
+        /** @var stdClass $user */
         $user = $this->usersModel->readUsersByIdDB(
             (new Users())
                 ->setIdusers($row->idusers)

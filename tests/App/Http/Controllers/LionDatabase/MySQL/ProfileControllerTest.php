@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Exceptions\ProcessException;
 use App\Http\Controllers\LionDatabase\MySQL\ProfileController;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Models\LionDatabase\MySQL\ProfileModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Exception;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
+use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\AES;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
@@ -26,41 +29,48 @@ class ProfileControllerTest extends Test
     use AuthJwtProviderTrait;
     use SetUpMigrationsAndQueuesProviderTrait;
 
-    const string USERS_EMAIL = 'root@dev.com';
+    private const string USERS_EMAIL = 'root@dev.com';
 
     private ProfileController $profileController;
+    private UsersModel $usersModel;
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->profileController = new ProfileController();
+
+        $this->usersModel = new UsersModel();
     }
 
     protected function tearDown(): void
     {
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
-
-        Schema::truncateTable('users')->execute();
     }
 
-    public function testReadProfile(): void
+    #[Testing]
+    public function readProfile(): void
     {
-        $users = (new UsersModel())->readUsersDB();
-
-        $this->assertIsArray($users);
-
-        $user = reset($users);
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdclass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
-        $encode = $this->AESEncode(['idusers' => (string) $user->idusers]);
+        $encode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+        ]);
 
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
             'idusers' => $encode['idusers']
         ]);
 
+        /** @var stdClass $response */
         $response = $this->profileController->readProfile(
             new Users(),
             new ProfileModel(),
@@ -72,6 +82,7 @@ class ProfileControllerTest extends Test
         );
 
         $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertObjectHasProperty('idusers', $response);
         $this->assertObjectHasProperty('idroles', $response);
         $this->assertObjectHasProperty('iddocument_types', $response);
@@ -80,24 +91,33 @@ class ProfileControllerTest extends Test
         $this->assertObjectHasProperty('users_last_name', $response);
         $this->assertObjectHasProperty('users_nickname', $response);
         $this->assertObjectHasProperty('users_email', $response);
+        $this->assertIsInt($response->idusers);
         $this->assertSame($user->idusers, $response->idusers);
     }
 
-    public function testUpdateProfile(): void
+    /**
+     * @throws ProcessException
+     */
+    #[Testing]
+    public function updateProfile(): void
     {
-        $users = (new UsersModel())->readUsersDB();
-
-        $this->assertIsArray($users);
-
-        $user = reset($users);
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdclass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
-        $encode = $this->AESEncode(['idusers' => (string) $user->idusers]);
+        $encode = $this->AESEncode([
+            'idusers' => (string) $user->idusers,
+        ]);
 
         $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
-            'idusers' => $encode['idusers']
+            'idusers' => $encode['idusers'],
         ]);
 
         $users_name = fake()->name();
@@ -114,43 +134,61 @@ class ProfileControllerTest extends Test
                 ->setAES(new AES())
         );
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('profile updated successfully', $response->message);
         $this->assertArrayNotHasKeyFromList($_POST, ['users_name']);
 
-        $users = (new UsersModel())->readUsersDB();
-
-        $this->assertIsArray($users);
-
-        $user = reset($users);
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdclass::class, $user);
         $this->assertObjectHasProperty('users_name', $user);
         $this->assertSame($users_name, $user->users_name);
     }
 
-    public function testUpdateProfileIsError(): void
+    /**
+     * @throws Exception
+     * @throws ProcessException
+     */
+    #[Testing]
+    public function updateProfileIsError(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage("an error occurred while updating the user's profile");
-        $this->expectExceptionCode(Http::INTERNAL_SERVER_ERROR);
+        $this
+            ->exception(ProcessException::class)
+            ->exceptionCode(Http::INTERNAL_SERVER_ERROR)
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionMessage("an error occurred while updating the user's profile")
+            ->expectLionException(function (): void {
+                $encode = $this->AESEncode([
+                    'idusers' => fake()->numerify('###############'),
+                ]);
 
-        $encode = $this->AESEncode(['idusers' => fake()->numerify('###############')]);
+                $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
+                    'idusers' => $encode['idusers'],
+                ]);
 
-        $_SERVER['HTTP_AUTHORIZATION'] = $this->getAuthorization([
-            'idusers' => $encode['idusers']
-        ]);
-
-        $this->profileController->updateProfile(
-            new Users(),
-            new ProfileModel(),
-            (new JWTService())
-                ->setRSA(new RSA())
-                ->setJWT(new JWT()),
-            (new AESService())
-                ->setAES(new AES())
-        );
+                $this->profileController->updateProfile(
+                    new Users(),
+                    new ProfileModel(),
+                    (new JWTService())
+                        ->setRSA(new RSA())
+                        ->setJWT(new JWT()),
+                    (new AESService())
+                        ->setAES(new AES())
+                );
+            });
     }
 }

@@ -11,12 +11,13 @@ use App\Http\Controllers\LionDatabase\MySQL\UsersController;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
-use Exception;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
+use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\Validation;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
@@ -30,15 +31,13 @@ class UsersControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->usersController = new UsersController();
     }
 
     protected function tearDown(): void
     {
-        Schema::truncateTable('users')->execute();
-
         $this->assertArrayNotHasKeyFromList($_POST, [
             'idroles',
             'iddocument_types',
@@ -51,7 +50,11 @@ class UsersControllerTest extends Test
         ]);
     }
 
-    public function testCreateUsers(): void
+    /**
+     * @throws ProcessException
+     */
+    #[Testing]
+    public function createUsers(): void
     {
         $_POST['idroles'] = RolesEnum::ADMINISTRATOR->value;
 
@@ -71,12 +74,23 @@ class UsersControllerTest extends Test
 
         $response = $this->usersController->createUsers(new Users(), new UsersModel(), new Validation());
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('registered user successfully', $response->message);
     }
 
+    /**
+     * @throws Exception
+     * @throws ProcessException
+     */
     #[Testing]
     public function createUsersIsError(): void
     {
@@ -106,38 +120,62 @@ class UsersControllerTest extends Test
             });
     }
 
-    public function testReadUsers(): void
+    #[Testing]
+    public function readUsers(): void
     {
-        $response = $this->usersController->readUsers(new UsersModel());
+        $users = $this->usersController->readUsers(new UsersModel());
 
-        $this->assertIsArray($response);
-        $this->assertCount(self::AVAILABLE_USERS, $response);
+        $this->assertIsArray($users);
+
+        $user = reset($users);
+
+        $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
+        $this->assertObjectHasProperty('idusers', $user);
+        $this->assertObjectHasProperty('users_citizen_identification', $user);
+        $this->assertObjectHasProperty('users_name', $user);
+        $this->assertObjectHasProperty('users_last_name', $user);
+        $this->assertObjectHasProperty('users_nickname', $user);
     }
 
-    public function testReadUsersWithoutData(): void
+    #[Testing]
+    public function readUsersWithoutData(): void
     {
         Schema::truncateTable('users')->execute();
 
         $response = $this->usersController->readUsers(new UsersModel());
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('no data available', $response->message);
     }
 
-    public function testReadUsersById(): void
+    #[Testing]
+    public function readUsersById(): void
     {
-        $response = $this->usersController->readUsers(new UsersModel());
+        $users = $this->usersController->readUsers(new UsersModel());
 
-        $this->assertIsArray($response);
-        $this->assertCount(self::AVAILABLE_USERS, $response);
+        $this->assertIsArray($users);
 
-        $user = reset($response);
+        $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertObjectHasProperty('users_citizen_identification', $user);
+        $this->assertObjectHasProperty('users_name', $user);
+        $this->assertObjectHasProperty('users_last_name', $user);
+        $this->assertObjectHasProperty('users_nickname', $user);
 
+        /** @var stdClass $response */
         $response = $this->usersController->readUsersById(new Users(), new UsersModel(), (string) $user->idusers);
 
         $this->assertIsObject($response);
@@ -145,29 +183,45 @@ class UsersControllerTest extends Test
         $this->assertSame($user->idusers, $response->idusers);
     }
 
-    public function testReadUsersByIdWithoutData(): void
+    #[Testing]
+    public function readUsersByIdWithoutData(): void
     {
         Schema::truncateTable('users')->execute();
 
         $response = $this->usersController->readUsersById(new Users(), new UsersModel(), "1");
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('no data available', $response->message);
     }
 
-    public function testUpdateUsers(): void
+    /**
+     * @throws ProcessException
+     */
+    #[Testing]
+    public function updateUsers(): void
     {
-        $response = $this->usersController->readUsers(new UsersModel());
+        $users = $this->usersController->readUsers(new UsersModel());
 
-        $this->assertIsArray($response);
-        $this->assertCount(self::AVAILABLE_USERS, $response);
+        $this->assertIsArray($users);
 
-        $user = reset($response);
+        $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertObjectHasProperty('users_citizen_identification', $user);
+        $this->assertObjectHasProperty('users_name', $user);
+        $this->assertObjectHasProperty('users_last_name', $user);
+        $this->assertObjectHasProperty('users_nickname', $user);
 
         $_POST['idroles'] = 1;
 
@@ -185,54 +239,80 @@ class UsersControllerTest extends Test
 
         $response = $this->usersController->updateUsers(new Users(), new UsersModel(), (string) $user->idusers);
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('the registered user has been successfully updated', $response->message);
     }
 
-    public function testUpdateUsersIsError(): void
+    /**
+     * @throws Exception
+     * @throws ProcessException
+     */
+    #[Testing]
+    public function updateUsersIsError(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('an error occurred while updating the user');
-        $this->expectExceptionCode(Http::INTERNAL_SERVER_ERROR);
+        $this
+            ->exception(ProcessException::class)
+            ->exceptionCode(Http::INTERNAL_SERVER_ERROR)
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionMessage('an error occurred while updating the user')
+            ->expectLionException(function (): void {
+                $_POST['idroles'] = 1;
 
-        $_POST['idroles'] = 1;
+                $_POST['iddocument_types'] = 1;
 
-        $_POST['iddocument_types'] = 1;
+                $_POST['users_citizen_identification'] = '##########';
 
-        $_POST['users_citizen_identification'] = '##########';
+                $_POST['users_name'] = 'Sergio';
 
-        $_POST['users_name'] = 'Sergio';
+                $_POST['users_last_name'] = 'Leon';
 
-        $_POST['users_last_name'] = 'Leon';
+                $_POST['users_nickname'] = 'Sleon';
 
-        $_POST['users_nickname'] = 'Sleon';
+                $_POST['users_email'] = 'sleon@dev.com';
 
-        $_POST['users_email'] = 'sleon@dev.com';
-
-        $this->usersController->updateUsers(
-            new Users(),
-            new UsersModel(),
-            fake()->numerify('###############')
-        );
+                $this->usersController->updateUsers(new Users(), new UsersModel(), fake()->numerify('###############'));
+            });
     }
 
-    public function testDeleteUsers(): void
+    /**
+     * @throws ProcessException
+     */
+    #[Testing]
+    public function deleteUsers(): void
     {
-        $response = $this->usersController->readUsers(new UsersModel());
+        $users = $this->usersController->readUsers(new UsersModel());
 
-        $this->assertIsArray($response);
-        $this->assertCount(self::AVAILABLE_USERS, $response);
+        $this->assertIsArray($users);
 
-        $user = reset($response);
+        $user = reset($users);
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertObjectHasProperty('users_citizen_identification', $user);
+        $this->assertObjectHasProperty('users_name', $user);
+        $this->assertObjectHasProperty('users_last_name', $user);
+        $this->assertObjectHasProperty('users_nickname', $user);
 
         $response = $this->usersController->deleteUsers(new Users(), new UsersModel(), (string) $user->idusers);
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('the registered user has been successfully deleted', $response->message);
@@ -243,12 +323,20 @@ class UsersControllerTest extends Test
         $this->assertCount(self::REMAINING_USERS, $response);
     }
 
-    public function testDeleteUsersIsError(): void
+    /**
+     * @throws Exception
+     * @throws ProcessException
+     */
+    #[Testing]
+    public function deleteUsersIsError(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('an error occurred while deleting the user');
-        $this->expectExceptionCode(Http::INTERNAL_SERVER_ERROR);
-
-        $this->usersController->deleteUsers(new Users(), new UsersModel(), fake()->numerify('###############'));
+        $this
+            ->exception(ProcessException::class)
+            ->exceptionCode(Http::INTERNAL_SERVER_ERROR)
+            ->exceptionStatus(Status::ERROR)
+            ->exceptionMessage('an error occurred while deleting the user')
+            ->expectLionException(function (): void {
+                $this->usersController->deleteUsers(new Users(), new UsersModel(), fake()->numerify('###############'));
+            });
     }
 }

@@ -8,7 +8,6 @@ use App\Models\LionDatabase\MySQL\PasswordManagerModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Status;
 use Lion\Security\Validation;
 use Lion\Test\Test;
@@ -29,16 +28,11 @@ class PasswordManagerModelTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->passwordManagerModel = new PasswordManagerModel();
 
         $this->validation = new Validation();
-    }
-
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
     }
 
     #[Testing]
@@ -55,6 +49,7 @@ class PasswordManagerModelTest extends Test
         $this->assertObjectHasProperty('idusers', $user);
         $this->assertIsInt($user->idusers);
 
+        /** @var stdClass $hash */
         $hash = $this->passwordManagerModel->getPasswordDB(
             (new PasswordManager())
                 ->setIdusers($user->idusers)

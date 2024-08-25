@@ -24,12 +24,7 @@ class ProfileControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
-    }
-
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
+        $this->runMigrations();
     }
 
     /**

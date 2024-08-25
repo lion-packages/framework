@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Exceptions\ProcessException;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Models\LionDatabase\MySQL\ProfileModel;
@@ -16,6 +17,7 @@ use Database\Class\LionDatabase\MySQL\Users;
 use Exception;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
+use Lion\Request\Status;
 use Lion\Route\Attributes\Rules;
 use stdClass;
 
@@ -66,7 +68,7 @@ class ProfileController
      *
      * @return stdClass
      *
-     * @throws Exception
+     * @throws ProcessException
      */
     #[Rules(
         IddocumentTypesRule::class,
@@ -92,8 +94,9 @@ class ProfileController
         );
 
         if (isError($response)) {
-            throw new Exception(
+            throw new ProcessException(
                 "an error occurred while updating the user's profile",
+                Status::ERROR,
                 Http::INTERNAL_SERVER_ERROR
             );
         }

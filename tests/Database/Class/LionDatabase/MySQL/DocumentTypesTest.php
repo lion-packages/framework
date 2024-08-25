@@ -33,6 +33,7 @@ class DocumentTypesTest extends Test
     {
         $this->documentTypes->setIddocumentTypes(self::IDDOCUMENT_TYPES);
 
+        $this->assertIsInt($this->documentTypes->getIddocumentTypes());
         $this->assertSame(self::IDDOCUMENT_TYPES, $this->documentTypes->getIddocumentTypes());
     }
 
@@ -44,6 +45,7 @@ class DocumentTypesTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsInt($this->documentTypes->getIddocumentTypes());
         $this->assertSame(self::IDDOCUMENT_TYPES, $this->documentTypes->getIddocumentTypes());
     }
 
@@ -52,6 +54,7 @@ class DocumentTypesTest extends Test
     {
         $this->documentTypes->setDocumentTypesName(self::DOCUMENT_TYPES_NAME);
 
+        $this->assertIsString($this->documentTypes->getDocumentTypesName());
         $this->assertSame(self::DOCUMENT_TYPES_NAME, $this->documentTypes->getDocumentTypesName());
     }
 
@@ -63,6 +66,7 @@ class DocumentTypesTest extends Test
             CapsuleInterface::class,
         ]);
 
+        $this->assertIsString($this->documentTypes->getDocumentTypesName());
         $this->assertSame(self::DOCUMENT_TYPES_NAME, $this->documentTypes->getDocumentTypesName());
     }
 }

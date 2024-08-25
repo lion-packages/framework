@@ -8,7 +8,7 @@ use Lion\Bundle\Helpers\Commands\ProcessCommand;
 
 trait SetUpMigrationsAndQueuesProviderTrait
 {
-    public function runMigrationsAndQueues(bool $runSeeds = true): void
+    public function runMigrations(bool $runSeeds = true): void
     {
         $seedOption = $runSeeds ? '--seed' : '';
 

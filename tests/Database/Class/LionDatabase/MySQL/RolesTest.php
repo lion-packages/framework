@@ -34,6 +34,7 @@ class RolesTest extends Test
     {
         $this->roles->setIdroles(self::IDROLES);
 
+        $this->assertIsInt($this->roles->getIdroles());
         $this->assertSame(self::IDROLES, $this->roles->getIdroles());
     }
 
@@ -45,6 +46,7 @@ class RolesTest extends Test
             CapsuleInterface::class
         ]);
 
+        $this->assertIsInt($this->roles->getIdroles());
         $this->assertSame(self::IDROLES, $this->roles->getIdroles());
     }
 
@@ -53,6 +55,7 @@ class RolesTest extends Test
     {
         $this->roles->setRolesName(self::ROLES_NAME);
 
+        $this->assertIsString($this->roles->getRolesName());
         $this->assertSame(self::ROLES_NAME, $this->roles->getRolesName());
     }
 
@@ -64,6 +67,7 @@ class RolesTest extends Test
             CapsuleInterface::class
         ]);
 
+        $this->assertIsString($this->roles->getRolesName());
         $this->assertSame(self::ROLES_NAME, $this->roles->getRolesName());
     }
 
@@ -72,6 +76,7 @@ class RolesTest extends Test
     {
         $this->roles->setRolesDescription(self::ROLES_DESCRIPTION);
 
+        $this->assertIsString($this->roles->getRolesDescription());
         $this->assertSame(self::ROLES_DESCRIPTION, $this->roles->getRolesDescription());
     }
 
@@ -83,6 +88,7 @@ class RolesTest extends Test
             CapsuleInterface::class
         ]);
 
+        $this->assertIsString($this->roles->getRolesDescription());
         $this->assertSame(self::ROLES_DESCRIPTION, $this->roles->getRolesDescription());
     }
 }

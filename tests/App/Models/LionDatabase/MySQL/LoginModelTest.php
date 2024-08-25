@@ -7,7 +7,6 @@ namespace Tests\App\Models\LionDatabase\MySQL;
 use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use stdClass;
@@ -23,14 +22,9 @@ class LoginModelTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->loginModel = new LoginModel();
-    }
-
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
     }
 
     #[Testing]
@@ -66,6 +60,7 @@ class LoginModelTest extends Test
     #[Testing]
     public function verifyAccountActivationDB(): void
     {
+        /** @var stdClass $response */
         $response = $this->loginModel->verifyAccountActivationDB(
             (new Users())
                 ->setUsersEmail(UsersFactory::USERS_EMAIL)

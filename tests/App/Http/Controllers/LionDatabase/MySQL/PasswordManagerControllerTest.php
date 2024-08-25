@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Exceptions\AccountException;
+use App\Exceptions\AuthenticationException;
+use App\Exceptions\PasswordException;
 use App\Http\Controllers\LionDatabase\MySQL\PasswordManagerController;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
@@ -16,13 +19,14 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\AES;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 use Lion\Security\Validation;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
@@ -35,22 +39,23 @@ class PasswordManagerControllerTest extends Test
     const string USERS_PASSWORD = 'lion-password';
 
     private PasswordManagerController $passwordManagerController;
+    private UsersModel $usersModel;
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->passwordManagerController = new PasswordManagerController();
+
+        $this->usersModel = new UsersModel();
     }
 
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
-
-        Schema::truncateTable('task_queue')->execute();
-    }
-
-    public function testRecoveryPassword(): void
+    /**
+     * @throws AccountException
+     * @throws AuthenticationException
+     */
+    #[Testing]
+    public function recoveryPassword(): void
     {
         $_POST['users_email'] = UsersFactory::USERS_EMAIL;
 
@@ -74,7 +79,14 @@ class PasswordManagerControllerTest extends Test
                 )
         );
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
 
@@ -86,7 +98,13 @@ class PasswordManagerControllerTest extends Test
         $this->assertArrayNotHasKeyFromList($_POST, ['users_email']);
     }
 
-    public function testUpdateLostPassword(): void
+    /**
+     * @throws PasswordException
+     * @throws AuthenticationException
+     * @throws AccountException
+     */
+    #[Testing]
+    public function updateLostPassword(): void
     {
         $_POST['users_email'] = UsersFactory::USERS_EMAIL;
 
@@ -110,7 +128,14 @@ class PasswordManagerControllerTest extends Test
                 )
         );
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
 
@@ -119,13 +144,16 @@ class PasswordManagerControllerTest extends Test
             $response->message
         );
 
-        $user = (new UsersModel())->readUsersByEmailDB(
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
             (new Users())
                 ->setUsersEmail(UsersFactory::USERS_EMAIL)
         );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('users_recovery_code', $user);
+        $this->assertIsString($user->users_recovery_code);
 
         $encode = $this->AESEncode([
             'users_password_new' => self::USERS_PASSWORD,
@@ -164,7 +192,14 @@ class PasswordManagerControllerTest extends Test
                 ->setAES(new AES())
         );
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
 
@@ -181,16 +216,22 @@ class PasswordManagerControllerTest extends Test
         ]);
     }
 
-    public function testUpdatePassword(): void
+    /**
+     * @throws PasswordException
+     */
+    #[Testing]
+    public function updatePassword(): void
     {
-        $users = (new UsersModel())->readUsersDB();
-
-        $this->assertIsArray($users);
-
-        $user = reset($users);
+        /** @var stdClass $user */
+        $user = $this->usersModel->readUsersByEmailDB(
+            (new Users())
+                ->setUsersEmail(UsersFactory::USERS_EMAIL)
+        );
 
         $this->assertIsObject($user);
+        $this->assertInstanceOf(stdClass::class, $user);
         $this->assertObjectHasProperty('idusers', $user);
+        $this->assertIsInt($user->idusers);
 
         $encode = $this->AESEncode([
             'idusers' => (string) $user->idusers,
@@ -221,7 +262,14 @@ class PasswordManagerControllerTest extends Test
                 ->setAES(new AES())
         );
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('password updated successfully', $response->message);

@@ -26,7 +26,7 @@ class PasswordManagerServiceTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->validation = new Validation();
 
@@ -36,6 +36,7 @@ class PasswordManagerServiceTest extends Test
 
     /**
      * @throws Exception
+     * @throws PasswordException
      */
     #[Testing]
     public function verifyPasswords(): void
@@ -58,6 +59,7 @@ class PasswordManagerServiceTest extends Test
 
     /**
      * @throws Exception
+     * @throws PasswordException
      */
     #[Testing]
     public function comparePasswords(): void
@@ -78,6 +80,7 @@ class PasswordManagerServiceTest extends Test
 
     /**
      * @throws Exception
+     * @throws PasswordException
      */
     #[Testing]
     public function updatePassword(): void

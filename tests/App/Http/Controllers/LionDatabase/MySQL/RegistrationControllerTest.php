@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\App\Http\Controllers\LionDatabase\MySQL;
 
+use App\Exceptions\AccountException;
+use App\Exceptions\AuthenticationException;
 use App\Http\Controllers\LionDatabase\MySQL\RegistrationController;
 use App\Http\Services\AESService;
 use App\Http\Services\LionDatabase\MySQL\AccountService;
@@ -18,6 +20,8 @@ use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\AES;
 use Lion\Security\Validation;
+use PHPUnit\Framework\Attributes\Test as Testing;
+use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
 use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 use Tests\Test;
@@ -31,19 +35,22 @@ class RegistrationControllerTest extends Test
 
     protected function setUp(): void
     {
+        $this->runMigrations();
+
         $this->registrationController = new RegistrationController();
     }
 
-    protected function tearDown(): void
+    /**
+     * @throws AccountException
+     */
+    #[Testing]
+    public function register(): void
     {
         Schema::truncateTable('users')->execute();
 
-        Schema::truncateTable('task_queue')->execute();
-    }
-
-    public function testRegister(): void
-    {
-        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+        $encode = $this->AESEncode([
+            'users_password' => UsersFactory::USERS_PASSWORD,
+        ]);
 
         $_POST['users_email'] = UsersFactory::USERS_EMAIL;
 
@@ -60,7 +67,14 @@ class RegistrationControllerTest extends Test
             new Validation()
         );
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
 
@@ -72,9 +86,18 @@ class RegistrationControllerTest extends Test
         $this->assertArrayNotHasKeyFromList($_POST, ['users_email', 'users_password']);
     }
 
-    public function testVerifyAccount(): void
+    /**
+     * @throws AccountException
+     * @throws AuthenticationException
+     */
+    #[Testing]
+    public function verifyAccount(): void
     {
-        $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
+        Schema::truncateTable('users')->execute();
+
+        $encode = $this->AESEncode([
+            'users_password' => UsersFactory::USERS_PASSWORD,
+        ]);
 
         $_POST['users_email'] = UsersFactory::USERS_EMAIL;
 
@@ -91,7 +114,14 @@ class RegistrationControllerTest extends Test
             new Validation()
         );
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
 
@@ -100,6 +130,7 @@ class RegistrationControllerTest extends Test
             $response->message
         );
 
+        /** @var stdClass $users_activation_code */
         $users_activation_code = DB::table('users')
             ->select('users_activation_code')
             ->where()->equalTo('users_email', UsersFactory::USERS_EMAIL)
@@ -107,7 +138,7 @@ class RegistrationControllerTest extends Test
 
         $_POST['users_activation_code'] = $users_activation_code->users_activation_code;
 
-        $response = $response = $this->registrationController->verifyAccount(
+        $response = $this->registrationController->verifyAccount(
             new Users(),
             new RegistrationModel(),
             new RegistrationService(),
@@ -115,7 +146,14 @@ class RegistrationControllerTest extends Test
                 ->setUsersModel(new UsersModel()),
         );;
 
-        $this->assertIsSuccess($response);
+        $this->assertIsObject($response);
+        $this->assertInstanceOf(stdClass::class, $response);
+        $this->assertObjectHasProperty('code', $response);
+        $this->assertObjectHasProperty('status', $response);
+        $this->assertObjectHasProperty('message', $response);
+        $this->assertIsInt($response->code);
+        $this->assertIsString($response->status);
+        $this->assertIsString($response->message);
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('user account has been successfully verified', $response->message);

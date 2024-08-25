@@ -6,11 +6,11 @@ namespace Tests\App\Console\Commands;
 
 use App\Console\Commands\EncryptValueAESCommand;
 use App\Http\Services\AESService;
-use Lion\Command\Command;
 use Lion\Security\AES;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class EncryptValueAESCommandTest extends Test

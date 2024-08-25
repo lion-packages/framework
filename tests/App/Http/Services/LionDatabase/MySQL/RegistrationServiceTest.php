@@ -7,7 +7,6 @@ namespace Tests\App\Http\Services\LionDatabase\MySQL;
 use App\Exceptions\AuthenticationException;
 use App\Http\Services\LionDatabase\MySQL\RegistrationService;
 use Database\Class\LionDatabase\MySQL\Users;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -26,14 +25,9 @@ class RegistrationServiceTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->registrationService = new RegistrationService();
-    }
-
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('task_queue')->execute();
     }
 
     /**

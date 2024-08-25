@@ -6,13 +6,13 @@ namespace App\Http\Controllers\LionDatabase\MySQL;
 
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\PasswordException;
+use App\Exceptions\ProcessException;
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
 use App\Http\Services\LionDatabase\MySQL\AuthenticatorService;
 use App\Http\Services\LionDatabase\MySQL\LoginService;
 use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\LoginModel;
-use App\Models\LionDatabase\MySQL\UsersModel;
 use App\Rules\JWTRefreshRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
@@ -110,6 +110,8 @@ class LoginController
      * @param AuthenticatorService $authenticatorService [Manage 2FA services]
      *
      * @return stdClass
+     *
+     * @throws ProcessException
      */
     #[Rules(UsersEmailRule::class, UsersSecretCodeRule::class)]
     public function auth2FA(

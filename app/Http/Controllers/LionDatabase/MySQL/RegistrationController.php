@@ -17,6 +17,7 @@ use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Exception;
 use Lion\Route\Attributes\Rules;
 use Lion\Security\Validation;
 use stdClass;
@@ -31,12 +32,12 @@ class RegistrationController
     /**
      * Register users with their basic data to create a user account
      *
-     * @api /api/auth/register
+     * @route /api/auth/register
      *
      * @param Users $users [Capsule for the 'Users' entity]
      * @param UsersModel $usersModel [Model for the Users entity]
-     * @param RegistrationModel $registrationModel [Validate in the database
-     * if the registration and verification are valid]
+     * @param RegistrationModel $registrationModel [Validate in the database if
+     * the registration and verification are valid]
      * @param AccountService $accountService [Manage user account processes]
      * @param AESService $aESService [Encrypt and decrypt data with AES]
      * @param Validation $validation [Allows you to validate form data and
@@ -45,6 +46,7 @@ class RegistrationController
      * @return stdClass
      *
      * @throws AccountException
+     * @throws Exception
      */
     #[Rules(UsersEmailRule::class, UsersPasswordRule::class)]
     public function register(
@@ -75,7 +77,7 @@ class RegistrationController
                 ->setUsersActivationCode(fake()->numerify('######'))
                 ->setUsersCode(uniqid('code-'))
                 ->setUsers2fa(UsersFactory::DISABLED_2FA)
-                ->setUsers2faSecret(null)
+                ->setUsers2faSecret()
         );
 
         if (isSuccess($response)) {

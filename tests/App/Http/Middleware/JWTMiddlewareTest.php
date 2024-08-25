@@ -45,6 +45,27 @@ class JWTMiddlewareTest extends Test
     }
 
     #[Testing]
+    public function setStore(): void
+    {
+        $this->assertInstanceOf(JWTMiddleware::class, $this->jWTMiddleware->setStore(new Store()));
+        $this->assertInstanceOf(Store::class, $this->getPrivateProperty('store'));
+    }
+
+    #[Testing]
+    public function setRSA(): void
+    {
+        $this->assertInstanceOf(JWTMiddleware::class, $this->jWTMiddleware->setRSA(new RSA()));
+        $this->assertInstanceOf(RSA::class, $this->getPrivateProperty('rsa'));
+    }
+
+    #[Testing]
+    public function setJWT(): void
+    {
+        $this->assertInstanceOf(JWTMiddleware::class, $this->jWTMiddleware->setJWT(new JWT()));
+        $this->assertInstanceOf(JWT::class, $this->getPrivateProperty('jwt'));
+    }
+
+    #[Testing]
     public function initRSA(): void
     {
         $this->getPrivateMethod('initRSA', [env('RSA_URL_PATH')]);

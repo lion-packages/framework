@@ -9,7 +9,6 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Test\Test;
@@ -28,16 +27,11 @@ class AuthenticatorModelTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrationsAndQueues();
+        $this->runMigrations();
 
         $this->authenticatorModel = new AuthenticatorModel();
 
         $this->usersModel = new UsersModel();
-    }
-
-    protected function tearDown(): void
-    {
-        Schema::truncateTable('users')->execute();
     }
 
     #[Testing]
@@ -82,6 +76,7 @@ class AuthenticatorModelTest extends Test
         $this->assertObjectHasProperty('idusers', $user);
         $this->assertIsInt($user->idusers);
 
+        /** @var stdClass $status */
         $status = $this->authenticatorModel->readCheckStatusDB(
             (new Authenticator2FA())
                 ->setIdusers($user->idusers)
@@ -126,6 +121,7 @@ class AuthenticatorModelTest extends Test
         $this->assertIsString($response->message);
         $this->assertSame('execution finished', $response->message);
 
+        /** @var stdClass $response */
         $response = $this->usersModel->readUsersByIdDB(
             (new Users())
                 ->setIdusers($capsule->getIdusers())
