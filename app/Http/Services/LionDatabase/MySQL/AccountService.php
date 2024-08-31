@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Services\LionDatabase\MySQL;
 
+use App\Html\Email\RecoveryAccountHtml;
 use Exception;
 use App\Exceptions\AccountException;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Lion\Bundle\Enums\LogTypeEnum;
+use Lion\Bundle\Enums\TaskStatusEnum;
 use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
+use Lion\Mailer\Mailer;
+use Lion\Mailer\Priority;
 use Lion\Request\Http;
 use Lion\Request\Status;
 
@@ -76,6 +81,50 @@ class AccountService
             'account' => $users->getUsersEmail(),
             'code' => $users->getUsersActivationCode(),
         ]));
+    }
+
+    /**
+     * Send emails for account validation
+     *
+     * @param RecoveryAccountHtml $recoveryAccountHtml [Password recovery
+     * template]
+     * @param object $queue [Queued task object]
+     * @param string $account [Mail account]
+     * @param string $code [Code]
+     * @return void
+     *
+     * @throws Exception [Catch an exception if the process fails]
+     */
+    public function runSendVerificationCodeEmail(
+        RecoveryAccountHtml $recoveryAccountHtml,
+        object $queue,
+        string $account,
+        string $code
+    ): bool {
+        try {
+            return Mailer::account(env('MAIL_NAME'))
+                ->subject('Password Recovery: check your email')
+                ->from(env('MAIL_USER_NAME'), 'Lion-Packages')
+                ->addAddress($account)
+                ->body(
+                    $recoveryAccountHtml
+                        ->template()
+                        ->replace('CODE_REPLACE', $code)
+                        ->get()
+                )
+                ->priority(Priority::HIGH)
+                ->send();
+        } catch (Exception $e) {
+            TaskQueue::edit($queue, TaskStatusEnum::FAILED);
+
+            logger($e->getMessage(), LogTypeEnum::ERROR, [
+                'idtask_queue' => $queue->idtask_queue,
+                'task_queue_type' => $queue->task_queue_type,
+                'task_queue_data' => $queue->task_queue_data
+            ]);
+
+            return false;
+        }
     }
 
     /**
