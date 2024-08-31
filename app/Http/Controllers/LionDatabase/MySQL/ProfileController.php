@@ -14,7 +14,6 @@ use App\Rules\LionDatabase\MySQL\Users\UsersLastNameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersNameRequiredRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersNicknameRequiredRule;
 use Database\Class\LionDatabase\MySQL\Users;
-use Exception;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
 use Lion\Request\Status;

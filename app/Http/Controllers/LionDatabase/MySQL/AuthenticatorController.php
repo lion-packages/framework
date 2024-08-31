@@ -191,10 +191,11 @@ class AuthenticatorController
         $authenticator2FA
             ->setIdusers((int) $aesDecode['idusers'])
             ->setUsers2fa(UsersFactory::DISABLED_2FA)
-            ->setUsers2faSecret(null);
+            ->setUsers2faSecret();
 
         $authenticatorService->checkStatus(UsersFactory::DISABLED_2FA, $authenticator2FA);
 
+        /** @var stdClass $users_2fa */
         $users_2fa = $usersModel->readUsers2FADB(
             $users
                 ->setIdusers((int) $aesDecode['idusers'])

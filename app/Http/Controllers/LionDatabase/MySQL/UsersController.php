@@ -64,7 +64,7 @@ class UsersController
                 ->setUsersRecoveryCode(null)
                 ->setUsersCode(uniqid('code-'))
                 ->setUsers2fa(UsersFactory::DISABLED_2FA)
-                ->setUsers2faSecret(null)
+                ->setUsers2faSecret()
         );
 
         if (isError($response)) {

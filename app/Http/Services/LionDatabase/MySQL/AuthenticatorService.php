@@ -14,6 +14,7 @@ use Lion\Authentication\Auth2FA;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
 use Lion\Request\Status;
+use stdClass;
 
 /**
  * Manage 2FA services
@@ -94,6 +95,7 @@ class AuthenticatorService
      */
     public function checkStatus(int $users_2fa, Authenticator2FA $authenticator2FA): void
     {
+        /** @var stdClass $status */
         $status = $this->authenticatorModel->readCheckStatusDB($authenticator2FA);
 
         if (UsersFactory::ENABLED_2FA === $users_2fa && UsersFactory::ENABLED_2FA === $status->users_2fa) {

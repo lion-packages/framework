@@ -16,6 +16,7 @@ use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
+use stdClass;
 
 /**
  * Allows you to manage the user authentication process
@@ -172,6 +173,7 @@ class LoginService
      */
     public function verifyAccountActivation(Users $users): void
     {
+        /** @var stdClass $users_activation_code */
         $users_activation_code = $this->loginModel->verifyAccountActivationDB($users);
 
         if ($users_activation_code->users_activation_code != null) {
@@ -186,7 +188,7 @@ class LoginService
     /**
      * Generate a JWT token for user authorization
      *
-     * @param string $path [Path where RSA public and private keys are defined]
+     * @param string|int $time [Token useful life]
      * @param array<string, mixed> $data [Data that is added to the JWT token]
      *
      * @return string
@@ -264,6 +266,7 @@ class LoginService
      */
     public function checkStatus2FA(Authenticator2FA $authenticator2FA): bool
     {
+        /** @var stdClass $status */
         $status = $this->authenticatorModel->readCheckStatusDB($authenticator2FA);
 
         return UsersFactory::ENABLED_2FA === $status->users_2fa;
