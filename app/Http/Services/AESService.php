@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Services;
 
 use Lion\Security\AES;
+use Lion\Security\Exceptions\AESException;
 
 /**
  * Encrypt and decrypt data with AES
@@ -42,6 +43,8 @@ class AESService
      * @param array<string, string> $rows [List of data to encrypt]
      *
      * @return array|object
+     *
+     * @throws AESException [If encryption fails]
      */
     public function encode(array $rows): array|object
     {

@@ -155,7 +155,7 @@ class PasswordManagerController
         $accountService->updateRecoveryCode(
             $users
                 ->setIdusers($data->idusers)
-                ->setUsersRecoveryCode(null)
+                ->setUsersRecoveryCode()
         );
 
         return success('the recovery code is valid, your password has been updated successfully');
