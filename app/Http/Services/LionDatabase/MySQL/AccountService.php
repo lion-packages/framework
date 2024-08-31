@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Services\LionDatabase\MySQL;
 
 use App\Html\Email\RecoveryAccountHtml;
+use App\Html\Email\VerifyAccountHtml;
 use Exception;
 use App\Exceptions\AccountException;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
@@ -17,6 +18,7 @@ use Lion\Mailer\Mailer;
 use Lion\Mailer\Priority;
 use Lion\Request\Http;
 use Lion\Request\Status;
+use stdClass;
 
 /**
  * Manage user account processes
@@ -88,16 +90,17 @@ class AccountService
      *
      * @param RecoveryAccountHtml $recoveryAccountHtml [Password recovery
      * template]
-     * @param object $queue [Queued task object]
+     * @param stdClass $queue [Queued task object]
      * @param string $account [Mail account]
      * @param string $code [Code]
-     * @return void
+     *
+     * @return bool
      *
      * @throws Exception [Catch an exception if the process fails]
      */
     public function runSendVerificationCodeEmail(
         RecoveryAccountHtml $recoveryAccountHtml,
-        object $queue,
+        stdClass $queue,
         string $account,
         string $code
     ): bool {
@@ -143,6 +146,50 @@ class AccountService
             'account' => $users->getUsersEmail(),
             'code' => $users->getUsersRecoveryCode(),
         ]));
+    }
+
+    /**
+     * Send emails for account validation
+     *
+     * @param VerifyAccountHtml $verifyAccountHtml
+     * @param stdClass $queue [Queued task object]
+     * @param string $account [Mail account]
+     * @param string $code [Code]
+     *
+     * @return bool
+     *
+     * @throws Exception [Catch an exception if the process fails]
+     */
+    public function runSendRecoveryCodeByEmail(
+        VerifyAccountHtml $verifyAccountHtml,
+        stdClass $queue,
+        string $account,
+        string $code
+    ): bool {
+        try {
+            return Mailer::account(env('MAIL_NAME'))
+                ->subject('Registration Confirmation - Please Verify Your Email')
+                ->from(env('MAIL_USER_NAME'), 'Lion-Packages')
+                ->addAddress($account)
+                ->body(
+                    $verifyAccountHtml
+                        ->template()
+                        ->replace('CODE_REPLACE', $code)
+                        ->get()
+                )
+                ->priority(Priority::HIGH)
+                ->send();
+        } catch (Exception $e) {
+            TaskQueue::edit($queue, TaskStatusEnum::FAILED);
+
+            logger($e->getMessage(), LogTypeEnum::ERROR, [
+                'idtask_queue' => $queue->idtask_queue,
+                'task_queue_type' => $queue->task_queue_type,
+                'task_queue_data' => $queue->task_queue_data
+            ]);
+
+            return false;
+        }
     }
 
     /**

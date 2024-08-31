@@ -6,6 +6,7 @@ namespace Tests\App\Http\Services\LionDatabase\MySQL;
 
 use App\Exceptions\AccountException;
 use App\Html\Email\RecoveryAccountHtml;
+use App\Html\Email\VerifyAccountHtml;
 use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
@@ -222,6 +223,92 @@ class AccountServiceTest extends Test
             'code' => $code,
             'account' => $account,
         ]);
+    }
+
+    /**
+     * @throws ExceptionGlobal
+     */
+    #[Testing]
+    public function runSendRecoveryCodeByEmail(): void
+    {
+        Schema::truncateTable('task_queue')->execute();
+
+        $account = fake()->email();
+
+        $code = fake()->numerify('######');
+
+        TaskQueue::push('send:email:account-recovery', json([
+            'account' => $account,
+            'code' => $code
+        ]));
+
+        $tasks = DB::table('task_queue')
+            ->select()
+            ->getAll();
+
+        $this->assertIsArray($tasks);
+        $this->assertNotEmpty($tasks);
+
+        $task = reset($tasks);
+
+        $this->assertIsObject($task);
+        $this->assertInstanceOf(stdClass::class, $task);
+
+        $response = $this->accountService->runSendRecoveryCodeByEmail(
+            new VerifyAccountHtml(),
+            $task,
+            $account,
+            $code
+        );
+
+        $this->assertIsBool($response);
+        $this->assertTrue($response);
+    }
+
+    /**
+     * @throws ExceptionGlobal
+     */
+    #[Testing]
+    public function runSendRecoveryCodeByEmailIsError(): void
+    {
+        Schema::truncateTable('task_queue')->execute();
+
+        $account = fake()->email();
+
+        $code = fake()->numerify('######');
+
+        TaskQueue::push('send:email:account-recovery', json([
+            'account' => $account,
+            'code' => $code
+        ]));
+
+        $tasks = DB::table('task_queue')
+            ->select()
+            ->getAll();
+
+        $this->assertIsArray($tasks);
+        $this->assertNotEmpty($tasks);
+
+        $task = reset($tasks);
+
+        $this->assertIsObject($task);
+        $this->assertInstanceOf(stdClass::class, $task);
+
+        $_ENV['MAIL_NAME'] = env('APP_NAME') . '-err';
+
+        $response = $this->accountService->runSendRecoveryCodeByEmail(
+            new VerifyAccountHtml(),
+            $task,
+            $account,
+            $code
+        );
+
+        $this->assertIsBool($response);
+        $this->assertFalse($response);
+
+        $_ENV['MAIL_NAME'] = env('APP_NAME');
+
+        $this->assertSame(env('APP_NAME'), $_ENV['MAIL_NAME']);
     }
 
     /**
