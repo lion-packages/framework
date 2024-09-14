@@ -7,6 +7,7 @@ namespace Tests\App\Console\Commands;
 use App\Console\Commands\EncryptValueAESCommand;
 use App\Http\Services\AESService;
 use Lion\Security\AES;
+use Lion\Security\Exceptions\AESException;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use Symfony\Component\Console\Application;
@@ -33,6 +34,9 @@ class EncryptValueAESCommandTest extends Test
         $this->commandTester = new CommandTester($application->find('aes:encode'));
     }
 
+    /**
+     * @throws AESException
+     */
     #[Testing]
     public function execute(): void
     {
