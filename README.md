@@ -9,10 +9,10 @@
 </p>
 
 <p align="center">
-  <img src="http://poser.pugx.org/lion/framework/v" alt="Latest Stable Version">
-  <img src="http://poser.pugx.org/lion/framework/downloads" alt="Total Downloads">
-  <img src="http://poser.pugx.org/lion/framework/license" alt="License">
-  <img src="http://poser.pugx.org/lion/framework/require/php" alt="PHP Version Require">
+  <img src="https://poser.pugx.org/lion/framework/v" alt="Latest Stable Version">
+  <img src="https://poser.pugx.org/lion/framework/downloads" alt="Total Downloads">
+  <img src="https://poser.pugx.org/lion/framework/license" alt="License">
+  <img src="https://poser.pugx.org/lion/framework/require/php" alt="PHP Version Require">
 </p>
 
 ## About Lion-Framework
