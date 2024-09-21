@@ -2,7 +2,7 @@
 
 define('LION_START', microtime(true));
 
-define('IS_INDEX', true);
+const IS_INDEX = true;
 
 /**
  * -----------------------------------------------------------------------------
@@ -11,7 +11,7 @@ define('IS_INDEX', true);
  * Composer provides a convenient, automatically generated class loader for
  * this application
  * -----------------------------------------------------------------------------
- **/
+ */
 
 require_once(__DIR__ . '/../vendor/autoload.php');
 
@@ -27,7 +27,7 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  * Controls and serializes exceptions to JSON format
  * -----------------------------------------------------------------------------
- **/
+ */
 
 (new Serialize())
     ->exceptionHandler();
@@ -38,9 +38,9 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  * .dotenv provides an easy way to access environment variables with $_ENV
  * -----------------------------------------------------------------------------
- **/
+ */
 
-if ((new Store())->exist(__DIR__ . '/../.env')) {
+if (isSuccess((new Store())->exist(__DIR__ . '/../.env'))) {
     Dotenv::createMutable(__DIR__ . '/../')->load();
 }
 
@@ -52,7 +52,7 @@ if ((new Store())->exist(__DIR__ . '/../.env')) {
  * sharing or "CORS". This determines which cross-origin operations
  * can be executed in web browsers.
  * -----------------------------------------------------------------------------
- **/
+ */
 
 require_once(__DIR__ . '/../config/cors.php');
 
@@ -86,7 +86,7 @@ date_default_timezone_set(env('SERVER_DATE_TIMEZONE', 'America/Bogota'));
  * -----------------------------------------------------------------------------
  * Here is where you can register web routes for your application
  * -----------------------------------------------------------------------------
- **/
+ */
 
 Route::init();
 

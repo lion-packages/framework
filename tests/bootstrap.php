@@ -13,11 +13,12 @@ define('IS_INDEX', false);
  * Composer provides a convenient, automatically generated class loader for
  * this application
  * -----------------------------------------------------------------------------
- **/
+ */
 
 require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Dotenv\Dotenv;
+use Lion\Files\Store;
 
 /**
  * -----------------------------------------------------------------------------
@@ -25,9 +26,11 @@ use Dotenv\Dotenv;
  * -----------------------------------------------------------------------------
  * .dotenv provides an easy way to access environment variables with $_ENV
  * -----------------------------------------------------------------------------
- **/
+ */
 
-Dotenv::createImmutable(__DIR__ . '/../')->load();
+if (isSuccess((new Store())->exist(__DIR__ . '/../.env'))) {
+    Dotenv::createMutable(__DIR__ . '/../')->load();
+}
 
 /**
  * -----------------------------------------------------------------------------
