@@ -74,9 +74,9 @@ class EncryptValueAESCommand extends Command
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
-        $value = $helper->ask($input, $output, new Question($this->warningOutput("\t>> enter a value: "), null));
+        $value = $helper->ask($input, $output, new Question($this->warningOutput("\t>> enter a value: "), NULL_VALUE));
 
-        if (null === $value) {
+        if (NULL_VALUE === $value) {
             $output->writeln($this->errorOutput("\t>> you must enter a value for encryption"));
 
             return Command::INVALID;

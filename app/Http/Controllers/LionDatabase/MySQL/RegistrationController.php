@@ -111,6 +111,7 @@ class RegistrationController
         RegistrationService $registrationService,
         AccountService $accountService
     ): stdClass {
+        /** @var stdClass $data */
         $data = $registrationModel->verifyAccountDB(
             $users
                 ->setUsersEmail(request('users_email'))
@@ -121,7 +122,7 @@ class RegistrationController
 
         $accountService->updateActivationCode(
             $users
-                ->setUsersActivationCode(null)
+                ->setUsersActivationCode(NULL_VALUE)
                 ->setIdusers($data->idusers)
         );
 

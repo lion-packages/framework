@@ -91,7 +91,7 @@ class JWTService
      *
      * @return stdClass
      */
-    public function decode(string $rsaPath, ?string $jwt = null): stdClass
+    public function decode(string $rsaPath, ?string $jwt = NULL_VALUE): stdClass
     {
         return $this->jwt
             ->config([
@@ -100,7 +100,7 @@ class JWTService
                     ->init()
                     ->getPublicKey()
             ])
-            ->decode(null === $jwt ? jwt() : $jwt)
+            ->decode(NULL_VALUE === $jwt ? jwt() : $jwt)
             ->get();
     }
 }
