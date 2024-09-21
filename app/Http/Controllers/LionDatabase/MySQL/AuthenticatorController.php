@@ -20,6 +20,7 @@ use Lion\Authentication\Auth2FA;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
 use Lion\Route\Attributes\Rules;
+use Lion\Security\Exceptions\AESException;
 use stdClass;
 
 /**
@@ -81,6 +82,7 @@ class AuthenticatorController
      * @param JWTService $jWTService [Service to manipulate JWT tokens]
      *
      * @return stdClass|array|DatabaseCapsuleInterface
+     * @throws AESException
      */
     public function qr(
         Users $users,
@@ -103,7 +105,7 @@ class AuthenticatorController
 
         $qr2fa = $auth2FA->qr(env('APP_NAME'), $user->users_email);
 
-        return success(null, Http::OK, (object) $aESService->encode([
+        return success(NULL_VALUE, Http::OK, (object) $aESService->encode([
             'qr' => $qr2fa->data->qr,
             'secret' => $qr2fa->data->secretKey,
         ]));

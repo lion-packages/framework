@@ -176,7 +176,7 @@ class LoginService
         /** @var stdClass $users_activation_code */
         $users_activation_code = $this->loginModel->verifyAccountActivationDB($users);
 
-        if ($users_activation_code->users_activation_code != null) {
+        if (NULL_VALUE != $users_activation_code->users_activation_code) {
             throw new AuthenticationException(
                 "the user's account has not yet been verified",
                 Status::SESSION_ERROR,

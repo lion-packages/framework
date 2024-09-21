@@ -82,7 +82,7 @@ class LoginController
             ->setIdusers($session->getIdusers());
 
         if ($loginService->checkStatus2FA($authenticator2FA)) {
-            return warning(null, Http::ACCEPTED);
+            return warning(NULL_VALUE, Http::ACCEPTED);
         }
 
         return success('successfully authenticated user', Http::OK, [
