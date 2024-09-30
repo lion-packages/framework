@@ -19,6 +19,8 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
+use Lion\Bundle\Helpers\Redis;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\AES;
@@ -76,7 +78,9 @@ class PasswordManagerControllerTest extends Test
                     (new JWTService())
                         ->setRSA(new RSA())
                         ->setJWT(new JWT())
-                )
+                ),
+            (new TaskQueue())
+                ->setRedis(new Redis())
         );
 
         $this->assertIsObject($response);
@@ -125,7 +129,9 @@ class PasswordManagerControllerTest extends Test
                     (new JWTService())
                         ->setRSA(new RSA())
                         ->setJWT(new JWT())
-                )
+                ),
+            (new TaskQueue())
+                ->setRedis(new Redis())
         );
 
         $this->assertIsObject($response);

@@ -21,7 +21,8 @@ use App\Rules\UsersPasswordConfirmRule;
 use App\Rules\UsersPasswordNewRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
-use Exception;
+use Lion\Bundle\Helpers\Commands\Schedule\Task;
+use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
 use Lion\Route\Attributes\Rules;
 use stdClass;
 
@@ -42,19 +43,20 @@ class PasswordManagerController
      * @param AccountService $accountService [Manage user account processes]
      * @param LoginService $loginService [Allows you to manage the user
      * authentication process]
+     * @param TaskQueue $taskQueue [Manage server queued task processes]
      *
      * @return stdClass
      *
-     * @throws AuthenticationException
      * @throws AccountException
-     * @throws Exception
+     * @throws AuthenticationException
      */
     #[Rules(UsersEmailRule::class)]
     public function recoveryPassword(
         Users $users,
         UsersModel $usersModel,
         AccountService $accountService,
-        LoginService $loginService
+        LoginService $loginService,
+        TaskQueue $taskQueue
     ): stdClass {
         $users
             ->setUsersEmail(request('users_email'));
@@ -75,7 +77,12 @@ class PasswordManagerController
 
         $accountService->updateRecoveryCode($users);
 
-        $accountService->sendRecoveryCodeEmail($users);
+        $taskQueue->push(
+            new Task(AccountService::class, 'runSendVerificationCodeEmail', [
+                'account' => $users->getUsersEmail(),
+                'code' => $users->getUsersRecoveryCode(),
+            ])
+        );
 
         return success('confirmation code sent, check your email inbox to see your verification code');
     }
@@ -100,8 +107,8 @@ class PasswordManagerController
      *
      * @return stdClass
      *
-     * @throws AuthenticationException
      * @throws AccountException
+     * @throws AuthenticationException
      * @throws PasswordException
      */
     #[Rules(
