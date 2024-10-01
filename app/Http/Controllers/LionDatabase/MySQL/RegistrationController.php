@@ -18,6 +18,8 @@ use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Exception;
+use Lion\Bundle\Helpers\Commands\Schedule\Task;
+use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
 use Lion\Route\Attributes\Rules;
 use Lion\Security\Validation;
 use stdClass;
@@ -42,11 +44,11 @@ class RegistrationController
      * @param AESService $aESService [Encrypt and decrypt data with AES]
      * @param Validation $validation [Allows you to validate form data and
      * generate encryption safely]
+     * @param TaskQueue $taskQueue [Manage server queued task processes]
      *
      * @return stdClass
      *
      * @throws AccountException
-     * @throws Exception
      */
     #[Rules(UsersEmailRule::class, UsersPasswordRule::class)]
     public function register(
@@ -55,7 +57,8 @@ class RegistrationController
         RegistrationModel $registrationModel,
         AccountService $accountService,
         AESService $aESService,
-        Validation $validation
+        Validation $validation,
+        TaskQueue $taskQueue
     ): stdClass {
         $accountService->validateAccountExists(
             $registrationModel,
@@ -81,7 +84,12 @@ class RegistrationController
         );
 
         if (isSuccess($response)) {
-            $accountService->sendVerifyCodeEmail($users);
+            $taskQueue->push(
+                new Task(AccountService::class, 'runSendRecoveryCodeByEmail', [
+                    'account' => $users->getUsersEmail(),
+                    'code' => $users->getUsersActivationCode(),
+                ])
+            );
         }
 
         return success('user successfully registered, check your mailbox to obtain the account activation code');

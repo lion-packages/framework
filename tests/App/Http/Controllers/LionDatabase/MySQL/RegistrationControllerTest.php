@@ -14,6 +14,8 @@ use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
+use Lion\Bundle\Helpers\Redis;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
@@ -64,7 +66,9 @@ class RegistrationControllerTest extends Test
                 ->setUsersModel(new UsersModel()),
             (new AESService())
                 ->setAES(new AES()),
-            new Validation()
+            new Validation(),
+            (new TaskQueue())
+                ->setRedis(new Redis())
         );
 
         $this->assertIsObject($response);
@@ -111,7 +115,9 @@ class RegistrationControllerTest extends Test
                 ->setUsersModel(new UsersModel()),
             (new AESService())
                 ->setAES(new AES()),
-            new Validation()
+            new Validation(),
+            (new TaskQueue())
+                ->setRedis(new Redis())
         );
 
         $this->assertIsObject($response);
