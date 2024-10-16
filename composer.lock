@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0e5e2b6edaf95ca29e5130fb1e7256e1",
+    "content-hash": "45a4034db58e4dfbcd43b47945b750db",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -948,16 +948,16 @@
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v1.3.4",
+            "version": "v1.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "61b87392d986dc49ad5ef64e75b1ff5fee24ef81"
+                "reference": "1dc4a3dbfa2b7628a3114e43e32120cce7cdda9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/61b87392d986dc49ad5ef64e75b1ff5fee24ef81",
-                "reference": "61b87392d986dc49ad5ef64e75b1ff5fee24ef81",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/1dc4a3dbfa2b7628a3114e43e32120cce7cdda9c",
+                "reference": "1dc4a3dbfa2b7628a3114e43e32120cce7cdda9c",
                 "shasum": ""
             },
             "require": {
@@ -1005,7 +1005,7 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2024-08-02T07:48:17+00:00"
+            "time": "2024-09-23T13:33:08+00:00"
         },
         {
             "name": "lion/authentication",
@@ -1049,16 +1049,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v17.12.0",
+            "version": "v17.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "76c0ce9beef1f508e2c1dcbb62ec47a81539910c"
+                "reference": "8c09585cc1ca7d7fa45dca9b54c8fa0c2655c306"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/76c0ce9beef1f508e2c1dcbb62ec47a81539910c",
-                "reference": "76c0ce9beef1f508e2c1dcbb62ec47a81539910c",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/8c09585cc1ca7d7fa45dca9b54c8fa0c2655c306",
+                "reference": "8c09585cc1ca7d7fa45dca9b54c8fa0c2655c306",
                 "shasum": ""
             },
             "require": {
@@ -1073,7 +1073,7 @@
                 "fakerphp/faker": "^1.23",
                 "guzzlehttp/guzzle": "^7.8",
                 "lion/command": "^3.1",
-                "lion/database": "^10.2",
+                "lion/database": "^10.3",
                 "lion/dependency-injection": "^2.0",
                 "lion/exceptions": "^1.2",
                 "lion/files": "^7.0",
@@ -1134,7 +1134,7 @@
                 "issues": "https://github.com/lion-packages/framework/issues",
                 "source": "https://github.com/lion-packages/framework"
             },
-            "time": "2024-09-22T20:04:02+00:00"
+            "time": "2024-10-16T13:43:14+00:00"
         },
         {
             "name": "lion/command",
@@ -1177,16 +1177,16 @@
         },
         {
             "name": "lion/database",
-            "version": "v10.2.0",
+            "version": "v10.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/database.git",
-                "reference": "7b8d00a4b022ac490c43c0a0b864703ec9878f99"
+                "reference": "61450f0530116bc0ce83ac56e5a1d7a99a28ab54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/database/zipball/7b8d00a4b022ac490c43c0a0b864703ec9878f99",
-                "reference": "7b8d00a4b022ac490c43c0a0b864703ec9878f99",
+                "url": "https://api.github.com/repos/lion-packages/database/zipball/61450f0530116bc0ce83ac56e5a1d7a99a28ab54",
+                "reference": "61450f0530116bc0ce83ac56e5a1d7a99a28ab54",
                 "shasum": ""
             },
             "require": {
@@ -1214,7 +1214,7 @@
                 "issues": "https://github.com/lion-packages/database/issues",
                 "source": "https://github.com/lion-packages/database"
             },
-            "time": "2024-08-11T22:38:46+00:00"
+            "time": "2024-10-14T19:21:48+00:00"
         },
         {
             "name": "lion/dependency-injection",
@@ -1943,16 +1943,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.9.1",
+            "version": "v6.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "039de174cd9c17a8389754d3b877a2ed22743e18"
+                "reference": "a7b17b42fa4887c92146243f3d2f4ccb962af17c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/039de174cd9c17a8389754d3b877a2ed22743e18",
-                "reference": "039de174cd9c17a8389754d3b877a2ed22743e18",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/a7b17b42fa4887c92146243f3d2f4ccb962af17c",
+                "reference": "a7b17b42fa4887c92146243f3d2f4ccb962af17c",
                 "shasum": ""
             },
             "require": {
@@ -2012,7 +2012,7 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.9.1"
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.9.2"
             },
             "funding": [
                 {
@@ -2020,7 +2020,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-25T22:23:28+00:00"
+            "time": "2024-10-09T10:07:50+00:00"
         },
         {
             "name": "phpoption/phpoption",
