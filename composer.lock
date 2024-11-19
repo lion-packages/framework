@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9ef7d62756cd9d303b204c5946bd3350",
+    "content-hash": "8159f64da0d6514e6f7e1c00f45e17f3",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1049,16 +1049,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v17.18.0",
+            "version": "v17.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "2eeed82fc2e8ecd200c09baf6d421e54b6cac25a"
+                "reference": "a5acb0c13ebf966fdd2004877d08b37abc5c15d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/2eeed82fc2e8ecd200c09baf6d421e54b6cac25a",
-                "reference": "2eeed82fc2e8ecd200c09baf6d421e54b6cac25a",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/a5acb0c13ebf966fdd2004877d08b37abc5c15d6",
+                "reference": "a5acb0c13ebf966fdd2004877d08b37abc5c15d6",
                 "shasum": ""
             },
             "require": {
@@ -1080,7 +1080,7 @@
                 "lion/helpers": "^4.0",
                 "lion/mailer": "^6.3",
                 "lion/request": "^6.9",
-                "lion/route": "^11.4",
+                "lion/route": "^11.5",
                 "lion/security": "^10.0",
                 "monolog/monolog": "^3.3",
                 "nesbot/carbon": "^2.66",
@@ -1137,7 +1137,7 @@
                 "issues": "https://github.com/lion-packages/framework/issues",
                 "source": "https://github.com/lion-packages/framework"
             },
-            "time": "2024-11-18T22:28:18+00:00"
+            "time": "2024-11-19T12:59:26+00:00"
         },
         {
             "name": "lion/command",
@@ -1455,16 +1455,16 @@
         },
         {
             "name": "lion/route",
-            "version": "v11.4.0",
+            "version": "v11.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/route.git",
-                "reference": "279eca4f1e3f9524d25bf7f36bf19af865246688"
+                "reference": "bd58a08d2fc25720b6ec9e04f0a5719749c4f3d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/route/zipball/279eca4f1e3f9524d25bf7f36bf19af865246688",
-                "reference": "279eca4f1e3f9524d25bf7f36bf19af865246688",
+                "url": "https://api.github.com/repos/lion-packages/route/zipball/bd58a08d2fc25720b6ec9e04f0a5719749c4f3d5",
+                "reference": "bd58a08d2fc25720b6ec9e04f0a5719749c4f3d5",
                 "shasum": ""
             },
             "require": {
@@ -1493,9 +1493,9 @@
             "description": "This library has quick router usage with regular expressions.",
             "support": {
                 "issues": "https://github.com/lion-packages/route/issues",
-                "source": "https://github.com/lion-packages/route/tree/v11.4.0"
+                "source": "https://github.com/lion-packages/route/tree/v11.5.0"
             },
-            "time": "2024-11-18T15:03:38+00:00"
+            "time": "2024-11-19T12:47:11+00:00"
         },
         {
             "name": "lion/security",
