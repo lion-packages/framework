@@ -36,24 +36,6 @@ class Test extends TestTest
     }
 
     /**
-     * Remove the $_SERVER header and assert if it does not exist
-     *
-     * @param string $header [Header]
-     *
-     * @return void
-     */
-    final public function assertHeaderNotHasKey(string $header): void
-    {
-        $server = $_SERVER;
-
-        unset($server[$header]);
-
-        $_SERVER = $server;
-
-        $this->assertArrayNotHasKey($header, $_SERVER);
-    }
-
-    /**
      * Checks two aspects of an object that implements the CapsuleInterface
      * interface
      *
