@@ -12,8 +12,10 @@ use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use DI\Attribute\Inject;
 use Lion\Request\Http;
 use Lion\Request\Status;
+use Lion\Security\Exceptions\AESException;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 use stdClass;
@@ -80,9 +82,7 @@ class LoginService
      */
     private JWTService $jWTService;
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setRSA(RSA $rsa): LoginService
     {
         $this->rsa = $rsa;
@@ -90,9 +90,7 @@ class LoginService
         return $this;
     }
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setJWT(JWT $jwt): LoginService
     {
         $this->jwt = $jwt;
@@ -100,9 +98,7 @@ class LoginService
         return $this;
     }
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setLoginModel(LoginModel $loginModel): LoginService
     {
         $this->loginModel = $loginModel;
@@ -110,9 +106,7 @@ class LoginService
         return $this;
     }
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setAuthenticatorModel(AuthenticatorModel $authenticatorModel): LoginService
     {
         $this->authenticatorModel = $authenticatorModel;
@@ -120,9 +114,7 @@ class LoginService
         return $this;
     }
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setAESService(AESService $aESService): LoginService
     {
         $this->aESService = $aESService;
@@ -130,9 +122,7 @@ class LoginService
         return $this;
     }
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setJWTService(JWTService $jWTService): LoginService
     {
         $this->jWTService = $jWTService;
@@ -212,6 +202,8 @@ class LoginService
      * @param Users $users [Capsule for the 'Users' entity]
      *
      * @return array<string, string>
+     *
+     * @throws AESException
      */
     public function generateTokens(Users $users): array
     {

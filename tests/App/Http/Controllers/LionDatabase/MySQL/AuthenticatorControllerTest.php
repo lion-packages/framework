@@ -19,6 +19,7 @@ use Lion\Authentication\Auth2FA;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\AES;
+use Lion\Security\Exceptions\AESException;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 use PHPUnit\Framework\Attributes\Test as Testing;
@@ -156,6 +157,7 @@ class AuthenticatorControllerTest extends Test
      * @throws ProcessException
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
+     * @throws AESException
      */
     #[Testing]
     public function enable2FA(): void

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Services;
 
+use DI\Attribute\Inject;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 use stdClass;
@@ -37,9 +38,7 @@ class JWTService
      */
     private JWT $jwt;
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setRSA(RSA $rsa): JWTService
     {
         $this->rsa = $rsa;
@@ -47,9 +46,7 @@ class JWTService
         return $this;
     }
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setJWT(JWT $jwt): JWTService
     {
         $this->jwt = $jwt;

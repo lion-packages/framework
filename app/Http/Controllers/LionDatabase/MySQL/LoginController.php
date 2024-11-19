@@ -21,6 +21,7 @@ use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Lion\Request\Http;
 use Lion\Route\Attributes\Rules;
+use Lion\Security\Exceptions\AESException;
 use stdClass;
 
 /**
@@ -49,6 +50,7 @@ class LoginController
      *
      * @throws AuthenticationException
      * @throws PasswordException
+     * @throws AESException
      */
     #[Rules(UsersEmailRule::class, UsersPasswordRule::class)]
     public function auth(
@@ -78,8 +80,7 @@ class LoginController
             'email/password is incorrect [AUTH-2]'
         );
 
-        $authenticator2FA = $authenticator2FA
-            ->setIdusers($session->getIdusers());
+        $authenticator2FA = $authenticator2FA->setIdusers($session->getIdusers());
 
         if ($loginService->checkStatus2FA($authenticator2FA)) {
             return warning(NULL_VALUE, Http::ACCEPTED);
@@ -112,6 +113,7 @@ class LoginController
      * @return stdClass
      *
      * @throws ProcessException
+     * @throws AESException
      */
     #[Rules(UsersEmailRule::class, UsersSecretCodeRule::class)]
     public function auth2FA(
@@ -161,6 +163,7 @@ class LoginController
      * @return stdClass
      *
      * @throws AuthenticationException
+     * @throws AESException
      */
     #[Rules(JWTRefreshRule::class)]
     public function refresh(

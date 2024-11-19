@@ -6,6 +6,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Services\AESService;
 use App\Http\Services\JWTService;
+use DI\Attribute\Inject;
 use Lion\Bundle\Exceptions\MiddlewareException;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -34,9 +35,7 @@ class RolesMiddleware
      */
     private JWTService $jWTService;
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setAESService(AESService $aESService): RolesMiddleware
     {
         $this->aESService = $aESService;
@@ -44,9 +43,7 @@ class RolesMiddleware
         return $this;
     }
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setJWTService(JWTService $jWTService): RolesMiddleware
     {
         $this->jWTService = $jWTService;
@@ -56,6 +53,8 @@ class RolesMiddleware
 
     /**
      * Validates if a user has access to this resource
+     *
+     * @param array $roles [Allowed Roles]
      *
      * @return void
      *

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Http\Services\AESService;
+use DI\Attribute\Inject;
 use Lion\Command\Command;
 use Lion\Security\Exceptions\AESException;
 use Symfony\Component\Console\Exception\LogicException;
@@ -29,9 +30,7 @@ class EncryptValueAESCommand extends Command
      */
     private AESService $aESService;
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setAESService(AESService $aESService): EncryptValueAESCommand
     {
         $this->aESService = $aESService;
@@ -64,7 +63,7 @@ class EncryptValueAESCommand extends Command
      * @param OutputInterface $output [OutputInterface is the interface
      * implemented by all Output classes]
      *
-     * @return int [0 if everything went fine, or an exit code]
+     * @return int
      *
      * @throws LogicException [When this abstract method is not implemented]
      * @throws AESException [If encryption fails]
