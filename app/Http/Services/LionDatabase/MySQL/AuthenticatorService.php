@@ -10,6 +10,7 @@ use App\Models\LionDatabase\MySQL\AuthenticatorModel;
 use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use DI\Attribute\Inject;
 use Lion\Authentication\Auth2FA;
 use Lion\Database\Interface\DatabaseCapsuleInterface;
 use Lion\Request\Http;
@@ -43,9 +44,7 @@ class AuthenticatorService
      */
     private Auth2FA $auth2FA;
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setAuthenticatorModel(AuthenticatorModel $authenticatorModel): AuthenticatorService
     {
         $this->authenticatorModel = $authenticatorModel;
@@ -53,9 +52,7 @@ class AuthenticatorService
         return $this;
     }
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setAuth2FA(Auth2FA $auth2FA): AuthenticatorService
     {
         $this->auth2FA = $auth2FA;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use DI\Attribute\Inject;
 use Lion\Bundle\Exceptions\MiddlewareException;
 use Lion\Files\Store;
 use Lion\Request\Http;
@@ -43,9 +44,7 @@ class JWTMiddleware
      */
     private JWT $jwt;
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setStore(Store $store): JWTMiddleware
     {
         $this->store = $store;
@@ -53,9 +52,7 @@ class JWTMiddleware
         return $this;
     }
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setRSA(RSA $rsa): JWTMiddleware
     {
         $this->rsa = $rsa;
@@ -63,9 +60,7 @@ class JWTMiddleware
         return $this;
     }
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setJWT(JWT $jwt): JWTMiddleware
     {
         $this->jwt = $jwt;

@@ -6,17 +6,16 @@ namespace App\Http\Services\LionDatabase\MySQL;
 
 use App\Html\Email\RecoveryAccountHtml;
 use App\Html\Email\VerifyAccountHtml;
+use DI\Attribute\Inject;
 use Exception;
 use App\Exceptions\AccountException;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
-use Lion\Bundle\Enums\LogTypeEnum;
 use Lion\Mailer\Mailer;
 use Lion\Mailer\Priority;
 use Lion\Request\Http;
 use Lion\Request\Status;
-use stdClass;
 
 /**
  * Manage user account processes
@@ -34,9 +33,7 @@ class AccountService
      */
     private UsersModel $usersModel;
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setUsersModel(UsersModel $usersModel): AccountService
     {
         $this->usersModel = $usersModel;

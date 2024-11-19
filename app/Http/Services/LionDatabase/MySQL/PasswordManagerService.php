@@ -7,6 +7,7 @@ namespace App\Http\Services\LionDatabase\MySQL;
 use App\Exceptions\PasswordException;
 use App\Models\LionDatabase\MySQL\PasswordManagerModel;
 use Database\Class\PasswordManager;
+use DI\Attribute\Inject;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\Validation;
@@ -28,9 +29,7 @@ class PasswordManagerService
      */
     private Validation $validation;
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setValidation(Validation $validation): PasswordManagerService
     {
         $this->validation = $validation;

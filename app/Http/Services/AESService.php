@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Services;
 
+use DI\Attribute\Inject;
 use Lion\Security\AES;
 use Lion\Security\Exceptions\AESException;
 
@@ -27,9 +28,7 @@ class AESService
      */
     private AES $aes;
 
-    /**
-     * @required
-     */
+    #[Inject]
     public function setAES(AES $aes): AESService
     {
         $this->aes = $aes;
