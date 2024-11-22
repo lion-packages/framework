@@ -17,7 +17,6 @@ use App\Rules\LionDatabase\MySQL\Users\UsersEmailRule;
 use App\Rules\LionDatabase\MySQL\Users\UsersPasswordRule;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
-use Exception;
 use Lion\Bundle\Helpers\Commands\Schedule\Task;
 use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
 use Lion\Route\Attributes\Rules;
