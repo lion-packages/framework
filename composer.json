@@ -34,12 +34,12 @@
     "require": {
         "php": ">=8.3",
         "lion/authentication": "^4.0",
-        "lion/bundle": "^17.21",
+        "lion/bundle": "^17.22",
         "lion/mailer": "^6.3",
         "symfony/mailer": "^7.1"
     },
     "require-dev": {
-        "lion/test": "^2.1",
+        "lion/test": "^2.2",
         "phpunit/phpunit": "^11.4",
         "robiningelbrecht/phpunit-pretty-print": "^1.3"
     },
