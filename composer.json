@@ -18,7 +18,8 @@
             "App\\": "app/",
             "Database\\Class\\": "database/Class/",
             "Database\\Factory\\": "database/Factory/",
-            "Database\\Seed\\": "database/Seed/"
+            "Database\\Seed\\": "database/Seed/",
+            "Database\\Migrations\\": "database/Migrations/"
         }
     },
     "autoload-dev": {
@@ -33,8 +34,8 @@
     "require": {
         "php": ">=8.3",
         "lion/authentication": "^4.0",
-        "lion/bundle": "^17.20",
-        "phpmailer/phpmailer": "^6.9",
+        "lion/bundle": "^17.21",
+        "lion/mailer": "^6.3",
         "symfony/mailer": "^7.1"
     },
     "require-dev": {
