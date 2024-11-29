@@ -14,31 +14,52 @@ use App\Models\LionDatabase\MySQL\LoginModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
+use Lion\Bundle\Test\Test;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\AES;
+use Lion\Security\Exceptions\AESException;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
-use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use ReflectionException;
 use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class LoginServiceTest extends Test
 {
     use AuthJwtProviderTrait;
-    use SetUpMigrationsAndQueuesProviderTrait;
 
     private const string USERS_EMAIL = 'manager@dev.com';
 
     private LoginService $loginService;
     private UsersModel $usersModel;
 
+    /**
+     * @throws ReflectionException
+     */
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->loginService = (new LoginService())
             ->setRSA(new RSA())
@@ -60,6 +81,9 @@ class LoginServiceTest extends Test
         $this->initReflection($this->loginService);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setRSA(): void
     {
@@ -67,6 +91,9 @@ class LoginServiceTest extends Test
         $this->assertInstanceOf(RSA::class, $this->getPrivateProperty('rsa'));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setJWT(): void
     {
@@ -74,6 +101,9 @@ class LoginServiceTest extends Test
         $this->assertInstanceOf(JWT::class, $this->getPrivateProperty('jwt'));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setLoginModel(): void
     {
@@ -81,6 +111,9 @@ class LoginServiceTest extends Test
         $this->assertInstanceOf(LoginModel::class, $this->getPrivateProperty('loginModel'));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setAuthenticatorModel(): void
     {
@@ -92,6 +125,9 @@ class LoginServiceTest extends Test
         $this->assertInstanceOf(AuthenticatorModel::class, $this->getPrivateProperty('authenticatorModel'));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setAESService(): void
     {
@@ -99,6 +135,9 @@ class LoginServiceTest extends Test
         $this->assertInstanceOf(AESService::class, $this->getPrivateProperty('aESService'));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setJWTService(): void
     {
@@ -154,6 +193,9 @@ class LoginServiceTest extends Test
         $this->assertIsString($token);
     }
 
+    /**
+     * @throws AESException
+     */
     #[Testing]
     public function generateTokens(): void
     {

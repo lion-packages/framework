@@ -9,25 +9,41 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
+use Lion\Bundle\Test\Test;
 use Lion\Request\Http;
 use Lion\Request\Status;
-use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class AuthenticatorModelTest extends Test
 {
     use AuthJwtProviderTrait;
-    use SetUpMigrationsAndQueuesProviderTrait;
 
     private AuthenticatorModel $authenticatorModel;
     private UsersModel $usersModel;
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->authenticatorModel = new AuthenticatorModel();
 

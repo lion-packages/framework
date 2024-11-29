@@ -8,22 +8,37 @@ use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
 use App\Models\LionDatabase\MySQL\ProfileModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
+use Lion\Bundle\Test\Test;
 use Lion\Request\Status;
-use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use stdClass;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class ProfileModelTest extends Test
 {
-    use SetUpMigrationsAndQueuesProviderTrait;
-
     private ProfileModel $profileModel;
     private Users $users;
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->profileModel = new ProfileModel();
 

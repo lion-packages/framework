@@ -19,8 +19,16 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
 use Lion\Bundle\Helpers\Redis;
+use Lion\Bundle\Test\Test;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\AES;
@@ -30,13 +38,10 @@ use Lion\Security\Validation;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
-use Tests\Test;
 
 class PasswordManagerControllerTest extends Test
 {
     use AuthJwtProviderTrait;
-    use SetUpMigrationsAndQueuesProviderTrait;
 
     const string USERS_PASSWORD = 'lion-password';
 
@@ -45,7 +50,18 @@ class PasswordManagerControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->passwordManagerController = new PasswordManagerController();
 
@@ -99,7 +115,7 @@ class PasswordManagerControllerTest extends Test
             $response->message
         );
 
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_email']);
+        $this->assertHttpBodyNotHasKey('users_email');
     }
 
     /**
@@ -214,12 +230,10 @@ class PasswordManagerControllerTest extends Test
             $response->message
         );
 
-        $this->assertArrayNotHasKeyFromList($_POST, [
-            'users_email',
-            'users_password_new',
-            'users_password_confirm',
-            'users_recovery_code',
-        ]);
+        $this->assertHttpBodyNotHasKey('users_email');
+        $this->assertHttpBodyNotHasKey('users_password_new');
+        $this->assertHttpBodyNotHasKey('users_password_confirm');
+        $this->assertHttpBodyNotHasKey('users_recovery_code');
     }
 
     /**
@@ -281,10 +295,8 @@ class PasswordManagerControllerTest extends Test
         $this->assertSame('password updated successfully', $response->message);
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
 
-        $this->assertArrayNotHasKeyFromList($_POST, [
-            'users_password',
-            'users_password_new',
-            'users_password_confirm',
-        ]);
+        $this->assertHttpBodyNotHasKey('users_password');
+        $this->assertHttpBodyNotHasKey('users_password_new');
+        $this->assertHttpBodyNotHasKey('users_password_confirm');
     }
 }

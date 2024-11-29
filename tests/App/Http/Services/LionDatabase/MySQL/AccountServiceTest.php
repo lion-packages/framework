@@ -11,26 +11,29 @@ use App\Http\Services\LionDatabase\MySQL\AccountService;
 use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use Exception as ExceptionGlobal;
 use Lion\Bundle\Helpers\Commands\Schedule\Task;
 use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
 use Lion\Bundle\Helpers\Redis;
-use Lion\Database\Drivers\MySQL as DB;
-use Lion\Database\Drivers\Schema\MySQL as Schema;
+use Lion\Bundle\Test\Test;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
-use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use stdClass;
 use Tests\Providers\App\Http\Services\LionDatabase\MySQL\AccountServiceProviderTrait;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class AccountServiceTest extends Test
 {
     use AccountServiceProviderTrait;
-    use SetUpMigrationsAndQueuesProviderTrait;
 
     const string USERS_EMAIL = 'root@dev.com';
 
@@ -39,7 +42,18 @@ class AccountServiceTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->accountService = (new AccountService())
             ->setUsersModel(new UsersModel());

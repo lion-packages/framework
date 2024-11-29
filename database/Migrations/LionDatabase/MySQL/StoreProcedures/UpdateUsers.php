@@ -2,14 +2,19 @@
 
 declare(strict_types=1);
 
+namespace Database\Migrations\LionDatabase\MySQL\StoreProcedures;
+
 use Lion\Bundle\Interface\Migrations\StoreProcedureInterface;
 use Lion\Database\Drivers\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
+use stdClass;
 
 /**
  * Update users
+ *
+ * @package Database\Migrations\LionDatabase\MySQL\StoreProcedures
  */
-return new class implements StoreProcedureInterface
+class UpdateUsers implements StoreProcedureInterface
 {
     /**
      * {@inheritdoc}
@@ -19,12 +24,19 @@ return new class implements StoreProcedureInterface
         return Schema::connection(env('DB_NAME', 'lion_database'))
             ->createStoreProcedure('update_users', function (): void {
                 Schema::in()->int('_idroles')->null();
+
                 Schema::in()->int('_iddocument_types')->null();
+
                 Schema::in()->varchar('_users_citizen_identification', 25)->null();
+
                 Schema::in()->varchar('_users_name', 25)->null();
+
                 Schema::in()->varchar('_users_last_name', 25)->null();
+
                 Schema::in()->varchar('_users_nickname', 25)->null();
+
                 Schema::in()->varchar('_users_email', 255);
+
                 Schema::in()->int('_idusers');
             }, function (MySQL $db): void {
                 $db

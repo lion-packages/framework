@@ -14,6 +14,7 @@ use Lion\Security\JWT;
 use Lion\Security\RSA;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use ReflectionException;
 use Tests\Providers\AuthJwtProviderTrait;
 
 class JWTMiddlewareTest extends Test
@@ -25,6 +26,9 @@ class JWTMiddlewareTest extends Test
     private JWTMiddleware $jWTMiddleware;
     private string $users_code;
 
+    /**
+     * @throws ReflectionException
+     */
     protected function setUp(): void
     {
         $this->jWTMiddleware = (new JWTMiddleware())
@@ -41,9 +45,12 @@ class JWTMiddlewareTest extends Test
     {
         $this->rmdirRecursively(storage_path(env('RSA_URL_PATH') . "{$this->users_code}/"));
 
-        unset($_SERVER['HTTP_AUTHORIZATION']);
+        $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setStore(): void
     {
@@ -51,6 +58,9 @@ class JWTMiddlewareTest extends Test
         $this->assertInstanceOf(Store::class, $this->getPrivateProperty('store'));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setRSA(): void
     {
@@ -58,6 +68,9 @@ class JWTMiddlewareTest extends Test
         $this->assertInstanceOf(RSA::class, $this->getPrivateProperty('rsa'));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setJWT(): void
     {
@@ -65,6 +78,9 @@ class JWTMiddlewareTest extends Test
         $this->assertInstanceOf(JWT::class, $this->getPrivateProperty('jwt'));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function initRSA(): void
     {

@@ -2,18 +2,23 @@
 
 declare(strict_types=1);
 
+namespace Database\Migrations\LionDatabase\MySQL\Views;
+
 use Lion\Bundle\Interface\Migrations\ViewInterface;
 use Lion\Database\Drivers\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
+use stdClass;
 
 /**
  * View to read users with their data relationships
+ *
+ * @package Database\Migrations\LionDatabase\MySQL\Views
  */
-return new class implements ViewInterface
+class ReadUsers implements ViewInterface
 {
     /**
      * {@inheritdoc}
-     * */
+     */
     public function up(): stdClass
     {
         return Schema::connection(env('DB_NAME', 'lion_database'))

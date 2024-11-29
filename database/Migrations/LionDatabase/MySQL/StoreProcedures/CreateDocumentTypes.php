@@ -2,18 +2,23 @@
 
 declare(strict_types=1);
 
+namespace Database\Migrations\LionDatabase\MySQL\StoreProcedures;
+
 use Lion\Bundle\Interface\Migrations\StoreProcedureInterface;
 use Lion\Database\Drivers\MySQL;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
+use stdClass;
 
 /**
  * Create document types
+ *
+ * @package Database\Migrations\LionDatabase\MySQL\StoreProcedures
  */
-return new class implements StoreProcedureInterface
+class CreateDocumentTypes implements StoreProcedureInterface
 {
     /**
      * {@inheritdoc}
-     * */
+     */
     public function up(): stdClass
     {
         return Schema::connection(env('DB_NAME', 'lion_database'))

@@ -12,6 +12,14 @@ use App\Models\LionDatabase\MySQL\ProfileModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
+use Lion\Bundle\Test\Test;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -21,13 +29,10 @@ use Lion\Security\RSA;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
-use Tests\Test;
 
 class ProfileControllerTest extends Test
 {
     use AuthJwtProviderTrait;
-    use SetUpMigrationsAndQueuesProviderTrait;
 
     private const string USERS_EMAIL = 'root@dev.com';
 
@@ -36,7 +41,18 @@ class ProfileControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->profileController = new ProfileController();
 
@@ -145,7 +161,7 @@ class ProfileControllerTest extends Test
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('profile updated successfully', $response->message);
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_name']);
+        $this->assertHttpBodyNotHasKey('users_name');
 
         /** @var stdClass $user */
         $user = $this->usersModel->readUsersByEmailDB(

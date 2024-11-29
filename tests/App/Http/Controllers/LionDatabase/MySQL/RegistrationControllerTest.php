@@ -14,8 +14,16 @@ use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use Lion\Bundle\Helpers\Commands\Schedule\TaskQueue;
 use Lion\Bundle\Helpers\Redis;
+use Lion\Bundle\Test\Test;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
@@ -25,19 +33,27 @@ use Lion\Security\Validation;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
-use Tests\Test;
 
 class RegistrationControllerTest extends Test
 {
     use AuthJwtProviderTrait;
-    use SetUpMigrationsAndQueuesProviderTrait;
 
     private RegistrationController $registrationController;
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->registrationController = new RegistrationController();
     }
@@ -87,7 +103,8 @@ class RegistrationControllerTest extends Test
             $response->message
         );
 
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_email', 'users_password']);
+        $this->assertHttpBodyNotHasKey('users_email');
+        $this->assertHttpBodyNotHasKey('users_password');
     }
 
     /**
@@ -150,7 +167,7 @@ class RegistrationControllerTest extends Test
             new RegistrationService(),
             (new AccountService())
                 ->setUsersModel(new UsersModel()),
-        );;
+        );
 
         $this->assertIsObject($response);
         $this->assertInstanceOf(stdClass::class, $response);
@@ -163,6 +180,8 @@ class RegistrationControllerTest extends Test
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('user account has been successfully verified', $response->message);
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_email', 'users_password', 'users_activation_code']);
+        $this->assertHttpBodyNotHasKey('users_email');
+        $this->assertHttpBodyNotHasKey('users_password');
+        $this->assertHttpBodyNotHasKey('users_activation_code');
     }
 }
