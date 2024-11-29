@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Tests\App\Http\Services;
 
 use App\Http\Services\JWTService;
+use Lion\Bundle\Test\Test;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use ReflectionException;
 use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
-use Tests\Test;
 
 class JWTServiceTest extends Test
 {
@@ -18,6 +19,9 @@ class JWTServiceTest extends Test
 
     private JWTService $jWTService;
 
+    /**
+     * @throws ReflectionException
+     */
     protected function setUp(): void
     {
         $this->jWTService = (new JWTService())
@@ -27,6 +31,9 @@ class JWTServiceTest extends Test
         $this->initReflection($this->jWTService);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setRSA(): void
     {
@@ -34,6 +41,9 @@ class JWTServiceTest extends Test
         $this->assertInstanceOf(RSA::class, $this->getPrivateProperty('rsa'));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setJWT(): void
     {

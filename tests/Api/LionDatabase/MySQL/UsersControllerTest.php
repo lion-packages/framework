@@ -7,19 +7,24 @@ namespace Tests\Api\LionDatabase\MySQL;
 use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use GuzzleHttp\Exception\GuzzleException;
+use Lion\Bundle\Test\Test;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
 use Lion\Request\Status;
-use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use Tests\Providers\AuthJwtProviderTrait;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class UsersControllerTest extends Test
 {
     use AuthJwtProviderTrait;
-    use SetUpMigrationsAndQueuesProviderTrait;
 
     private const array JSON_UPDATE_USERS = [
         'idroles' => RolesEnum::ADMINISTRATOR->value,
@@ -33,7 +38,18 @@ class UsersControllerTest extends Test
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
     }
 
     /**

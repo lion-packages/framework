@@ -7,22 +7,37 @@ namespace Tests\App\Models\LionDatabase\MySQL;
 use App\Models\LionDatabase\MySQL\LoginModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
-use Lion\Test\Test;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
+use Lion\Bundle\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
 use stdClass;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class LoginModelTest extends Test
 {
-    use SetUpMigrationsAndQueuesProviderTrait;
-
     private const string USERS_EMAIL_ERR = 'sleon@dev.com';
 
     private LoginModel $loginModel;
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->loginModel = new LoginModel();
     }

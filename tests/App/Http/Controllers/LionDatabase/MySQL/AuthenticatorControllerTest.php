@@ -15,7 +15,15 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use Lion\Authentication\Auth2FA;
+use Lion\Bundle\Test\Test;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\AES;
@@ -29,20 +37,28 @@ use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FAQRCode\Google2FA;
 use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
-use Tests\Test;
 
 class AuthenticatorControllerTest extends Test
 {
     use AuthJwtProviderTrait;
-    use SetUpMigrationsAndQueuesProviderTrait;
 
     private AuthenticatorController $authenticatorController;
     private UsersModel $usersModel;
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->authenticatorController = new AuthenticatorController();
 
@@ -96,7 +112,7 @@ class AuthenticatorControllerTest extends Test
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('the password is valid', $response->message);
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_password']);
+        $this->assertHttpBodyNotHasKey('users_password');
     }
 
     #[Testing]
@@ -247,7 +263,8 @@ class AuthenticatorControllerTest extends Test
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('2FA authentication has been enabled', $response->message);
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_2fa_secret', 'users_secret_code']);
+        $this->assertHttpBodyNotHasKey('users_2fa_secret');
+        $this->assertHttpBodyNotHasKey('users_secret_code');
 
         /** @var stdClass $user */
         $user = $this->usersModel->readUsersByEmailDB(
@@ -318,6 +335,6 @@ class AuthenticatorControllerTest extends Test
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('2FA authentication has been disabled', $response->message);
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_secret_code']);
+        $this->assertHttpBodyNotHasKey('users_secret_code');
     }
 }

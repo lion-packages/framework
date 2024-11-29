@@ -20,10 +20,19 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use Lion\Authentication\Auth2FA;
+use Lion\Bundle\Test\Test;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\AES;
+use Lion\Security\Exceptions\AESException;
 use Lion\Security\JWT;
 use Lion\Security\RSA;
 use Lion\Security\Validation;
@@ -34,20 +43,28 @@ use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FAQRCode\Google2FA;
 use stdClass;
 use Tests\Providers\AuthJwtProviderTrait;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
-use Tests\Test;
 
 class LoginControllerTest extends Test
 {
     use AuthJwtProviderTrait;
-    use SetUpMigrationsAndQueuesProviderTrait;
 
     private LoginController $loginController;
     private UsersModel $usersModel;
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->loginController = new LoginController();
 
@@ -57,6 +74,7 @@ class LoginControllerTest extends Test
     /**
      * @throws PasswordException
      * @throws AuthenticationException
+     * @throws AESException
      */
     #[Testing]
     public function auth(): void
@@ -114,12 +132,14 @@ class LoginControllerTest extends Test
         $this->assertSame(Http::OK, $response->code);
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('successfully authenticated user', $response->message);
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_email', 'users_password']);
+        $this->assertHttpBodyNotHasKey('users_email');
+        $this->assertHttpBodyNotHasKey('users_password');
     }
 
     /**
      * @throws PasswordException
      * @throws AuthenticationException
+     * @throws AESException
      */
     #[Testing]
     public function authIsWarning(): void
@@ -167,7 +187,8 @@ class LoginControllerTest extends Test
         $this->assertSame(Http::ACCEPTED, $response->code);
         $this->assertSame(Status::WARNING, $response->status);
         $this->assertNull($response->message);
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_email', 'users_password']);
+        $this->assertHttpBodyNotHasKey('users_email');
+        $this->assertHttpBodyNotHasKey('users_password');
     }
 
     /**
@@ -175,6 +196,7 @@ class LoginControllerTest extends Test
      * @throws ProcessException
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
+     * @throws AESException
      */
     #[Testing]
     public function auth2FA(): void
@@ -233,11 +255,13 @@ class LoginControllerTest extends Test
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('successfully authenticated user', $response->message);
         $this->assertObjectHasProperty('data', $response);
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_email', 'users_secret_code']);
+        $this->assertHttpBodyNotHasKey('users_email');
+        $this->assertHttpBodyNotHasKey('users_secret_code');
     }
 
     /**
      * @throws ProcessException
+     * @throws AESException
      */
     #[Testing]
     public function auth2FAIsError(): void
@@ -280,11 +304,13 @@ class LoginControllerTest extends Test
         $this->assertSame(Http::FORBIDDEN, $response->code);
         $this->assertSame(Status::ERROR, $response->status);
         $this->assertSame('2FA security is not active for this user', $response->message);
-        $this->assertArrayNotHasKeyFromList($_POST, ['users_email', 'users_secret_code']);
+        $this->assertHttpBodyNotHasKey('users_email');
+        $this->assertHttpBodyNotHasKey('users_secret_code');
     }
 
     /**
      * @throws AuthenticationException
+     * @throws AESException
      */
     #[Testing]
     public function refresh(): void
@@ -359,6 +385,6 @@ class LoginControllerTest extends Test
         $this->assertSame(Status::SUCCESS, $response->status);
         $this->assertSame('successfully authenticated user', $response->message);
         $this->assertHeaderNotHasKey('HTTP_AUTHORIZATION');
-        $this->assertArrayNotHasKeyFromList($_POST, ['jwt_refresh']);
+        $this->assertHttpBodyNotHasKey('jwt_refresh');
     }
 }

@@ -6,8 +6,8 @@ namespace Tests\Database\Class\LionDatabase\MySQL;
 
 use Database\Class\LionDatabase\MySQL\DocumentTypes;
 use Lion\Bundle\Interface\CapsuleInterface;
+use Lion\Bundle\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
-use Tests\Test;
 
 class DocumentTypesTest extends Test
 {

@@ -17,6 +17,7 @@ use Lion\Security\JWT;
 use Lion\Security\RSA;
 use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
+use ReflectionException;
 use Tests\Providers\AuthJwtProviderTrait;
 
 class RolesMiddlewareTest extends Test
@@ -25,6 +26,9 @@ class RolesMiddlewareTest extends Test
 
     private RolesMiddleware $rolesMiddleware;
 
+    /**
+     * @throws ReflectionException
+     */
     protected function setUp(): void
     {
         $this->rolesMiddleware = (new RolesMiddleware())
@@ -41,6 +45,9 @@ class RolesMiddlewareTest extends Test
         $this->initReflection($this->rolesMiddleware);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setAESService(): void
     {
@@ -48,6 +55,9 @@ class RolesMiddlewareTest extends Test
         $this->assertInstanceOf(AESService::class, $this->getPrivateProperty('aESService'));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     #[Testing]
     public function setJWTService(): void
     {

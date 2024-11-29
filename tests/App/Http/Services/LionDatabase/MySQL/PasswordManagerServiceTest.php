@@ -9,24 +9,39 @@ use App\Http\Services\LionDatabase\MySQL\PasswordManagerService;
 use App\Models\LionDatabase\MySQL\PasswordManagerModel;
 use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
+use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
+use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
+use Database\Seed\LionDatabase\MySQL\RolesSeed;
+use Database\Seed\LionDatabase\MySQL\UsersSeed;
+use Lion\Bundle\Test\Test;
 use Lion\Exceptions\Exception;
 use Lion\Request\Http;
 use Lion\Request\Status;
 use Lion\Security\Validation;
-use Lion\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
-use Tests\Providers\SetUpMigrationsAndQueuesProviderTrait;
 
 class PasswordManagerServiceTest extends Test
 {
-    use SetUpMigrationsAndQueuesProviderTrait;
-
     private PasswordManagerService $passwordManagerService;
     private Validation $validation;
 
     protected function setUp(): void
     {
-        $this->runMigrations();
+        $this->executeMigrationsGroup([
+            DocumentTypesTable::class,
+            RolesTable::class,
+            UsersTable::class,
+            ReadUsersById::class,
+        ]);
+
+        $this->executeSeedsGroup([
+            DocumentTypesSeed::class,
+            RolesSeed::class,
+            UsersSeed::class,
+        ]);
 
         $this->validation = new Validation();
 

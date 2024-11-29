@@ -7,8 +7,8 @@ namespace Tests\Database\Class;
 use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
 use Lion\Bundle\Interface\CapsuleInterface;
+use Lion\Bundle\Test\Test;
 use PHPUnit\Framework\Attributes\Test as Testing;
-use Tests\Test;
 
 class PasswordManagerTest extends Test
 {
