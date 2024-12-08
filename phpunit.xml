@@ -29,14 +29,6 @@
         <ini name="memory_limit" value="2048M" />
     </php>
 
-    <extensions>
-        <bootstrap class="RobinIngelbrecht\PHPUnitPrettyPrint\PhpUnitExtension">
-            <parameter name="enableByDefault" value="true" />
-            <parameter name="displayProfiling" value="false" />
-            <parameter name="useCompactMode" value="true" />
-        </bootstrap>
-    </extensions>
-
     <source>
         <include>
             <directory suffix=".php">app</directory>
