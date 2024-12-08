@@ -25,8 +25,7 @@ RUN apt-get update -y \
 # Configure PHP-Extensions
 RUN pecl install ev redis xdebug \
     && docker-php-ext-install mbstring gd zip pdo pdo_mysql pdo_pgsql \
-    && docker-php-ext-enable xdebug redis gd zip pdo_pgsql \
-    && a2enmod rewrite
+    && docker-php-ext-enable xdebug redis gd zip pdo_pgsql
 
 # Configure Xdebug
 RUN echo "xdebug.mode=develop,coverage,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
@@ -41,6 +40,10 @@ RUN echo "xdebug.mode=develop,coverage,debug" >> /usr/local/etc/php/conf.d/docke
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Apache config
+RUN a2enmod rewrite \
+    && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 # ----------------------------------------------------------------------------------------------------------------------
 USER lion
 
@@ -60,10 +63,17 @@ USER root
 SHELL ["/bin/bash", "--login", "-c"]
 
 # Install logo-ls
-RUN wget https://github.com/Yash-Handa/logo-ls/releases/download/v1.3.7/logo-ls_amd64.deb \
-    && dpkg -i logo-ls_amd64.deb \
-    && rm logo-ls_amd64.deb \
-    && curl https://raw.githubusercontent.com/UTFeight/logo-ls-modernized/master/INSTALL | bash
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+        wget https://github.com/Yash-Handa/logo-ls/releases/download/v1.3.7/logo-ls_amd64.deb; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        wget https://github.com/Yash-Handa/logo-ls/releases/download/v1.3.7/logo-ls_arm64.deb; \
+    else \
+        echo "Unsupported architecture: $ARCH" && exit 1; \
+    fi && \
+    dpkg -i logo-ls_*.deb && \
+    rm logo-ls_*.deb && \
+    curl https://raw.githubusercontent.com/UTFeight/logo-ls-modernized/master/INSTALL | bash
 
 # Add configuration in .zshrc
 RUN echo 'export NVM_DIR="$HOME/.nvm"' >> /home/lion/.zshrc \
@@ -79,4 +89,5 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # ----------------------------------------------------------------------------------------------------------------------
 # Init Project
 CMD touch storage/logs/server.log storage/logs/socket.log storage/logs/supervisord.log storage/logs/test-coverage.log \
+    && service apache2 restart \
     && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
