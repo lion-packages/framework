@@ -5,29 +5,21 @@ services:
             context: .
             dockerfile: Dockerfile
         extra_hosts:
-            - "host.docker.internal:host-gateway"
-        environment:
-            - DISPLAY=${DISPLAY}
-            - DBUS_SESSION_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
-        devices:
-            - /dev/dri:/dev/dri
+            - host.docker.internal:host-gateway
         ports:
-            - "8000:8000"
-            - "8001:8001"
-            - "8080:8080"
-            - "5173:5173"
-            - "4173:4173"
+            - 80:80
+            - 443:443
+            - 5173:5173
+            - 5174:5174
+        environment:
+            - XDEBUG_PORT=9000
+            - XDEBUG_CLIENT_HOST=host.docker.internal
         volumes:
             - ./:/var/www/html
-            - /var/run/dbus:/var/run/dbus
-            - /tmp/.X11-unix:/tmp/.X11-unix
-            - /dev/dri:/dev/dri
         depends_on:
             - mysql
             - phpmyadmin
             - redis
-        cap_add:
-            - SYS_ADMIN
         networks:
             - lion
 
@@ -36,8 +28,8 @@ services:
         container_name: framework-mailhog
         restart: unless-stopped
         ports:
-            - "8025:8025"
-            - "1025:1025"
+            - 8025:8025
+            - 1025:1025
         networks:
             - lion
 
@@ -46,7 +38,7 @@ services:
         container_name: framework-redis
         restart: always
         ports:
-            - "6379:6379"
+            - 6379:6379
         volumes:
             - redis_data:/data
         environment:
@@ -60,7 +52,7 @@ services:
         image: mysql
         container_name: framework-mysql
         ports:
-            - "3306:3306"
+            - 3306:3306
         environment:
             MYSQL_DATABASE: lion_database
             MYSQL_PASSWORD: lion
@@ -76,7 +68,7 @@ services:
         links:
             - mysql:mysql
         ports:
-            - 80:80
+            - 8080:80
         environment:
             PMA_HOST: mysql
             MYSQL_USER: root
@@ -87,9 +79,9 @@ services:
 
     # postgres:
     #     image: postgres
-    #     container_name: database-postgres
+    #     container_name: framework-postgres
     #     ports:
-    #         - "5432:5432"
+    #         - 5432:5432
     #     environment:
     #         POSTGRES_DB: lion_database
     #         POSTGRES_USER: root
@@ -101,9 +93,9 @@ services:
 
     # pgadmin:
     #     image: dpage/pgadmin4
-    #     container_name: database-pgadmin4
+    #     container_name: framework-pgadmin4
     #     ports:
-    #         - "5050:80"
+    #         - 5050:80
     #     environment:
     #         PGADMIN_DEFAULT_EMAIL: root@dev.com
     #         PGADMIN_DEFAULT_PASSWORD: lion
