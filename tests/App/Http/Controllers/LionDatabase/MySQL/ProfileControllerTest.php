@@ -12,6 +12,7 @@ use App\Models\LionDatabase\MySQL\ProfileModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\UpdateProfile;
 use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
@@ -46,6 +47,7 @@ class ProfileControllerTest extends Test
             RolesTable::class,
             UsersTable::class,
             ReadUsersById::class,
+            UpdateProfile::class,
         ]);
 
         $this->executeSeedsGroup([

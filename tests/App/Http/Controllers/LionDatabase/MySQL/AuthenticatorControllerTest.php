@@ -15,6 +15,7 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\Authenticator2FA;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\Update2fa;
 use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
@@ -23,6 +24,7 @@ use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
 use Database\Seed\LionDatabase\MySQL\RolesSeed;
 use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use Lion\Authentication\Auth2FA;
+use Lion\Bundle\Helpers\Commands\Migrations\Migrations;
 use Lion\Bundle\Test\Test;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -52,6 +54,7 @@ class AuthenticatorControllerTest extends Test
             RolesTable::class,
             UsersTable::class,
             ReadUsersById::class,
+            Update2fa::class,
         ]);
 
         $this->executeSeedsGroup([

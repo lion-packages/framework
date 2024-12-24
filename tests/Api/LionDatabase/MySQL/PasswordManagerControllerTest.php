@@ -7,6 +7,8 @@ namespace Tests\Api\LionDatabase\MySQL;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\UpdatePassword;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\UpdateRecoveryCode;
 use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
@@ -16,6 +18,8 @@ use Database\Seed\LionDatabase\MySQL\RolesSeed;
 use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use Lion\Bundle\Helpers\Http\Fetch;
+use Lion\Bundle\Helpers\Http\FetchConfiguration;
 use Lion\Bundle\Test\Test;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -37,6 +41,8 @@ class PasswordManagerControllerTest extends Test
             RolesTable::class,
             UsersTable::class,
             ReadUsersById::class,
+            UpdatePassword::class,
+            UpdateRecoveryCode::class,
         ]);
 
         $this->executeSeedsGroup([
@@ -52,11 +58,18 @@ class PasswordManagerControllerTest extends Test
     #[Testing]
     public function recoveryPassword(): void
     {
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
-            'json' => [
-                'users_email' => self::USERS_EMAIL,
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
+                'json' => [
+                    'users_email' => self::USERS_EMAIL,
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -74,11 +87,18 @@ class PasswordManagerControllerTest extends Test
     #[Testing]
     public function recoveryPasswordCodeNotNull(): void
     {
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
-            'json' => [
-                'users_email' => self::USERS_EMAIL,
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
+                'json' => [
+                    'users_email' => self::USERS_EMAIL,
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -89,11 +109,18 @@ class PasswordManagerControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function (): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
-                'json' => [
-                    'users_email' => self::USERS_EMAIL,
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
+                    'json' => [
+                        'users_email' => self::USERS_EMAIL,
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -110,11 +137,18 @@ class PasswordManagerControllerTest extends Test
     public function recoveryPasswordIncorrect1(): void
     {
         $exception = $this->getExceptionFromApi(function (): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
-                'json' => [
-                    'users_email' => fake()->email(),
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
+                    'json' => [
+                        'users_email' => fake()->email(),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -130,11 +164,18 @@ class PasswordManagerControllerTest extends Test
     #[Testing]
     public function updateLostPassword(): void
     {
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
-            'json' => [
-                'users_email' => self::USERS_EMAIL,
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
+                'json' => [
+                    'users_email' => self::USERS_EMAIL,
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -160,14 +201,21 @@ class PasswordManagerControllerTest extends Test
             'users_password_confirm' => self::USERS_PASSWORD,
         ]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
-            'json' => [
-                'users_email' => self::USERS_EMAIL,
-                'users_password_new' => $encode['users_password_new'],
-                'users_password_confirm' => $encode['users_password_confirm'],
-                'users_recovery_code' => $user->users_recovery_code,
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
+                'json' => [
+                    'users_email' => self::USERS_EMAIL,
+                    'users_password_new' => $encode['users_password_new'],
+                    'users_password_confirm' => $encode['users_password_confirm'],
+                    'users_recovery_code' => $user->users_recovery_code,
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -201,14 +249,21 @@ class PasswordManagerControllerTest extends Test
                 'users_password_confirm' => self::USERS_PASSWORD,
             ]);
 
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
-                'json' => [
-                    'users_email' => fake()->email(),
-                    'users_password_new' => $encode['users_password_new'],
-                    'users_password_confirm' => $encode['users_password_confirm'],
-                    'users_recovery_code' => fake()->numerify('######'),
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
+                    'json' => [
+                        'users_email' => fake()->email(),
+                        'users_password_new' => $encode['users_password_new'],
+                        'users_password_confirm' => $encode['users_password_confirm'],
+                        'users_recovery_code' => fake()->numerify('######'),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -225,11 +280,18 @@ class PasswordManagerControllerTest extends Test
     #[Testing]
     public function updateLostPasswordInvalid1(): void
     {
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
-            'json' => [
-                'users_email' => self::USERS_EMAIL,
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
+                'json' => [
+                    'users_email' => self::USERS_EMAIL,
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -256,14 +318,21 @@ class PasswordManagerControllerTest extends Test
                 'users_password_confirm' => self::USERS_PASSWORD,
             ]);
 
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
-                'json' => [
-                    'users_email' => self::USERS_EMAIL,
-                    'users_password_new' => $encode['users_password_new'],
-                    'users_password_confirm' => $encode['users_password_confirm'],
-                    'users_recovery_code' => fake()->numerify('######'),
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
+                    'json' => [
+                        'users_email' => self::USERS_EMAIL,
+                        'users_password_new' => $encode['users_password_new'],
+                        'users_password_confirm' => $encode['users_password_confirm'],
+                        'users_recovery_code' => fake()->numerify('######'),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -280,11 +349,18 @@ class PasswordManagerControllerTest extends Test
     #[Testing]
     public function updateLostPasswordIncorrect2(): void
     {
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
-            'json' => [
-                'users_email' => self::USERS_EMAIL,
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/password'), [
+                'json' => [
+                    'users_email' => self::USERS_EMAIL,
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -311,14 +387,21 @@ class PasswordManagerControllerTest extends Test
                 'users_password_confirm' => self::USERS_PASSWORD,
             ]);
 
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
-                'json' => [
-                    'users_email' => self::USERS_EMAIL,
-                    'users_password_new' => $encode['users_password_new'],
-                    'users_password_confirm' => $encode['users_password_confirm'],
-                    'users_recovery_code' => $user->users_recovery_code,
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/recovery/verify-code'), [
+                    'json' => [
+                        'users_email' => self::USERS_EMAIL,
+                        'users_password_new' => $encode['users_password_new'],
+                        'users_password_confirm' => $encode['users_password_confirm'],
+                        'users_recovery_code' => $user->users_recovery_code,
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -352,18 +435,25 @@ class PasswordManagerControllerTest extends Test
             'users_password_confirm' => self::USERS_PASSWORD,
         ]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password'), [
-            'headers' => [
-                'Authorization' => $this->getAuthorization([
-                    'idusers' => $encode['idusers'],
-                ])
-            ],
-            'json' => [
-                'users_password' => $encode['users_password'],
-                'users_password_new' => $encode['users_password_new'],
-                'users_password_confirm' => $encode['users_password_confirm'],
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $encode['idusers'],
+                    ])
+                ],
+                'json' => [
+                    'users_password' => $encode['users_password'],
+                    'users_password_new' => $encode['users_password_new'],
+                    'users_password_confirm' => $encode['users_password_confirm'],
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -399,18 +489,25 @@ class PasswordManagerControllerTest extends Test
                 'users_password_confirm' => self::USERS_PASSWORD,
             ]);
 
-            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $encode['idusers'],
-                    ]),
-                ],
-                'json' => [
-                    'users_password' => $encode['users_password'],
-                    'users_password_new' => $encode['users_password_new'],
-                    'users_password_confirm' => $encode['users_password_confirm'],
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password'), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idusers' => $encode['idusers'],
+                        ]),
+                    ],
+                    'json' => [
+                        'users_password' => $encode['users_password'],
+                        'users_password_new' => $encode['users_password_new'],
+                        'users_password_confirm' => $encode['users_password_confirm'],
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -445,18 +542,25 @@ class PasswordManagerControllerTest extends Test
                 'users_password_confirm' => self::USERS_PASSWORD,
             ]);
 
-            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $encode['idusers'],
-                    ]),
-                ],
-                'json' => [
-                    'users_password' => $encode['users_password'],
-                    'users_password_new' => $encode['users_password_new'],
-                    'users_password_confirm' => $encode['users_password_confirm'],
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/password'), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idusers' => $encode['idusers'],
+                        ]),
+                    ],
+                    'json' => [
+                        'users_password' => $encode['users_password'],
+                        'users_password_new' => $encode['users_password_new'],
+                        'users_password_confirm' => $encode['users_password_confirm'],
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [

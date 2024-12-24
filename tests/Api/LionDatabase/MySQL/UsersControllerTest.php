@@ -7,14 +7,20 @@ namespace Tests\Api\LionDatabase\MySQL;
 use App\Enums\DocumentTypesEnum;
 use App\Enums\RolesEnum;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\CreateUsers;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\DeleteUsers;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\UpdateUsers;
 use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsers;
 use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
 use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
 use Database\Seed\LionDatabase\MySQL\RolesSeed;
 use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use GuzzleHttp\Exception\GuzzleException;
+use Lion\Bundle\Helpers\Http\Fetch;
+use Lion\Bundle\Helpers\Http\FetchConfiguration;
 use Lion\Bundle\Test\Test;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
 use Lion\Request\Http;
@@ -42,7 +48,11 @@ class UsersControllerTest extends Test
             DocumentTypesTable::class,
             RolesTable::class,
             UsersTable::class,
+            ReadUsers::class,
             ReadUsersById::class,
+            CreateUsers::class,
+            UpdateUsers::class,
+            DeleteUsers::class,
         ]);
 
         $this->executeSeedsGroup([
@@ -62,23 +72,30 @@ class UsersControllerTest extends Test
             'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
         ]);
 
-        $response = fetch(Http::POST, env('SERVER_URL') . '/api/users', [
-            'headers' => [
-                'Authorization' => $this->getAuthorization([
-                    'idroles' => $encode['idroles'],
-                ]),
-            ],
-            'json' => [
-                'idroles' => RolesEnum::ADMINISTRATOR->value,
-                'iddocument_types' => DocumentTypesEnum::PASSPORT->value,
-                'users_citizen_identification' => fake()->numerify('##########'),
-                'users_name' => fake()->name(),
-                'users_last_name' => fake()->lastName(),
-                'users_nickname' => fake()->userName(),
-                'users_email' => fake()->email(),
-                'users_password' => UsersFactory::USERS_PASSWORD_HASH,
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, env('SERVER_URL') . '/api/users', [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idroles' => $encode['idroles'],
+                    ]),
+                ],
+                'json' => [
+                    'idroles' => RolesEnum::ADMINISTRATOR->value,
+                    'iddocument_types' => DocumentTypesEnum::PASSPORT->value,
+                    'users_citizen_identification' => fake()->numerify('##########'),
+                    'users_name' => fake()->name(),
+                    'users_last_name' => fake()->lastName(),
+                    'users_nickname' => fake()->userName(),
+                    'users_email' => fake()->email(),
+                    'users_password' => UsersFactory::USERS_PASSWORD_HASH,
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -100,13 +117,20 @@ class UsersControllerTest extends Test
         ]);
 
         $users = json_decode(
-            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idroles' => $encode['idroles'],
-                    ]),
-                ],
-            ])
+            fetch(
+                (new Fetch(Http::GET, env('SERVER_URL') . '/api/users', [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idroles' => $encode['idroles'],
+                        ]),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents(),
             true
@@ -128,13 +152,20 @@ class UsersControllerTest extends Test
             'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
         ]);
 
-        $users = fetch(Http::GET, env('SERVER_URL') . '/api/users', [
-            'headers' => [
-                'Authorization' => $this->getAuthorization([
-                    'idroles' => $encode['idroles'],
-                ]),
-            ],
-        ])
+        $users = fetch(
+            (new Fetch(Http::GET, env('SERVER_URL') . '/api/users', [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idroles' => $encode['idroles'],
+                    ]),
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -156,13 +187,20 @@ class UsersControllerTest extends Test
         ]);
 
         $users = json_decode(
-            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idroles' => $encode['idroles'],
-                    ]),
-                ],
-            ])
+            fetch(
+                (new Fetch(Http::GET, env('SERVER_URL') . '/api/users', [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idroles' => $encode['idroles'],
+                        ]),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents(),
             true
@@ -178,13 +216,20 @@ class UsersControllerTest extends Test
         $this->assertIsInt($firstUser['idusers']);
 
         $user = json_decode(
-            fetch(Http::GET, (env('SERVER_URL') . '/api/users/' . $firstUser['idusers']), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idroles' => $encode['idroles'],
-                    ]),
-                ],
-            ])
+            fetch(
+                (new Fetch(Http::GET, (env('SERVER_URL') . '/api/users/' . $firstUser['idusers']), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idroles' => $encode['idroles'],
+                        ]),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents(),
             true
@@ -209,13 +254,20 @@ class UsersControllerTest extends Test
             'idroles' => (string) RolesEnum::ADMINISTRATOR->value,
         ]);
 
-        $users = fetch(Http::GET, (env('SERVER_URL') . '/api/users/1'), [
-            'headers' => [
-                'Authorization' => $this->getAuthorization([
-                    'idroles' => $encode['idroles'],
-                ]),
-            ],
-        ])
+        $users = fetch(
+            (new Fetch(Http::GET, (env('SERVER_URL') . '/api/users/1'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idroles' => $encode['idroles'],
+                    ]),
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -241,11 +293,18 @@ class UsersControllerTest extends Test
         ]);
 
         $users = json_decode(
-            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
-                'headers' => [
-                    'Authorization' => $token,
-                ],
-            ])
+            fetch(
+                (new Fetch(Http::GET, env('SERVER_URL') . '/api/users', [
+                    'headers' => [
+                        'Authorization' => $token,
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents(),
             true
@@ -260,12 +319,19 @@ class UsersControllerTest extends Test
         $this->assertArrayHasKey('idusers', $firstUser);
         $this->assertIsInt($firstUser['idusers']);
 
-        $response = fetch(Http::PUT, env('SERVER_URL') . '/api/users/' . $firstUser['idusers'], [
-            'json' => self::JSON_UPDATE_USERS,
-            'headers' => [
-                'Authorization' => $token,
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::PUT, env('SERVER_URL') . '/api/users/' . $firstUser['idusers'], [
+                'json' => self::JSON_UPDATE_USERS,
+                'headers' => [
+                    'Authorization' => $token,
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -276,11 +342,18 @@ class UsersControllerTest extends Test
         ]);
 
         $users = json_decode(
-            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
-                'headers' => [
-                    'Authorization' => $token,
-                ],
-            ])
+            fetch(
+                (new Fetch(Http::GET, env('SERVER_URL') . '/api/users', [
+                    'headers' => [
+                        'Authorization' => $token,
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents(),
             true
@@ -315,11 +388,18 @@ class UsersControllerTest extends Test
         ]);
 
         $users = json_decode(
-            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
-                'headers' => [
-                    'Authorization' => $token,
-                ],
-            ])
+            fetch(
+                (new Fetch(Http::GET, env('SERVER_URL') . '/api/users', [
+                    'headers' => [
+                        'Authorization' => $token,
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents(),
             true
@@ -334,11 +414,18 @@ class UsersControllerTest extends Test
         $this->assertArrayHasKey('idusers', $firstUser);
         $this->assertIsInt($firstUser['idusers']);
 
-        $response = fetch(Http::DELETE, env('SERVER_URL') . '/api/users/' . $firstUser['idusers'], [
-            'headers' => [
-                'Authorization' => $token,
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::DELETE, env('SERVER_URL') . '/api/users/' . $firstUser['idusers'], [
+                'headers' => [
+                    'Authorization' => $token,
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -349,11 +436,18 @@ class UsersControllerTest extends Test
         ]);
 
         $users = json_decode(
-            fetch(Http::GET, env('SERVER_URL') . '/api/users', [
-                'headers' => [
-                    'Authorization' => $token,
-                ],
-            ])
+            fetch(
+                (new Fetch(Http::GET, env('SERVER_URL') . '/api/users', [
+                    'headers' => [
+                        'Authorization' => $token,
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents()
         );
