@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Api\LionDatabase\MySQL;
 
 use App\Enums\DocumentTypesEnum;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\UpdateProfile;
 use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
@@ -13,6 +14,8 @@ use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
 use Database\Seed\LionDatabase\MySQL\RolesSeed;
 use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use GuzzleHttp\Exception\GuzzleException;
+use Lion\Bundle\Helpers\Http\Fetch;
+use Lion\Bundle\Helpers\Http\FetchConfiguration;
 use Lion\Bundle\Test\Test;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -33,6 +36,7 @@ class ProfileControllerTest extends Test
             RolesTable::class,
             UsersTable::class,
             ReadUsersById::class,
+            UpdateProfile::class,
         ]);
 
         $this->executeSeedsGroup([
@@ -51,13 +55,20 @@ class ProfileControllerTest extends Test
         $encode = $this->AESEncode(['idusers' => (string) self::IDUSERS]);
 
         $response = json_decode(
-            fetch(Http::GET, (env('SERVER_URL') . '/api/profile'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $encode['idusers'],
-                    ])
-                ]
-            ])
+            fetch(
+                (new Fetch(Http::GET, (env('SERVER_URL') . '/api/profile'), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idusers' => $encode['idusers'],
+                        ])
+                    ]
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents()
         );
@@ -90,20 +101,27 @@ class ProfileControllerTest extends Test
     {
         $encode = $this->AESEncode(['idusers' => (string) self::IDUSERS]);
 
-        $response = fetch(Http::PUT, (env('SERVER_URL') . '/api/profile'), [
-            'headers' => [
-                'Authorization' => $this->getAuthorization([
-                    'idusers' => $encode['idusers'],
-                ]),
-            ],
-            'json' => [
-                'iddocument_types' => DocumentTypesEnum::PASSPORT->value,
-                'users_citizen_identification' => fake()->numerify('##########'),
-                'users_name' => fake()->name(),
-                'users_last_name' => fake()->lastName(),
-                'users_nickname' => fake()->userName(),
-            ]
-        ])
+        $response = fetch(
+            (new Fetch(Http::PUT, (env('SERVER_URL') . '/api/profile'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $encode['idusers'],
+                    ]),
+                ],
+                'json' => [
+                    'iddocument_types' => DocumentTypesEnum::PASSPORT->value,
+                    'users_citizen_identification' => fake()->numerify('##########'),
+                    'users_name' => fake()->name(),
+                    'users_last_name' => fake()->lastName(),
+                    'users_nickname' => fake()->userName(),
+                ]
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 

@@ -15,6 +15,8 @@ use Database\Seed\LionDatabase\MySQL\RolesSeed;
 use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use Lion\Bundle\Helpers\Http\Fetch;
+use Lion\Bundle\Helpers\Http\FetchConfiguration;
 use Lion\Bundle\Test\Test;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -59,12 +61,19 @@ class LoginControllerTest extends Test
         ]);
 
         $response = json_decode(
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
-                'json' => [
-                    'users_email' => UsersFactory::USERS_EMAIL,
-                    'users_password' => $encode['users_password'],
-                ],
-            ])
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
+                    'json' => [
+                        'users_email' => UsersFactory::USERS_EMAIL,
+                        'users_password' => $encode['users_password'],
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents()
         );
@@ -100,12 +109,19 @@ class LoginControllerTest extends Test
         $exception = $this->getExceptionFromApi(function (): void {
             $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
-                'json' => [
-                    'users_email' => 'root-dev@dev.com',
-                    'users_password' => $encode['users_password'],
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
+                    'json' => [
+                        'users_email' => 'root-dev@dev.com',
+                        'users_password' => $encode['users_password'],
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -126,12 +142,19 @@ class LoginControllerTest extends Test
                 'users_password' => UsersFactory::USERS_PASSWORD . '-x',
             ]);
 
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
-                'json' => [
-                    'users_email' => UsersFactory::USERS_EMAIL,
-                    'users_password' => $encode['users_password'],
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
+                    'json' => [
+                        'users_email' => UsersFactory::USERS_EMAIL,
+                        'users_password' => $encode['users_password'],
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -152,12 +175,19 @@ class LoginControllerTest extends Test
                 'users_password' => UsersFactory::USERS_PASSWORD,
             ]);
 
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
-                'json' => [
-                    'users_email' => self::USERS_EMAIL_MANAGER,
-                    'users_password' => $encode['users_password'],
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/login'), [
+                    'json' => [
+                        'users_email' => self::USERS_EMAIL_MANAGER,
+                        'users_password' => $encode['users_password'],
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -177,13 +207,20 @@ class LoginControllerTest extends Test
     public function auth2FA(): void
     {
         $response = json_decode(
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/2fa'), [
-                'json' => [
-                    'users_email' => UsersFactory::USERS_EMAIL_SECURITY,
-                    'users_secret_code' => (new Google2FA())
-                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
-                ],
-            ])
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/2fa'), [
+                    'json' => [
+                        'users_email' => UsersFactory::USERS_EMAIL_SECURITY,
+                        'users_secret_code' => (new Google2FA())
+                            ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents()
         );
@@ -215,13 +252,20 @@ class LoginControllerTest extends Test
     public function auth2FAIsError(): void
     {
         $exception = $this->getExceptionFromApi(function (): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/2fa'), [
-                'json' => [
-                    'users_email' => UsersFactory::USERS_EMAIL,
-                    'users_secret_code' => (new Google2FA())
-                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/2fa'), [
+                    'json' => [
+                        'users_email' => UsersFactory::USERS_EMAIL,
+                        'users_secret_code' => (new Google2FA())
+                            ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -238,12 +282,21 @@ class LoginControllerTest extends Test
     public function auth2FAVerify2FAIsError(): void
     {
         $exception = $this->getExceptionFromApi(function (): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/2fa'), [
-                'json' => [
-                    'users_email' => UsersFactory::USERS_EMAIL_SECURITY,
-                    'users_secret_code' => fake()->numerify('######'),
-                ],
-            ]);
+            fetch(
+                (new Fetch(
+                    Http::POST, (env('SERVER_URL') . '/api/auth/2fa'), [
+                        'json' => [
+                            'users_email' => UsersFactory::USERS_EMAIL_SECURITY,
+                            'users_secret_code' => fake()->numerify('######'),
+                        ],
+                    ]
+                ))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -278,17 +331,24 @@ class LoginControllerTest extends Test
         ]);
 
         $response = json_decode(
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/refresh'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $encode['idusers'],
-                        'idroles' => $encode['idroles'],
-                    ]),
-                ],
-                'json' => [
-                    'jwt_refresh' => $jwtEncode['jwt_refresh'],
-                ],
-            ])
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/refresh'), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idusers' => $encode['idusers'],
+                            'idroles' => $encode['idroles'],
+                        ]),
+                    ],
+                    'json' => [
+                        'jwt_refresh' => $jwtEncode['jwt_refresh'],
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            )
                 ->getBody()
                 ->getContents()
         );

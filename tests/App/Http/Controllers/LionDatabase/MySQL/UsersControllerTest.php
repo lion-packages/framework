@@ -11,9 +11,13 @@ use App\Http\Controllers\LionDatabase\MySQL\UsersController;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\CreateUsers;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\DeleteUsers;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\UpdateUsers;
 use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
+use Database\Migrations\LionDatabase\MySQL\Views\ReadUsers;
 use Database\Migrations\LionDatabase\MySQL\Views\ReadUsersById;
 use Database\Seed\LionDatabase\MySQL\DocumentTypesSeed;
 use Database\Seed\LionDatabase\MySQL\RolesSeed;
@@ -40,7 +44,11 @@ class UsersControllerTest extends Test
             DocumentTypesTable::class,
             RolesTable::class,
             UsersTable::class,
+            ReadUsers::class,
             ReadUsersById::class,
+            CreateUsers::class,
+            DeleteUsers::class,
+            UpdateUsers::class,
         ]);
 
         $this->executeSeedsGroup([

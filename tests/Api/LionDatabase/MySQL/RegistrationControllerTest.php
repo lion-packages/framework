@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Api\LionDatabase\MySQL;
 
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\CreateUsers;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\UpdateActivationCode;
 use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
@@ -14,6 +16,8 @@ use Database\Seed\LionDatabase\MySQL\RolesSeed;
 use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use Lion\Bundle\Helpers\Http\Fetch;
+use Lion\Bundle\Helpers\Http\FetchConfiguration;
 use Lion\Bundle\Test\Test;
 use Lion\Database\Drivers\MySQL as DB;
 use Lion\Database\Drivers\Schema\MySQL as Schema;
@@ -34,6 +38,8 @@ class RegistrationControllerTest extends Test
             RolesTable::class,
             UsersTable::class,
             ReadUsersById::class,
+            CreateUsers::class,
+            UpdateActivationCode::class,
         ]);
 
         $this->executeSeedsGroup([
@@ -53,12 +59,19 @@ class RegistrationControllerTest extends Test
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
-            'json' => [
-                'users_email' => UsersFactory::USERS_EMAIL,
-                'users_password' => $encode['users_password'],
-            ]
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
+                'json' => [
+                    'users_email' => UsersFactory::USERS_EMAIL,
+                    'users_password' => $encode['users_password'],
+                ]
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -78,12 +91,19 @@ class RegistrationControllerTest extends Test
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
-            'json' => [
-                'users_email' => UsersFactory::USERS_EMAIL,
-                'users_password' => $encode['users_password'],
-            ]
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
+                'json' => [
+                    'users_email' => UsersFactory::USERS_EMAIL,
+                    'users_password' => $encode['users_password'],
+                ]
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -94,12 +114,19 @@ class RegistrationControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function () use ($encode): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
-                'json' => [
-                    'users_email' => UsersFactory::USERS_EMAIL,
-                    'users_password' => $encode['users_password'],
-                ]
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
+                    'json' => [
+                        'users_email' => UsersFactory::USERS_EMAIL,
+                        'users_password' => $encode['users_password'],
+                    ]
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -117,12 +144,19 @@ class RegistrationControllerTest extends Test
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
-            'json' => [
-                'users_email' => UsersFactory::USERS_EMAIL,
-                'users_password' => $encode['users_password'],
-            ]
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
+                'json' => [
+                    'users_email' => UsersFactory::USERS_EMAIL,
+                    'users_password' => $encode['users_password'],
+                ]
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -142,12 +176,19 @@ class RegistrationControllerTest extends Test
         $this->assertInstanceOf(stdClass::class, $users_activation_code);
         $this->assertIsString($users_activation_code->users_activation_code);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/verify'), [
-            'json' => [
-                'users_email' => UsersFactory::USERS_EMAIL,
-                'users_activation_code' => $users_activation_code->users_activation_code
-            ]
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/verify'), [
+                'json' => [
+                    'users_email' => UsersFactory::USERS_EMAIL,
+                    'users_activation_code' => $users_activation_code->users_activation_code
+                ]
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -167,12 +208,19 @@ class RegistrationControllerTest extends Test
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
-            'json' => [
-                'users_email' => UsersFactory::USERS_EMAIL,
-                'users_password' => $encode['users_password'],
-            ]
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
+                'json' => [
+                    'users_email' => UsersFactory::USERS_EMAIL,
+                    'users_password' => $encode['users_password'],
+                ]
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -183,12 +231,19 @@ class RegistrationControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function (): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/verify'), [
-                'json' => [
-                    'users_activation_code' => fake()->numerify('######'),
-                    'users_email' => fake()->email()
-                ]
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/verify'), [
+                    'json' => [
+                        'users_activation_code' => fake()->numerify('######'),
+                        'users_email' => fake()->email()
+                    ]
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -207,12 +262,19 @@ class RegistrationControllerTest extends Test
     {
         $encode = $this->AESEncode(['users_password' => UsersFactory::USERS_PASSWORD]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
-            'json' => [
-                'users_email' => UsersFactory::USERS_EMAIL,
-                'users_password' => $encode['users_password'],
-            ]
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/register'), [
+                'json' => [
+                    'users_email' => UsersFactory::USERS_EMAIL,
+                    'users_password' => $encode['users_password'],
+                ]
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -223,12 +285,19 @@ class RegistrationControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function (): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/auth/verify'), [
-                'json' => [
-                    'users_email' => UsersFactory::USERS_EMAIL,
-                    'users_activation_code' => fake()->numerify('######'),
-                ]
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/auth/verify'), [
+                    'json' => [
+                        'users_email' => UsersFactory::USERS_EMAIL,
+                        'users_activation_code' => fake()->numerify('######'),
+                    ]
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [

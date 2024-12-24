@@ -19,6 +19,8 @@ use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Class\PasswordManager;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\UpdatePassword;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\UpdateRecoveryCode;
 use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
@@ -55,6 +57,8 @@ class PasswordManagerControllerTest extends Test
             RolesTable::class,
             UsersTable::class,
             ReadUsersById::class,
+            UpdatePassword::class,
+            UpdateRecoveryCode::class,
         ]);
 
         $this->executeSeedsGroup([

@@ -14,6 +14,8 @@ use App\Models\LionDatabase\MySQL\RegistrationModel;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\CreateUsers;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\UpdateActivationCode;
 use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
@@ -47,6 +49,8 @@ class RegistrationControllerTest extends Test
             RolesTable::class,
             UsersTable::class,
             ReadUsersById::class,
+            CreateUsers::class,
+            UpdateActivationCode::class,
         ]);
 
         $this->executeSeedsGroup([

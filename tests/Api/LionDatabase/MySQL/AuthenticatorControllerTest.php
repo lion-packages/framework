@@ -7,6 +7,7 @@ namespace Tests\Api\LionDatabase\MySQL;
 use App\Models\LionDatabase\MySQL\UsersModel;
 use Database\Class\LionDatabase\MySQL\Users;
 use Database\Factory\LionDatabase\MySQL\UsersFactory;
+use Database\Migrations\LionDatabase\MySQL\StoreProcedures\Update2fa;
 use Database\Migrations\LionDatabase\MySQL\Tables\DocumentTypes as DocumentTypesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Roles as RolesTable;
 use Database\Migrations\LionDatabase\MySQL\Tables\Users as UsersTable;
@@ -16,6 +17,8 @@ use Database\Seed\LionDatabase\MySQL\RolesSeed;
 use Database\Seed\LionDatabase\MySQL\UsersSeed;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use Lion\Bundle\Helpers\Http\Fetch;
+use Lion\Bundle\Helpers\Http\FetchConfiguration;
 use Lion\Bundle\Test\Test;
 use Lion\Request\Http;
 use Lion\Request\Status;
@@ -40,6 +43,7 @@ class AuthenticatorControllerTest extends Test
             RolesTable::class,
             UsersTable::class,
             ReadUsersById::class,
+            Update2fa::class,
         ]);
 
         $this->executeSeedsGroup([
@@ -73,16 +77,23 @@ class AuthenticatorControllerTest extends Test
             'users_password' => UsersFactory::USERS_PASSWORD,
         ]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/verify'), [
-            'headers' => [
-                'Authorization' => $this->getAuthorization([
-                    'idusers' => $aesEncode['idusers'],
-                ]),
-            ],
-            'json' => [
-                'users_password' => $aesEncode['users_password'],
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/verify'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $aesEncode['idusers'],
+                    ]),
+                ],
+                'json' => [
+                    'users_password' => $aesEncode['users_password'],
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -116,16 +127,23 @@ class AuthenticatorControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function () use ($aesEncode): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/verify'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $aesEncode['idusers'],
-                    ]),
-                ],
-                'json' => [
-                    'users_password' => $aesEncode['users_password'],
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/verify'), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idusers' => $aesEncode['idusers'],
+                        ]),
+                    ],
+                    'json' => [
+                        'users_password' => $aesEncode['users_password'],
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -153,15 +171,22 @@ class AuthenticatorControllerTest extends Test
         $this->assertIsInt($user->idusers);
 
         $response = json_decode(
-            fetch(Http::GET, (env('SERVER_URL') . '/api/profile/2fa/qr'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization(
-                        $this->AESEncode([
-                            'idusers' => (string) $user->idusers,
+            fetch(
+                (new Fetch(Http::GET, (env('SERVER_URL') . '/api/profile/2fa/qr'), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization(
+                            $this->AESEncode([
+                                'idusers' => (string) $user->idusers,
+                            ])
+                        ),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
                         ])
-                    ),
-                ],
-            ])
+                    )
+            )
                 ->getBody()
                 ->getContents()
         );
@@ -211,18 +236,25 @@ class AuthenticatorControllerTest extends Test
             'users_2fa_secret' => UsersFactory::SECURITY_KEY_2FA,
         ]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
-            'headers' => [
-                'Authorization' => $this->getAuthorization([
-                    'idusers' => $aesEncode['idusers'],
-                ]),
-            ],
-            'json' => [
-                'users_2fa_secret' => $aesEncode['users_2fa_secret'],
-                'users_secret_code' => (new Google2FA())
-                    ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $aesEncode['idusers'],
+                    ]),
+                ],
+                'json' => [
+                    'users_2fa_secret' => $aesEncode['users_2fa_secret'],
+                    'users_secret_code' => (new Google2FA())
+                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -256,18 +288,25 @@ class AuthenticatorControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function () use ($aesEncode): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $aesEncode['idusers'],
-                    ]),
-                ],
-                'json' => [
-                    'users_2fa_secret' => $aesEncode['users_2fa_secret'],
-                    'users_secret_code' => (new Google2FA())
-                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idusers' => $aesEncode['idusers'],
+                        ]),
+                    ],
+                    'json' => [
+                        'users_2fa_secret' => $aesEncode['users_2fa_secret'],
+                        'users_secret_code' => (new Google2FA())
+                            ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -300,17 +339,24 @@ class AuthenticatorControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function () use ($aesEncode): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $aesEncode['idusers'],
-                    ]),
-                ],
-                'json' => [
-                    'users_2fa_secret' => $aesEncode['users_2fa_secret'],
-                    'users_secret_code' => '000000',
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/enable'), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idusers' => $aesEncode['idusers'],
+                        ]),
+                    ],
+                    'json' => [
+                        'users_2fa_secret' => $aesEncode['users_2fa_secret'],
+                        'users_secret_code' => '000000',
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -344,17 +390,24 @@ class AuthenticatorControllerTest extends Test
             'idusers' => (string) $user->idusers,
         ]);
 
-        $response = fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
-            'headers' => [
-                'Authorization' => $this->getAuthorization([
-                    'idusers' => $aesEncode['idusers'],
-                ]),
-            ],
-            'json' => [
-                'users_secret_code' => (new Google2FA())
-                    ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
-            ],
-        ])
+        $response = fetch(
+            (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
+                'headers' => [
+                    'Authorization' => $this->getAuthorization([
+                        'idusers' => $aesEncode['idusers'],
+                    ]),
+                ],
+                'json' => [
+                    'users_secret_code' => (new Google2FA())
+                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                ],
+            ]))
+                ->setFetchConfiguration(
+                    new FetchConfiguration([
+                        'verify' => false,
+                    ])
+                )
+        )
             ->getBody()
             ->getContents();
 
@@ -387,17 +440,24 @@ class AuthenticatorControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function () use ($aesEncode): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $aesEncode['idusers'],
-                    ]),
-                ],
-                'json' => [
-                    'users_secret_code' => (new Google2FA())
-                        ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idusers' => $aesEncode['idusers'],
+                        ]),
+                    ],
+                    'json' => [
+                        'users_secret_code' => (new Google2FA())
+                            ->getCurrentOtp(UsersFactory::SECURITY_KEY_2FA),
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
@@ -429,16 +489,23 @@ class AuthenticatorControllerTest extends Test
         ]);
 
         $exception = $this->getExceptionFromApi(function () use ($aesEncode): void {
-            fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
-                'headers' => [
-                    'Authorization' => $this->getAuthorization([
-                        'idusers' => $aesEncode['idusers'],
-                    ]),
-                ],
-                'json' => [
-                    'users_secret_code' => '000000',
-                ],
-            ]);
+            fetch(
+                (new Fetch(Http::POST, (env('SERVER_URL') . '/api/profile/2fa/disable'), [
+                    'headers' => [
+                        'Authorization' => $this->getAuthorization([
+                            'idusers' => $aesEncode['idusers'],
+                        ]),
+                    ],
+                    'json' => [
+                        'users_secret_code' => '000000',
+                    ],
+                ]))
+                    ->setFetchConfiguration(
+                        new FetchConfiguration([
+                            'verify' => false,
+                        ])
+                    )
+            );
         });
 
         $this->assertJsonContent($this->getResponse($exception->getMessage(), 'response:'), [
