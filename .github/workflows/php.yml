@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: "0 11 * * *"
+    - cron: "15 0 * * *"
 
 jobs:
   composer-validation:
@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -31,10 +31,37 @@ jobs:
       - name: Composer Dump-Autoload
         run: composer dump-autoload --optimize --strict-psr
 
-  php-project:
+  code-analyze:
     runs-on: ubuntu-latest
-    name: "PHP Project"
+    name: PHP Code Analyze
     needs: composer-validation
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, gd, zip
+
+      - name: Composer Install
+        run: composer install
+
+      - name: PHP Code Snifer (App)
+        run: php vendor/bin/phpcs --standard=PSR12 app/
+
+      - name: PHP Code Snifer (Database)
+        run: php vendor/bin/phpcs --standard=PSR12 database/
+
+      - name: PHP Code Snifer (Tests)
+        run: php vendor/bin/phpcs --standard=PSR12 --ignore=tests/build/\*,tests/bootstrap.php --colors tests/
+
+  tests:
+    runs-on: ubuntu-latest
+    name: "PHP Tests"
+    needs: code-analyze
 
     services:
       mysql:
@@ -50,6 +77,7 @@ jobs:
           --health-timeout=5s
           --health-retries=3
 
+
       redis:
         image: redis:6
         ports:
@@ -63,7 +91,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
