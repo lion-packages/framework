@@ -36,4 +36,4 @@ class UpdateDocumentTypes implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

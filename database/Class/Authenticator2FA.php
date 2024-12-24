@@ -29,47 +29,47 @@ class Authenticator2FA implements CapsuleInterface
      */
     private string $entity = '';
 
-	/**
-	 * [Property for idusers]
-	 *
-	 * @var int|null $idusers
-	 */
-	private ?int $idusers = null;
+    /**
+     * [Property for idusers]
+     *
+     * @var int|null $idusers
+     */
+    private ?int $idusers = null;
 
-	/**
-	 * [Property for users_2fa]
-	 *
-	 * @var int|null $users_2fa
-	 */
-	private ?int $users_2fa = null;
+    /**
+     * [Property for users_2fa]
+     *
+     * @var int|null $users_2fa
+     */
+    private ?int $users_2fa = null;
 
-	/**
-	 * [Property for users_2fa_secret]
-	 *
-	 * @var string|null $users_2fa_secret
-	 */
-	private ?string $users_2fa_secret = null;
+    /**
+     * [Property for users_2fa_secret]
+     *
+     * @var string|null $users_2fa_secret
+     */
+    private ?string $users_2fa_secret = null;
 
-	/**
-	 * [Property for users_secret_code]
-	 *
-	 * @var string|null $users_secret_code
-	 */
-	private ?string $users_secret_code = null;
+    /**
+     * [Property for users_secret_code]
+     *
+     * @var string|null $users_secret_code
+     */
+    private ?string $users_secret_code = null;
 
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function capsule(): Authenticator2FA
-	{
-		$this
-			->setIdusers(request('idusers'))
-			->setUsers2fa(request('users_2fa'))
-			->setUsers2faSecret(request('users_2fa_secret'))
-			->setUsersSecretCode(request('users_secret_code'));
+    /**
+     * {@inheritdoc}
+     * */
+    public function capsule(): Authenticator2FA
+    {
+        $this
+            ->setIdusers(request('idusers'))
+            ->setUsers2fa(request('users_2fa'))
+            ->setUsers2faSecret(request('users_2fa_secret'))
+            ->setUsersSecretCode(request('users_secret_code'));
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Getter method for 'idusers'

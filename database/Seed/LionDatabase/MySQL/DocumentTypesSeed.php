@@ -21,7 +21,7 @@ class DocumentTypesSeed implements SeedInterface
      *
      * @const INDEX
      */
-    const INDEX = 1;
+    public const ?int INDEX = 1;
 
     /**
      * {@inheritdoc}

@@ -48,7 +48,7 @@ class UsersActivationCodeOptionalRule extends Rules implements RulesInterface
      * @var bool $disabled;
      */
     public bool $disabled = true;
- 
+
     /**
      * {@inheritdoc}
      */

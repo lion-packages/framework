@@ -18,40 +18,40 @@ use Lion\Bundle\Traits\CapsuleTrait;
  */
 class DocumentTypes implements CapsuleInterface
 {
-	use CapsuleTrait;
+    use CapsuleTrait;
 
-	/**
+    /**
      * [Entity name]
      *
      * @var string $entity
      */
     private string $entity = 'document_types';
 
-	/**
-	 * [Property for iddocument_types]
-	 *
-	 * @var int|null $iddocument_types
-	 */
-	private ?int $iddocument_types = null;
+    /**
+     * [Property for iddocument_types]
+     *
+     * @var int|null $iddocument_types
+     */
+    private ?int $iddocument_types = null;
 
-	/**
-	 * [Property for document_types_name]
-	 *
-	 * @var string|null $document_types_name
-	 */
-	private ?string $document_types_name = null;
+    /**
+     * [Property for document_types_name]
+     *
+     * @var string|null $document_types_name
+     */
+    private ?string $document_types_name = null;
 
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function capsule(): DocumentTypes
-	{
-		$this
-			->setIddocumentTypes(request('iddocument_types'))
-			->setDocumentTypesName(request('document_types_name'));
+    /**
+     * {@inheritdoc}
+     * */
+    public function capsule(): DocumentTypes
+    {
+        $this
+            ->setIddocumentTypes(request('iddocument_types'))
+            ->setDocumentTypesName(request('document_types_name'));
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Getter method for 'iddocument_types'

@@ -14,7 +14,7 @@ enum RolesEnum: int
     /**
      * [Administrator role]
      */
-	case ADMINISTRATOR = 1;
+    case ADMINISTRATOR = 1;
 
     /**
      * [Manager role]
@@ -31,8 +31,8 @@ enum RolesEnum: int
      *
      * @return array<int>
      */
-	public static function values(): array
-	{
-		return array_map(fn($value) => $value->value, self::cases());
-	}
+    public static function values(): array
+    {
+        return array_map(fn($value) => $value->value, self::cases());
+    }
 }

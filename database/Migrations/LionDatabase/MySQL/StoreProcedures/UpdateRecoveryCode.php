@@ -36,4 +36,4 @@ class UpdateRecoveryCode implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

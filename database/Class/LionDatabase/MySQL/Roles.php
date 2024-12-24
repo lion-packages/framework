@@ -19,48 +19,48 @@ use Lion\Bundle\Traits\CapsuleTrait;
  */
 class Roles implements CapsuleInterface
 {
-	use CapsuleTrait;
+    use CapsuleTrait;
 
-	/**
+    /**
      * [Entity name]
      *
      * @var string $entity
      */
     private string $entity = 'roles';
 
-	/**
-	 * [Property for idroles]
-	 *
-	 * @var int|null $idroles
-	 */
-	private ?int $idroles = null;
+    /**
+     * [Property for idroles]
+     *
+     * @var int|null $idroles
+     */
+    private ?int $idroles = null;
 
-	/**
-	 * [Property for roles_name]
-	 *
-	 * @var string|null $roles_name
-	 */
-	private ?string $roles_name = null;
+    /**
+     * [Property for roles_name]
+     *
+     * @var string|null $roles_name
+     */
+    private ?string $roles_name = null;
 
-	/**
-	 * [Property for roles_description]
-	 *
-	 * @var string|null $roles_description
-	 */
-	private ?string $roles_description = null;
+    /**
+     * [Property for roles_description]
+     *
+     * @var string|null $roles_description
+     */
+    private ?string $roles_description = null;
 
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function capsule(): Roles
-	{
-		$this
-			->setIdroles(request('idroles'))
-			->setRolesName(request('roles_name'))
-			->setRolesDescription(request('roles_description'));
+    /**
+     * {@inheritdoc}
+     * */
+    public function capsule(): Roles
+    {
+        $this
+            ->setIdroles(request('idroles'))
+            ->setRolesName(request('roles_name'))
+            ->setRolesDescription(request('roles_description'));
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Getter method for 'idroles'

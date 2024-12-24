@@ -60,4 +60,4 @@ class Users implements TableInterface
             })
             ->execute();
     }
-};
+}

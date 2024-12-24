@@ -284,7 +284,9 @@ class LoginControllerTest extends Test
         $exception = $this->getExceptionFromApi(function (): void {
             fetch(
                 (new Fetch(
-                    Http::POST, (env('SERVER_URL') . '/api/auth/2fa'), [
+                    Http::POST,
+                    (env('SERVER_URL') . '/api/auth/2fa'),
+                    [
                         'json' => [
                             'users_email' => UsersFactory::USERS_EMAIL_SECURITY,
                             'users_secret_code' => fake()->numerify('######'),

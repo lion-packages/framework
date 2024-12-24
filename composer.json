@@ -40,7 +40,8 @@
     },
     "require-dev": {
         "lion/test": "^2.2",
-        "phpunit/phpunit": "^11.4"
+        "phpunit/phpunit": "^11.4",
+        "squizlabs/php_codesniffer": "^3.11"
     },
     "scripts": {
         "post-root-package-install": [

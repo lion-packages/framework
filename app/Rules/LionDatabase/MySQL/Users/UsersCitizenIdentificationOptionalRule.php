@@ -48,7 +48,7 @@ class UsersCitizenIdentificationOptionalRule extends Rules implements RulesInter
      * @var bool $disabled;
      */
     public bool $disabled = true;
- 
+
     /**
      * {@inheritdoc}
      */

@@ -39,4 +39,4 @@ class Update2fa implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

@@ -36,4 +36,4 @@ class CreateRoles implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

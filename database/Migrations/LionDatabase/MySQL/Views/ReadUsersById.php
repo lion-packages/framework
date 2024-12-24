@@ -55,4 +55,4 @@ class ReadUsersById implements ViewInterface
             })
             ->execute();
     }
-};
+}

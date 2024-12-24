@@ -69,4 +69,4 @@ class CreateUsers implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

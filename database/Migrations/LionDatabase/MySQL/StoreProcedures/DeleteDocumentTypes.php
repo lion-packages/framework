@@ -32,4 +32,4 @@ class DeleteDocumentTypes implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

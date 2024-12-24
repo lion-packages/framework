@@ -32,4 +32,4 @@ class DeleteUsers implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

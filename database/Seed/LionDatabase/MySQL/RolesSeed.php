@@ -21,7 +21,7 @@ class RolesSeed implements SeedInterface
      *
      * @const INDEX
      */
-    const INDEX = 2;
+    public const ?int INDEX = 2;
 
     /**
      * {@inheritdoc}
