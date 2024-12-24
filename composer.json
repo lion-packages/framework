@@ -34,7 +34,7 @@
     "require": {
         "php": ">=8.3",
         "lion/authentication": "^4.0",
-        "lion/bundle": "^17.22",
+        "lion/bundle": "^17.23",
         "lion/mailer": "^6.3",
         "symfony/mailer": "^7.1"
     },
