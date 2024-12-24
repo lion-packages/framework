@@ -21,7 +21,7 @@ class UsersSeed implements SeedInterface
      *
      * @const INDEX
      */
-    const INDEX = 3;
+    public const ?int INDEX = 3;
 
     /**
      * {@inheritdoc}

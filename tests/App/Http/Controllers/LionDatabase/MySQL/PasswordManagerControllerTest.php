@@ -45,7 +45,7 @@ class PasswordManagerControllerTest extends Test
 {
     use AuthJwtProviderTrait;
 
-    const string USERS_PASSWORD = 'lion-password';
+    private const string USERS_PASSWORD = 'lion-password';
 
     private PasswordManagerController $passwordManagerController;
     private UsersModel $usersModel;

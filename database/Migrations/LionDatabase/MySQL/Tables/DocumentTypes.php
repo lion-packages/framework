@@ -35,4 +35,4 @@ class DocumentTypes implements TableInterface
             })
             ->execute();
     }
-};
+}

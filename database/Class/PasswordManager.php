@@ -29,47 +29,47 @@ class PasswordManager implements CapsuleInterface
      */
     private string $entity = '';
 
-	/**
-	 * [Property for idusers]
-	 *
-	 * @var int|null $idusers
-	 */
-	private ?int $idusers = null;
+    /**
+     * [Property for idusers]
+     *
+     * @var int|null $idusers
+     */
+    private ?int $idusers = null;
 
-	/**
-	 * [Property for users_password]
-	 *
-	 * @var string|null $users_password
-	 */
-	private ?string $users_password = null;
+    /**
+     * [Property for users_password]
+     *
+     * @var string|null $users_password
+     */
+    private ?string $users_password = null;
 
-	/**
-	 * [Property for users_password_new]
-	 *
-	 * @var string|null $users_password_new
-	 */
-	private ?string $users_password_new = null;
+    /**
+     * [Property for users_password_new]
+     *
+     * @var string|null $users_password_new
+     */
+    private ?string $users_password_new = null;
 
-	/**
-	 * [Property for users_password_confirm]
-	 *
-	 * @var string|null $users_password_confirm
-	 */
-	private ?string $users_password_confirm = null;
+    /**
+     * [Property for users_password_confirm]
+     *
+     * @var string|null $users_password_confirm
+     */
+    private ?string $users_password_confirm = null;
 
-	/**
-	 * {@inheritdoc}
-	 * */
-	public function capsule(): PasswordManager
-	{
-		$this
-			->setIdusers(request('idusers'))
-			->setUsersPassword(request('users_password'))
-			->setUsersPasswordNew(request('users_password_new'))
-			->setUsersPasswordConfirm(request('users_password_confirm'));
+    /**
+     * {@inheritdoc}
+     * */
+    public function capsule(): PasswordManager
+    {
+        $this
+            ->setIdusers(request('idusers'))
+            ->setUsersPassword(request('users_password'))
+            ->setUsersPasswordNew(request('users_password_new'))
+            ->setUsersPasswordConfirm(request('users_password_confirm'));
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Getter method for 'idusers'

@@ -48,4 +48,4 @@ class UpdateProfile implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

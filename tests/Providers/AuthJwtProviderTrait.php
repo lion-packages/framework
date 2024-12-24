@@ -12,8 +12,8 @@ use Lion\Security\RSA;
 
 trait AuthJwtProviderTrait
 {
-    const int AVAILABLE_USERS = 3;
-    const int REMAINING_USERS = 2;
+    public const int AVAILABLE_USERS = 3;
+    public const int REMAINING_USERS = 2;
 
     private function generateKeys(string $path): void
     {
@@ -50,7 +50,7 @@ trait AuthJwtProviderTrait
 
     private function getAuthorization(array $data = []): string
     {
-        $token = (new JWT)
+        $token = (new JWT())
             ->config([
                 'privateKey' => (new RSA())
                     ->setUrlPath(storage_path(env('RSA_URL_PATH')))
@@ -68,7 +68,7 @@ trait AuthJwtProviderTrait
 
     private function getCustomAuthorization(string $path, array $data = []): string
     {
-        $token = (new JWT)
+        $token = (new JWT())
             ->config([
                 'privateKey' => (new RSA())
                     ->setUrlPath(storage_path(env('RSA_URL_PATH')) . $path)

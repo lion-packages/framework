@@ -34,19 +34,47 @@ class RecoveryAccountHtml extends Html implements HtmlInterface
                         <td align="center">
                             <table cellpadding="0" cellspacing="0" border="0" width="600">
                                 <tr>
-                                    <td align="center" bgcolor="#ffffff" style="padding: 40px 0 30px 0; color: #333; font-size: 24px; font-weight: bold; font-family: Arial, sans-serif;">
+                                    <td
+                                        align="center"
+                                        bgcolor="#ffffff"
+                                        style="
+                                            padding: 40px 0 30px 0;
+                                            color: #333;
+                                            font-size: 24px;
+                                            font-weight: bold;
+                                            font-family: Arial, sans-serif;
+                                        "
+                                    >
                                         Recovery code
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td align="center" bgcolor="#ffffff" style="padding: 20px 30px 40px 30px; color: #333; font-size: 16px; font-family: Arial, sans-serif;">
+                                    <td
+                                        align="center"
+                                        bgcolor="#ffffff"
+                                        style="
+                                            padding: 20px 30px 40px 30px;
+                                            color: #333;
+                                            font-size: 16px;
+                                            font-family: Arial, sans-serif;
+                                        "
+                                    >
                                         <p>This is your recovery code!</p>
                                         <p>Your recovery code is: <strong>{{ CODE_REPLACE }}</strong></p>
                                         <p>Enter this code on the confirmation page to recover your password.</p>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td align="center" bgcolor="#ffffff" style="padding: 20px 30px 40px 30px; color: #333; font-size: 14px; font-family: Arial, sans-serif;">
+                                    <td
+                                        align="center"
+                                        bgcolor="#ffffff"
+                                        style="
+                                            padding: 20px 30px 40px 30px;
+                                            color: #333;
+                                            font-size: 14px;
+                                            font-family: Arial, sans-serif;
+                                        "
+                                    >
                                         If you didn't request this confirmation, please ignore this message.
                                     </td>
                                 </tr>

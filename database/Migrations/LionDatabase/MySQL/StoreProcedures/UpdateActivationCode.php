@@ -36,4 +36,4 @@ class UpdateActivationCode implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

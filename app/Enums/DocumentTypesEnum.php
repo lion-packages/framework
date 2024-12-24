@@ -14,7 +14,7 @@ enum DocumentTypesEnum: int
     /**
      * [Identification document]
      */
-	case CITIZENSHIP_CARD = 1;
+    case CITIZENSHIP_CARD = 1;
 
     /**
      * [Passport]
@@ -26,8 +26,8 @@ enum DocumentTypesEnum: int
      *
      * @return array<int>
      */
-	public static function values(): array
-	{
-		return array_map(fn($value) => $value->value, self::cases());
-	}
+    public static function values(): array
+    {
+        return array_map(fn($value) => $value->value, self::cases());
+    }
 }

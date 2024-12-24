@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * -----------------------------------------------------------------------------
  * Helpers
@@ -9,6 +7,8 @@ declare(strict_types=1);
  * Declare your helpers for your web application
  * -----------------------------------------------------------------------------
  */
+
+declare(strict_types=1);
 
 if (!function_exists('helloWorld')) {
     function helloWorld(): string

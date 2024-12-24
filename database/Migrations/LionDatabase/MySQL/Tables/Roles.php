@@ -20,7 +20,7 @@ class Roles implements TableInterface
      *
      * @const INDEX
      */
-    private const ?int INDEX = 2;
+    public const ?int INDEX = 2;
 
     /**
      * {@inheritdoc}
@@ -37,4 +37,4 @@ class Roles implements TableInterface
             })
             ->execute();
     }
-};
+}

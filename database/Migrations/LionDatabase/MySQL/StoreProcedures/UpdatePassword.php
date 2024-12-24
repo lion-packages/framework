@@ -36,4 +36,4 @@ class UpdatePassword implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

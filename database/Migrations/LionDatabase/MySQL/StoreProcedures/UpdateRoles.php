@@ -38,4 +38,4 @@ class UpdateRoles implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

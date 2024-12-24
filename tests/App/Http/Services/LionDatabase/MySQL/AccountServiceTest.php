@@ -35,7 +35,7 @@ class AccountServiceTest extends Test
 {
     use AccountServiceProviderTrait;
 
-    const string USERS_EMAIL = 'root@dev.com';
+    private const string USERS_EMAIL = 'root@dev.com';
 
     private AccountService $accountService;
     private TaskQueue $taskQueue;

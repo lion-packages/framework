@@ -33,4 +33,4 @@ class CreateDocumentTypes implements StoreProcedureInterface
             })
             ->execute();
     }
-};
+}

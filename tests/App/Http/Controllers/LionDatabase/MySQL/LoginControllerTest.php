@@ -232,7 +232,7 @@ class LoginControllerTest extends Test
             (new AuthenticatorService())
                 ->setAuthenticatorModel(new AuthenticatorModel())
                 ->setAuth2FA(new Auth2FA())
-            );
+        );
 
         $this->assertIsObject($response);
         $this->assertInstanceOf(stdClass::class, $response);

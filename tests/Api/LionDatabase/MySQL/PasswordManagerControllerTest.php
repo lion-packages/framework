@@ -187,7 +187,7 @@ class PasswordManagerControllerTest extends Test
 
         /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
-            (new Users)
+            (new Users())
                 ->setUsersEmail(self::USERS_EMAIL)
         );
 
@@ -227,7 +227,7 @@ class PasswordManagerControllerTest extends Test
 
         /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
-            (new Users)
+            (new Users())
                 ->setUsersEmail(self::USERS_EMAIL)
         );
 
@@ -303,7 +303,7 @@ class PasswordManagerControllerTest extends Test
 
         /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
-            (new Users)
+            (new Users())
                 ->setUsersEmail(self::USERS_EMAIL)
         );
 
@@ -372,7 +372,7 @@ class PasswordManagerControllerTest extends Test
 
         /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
-            (new Users)
+            (new Users())
                 ->setUsersEmail(self::USERS_EMAIL)
         );
 
@@ -419,7 +419,7 @@ class PasswordManagerControllerTest extends Test
     {
         /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
-            (new Users)
+            (new Users())
                 ->setUsersEmail(self::USERS_EMAIL)
         );
 
@@ -472,7 +472,7 @@ class PasswordManagerControllerTest extends Test
     {
         /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
-            (new Users)
+            (new Users())
                 ->setUsersEmail(self::USERS_EMAIL)
         );
 
@@ -525,7 +525,7 @@ class PasswordManagerControllerTest extends Test
     {
         /** @var stdClass $user */
         $user = (new UsersModel())->readUsersByEmailDB(
-            (new Users)
+            (new Users())
                 ->setUsersEmail(self::USERS_EMAIL)
         );
 

@@ -35,4 +35,4 @@ class ReadUsers implements ViewInterface
             })
             ->execute();
     }
-};
+}
