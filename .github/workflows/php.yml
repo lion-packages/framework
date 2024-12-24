@@ -1,0 +1,132 @@
+name: Lion-Framework (CI Workflow)
+
+on:
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 11 * * *"
+
+jobs:
+  composer-validation:
+    runs-on: ubuntu-latest
+    name: Composer Validation
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, gd, zip
+
+      - name: Composer Validate
+        run: composer validate --strict
+
+      - name: Composer Install
+        run: composer install
+
+      - name: Composer Dump-Autoload
+        run: composer dump-autoload --optimize --strict-psr
+
+  php-project:
+    runs-on: ubuntu-latest
+    name: "PHP Project"
+    needs: composer-validation
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: lion
+          MYSQL_DATABASE: lion_database
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=localhost --password=$MYSQL_ROOT_PASSWORD"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+      redis:
+        image: redis:6
+        ports:
+          - 6379:6379
+
+      mailhog:
+        image: mailhog/mailhog
+        ports:
+          - 8025:8025
+          - 1025:1025
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Stop MySQL
+        run: sudo systemctl stop mysql
+
+      - name: Tear down containers
+        run: docker compose down --volumes --remove-orphans
+
+      - name: Stop running Docker containers (if any)
+        run: |
+          docker ps -q | xargs -r docker stop
+          docker ps -aq | xargs -r docker rm
+
+      - name: Copy .env.example to .env
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          else
+            echo ".env.example not found! Please make sure the file exists."
+            exit 1
+          fi
+
+      - name: Build the Docker image
+        run: docker build -t framework-app .
+
+      - name: Start services using Docker Compose
+        run: |
+          docker compose -f docker-compose.yml up -d
+        env:
+          COMPOSE_PROJECT_NAME: framework
+
+      - name: Wait for MySQL to be ready
+        run: |
+          until docker exec framework-mysql mysqladmin --user=root --password=lion --host "localhost" ping --silent; do
+            echo "Waiting for MySQL to be available..."
+            sleep 3
+          done
+
+      - name: Wait for Redis to be ready
+        run: |
+          until docker exec framework-redis redis-cli ping; do
+            echo "Waiting for Redis to be available..."
+            sleep 3
+          done
+
+      - name: Install Composer dependencies
+        run: docker exec framework-app composer install
+
+      - name: Generate RSA Key's
+        run: docker exec framework-app php lion new:rsa
+
+      - name: Run PHP tests
+        run: docker exec framework-app php lion test
+
+      - name: Tear down containers
+        run: docker compose down --volumes --remove-orphans
