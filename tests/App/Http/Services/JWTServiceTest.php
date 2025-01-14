@@ -85,7 +85,7 @@ class JWTServiceTest extends Test
     #[Testing]
     public function decode(): void
     {
-        $token = str->of($this->getAuthorization())->replace('Bearer', '')->trim()->get();
+        $token = STR->of($this->getAuthorization())->replace('Bearer', '')->trim()->get();
 
         $data = $this->jWTService->decode(env('RSA_URL_PATH'), $token);
 

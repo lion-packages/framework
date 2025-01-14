@@ -61,7 +61,7 @@ class UsersController
                 ->capsule()
                 ->setUsersPassword($validation->passwordHash($users->getUsersPassword()))
                 ->setUsersActivationCode(fake()->numerify('######'))
-                ->setUsersRecoveryCode(NULL_VALUE)
+                ->setUsersRecoveryCode(null)
                 ->setUsersCode(uniqid('code-'))
                 ->setUsers2fa(UsersFactory::DISABLED_2FA)
                 ->setUsers2faSecret()

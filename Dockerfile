@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 ARG DEBIAN_FRONTEND=noninteractive
 # ----------------------------------------------------------------------------------------------------------------------
@@ -8,8 +8,8 @@ USER root
 RUN useradd -m lion && echo 'lion:lion' | chpasswd && usermod -aG sudo lion && usermod -s /bin/bash lion
 # Dependencies ---------------------------------------------------------------------------------------------------------
 RUN apt-get update -y \
-    && apt-get install -y sudo nano zsh git default-mysql-client curl wget unzip cron sendmail golang-go supervisor \
-    && apt-get install -y libpq-dev libpng-dev libzip-dev zlib1g-dev libonig-dev libevent-dev libssl-dev systemctl \
+    && apt-get install -y sudo nano zsh git default-mysql-client curl wget unzip cron sendmail golang-go systemctl \
+    && apt-get install -y libpq-dev libpng-dev libzip-dev zlib1g-dev libonig-dev libevent-dev libssl-dev \
     && apt-get install -y ca-certificates \
     && apt-get clean \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
@@ -48,7 +48,6 @@ RUN a2enmod rewrite ssl \
         -keyout /etc/ssl/private/apache-selfsigned.key \
         -out /etc/ssl/certs/apache-selfsigned.crt \
         -subj "/C=US/ST=State/L=City/O=Lion-Packages/OU=Lion/CN=localhost/emailAddress=root@dev.com" \
-    && cp /etc/ssl/certs/apache-selfsigned.crt /usr/local/share/ca-certificates/selfsigned.crt \
     && update-ca-certificates \
     && echo "\n\
 <VirtualHost *:80> \n\

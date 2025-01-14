@@ -129,7 +129,7 @@ class RegistrationController
 
         $accountService->updateActivationCode(
             $users
-                ->setUsersActivationCode(NULL_VALUE)
+                ->setUsersActivationCode(null)
                 ->setIdusers($data->idusers)
         );
 

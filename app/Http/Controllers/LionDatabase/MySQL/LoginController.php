@@ -83,12 +83,12 @@ class LoginController
         $authenticator2FA = $authenticator2FA->setIdusers($session->getIdusers());
 
         if ($loginService->checkStatus2FA($authenticator2FA)) {
-            return warning(NULL_VALUE, Http::ACCEPTED);
+            return warning(null, Http::ACCEPTED);
         }
 
         return success('successfully authenticated user', Http::OK, [
             'auth_2fa' => false,
-            'full_name' => str
+            'full_name' => STR
                 ->of("{$session->getUsersName()} {$session->getUsersLastName()}")
                 ->trim()
                 ->toNull()
@@ -138,7 +138,7 @@ class LoginController
 
         return success('successfully authenticated user', Http::OK, [
             'auth_2fa' => true,
-            'full_name' => str
+            'full_name' => STR
                 ->of("{$session->getUsersName()} {$session->getUsersLastName()}")
                 ->trim()
                 ->toNull()
