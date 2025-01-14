@@ -105,7 +105,7 @@ class AuthenticatorController
 
         $qr2fa = $auth2FA->qr(env('APP_NAME'), $user->users_email);
 
-        return success(NULL_VALUE, Http::OK, (object) $aESService->encode([
+        return success(null, Http::OK, (object) $aESService->encode([
             'qr' => $qr2fa->data->qr,
             'secret' => $qr2fa->data->secretKey,
         ]));

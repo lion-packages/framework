@@ -129,7 +129,7 @@ class JWTMiddleware
 
         $splitToken = explode('.', $this->jwt->getJWT());
 
-        if (arr->of($splitToken)->length() != 3) {
+        if (ARR->of($splitToken)->length() != 3) {
             throw new MiddlewareException('invalid JWT [AUTH-1]', Status::SESSION_ERROR, Http::UNAUTHORIZED);
         }
 

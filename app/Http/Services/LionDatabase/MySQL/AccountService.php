@@ -53,7 +53,7 @@ class AccountService
      */
     public function checkRecoveryCodeInactive(Users $users): void
     {
-        if (NULL_VALUE != $users->getUsersRecoveryCode()) {
+        if (null != $users->getUsersRecoveryCode()) {
             throw new AccountException(
                 'a verification code has already been sent to this account',
                 Status::ERROR,

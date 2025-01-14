@@ -321,7 +321,7 @@ class LoginControllerTest extends Test
         ]);
 
         $jwtEncode = $this->AESEncode([
-            'jwt_refresh' => str->of(
+            'jwt_refresh' => STR->of(
                 $this->getAuthorization([
                     'session' => true,
                     'idusers' => $encode['idusers'],
