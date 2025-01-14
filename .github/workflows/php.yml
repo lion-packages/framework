@@ -1,6 +1,9 @@
 name: Lion-Framework (CI Workflow)
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -16,17 +19,28 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer
+
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: mbstring, gd, zip
+
+      - name: Composer Install
+        run: composer install
 
       - name: Composer Validate
         run: composer validate --strict
 
-      - name: Composer Install
-        run: composer install
+      - name: Composer Check for vulnerabilities
+        run: composer audit --locked
 
       - name: Composer Dump-Autoload
         run: composer dump-autoload --optimize --strict-psr
@@ -34,7 +48,8 @@ jobs:
   code-analyze:
     runs-on: ubuntu-latest
     name: PHP Code Analyze
-    needs: composer-validation
+    needs:
+      - composer-validation
 
     steps:
       - name: Check out the repository
@@ -43,45 +58,50 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: mbstring, gd, zip
 
       - name: Composer Install
         run: composer install
 
-      - name: PHP Code Snifer (App)
-        run: php vendor/bin/phpcs --standard=PSR12 app/
+      - name: PHP CodeSnifer (App)
+        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 app
 
-      - name: PHP Code Snifer (Database)
-        run: php vendor/bin/phpcs --standard=PSR12 database/
+      - name: PHP CodeSnifer (Database)
+        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 database
 
-      - name: PHP Code Snifer (Tests)
-        run: php vendor/bin/phpcs --standard=PSR12 --ignore=tests/build/\*,tests/bootstrap.php --colors tests/
+      - name: PHP CodeSnifer (Tests)
+        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 --ignore=tests/build/\*,tests/bootstrap.php --colors tests
+
+        # - name: PHPStan (Src)
+        # run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max src
 
   tests:
     runs-on: ubuntu-latest
-    name: "PHP Tests"
-    needs: code-analyze
+    name: PHP Tests
+    needs:
+      - composer-validation
+      - code-analyze
 
     services:
-      mysql:
-        image: mysql:8
-        env:
-          MYSQL_ROOT_PASSWORD: lion
-          MYSQL_DATABASE: lion_database
+      redis:
+        image: redis
         ports:
-          - 3306:3306
+          - 6379:6379
+
+      mysql:
+        image: mysql
         options: >-
-          --health-cmd="mysqladmin ping --host=localhost --password=$MYSQL_ROOT_PASSWORD"
+          --health-cmd="mysqladmin ping"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
-
-
-      redis:
-        image: redis:6
         ports:
-          - 6379:6379
+          - 3306:3306
+        env:
+          MYSQL_DATABASE: lion_database
+          MYSQL_ROOT_PASSWORD: lion
+          MYSQL_PASSWORD: lion
 
       mailhog:
         image: mailhog/mailhog
@@ -93,68 +113,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Cache Docker layers
-        uses: actions/cache@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+          php-version: 8.4
+          extensions: mbstring, gd, zip, pdo, pdo_mysql, pdo_pgsql, redis, xdebug
+          coverage: xdebug
+          ini-values: |
+            xdebug.mode=develop,coverage,debug
+            xdebug.start_with_request=yes
+            xdebug.log_level=0
+          tools: composer
 
-      - name: Stop MySQL
-        run: sudo systemctl stop mysql
-
-      - name: Tear down containers
-        run: docker compose down --volumes --remove-orphans
-
-      - name: Stop running Docker containers (if any)
+      - name: Copy .env.actions to .env
         run: |
-          docker ps -q | xargs -r docker stop
-          docker ps -aq | xargs -r docker rm
-
-      - name: Copy .env.example to .env
-        run: |
-          if [ -f .env.example ]; then
-            cp .env.example .env
+          if [ -f .env.actions ]; then
+            cp .env.actions .env
           else
-            echo ".env.example not found! Please make sure the file exists."
+            echo ".env.actions not found! Please make sure the file exists."
             exit 1
           fi
 
-      - name: Build the Docker image
-        run: docker build -t framework-app .
+      - name: Install php dependencies
+        run: composer install
 
-      - name: Start services using Docker Compose
-        run: |
-          docker compose -f docker-compose.yml up -d
-        env:
-          COMPOSE_PROJECT_NAME: framework
-
-      - name: Wait for MySQL to be ready
-        run: |
-          until docker exec framework-mysql mysqladmin --user=root --password=lion --host "localhost" ping --silent; do
-            echo "Waiting for MySQL to be available..."
-            sleep 3
-          done
-
-      - name: Wait for Redis to be ready
-        run: |
-          until docker exec framework-redis redis-cli ping; do
-            echo "Waiting for Redis to be available..."
-            sleep 3
-          done
-
-      - name: Install Composer dependencies
-        run: docker exec framework-app composer install
+      - name: Start PHP built-in server
+        run: nohup php -S 0.0.0.0:8000 -t public &
 
       - name: Generate RSA Key's
-        run: docker exec framework-app php lion new:rsa
+        run: php lion new:rsa
 
-      - name: Run PHP tests
-        run: docker exec framework-app php lion test
-
-      - name: Tear down containers
-        run: docker compose down --volumes --remove-orphans
+      - name: Run tests
+        run: php lion test
