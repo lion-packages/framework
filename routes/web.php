@@ -20,7 +20,7 @@ use Lion\Route\Route;
 
 Route::middleware(['https'], function (): void {
     Route::get('/', fn (): stdClass => info('[index]'));
-    
+
     Route::prefix('api', function (): void {
         Route::prefix('auth', function (): void {
             Route::post('login', [LoginController::class, 'auth']);
