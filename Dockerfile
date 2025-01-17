@@ -111,5 +111,5 @@ RUN echo 'export NVM_DIR="$HOME/.nvm"' >> /home/lion/.zshrc \
 # Copy Data ------------------------------------------------------------------------------------------------------------
 COPY . .
 # Permissions ----------------------------------------------------------------------------------------------------------
-RUN chown -R lion:lion /var/www/html \
-    && chmod -R u=rwX,go=rX /var/www/html
+RUN chown -R lion:lion /var/www/html/public \
+    && chmod -R u=rwX,go=rX /var/www/html/public
