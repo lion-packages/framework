@@ -6,6 +6,7 @@ use App\Enums\RolesEnum;
 use App\Http\Middleware\JWTMiddleware;
 use App\Http\Middleware\RolesMiddleware;
 use Lion\Bundle\Helpers\Http\Routes;
+use Lion\Bundle\Middleware\HttpsMiddleware;
 use Lion\Bundle\Middleware\RouteMiddleware;
 use Lion\Route\Middleware;
 
@@ -24,6 +25,11 @@ Routes::setMiddleware([
      */
 
     new Middleware('protect-route-list', RouteMiddleware::class, 'protectRouteList'),
+
+    /**
+     * [Filters that request via HTTPS]
+     */
+    new Middleware('https', HttpsMiddleware::class, 'https'),
 
     /**
      * [Filters to validate different states with JWT]

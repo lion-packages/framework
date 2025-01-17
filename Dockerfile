@@ -48,6 +48,7 @@ RUN a2enmod rewrite ssl \
         -keyout /etc/ssl/private/apache-selfsigned.key \
         -out /etc/ssl/certs/apache-selfsigned.crt \
         -subj "/C=US/ST=State/L=City/O=Lion-Packages/OU=Lion/CN=localhost/emailAddress=root@dev.com" \
+    && cp /etc/ssl/certs/apache-selfsigned.crt /usr/local/share/ca-certificates/selfsigned.crt \
     && update-ca-certificates \
     && echo "\n\
 <VirtualHost *:80> \n\
@@ -110,5 +111,5 @@ RUN echo 'export NVM_DIR="$HOME/.nvm"' >> /home/lion/.zshrc \
 # Copy Data ------------------------------------------------------------------------------------------------------------
 COPY . .
 # Permissions ----------------------------------------------------------------------------------------------------------
-RUN chown -R lion:lion /var/www/html \
-    && chmod -R u=rwX,go=rX /var/www/html
+RUN chown -R lion:lion /var/www/html/public \
+    && chmod -R u=rwX,go=rX /var/www/html/public
