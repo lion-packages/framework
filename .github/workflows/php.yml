@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - new
   pull_request:
     branches:
       - main
@@ -213,9 +212,6 @@ jobs:
 
       - name: Generate RSA Key's
         run: php lion new:rsa
-
-      - name: Check Server
-        run: curl -k https://localhost
 
       - name: Run tests
         run: php lion test --report
