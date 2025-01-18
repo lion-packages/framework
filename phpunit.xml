@@ -12,7 +12,7 @@
     stopOnError="true"
     stopOnFailure="true"
     stopOnWarning="true"
-    bootstrap="tests/bootstrap.php"
+    bootstrap="config/bootstrap.test.php"
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.1/phpunit.xsd"
     backupStaticProperties="false"
     displayDetailsOnIncompleteTests="true"
