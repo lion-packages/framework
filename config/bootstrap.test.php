@@ -36,7 +36,7 @@ if (isSuccess((new Store())->exist(__DIR__ . '/../.env'))) {
  * -----------------------------------------------------------------------------
  * Database initialization
  * -----------------------------------------------------------------------------
- * */
+ */
 
 include_once(__DIR__ . '/../config/database.php');
 
@@ -44,7 +44,7 @@ include_once(__DIR__ . '/../config/database.php');
  * -----------------------------------------------------------------------------
  * Email initialization
  * -----------------------------------------------------------------------------
- * */
+ */
 
 include_once(__DIR__ . '/../config/email.php');
 
@@ -54,4 +54,4 @@ include_once(__DIR__ . '/../config/email.php');
  * -----------------------------------------------------------------------------
  */
 
-date_default_timezone_set($_ENV['SERVER_DATE_TIMEZONE']);
+date_default_timezone_set(env('SERVER_DATE_TIMEZONE', 'America/Bogota'));
