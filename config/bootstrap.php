@@ -39,7 +39,7 @@ if (isSuccess((new Store())->exist(__DIR__ . '/../.env'))) {
  * -----------------------------------------------------------------------------
  */
 
-require_once(__DIR__ . '/../config/cors.php');
+require_once __DIR__ . '/../config/cors.php';
 
 /**
  * -----------------------------------------------------------------------------
@@ -47,7 +47,7 @@ require_once(__DIR__ . '/../config/cors.php');
  * -----------------------------------------------------------------------------
  */
 
-include_once(__DIR__ . '/../config/database.php');
+include_once __DIR__ . '/../config/database.php';
 
 /**
  * -----------------------------------------------------------------------------
@@ -55,7 +55,7 @@ include_once(__DIR__ . '/../config/database.php');
  * -----------------------------------------------------------------------------
  */
 
-include_once(__DIR__ . '/../config/email.php');
+include_once __DIR__ . '/../config/email.php';
 
 /**
  * -----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ Route::init();
 
 Route::addMiddleware(Routes::getMiddleware());
 
-include_once(__DIR__ . '/../routes/web.php');
+include_once __DIR__ . '/../routes/web.php';
 
 Route::get('route-list', fn () => Route::getFullRoutes(), ['protect-route-list']);
 

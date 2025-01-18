@@ -15,7 +15,7 @@ define('IS_INDEX', false);
  * -----------------------------------------------------------------------------
  */
 
-require_once(__DIR__ . '/../vendor/autoload.php');
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
 use Lion\Files\Store;
@@ -38,7 +38,7 @@ if (isSuccess((new Store())->exist(__DIR__ . '/../.env'))) {
  * -----------------------------------------------------------------------------
  */
 
-include_once(__DIR__ . '/../config/database.php');
+include_once __DIR__ . '/../config/database.php';
 
 /**
  * -----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ include_once(__DIR__ . '/../config/database.php');
  * -----------------------------------------------------------------------------
  */
 
-include_once(__DIR__ . '/../config/email.php');
+include_once __DIR__ . '/../config/email.php';
 
 /**
  * -----------------------------------------------------------------------------
