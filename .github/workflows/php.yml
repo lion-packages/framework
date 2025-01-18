@@ -216,6 +216,24 @@ jobs:
       - name: Run tests
         run: php lion test --report
 
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: tests/build/logs/clover.xml
+
+  code-coverage:
+    runs-on: ubuntu-latest
+    name: Code Coverage
+    needs:
+      - tests
+
+    steps:
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
