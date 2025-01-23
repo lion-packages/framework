@@ -35,7 +35,7 @@
         "php": ">=8.4",
         "bacon/bacon-qr-code": "^3.0",
         "lion/authentication": "^5.0",
-        "lion/bundle": "^18.1",
+        "lion/bundle": "^18.2",
         "lion/mailer": "^7.0",
         "pragmarx/google2fa-qrcode": "^3.0",
         "symfony/mailer": "^7.2"
