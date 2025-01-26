@@ -1,0 +1,61 @@
+name: Discord Notification
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Assignees Environment Variable
+        id: assignes
+        run: |
+          if [ "${{ github.event.pull_request.assignees }}" == "[]" ]; then
+            echo "ASSIGNEES=No Assigned Users" >> $GITHUB_ENV
+          else
+            # Extraemos los logins de los asignados con un simple comando de texto
+            ASSIGNEES=$(echo "${{ github.event.pull_request.assignees }}" | sed 's/[^a-zA-Z0-9, ]//g' | tr -s ' ' | tr ',' '\n' | tr '\n' ', ' | sed 's/, $//')
+            echo "ASSIGNEES=$ASSIGNEES" >> $GITHUB_ENV
+          fi
+
+      - name: Send notification to Discord
+        env:
+          DISCORD_WEBHOOK_URL_LION_FRAMEWORK: ${{ secrets.DISCORD_WEBHOOK_URL_LION_FRAMEWORK }}
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{
+            "embeds": [
+              {
+                "title": "${{ github.event.pull_request.title }}",
+                "description": "**PR Link:** [#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})",
+                "fields": [
+                  {
+                    "name": "Author",
+                    "value": "${{ github.event.pull_request.user.login }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Created At",
+                    "value": "${{ github.event.pull_request.created_at }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Assigned To",
+                    "value": "${{ env.ASSIGNEES }}",
+                    "inline": true
+                  }
+                ],
+                "color": 3066993,
+                "footer": {
+                  "text": "Lion-Framework",
+                  "icon_url": "https://avatars.githubusercontent.com/u/139179826?s=200&v=4"
+                }
+              }
+            ]
+          }' \
+          "$DISCORD_WEBHOOK_URL_LION_FRAMEWORK"
