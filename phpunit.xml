@@ -13,7 +13,7 @@
     stopOnFailure="true"
     stopOnWarning="true"
     bootstrap="config/bootstrap.test.php"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.1/phpunit.xsd"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.0/phpunit.xsd"
     backupStaticProperties="false"
     displayDetailsOnIncompleteTests="true"
     displayDetailsOnSkippedTests="true"
@@ -24,6 +24,7 @@
 >
     <php>
         <env name="APP_ENV" value="testing" />
+
         <ini name="date.timezone" value="America/Bogota" />
         <ini name="intl.default_locale" value="C.UTF-8" />
         <ini name="memory_limit" value="2048M" />
@@ -37,6 +38,7 @@
 
         <exclude>
             <directory suffix=".php">app/Html</directory>
+            <directory suffix=".php">app/Interfaces</directory>
             <directory suffix=".php">app/Rules</directory>
             <directory suffix=".php">app/Sockets</directory>
         </exclude>
@@ -44,28 +46,7 @@
 
     <testsuites>
         <testsuite name="All-Test">
-            <directory suffix=".php">tests/Api</directory>
-            <directory suffix=".php">tests/App</directory>
-            <directory suffix=".php">tests/Database</directory>
-        </testsuite>
-
-        <testsuite name="Unit">
-            <directory suffix=".php">tests/App/Enums</directory>
-            <directory suffix=".php">tests/App/Exceptions</directory>
-            <directory suffix=".php">tests/App/Interfaces</directory>
-            <directory suffix=".php">tests/Database</directory>
-        </testsuite>
-
-        <testsuite name="Integration">
-            <directory suffix=".php">tests/App/Console/Commands</directory>
-            <directory suffix=".php">tests/App/Http/Controllers</directory>
-            <directory suffix=".php">tests/App/Http/Middleware</directory>
-            <directory suffix=".php">tests/App/Http/Services</directory>
-            <directory suffix=".php">tests/App/Models</directory>
-        </testsuite>
-
-        <testsuite name="Functional">
-            <directory suffix=".php">tests/Api</directory>
+            <directory suffix=".php">tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>
