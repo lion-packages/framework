@@ -29,7 +29,7 @@ use Lion\Files\Store;
  * -----------------------------------------------------------------------------
  */
 
-if (isSuccess((new Store())->exist(__DIR__ . '/.env'))) {
+if (isSuccess(new Store()->exist(__DIR__ . '/.env'))) {
     Dotenv::createMutable(__DIR__)->load();
 }
 
@@ -65,7 +65,7 @@ date_default_timezone_set($_ENV['SERVER_DATE_TIMEZONE']);
  * -----------------------------------------------------------------------------
  */
 
-(new CommandHandler('Lion-Framework'))
+new CommandHandler('Lion-Framework')
     ->registerCommands(
         './vendor/lion/bundle/src/LionBundle/Commands/Npm/',
         'Lion\\Bundle\\Commands\\Npm\\',
