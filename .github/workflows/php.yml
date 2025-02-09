@@ -63,7 +63,7 @@ jobs:
           extensions: mbstring, gd, zip
 
       - name: Composer Install
-        run: composer install
+        run: composer install --dev
 
       - name: PHP CodeSnifer (App)
         run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 app
@@ -72,10 +72,16 @@ jobs:
         run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 database
 
       - name: PHP CodeSnifer (Tests)
-        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 --ignore=tests/build/\*,tests/bootstrap.php --colors tests
+        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 --colors tests
 
-        # - name: PHPStan (Src)
-        # run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max src
+      - name: PHPStan (App)
+        run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max app
+
+      # - name: PHPStan (Database)
+      #   run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max database
+
+      # - name: PHPStan (Tests)
+      #   run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max tests
 
   tests:
     runs-on: ubuntu-latest
@@ -211,14 +217,11 @@ jobs:
       - name: Install php dependencies
         run: composer install
 
-      - name: Generate RSA Key's
-        run: php lion new:rsa
-
       - name: Run tests
-        run: php lion test --report
+        run: php vendor/bin/phpunit --coverage-clover tests/build/logs/clover.xml --coverage-html tests/build/coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           files: tests/build/logs/clover.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN_LION_FRAMEWORK }}
