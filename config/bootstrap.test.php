@@ -28,7 +28,7 @@ use Lion\Files\Store;
  * -----------------------------------------------------------------------------
  */
 
-if (isSuccess((new Store())->exist(__DIR__ . '/../.env'))) {
+if (isSuccess(new Store()->exist(__DIR__ . '/../.env'))) {
     Dotenv::createMutable(__DIR__ . '/../')->load();
 }
 
