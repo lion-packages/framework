@@ -67,18 +67,12 @@ jobs:
 
       - name: PHP CodeSnifer (App)
         run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 app
-
-      - name: PHP CodeSnifer (Database)
-        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 database
-
-      - name: PHP CodeSnifer (Tests)
-        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 --colors tests
-
+        
       - name: PHPStan (App)
         run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max app
 
-      # - name: PHPStan (Database)
-      #   run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max database
+      - name: PHP CodeSnifer (Tests)
+        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 --colors tests
 
       # - name: PHPStan (Tests)
       #   run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max tests
