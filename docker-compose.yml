@@ -11,6 +11,7 @@ services:
             - 443:443
             - 5173:5173
             - 5174:5174
+            - 4321:4321
         environment:
             - XDEBUG_PORT=9000
             - XDEBUG_CLIENT_HOST=host.docker.internal
@@ -19,32 +20,7 @@ services:
         depends_on:
             - mysql
             - phpmyadmin
-            - redis
-        networks:
-            - lion
-
-    mailhog:
-        image: mailhog/mailhog
-        container_name: framework-mailhog
-        restart: unless-stopped
-        ports:
-            - 8025:8025
-            - 1025:1025
-        networks:
-            - lion
-
-    redis:
-        image: redis
-        container_name: framework-redis
-        restart: always
-        ports:
-            - 6379:6379
-        volumes:
-            - redis_data:/data
-        environment:
-            REDIS_HOST: redis
-            REDIS_PASSWORD: lion
-            REDIS_DATABASES: 1
+            # - redis
         networks:
             - lion
 
@@ -76,6 +52,31 @@ services:
             MYSQL_ROOT_PASSWORD: lion
         networks:
             - lion
+
+    # mailhog:
+        # image: mailhog/mailhog
+        # container_name: framework-mailhog
+        # restart: unless-stopped
+        # ports:
+            # - 8025:8025
+            # - 1025:1025
+        # networks:
+            # - lion
+
+    # redis:
+        # image: redis
+        # container_name: framework-redis
+        # restart: always
+        # ports:
+            # - 6379:6379
+        # volumes:
+            # - redis_data:/data
+        # environment:
+            # REDIS_HOST: redis
+            # REDIS_PASSWORD: lion
+            # REDIS_DATABASES: 1
+        # networks:
+            # - lion
 
     # postgres:
     #     image: postgres
