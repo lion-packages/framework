@@ -13,9 +13,9 @@ use Lion\Database\Driver;
  **/
 
 Driver::run([
-    'default' => env('DB_NAME', 'lion_database'),
+    'default' => env('DB_DEFAULT', 'local'),
     'connections' => [
-        env('DB_NAME', 'lion_database') => [
+        'local' => [
             'type' => env('DB_TYPE', 'mysql'),
             'host' => env('DB_HOST', 'mysql'),
             'port' => env('DB_PORT', 3306),
@@ -23,5 +23,5 @@ Driver::run([
             'user' => env('DB_USER', 'root'),
             'password' => env('DB_PASSWORD', 'lion'),
         ],
-    ]
+    ],
 ]);
