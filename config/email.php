@@ -1,16 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
-use Lion\Mailer\Mailer;
-
 /**
  * -----------------------------------------------------------------------------
  * Start mail service
  * -----------------------------------------------------------------------------
  * describe connections to establish connecting to multiple databases
  * -----------------------------------------------------------------------------
- **/
+ */
+
+declare(strict_types=1);
+
+use Lion\Mailer\Mailer;
 
 Mailer::initialize([
     env('MAIL_NAME', 'lion-framework') => [

@@ -1,16 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
-use Lion\Database\Driver;
-
 /**
  * -----------------------------------------------------------------------------
  * Start database service
  * -----------------------------------------------------------------------------
  * describe connections to establish connecting to multiple databases
  * -----------------------------------------------------------------------------
- **/
+ */
+
+declare(strict_types=1);
+
+use Lion\Database\Driver;
 
 Driver::run([
     'default' => env('DB_DEFAULT', 'local'),
