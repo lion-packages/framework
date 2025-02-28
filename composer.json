@@ -33,7 +33,7 @@
     },
     "require": {
         "php": ">=8.4",
-        "lion/bundle": "^18.6",
+        "lion/bundle": "^18.7",
         "lion/mailer": "^7.0",
         "symfony/mailer": "^7.2"
     },

@@ -1,10 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-use Lion\Request\Http;
-use Lion\Request\Request;
-
 /**
  * -----------------------------------------------------------------------------
  * Cross-Origin Resource Sharing (CORS) Configuration
@@ -14,6 +9,11 @@ use Lion\Request\Request;
  * can be executed in web browsers.
  * -----------------------------------------------------------------------------
  */
+
+declare(strict_types=1);
+
+use Lion\Request\Http;
+use Lion\Request\Request;
 
 Request::header('Access-Control-Allow-Origin', env('SERVER_URL_AUD', 'http://localhost:5173'));
 
