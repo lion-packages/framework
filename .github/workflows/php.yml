@@ -3,7 +3,6 @@ name: Lion-Framework (CI Workflow)
 on:
   push:
     branches:
-      - main
       - actions
   pull_request:
     branches:
@@ -12,21 +11,44 @@ on:
     - cron: "15 0 * * *"
 
 jobs:
+  install-dependencies:
+    runs-on: ubuntu-latest
+    name: Install PHP Dependencies
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          extensions: mbstring, gd, zip
+
+      - name: Install PHP dependencies
+        run: composer install
+
+      - name: Cache vendor directory
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: php-vendor-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: php-vendor-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Cache composer.lock
+        uses: actions/cache@v4
+        with:
+          path: composer.lock
+          key: php-composer-lock-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: php-composer-lock-${{ runner.os }}-${{ github.run_id }}
+
   composer-validation:
     runs-on: ubuntu-latest
     name: Composer Validation
+    needs: install-dependencies
 
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -34,8 +56,19 @@ jobs:
           php-version: '8.4'
           extensions: mbstring, gd, zip
 
-      - name: Composer Install
-        run: composer install
+      - name: Restore composer.lock from cache
+        uses: actions/cache@v4
+        with:
+          path: composer.lock
+          key: php-composer-lock-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: php-composer-lock-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Restore vendor directory from cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: php-vendor-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: php-vendor-${{ runner.os }}-${{ github.run_id }}
 
       - name: Composer Validate
         run: composer validate --strict
@@ -46,9 +79,9 @@ jobs:
       - name: Composer Dump-Autoload
         run: composer dump-autoload --optimize --strict-psr
 
-  code-analyze:
+  code-analysis-php-stan:
     runs-on: ubuntu-latest
-    name: PHP Code Analyze
+    name: PHPStan
     needs:
       - composer-validation
 
@@ -62,53 +95,94 @@ jobs:
           php-version: '8.4'
           extensions: mbstring, gd, zip
 
-      - name: Composer Install
-        run: composer install --dev
+      - name: Restore composer.lock from cache
+        uses: actions/cache@v4
+        with:
+          path: composer.lock
+          key: php-composer-lock-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: php-composer-lock-${{ runner.os }}-${{ github.run_id }}
 
-      - name: PHP CodeSnifer (App)
-        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 app
-        
+      - name: Restore vendor directory from cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: php-vendor-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: php-vendor-${{ runner.os }}-${{ github.run_id }}
+
       - name: PHPStan (App)
         run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max app
 
-      - name: PHP CodeSnifer (Tests)
-        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 --colors tests
-
       # - name: PHPStan (Tests)
-      #   run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max tests
+        # run: php -d memory_limit=-1 vendor/bin/phpstan analyse --level max tests
 
-  tests:
+  code-analysis-php-codesniffer:
     runs-on: ubuntu-latest
-    name: PHP Tests
+    name: PHP Code Sniffer
     needs:
       - composer-validation
-      - code-analyze
 
-    services:
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
 
-      mysql:
-        image: mysql
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-        ports:
-          - 3306:3306
-        env:
-          MYSQL_DATABASE: lion_database
-          MYSQL_ROOT_PASSWORD: lion
-          MYSQL_PASSWORD: lion
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, gd, zip
 
-      mailhog:
-        image: mailhog/mailhog
-        ports:
-          - 8025:8025
-          - 1025:1025
+      - name: Restore composer.lock from cache
+        uses: actions/cache@v4
+        with:
+          path: composer.lock
+          key: php-composer-lock-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: php-composer-lock-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Restore vendor directory from cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: php-vendor-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: php-vendor-${{ runner.os }}-${{ github.run_id }}
+
+      - name: PHP CodeSniffer (App)
+        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 app
+
+      - name: PHP CodeSniffer (Tests)
+        run: php -d memory_limit=-1 vendor/bin/phpcs --standard=PSR12 tests
+
+  tests-phpunit:
+    runs-on: ubuntu-latest
+    name: PHPUnit
+    needs:
+      - code-analysis-php-stan
+      - code-analysis-php-codesniffer
+
+    # services:
+      # redis:
+        # image: redis
+        # ports:
+          # - 6379:6379
+
+      # mysql:
+        # image: mysql
+        # options: >-
+          # --health-cmd="mysqladmin ping"
+          # --health-interval=10s
+          # --health-timeout=5s
+          # --health-retries=3
+        # ports:
+          # - 3306:3306
+        # env:
+          # MYSQL_DATABASE: lion_database
+          # MYSQL_ROOT_PASSWORD: lion
+          # MYSQL_PASSWORD: lion
+
+      # mailhog:
+        # image: mailhog/mailhog
+        # ports:
+          # - 8025:8025
+          # - 1025:1025
 
     steps:
       - name: Checkout repository
@@ -118,7 +192,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
-          extensions: mbstring, gd, zip, pdo, pdo_mysql, pdo_pgsql, redis, xdebug
+          extensions: mbstring, gd, zip, xdebug # pdo, pdo_mysql, pdo_pgsql, redis
           coverage: xdebug
           ini-values: |
             xdebug.mode=coverage
@@ -126,78 +200,78 @@ jobs:
             xdebug.log_level=0
           tools: composer
 
-      - name: Install Apache and OpenSSL
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y apache2 libapache2-mod-php8.4 openssl ca-certificates
+      # - name: Install Apache and OpenSSL
+        # run: |
+          # sudo apt-get update
+          # sudo apt-get install -y apache2 libapache2-mod-php8.4 openssl ca-certificates
 
-      - name: Enable Apache mods and configure SSL
-        run: |
-          sudo a2enmod rewrite ssl
-          echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
-          sudo sed -i "s|SSLEngine on|SSLEngine on\nSSLVerifyClient none|g" /etc/apache2/sites-available/default-ssl.conf
-          sudo sed -i "s|DocumentRoot /var/www/html|DocumentRoot /home/runner/work/framework/framework/public|g" /etc/apache2/sites-available/000-default.conf
-          sudo sed -i "s|<Directory /var/www/html>|<Directory /home/runner/work/framework/framework/public>|g" /etc/apache2/apache2.conf
-          sudo sed -i "s|SSLProtocol all|SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1|g" /etc/apache2/mods-enabled/ssl.conf
-          sudo sed -i "s|SSLHonorCipherOrder on|SSLHonorCipherOrder on\nSSLCipherSuite HIGH:!aNULL:!MD5|g" /etc/apache2/mods-enabled/ssl.conf
-          sudo sed -i "s|www-data|$(whoami)|g" /etc/apache2/envvars
+      # - name: Enable Apache mods and configure SSL
+        # run: |
+          # sudo a2enmod rewrite ssl
+          # echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
+          # sudo sed -i "s|SSLEngine on|SSLEngine on\nSSLVerifyClient none|g" /etc/apache2/sites-available/default-ssl.conf
+          # sudo sed -i "s|DocumentRoot /var/www/html|DocumentRoot /home/runner/work/framework/framework/public|g" /etc/apache2/sites-available/000-default.conf
+          # sudo sed -i "s|<Directory /var/www/html>|<Directory /home/runner/work/framework/framework/public>|g" /etc/apache2/apache2.conf
+          # sudo sed -i "s|SSLProtocol all|SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1|g" /etc/apache2/mods-enabled/ssl.conf
+          # sudo sed -i "s|SSLHonorCipherOrder on|SSLHonorCipherOrder on\nSSLCipherSuite HIGH:!aNULL:!MD5|g" /etc/apache2/mods-enabled/ssl.conf
+          # sudo sed -i "s|www-data|$(whoami)|g" /etc/apache2/envvars
 
-      - name: Generate SSL certificates
-        run: |
-          sudo openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
-            -keyout /etc/ssl/private/apache-selfsigned.key \
-            -out /etc/ssl/certs/apache-selfsigned.crt \
-            -subj "/C=US/ST=State/L=City/O=Lion-Packages/OU=Lion/CN=localhost/emailAddress=root@dev.com"
-          sudo cp /etc/ssl/certs/apache-selfsigned.crt /usr/local/share/ca-certificates/selfsigned.crt
-          sudo update-ca-certificates
+      # - name: Generate SSL certificates
+        # run: |
+          # sudo openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
+            # -keyout /etc/ssl/private/apache-selfsigned.key \
+            # -out /etc/ssl/certs/apache-selfsigned.crt \
+            # -subj "/C=US/ST=State/L=City/O=Lion-Packages/OU=Lion/CN=localhost/emailAddress=root@dev.com"
+          # sudo cp /etc/ssl/certs/apache-selfsigned.crt /usr/local/share/ca-certificates/selfsigned.crt
+          # sudo update-ca-certificates
 
-      - name: Update Apache virtual hosts
-        run: |
-          sudo bash -c 'cat <<EOF > /etc/apache2/sites-available/default-ssl.conf
-          <VirtualHost *:80>
-              ServerName localhost
-              DocumentRoot /home/runner/work/framework/framework/public
-              SSLEngine on
-              SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
-              SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
-              ErrorLog \${APACHE_LOG_DIR}/error.log
-              CustomLog \${APACHE_LOG_DIR}/access.log combined
-              <Directory /home/runner/work/framework/framework/public>
-                  Options Indexes FollowSymLinks
-                  AllowOverride All
-                  Require all granted
-              </Directory>
-          </VirtualHost>
-          <VirtualHost *:443>
-              ServerName localhost
-              DocumentRoot /home/runner/work/framework/framework/public
-              SSLEngine on
-              SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
-              SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
-              ErrorLog \${APACHE_LOG_DIR}/error.log
-              CustomLog \${APACHE_LOG_DIR}/access.log combined
-              <Directory /home/runner/work/framework/framework/public>
-                  Options Indexes FollowSymLinks
-                  AllowOverride All
-                  Require all granted
-              </Directory>
-          </VirtualHost>
-          EOF'
+      # - name: Update Apache virtual hosts
+        # run: |
+          # sudo bash -c 'cat <<EOF > /etc/apache2/sites-available/default-ssl.conf
+          # <VirtualHost *:80>
+              # ServerName localhost
+              # DocumentRoot /home/runner/work/framework/framework/public
+              # SSLEngine on
+              # SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
+              # SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+              # ErrorLog \${APACHE_LOG_DIR}/error.log
+              # CustomLog \${APACHE_LOG_DIR}/access.log combined
+              # <Directory /home/runner/work/framework/framework/public>
+                  # Options Indexes FollowSymLinks
+                  # AllowOverride All
+                  # Require all granted
+              # </Directory>
+          # </VirtualHost>
+          # <VirtualHost *:443>
+              # ServerName localhost
+              # DocumentRoot /home/runner/work/framework/framework/public
+              # SSLEngine on
+              # SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
+              # SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+              # ErrorLog \${APACHE_LOG_DIR}/error.log
+              # CustomLog \${APACHE_LOG_DIR}/access.log combined
+              # <Directory /home/runner/work/framework/framework/public>
+                  # Options Indexes FollowSymLinks
+                  # AllowOverride All
+                  # Require all granted
+              # </Directory>
+          # </VirtualHost>
+          # EOF'
 
-      - name: Apache conf
-        run: sudo cat /etc/apache2/sites-available/default-ssl.conf
+       # - name: Apache conf
+         # run: sudo cat /etc/apache2/sites-available/default-ssl.conf
 
-      - name: Enable SSL site
-        run: |
-          sudo a2ensite default-ssl
-          sudo apache2ctl configtest
-          sudo apache2ctl restart
-          sudo apache2ctl status
+       # - name: Enable SSL site
+         # run: |
+           # sudo a2ensite default-ssl
+           # sudo apache2ctl configtest
+           # sudo apache2ctl restart
+           # sudo apache2ctl status
 
-      - name: Set permissions for the framework directory
-        run: |
-          sudo chown -R $USER:$USER /home/runner/work/framework/framework/public
-          sudo chmod -R 755 /home/runner/work/framework/framework/public
+       # - name: Set permissions for the framework directory
+         # run: |
+           # sudo chown -R $USER:$USER /home/runner/work/framework/framework/public
+           # sudo chmod -R 755 /home/runner/work/framework/framework/public
 
       - name: Copy .env.actions to .env
         run: |
@@ -208,8 +282,19 @@ jobs:
             exit 1
           fi
 
-      - name: Install php dependencies
-        run: composer install
+      - name: Restore composer.lock from cache
+        uses: actions/cache@v4
+        with:
+          path: composer.lock
+          key: php-composer-lock-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: php-composer-lock-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Restore vendor directory from cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: php-vendor-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: php-vendor-${{ runner.os }}-${{ github.run_id }}
 
       - name: Run tests
         run: php vendor/bin/phpunit --coverage-clover tests/build/logs/clover.xml --coverage-html tests/build/coverage
