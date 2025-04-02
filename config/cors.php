@@ -13,15 +13,17 @@
 declare(strict_types=1);
 
 use Lion\Request\Http;
-use Lion\Request\Request;
 
-Request::header('Access-Control-Allow-Origin', env('SERVER_URL_AUD', 'http://localhost:5173'));
+/** @var string $serverUrlAud */
+$serverUrlAud = env('SERVER_URL_AUD', 'http://localhost:5173');
 
-Request::header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+header('Access-Control-Allow-Origin: ' . $serverUrlAud);
 
-Request::header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH, OPTIONS');
 
-Request::header('Access-Control-Max-Age', '3600');
+header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+header('Access-Control-Max-Age: 3600');
 
 if (Http::OPTIONS === $_SERVER['REQUEST_METHOD']) {
     http_response_code(Http::OK);
@@ -29,4 +31,4 @@ if (Http::OPTIONS === $_SERVER['REQUEST_METHOD']) {
     exit(0);
 }
 
-Request::header('Content-Type', 'application/json; charset=UTF-8');
+header('Content-Type: application/json; charset=UTF-8');
