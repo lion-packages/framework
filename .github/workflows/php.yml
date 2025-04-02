@@ -229,78 +229,78 @@ jobs:
             xdebug.log_level=0
           tools: composer
 
-      # - name: Install Apache and OpenSSL
-        # run: |
-          # sudo apt-get update
-          # sudo apt-get install -y apache2 libapache2-mod-php8.4 openssl ca-certificates
+      - name: Install Apache and OpenSSL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apache2 libapache2-mod-php8.4 openssl ca-certificates
 
-      # - name: Enable Apache mods and configure SSL
-        # run: |
-          # sudo a2enmod rewrite ssl
-          # echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
-          # sudo sed -i "s|SSLEngine on|SSLEngine on\nSSLVerifyClient none|g" /etc/apache2/sites-available/default-ssl.conf
-          # sudo sed -i "s|DocumentRoot /var/www/html|DocumentRoot /home/runner/work/framework/framework/public|g" /etc/apache2/sites-available/000-default.conf
-          # sudo sed -i "s|<Directory /var/www/html>|<Directory /home/runner/work/framework/framework/public>|g" /etc/apache2/apache2.conf
-          # sudo sed -i "s|SSLProtocol all|SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1|g" /etc/apache2/mods-enabled/ssl.conf
-          # sudo sed -i "s|SSLHonorCipherOrder on|SSLHonorCipherOrder on\nSSLCipherSuite HIGH:!aNULL:!MD5|g" /etc/apache2/mods-enabled/ssl.conf
-          # sudo sed -i "s|www-data|$(whoami)|g" /etc/apache2/envvars
+      - name: Enable Apache mods and configure SSL
+        run: |
+          sudo a2enmod rewrite ssl
+          echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
+          sudo sed -i "s|SSLEngine on|SSLEngine on\nSSLVerifyClient none|g" /etc/apache2/sites-available/default-ssl.conf
+          sudo sed -i "s|DocumentRoot /var/www/html|DocumentRoot /home/runner/work/framework/framework/public|g" /etc/apache2/sites-available/000-default.conf
+          sudo sed -i "s|<Directory /var/www/html>|<Directory /home/runner/work/framework/framework/public>|g" /etc/apache2/apache2.conf
+          sudo sed -i "s|SSLProtocol all|SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1|g" /etc/apache2/mods-enabled/ssl.conf
+          sudo sed -i "s|SSLHonorCipherOrder on|SSLHonorCipherOrder on\nSSLCipherSuite HIGH:!aNULL:!MD5|g" /etc/apache2/mods-enabled/ssl.conf
+          sudo sed -i "s|www-data|$(whoami)|g" /etc/apache2/envvars
 
-      # - name: Generate SSL certificates
-        # run: |
-          # sudo openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
-            # -keyout /etc/ssl/private/apache-selfsigned.key \
-            # -out /etc/ssl/certs/apache-selfsigned.crt \
-            # -subj "/C=US/ST=State/L=City/O=Lion-Packages/OU=Lion/CN=localhost/emailAddress=root@dev.com"
-          # sudo cp /etc/ssl/certs/apache-selfsigned.crt /usr/local/share/ca-certificates/selfsigned.crt
-          # sudo update-ca-certificates
+      - name: Generate SSL certificates
+        run: |
+          sudo openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
+            -keyout /etc/ssl/private/apache-selfsigned.key \
+            -out /etc/ssl/certs/apache-selfsigned.crt \
+            -subj "/C=US/ST=State/L=City/O=Lion-Packages/OU=Lion/CN=localhost/emailAddress=root@dev.com"
+          sudo cp /etc/ssl/certs/apache-selfsigned.crt /usr/local/share/ca-certificates/selfsigned.crt
+          sudo update-ca-certificates
 
-      # - name: Update Apache virtual hosts
-        # run: |
-          # sudo bash -c 'cat <<EOF > /etc/apache2/sites-available/default-ssl.conf
-          # <VirtualHost *:80>
-              # ServerName localhost
-              # DocumentRoot /home/runner/work/framework/framework/public
-              # SSLEngine on
-              # SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
-              # SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
-              # ErrorLog \${APACHE_LOG_DIR}/error.log
-              # CustomLog \${APACHE_LOG_DIR}/access.log combined
-              # <Directory /home/runner/work/framework/framework/public>
-                  # Options Indexes FollowSymLinks
-                  # AllowOverride All
-                  # Require all granted
-              # </Directory>
-          # </VirtualHost>
-          # <VirtualHost *:443>
-              # ServerName localhost
-              # DocumentRoot /home/runner/work/framework/framework/public
-              # SSLEngine on
-              # SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
-              # SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
-              # ErrorLog \${APACHE_LOG_DIR}/error.log
-              # CustomLog \${APACHE_LOG_DIR}/access.log combined
-              # <Directory /home/runner/work/framework/framework/public>
-                  # Options Indexes FollowSymLinks
-                  # AllowOverride All
-                  # Require all granted
-              # </Directory>
-          # </VirtualHost>
-          # EOF'
+      - name: Update Apache virtual hosts
+        run: |
+          sudo bash -c 'cat <<EOF > /etc/apache2/sites-available/default-ssl.conf
+          <VirtualHost *:80>
+              ServerName localhost
+              DocumentRoot /home/runner/work/framework/framework/public
+              SSLEngine on
+              SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
+              SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+              ErrorLog \${APACHE_LOG_DIR}/error.log
+              CustomLog \${APACHE_LOG_DIR}/access.log combined
+              <Directory /home/runner/work/framework/framework/public>
+                  Options Indexes FollowSymLinks
+                  AllowOverride All
+                  Require all granted
+              </Directory>
+          </VirtualHost>
+          <VirtualHost *:443>
+              ServerName localhost
+              DocumentRoot /home/runner/work/framework/framework/public
+              SSLEngine on
+              SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
+              SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+              ErrorLog \${APACHE_LOG_DIR}/error.log
+              CustomLog \${APACHE_LOG_DIR}/access.log combined
+              <Directory /home/runner/work/framework/framework/public>
+                  Options Indexes FollowSymLinks
+                  AllowOverride All
+                  Require all granted
+              </Directory>
+          </VirtualHost>
+          EOF'
 
-       # - name: Apache conf
-         # run: sudo cat /etc/apache2/sites-available/default-ssl.conf
+      - name: Apache conf
+        run: sudo cat /etc/apache2/sites-available/default-ssl.conf
 
-       # - name: Enable SSL site
-         # run: |
-           # sudo a2ensite default-ssl
-           # sudo apache2ctl configtest
-           # sudo apache2ctl restart
-           # sudo apache2ctl status
+      - name: Enable SSL site
+        run: |
+          sudo a2ensite default-ssl
+          sudo apache2ctl configtest
+          sudo apache2ctl restart
+          sudo apache2ctl status
 
-       # - name: Set permissions for the framework directory
-         # run: |
-           # sudo chown -R $USER:$USER /home/runner/work/framework/framework/public
-           # sudo chmod -R 755 /home/runner/work/framework/framework/public
+      - name: Set permissions for the framework directory
+        run: |
+          sudo chown -R $USER:$USER /home/runner/work/framework/framework/public
+          sudo chmod -R 755 /home/runner/work/framework/framework/public
 
       - name: Copy .env.actions to .env
         run: |
@@ -324,6 +324,9 @@ jobs:
           path: vendor
           key: php-vendor-${{ runner.os }}-${{ github.run_id }}
           restore-keys: php-vendor-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Ping Server
+        run: curl --fail https://localhost
 
       - name: Run tests
         run: php vendor/bin/phpunit --coverage-clover tests/build/logs/clover.xml --coverage-html tests/build/coverage
