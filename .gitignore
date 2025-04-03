@@ -11,3 +11,5 @@
 .env
 .phpunit.result.cache
 composer.lock
+/.phplint.cache/
+
