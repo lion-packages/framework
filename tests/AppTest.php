@@ -28,10 +28,10 @@ class AppTest extends Test
             ->getBody()
             ->getContents();
 
-        $this->assertJson($response, json([
+        $this->assertJsonStringEqualsJsonString(json([
             'code' => Http::OK,
             'status' => Status::INFO,
             'message' => '[index]',
-        ]));
+        ]), $response);
     }
 }
