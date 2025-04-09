@@ -6,7 +6,7 @@ namespace Tests;
 
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
-use Lion\Bundle\Helpers\Http\Fetch;
+use Lion\Bundle\Support\Http\Fetch;
 use Lion\Bundle\Test\Test;
 use Lion\Request\Http;
 use Lion\Request\Status;

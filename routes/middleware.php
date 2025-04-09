@@ -10,9 +10,9 @@
 
 declare(strict_types=1);
 
-use Lion\Bundle\Helpers\Http\Routes;
 use Lion\Bundle\Middleware\HttpsMiddleware;
 use Lion\Bundle\Middleware\RouteMiddleware;
+use Lion\Bundle\Support\Http\Routes;
 
 Routes::setMiddleware([
 

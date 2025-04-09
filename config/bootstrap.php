@@ -1,7 +1,7 @@
 <?php
 
 use Dotenv\Dotenv;
-use Lion\Bundle\Helpers\Http\Routes;
+use Lion\Bundle\Support\Http\Routes;
 use Lion\Exceptions\Serialize;
 use Lion\Files\Store;
 use Lion\Route\Route;
