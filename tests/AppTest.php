@@ -19,8 +19,7 @@ class AppTest extends Test
      * @throws JsonException
      */
     #[Testing]
-    public function api(): void
-    {
+    public function api(): void{
         /** @var string $url */
         $url = env('SERVER_URL');
 
