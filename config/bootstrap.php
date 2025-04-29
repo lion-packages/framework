@@ -1,6 +1,7 @@
 <?php
 
 use Dotenv\Dotenv;
+use Lion\Bundle\Support\ExceptionHandler;
 use Lion\Bundle\Support\Http\Routes;
 use Lion\Exceptions\Serialize;
 use Lion\Files\Store;
@@ -14,8 +15,13 @@ use Lion\Route\Route;
  * -----------------------------------------------------------------------------
  */
 
+include_once __DIR__ . '/../config/exception.handler.php';
+
 new Serialize()
-    ->exceptionHandler();
+    ->exceptionHandler(
+        callback: ExceptionHandler::getOptions()['callback'],
+        addInformation: ExceptionHandler::getOptions()['addInformation']
+    );
 
 /**
  * -----------------------------------------------------------------------------
@@ -39,7 +45,7 @@ if (isSuccess(new Store()->exist(__DIR__ . '/../.env'))) {
  * -----------------------------------------------------------------------------
  */
 
-require_once __DIR__ . '/../config/cors.php';
+include_once __DIR__ . '/../config/cors.php';
 
 /**
  * -----------------------------------------------------------------------------
@@ -63,6 +69,7 @@ include_once __DIR__ . '/../config/email.php';
  * -----------------------------------------------------------------------------
  */
 
+/** @phpstan-ignore-next-line */
 date_default_timezone_set(env('SERVER_DATE_TIMEZONE', 'America/Bogota'));
 
 /**
