@@ -54,4 +54,5 @@ include_once __DIR__ . '/../config/email.php';
  * -----------------------------------------------------------------------------
  */
 
+/** @phpstan-ignore-next-line */
 date_default_timezone_set(env('SERVER_DATE_TIMEZONE', 'America/Bogota'));
