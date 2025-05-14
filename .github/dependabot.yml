@@ -5,3 +5,7 @@ updates:
     schedule:
       interval: "daily"
       time: "05:15"
+      days:
+        - monday
+        - wednesday
+        - friday
