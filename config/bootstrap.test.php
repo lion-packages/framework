@@ -1,17 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
 define('LION_START', microtime(true));
 
-define('IS_INDEX', false);
+const IS_INDEX = false;
 
 /**
  * -----------------------------------------------------------------------------
- * Register The Auto Loader
+ * Register The Auto Loader.
  * -----------------------------------------------------------------------------
- * Composer provides a convenient, automatically generated class loader for
- * this application
+ * Composer provides a convenient, automatically generated class loader for this
+ * application.
  * -----------------------------------------------------------------------------
  */
 
@@ -22,9 +20,9 @@ use Lion\Files\Store;
 
 /**
  * -----------------------------------------------------------------------------
- * Register environment variable loader automatically
+ * Register environment variable loader automatically.
  * -----------------------------------------------------------------------------
- * .dotenv provides an easy way to access environment variables with $_ENV
+ * .dotenv provides an easy way to access environment variables with $_ENV.
  * -----------------------------------------------------------------------------
  */
 
@@ -34,7 +32,7 @@ if (isSuccess(new Store()->exist(__DIR__ . '/../.env'))) {
 
 /**
  * -----------------------------------------------------------------------------
- * Database initialization
+ * Database initialization.
  * -----------------------------------------------------------------------------
  */
 
@@ -42,7 +40,7 @@ include_once __DIR__ . '/../config/database.php';
 
 /**
  * -----------------------------------------------------------------------------
- * Email initialization
+ * Email initialization.
  * -----------------------------------------------------------------------------
  */
 
@@ -50,7 +48,7 @@ include_once __DIR__ . '/../config/email.php';
 
 /**
  * -----------------------------------------------------------------------------
- * Local zone configuration
+ * Local zone configuration.
  * -----------------------------------------------------------------------------
  */
 

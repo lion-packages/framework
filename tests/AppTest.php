@@ -15,8 +15,8 @@ use PHPUnit\Framework\Attributes\Test as Testing;
 class AppTest extends Test
 {
     /**
-     * @throws GuzzleException
-     * @throws JsonException
+     * @throws GuzzleException If the request fails.
+     * @throws JsonException If encoding to JSON fails.
      */
     #[Testing]
     public function api(): void
@@ -29,9 +29,9 @@ class AppTest extends Test
             ->getContents();
 
         $this->assertJsonStringEqualsJsonString(json([
-            'code' => Http::OK,
-            'status' => Status::INFO,
-            'message' => '[index]',
+            CODE => Http::OK,
+            STATUS => Status::INFO,
+            MESSAGE => '[index]',
         ]), $response);
     }
 }
