@@ -2,9 +2,9 @@
 
 /**
  * -----------------------------------------------------------------------------
- * Start mail service
+ * Start mail service.
  * -----------------------------------------------------------------------------
- * describe connections to establish connecting to multiple databases
+ * describe connections to establish connecting to multiple databases.
  * -----------------------------------------------------------------------------
  */
 

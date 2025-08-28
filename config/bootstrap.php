@@ -1,5 +1,20 @@
 <?php
 
+define('LION_START', microtime(true));
+
+const IS_INDEX = true;
+
+/**
+ * -----------------------------------------------------------------------------
+ * Register The Auto Loader.
+ * -----------------------------------------------------------------------------
+ * Composer provides a convenient, automatically generated class loader for this
+ * application.
+ * -----------------------------------------------------------------------------
+ */
+
+require_once(__DIR__ . '/../vendor/autoload.php');
+
 use Dotenv\Dotenv;
 use Lion\Bundle\Support\ExceptionHandler;
 use Lion\Bundle\Support\Http\Routes;
@@ -9,9 +24,9 @@ use Lion\Route\Route;
 
 /**
  * -----------------------------------------------------------------------------
- * Initialize exception handling
+ * Initialize exception handling.
  * -----------------------------------------------------------------------------
- * Controls and serializes exceptions to JSON format
+ * Controls and serializes exceptions to JSON format.
  * -----------------------------------------------------------------------------
  */
 
@@ -25,9 +40,9 @@ new Serialize()
 
 /**
  * -----------------------------------------------------------------------------
- * Register environment variable loader automatically
+ * Register environment variable loader automatically.
  * -----------------------------------------------------------------------------
- * .dotenv provides an easy way to access environment variables with $_ENV
+ * .dotenv provides an easy way to access environment variables with $_ENV.
  * -----------------------------------------------------------------------------
  */
 
@@ -37,11 +52,11 @@ if (isSuccess(new Store()->exist(__DIR__ . '/../.env'))) {
 
 /**
  * -----------------------------------------------------------------------------
- * Cross-Origin Resource Sharing (CORS) Configuration
+ * Cross-Origin Resource Sharing (CORS) Configuration.
  * -----------------------------------------------------------------------------
- * Here you can configure your settings for cross-origin resource
- * sharing or "CORS". This determines which cross-origin operations
- * can be executed in web browsers.
+ * Here you can configure your settings for cross-origin resource sharing or
+ * "CORS". This determines which cross-origin operations can be executed in web
+ * browsers.
  * -----------------------------------------------------------------------------
  */
 
@@ -49,7 +64,7 @@ include_once __DIR__ . '/../config/cors.php';
 
 /**
  * -----------------------------------------------------------------------------
- * Database initialization
+ * Database initialization.
  * -----------------------------------------------------------------------------
  */
 
@@ -57,7 +72,7 @@ include_once __DIR__ . '/../config/database.php';
 
 /**
  * -----------------------------------------------------------------------------
- * Email initialization
+ * Email initialization.
  * -----------------------------------------------------------------------------
  */
 
@@ -65,7 +80,7 @@ include_once __DIR__ . '/../config/email.php';
 
 /**
  * -----------------------------------------------------------------------------
- * Local zone configuration
+ * Local zone configuration.
  * -----------------------------------------------------------------------------
  */
 

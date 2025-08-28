@@ -2,9 +2,9 @@
 
 /**
  * -----------------------------------------------------------------------------
- * Start database service
+ * Start database service.
  * -----------------------------------------------------------------------------
- * describe connections to establish connecting to multiple databases
+ * describe connections to establish connecting to multiple databases.
  * -----------------------------------------------------------------------------
  */
 

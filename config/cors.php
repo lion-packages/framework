@@ -2,11 +2,11 @@
 
 /**
  * -----------------------------------------------------------------------------
- * Cross-Origin Resource Sharing (CORS) Configuration
+ * Cross-Origin Resource Sharing (CORS) Configuration.
  * -----------------------------------------------------------------------------
- * Here you can configure your settings for cross-origin resource
- * sharing or "CORS". This determines which cross-origin operations
- * can be executed in web browsers.
+ * Here you can configure your settings for cross-origin resource sharing or
+ * "CORS". This determines which cross-origin operations can be executed in web
+ * browsers.
  * -----------------------------------------------------------------------------
  */
 
