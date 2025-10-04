@@ -1,15 +1,23 @@
-/.phpunit.cache
+# Ignore IDE/Editors directories -----------------------------------------------
 /.fleet
 /.idea
 /.vscode
+# ------------------------------------------------------------------------------
+
+# Ignore configuration or test files -------------------------------------------
+/tests/build/
+/.phplint.cache/
+.phpunit.result.cache
+# ------------------------------------------------------------------------------
+
+# Ignore dependency files ------------------------------------------------------
 /vendor/
+# ------------------------------------------------------------------------------
+
+# Ignore project files ---------------------------------------------------------
 /storage/**/*.key
 /storage/**/*.log
 /storage/postman/*.json
-/tests/build/
 .rnd
 .env
-.phpunit.result.cache
-composer.lock
-/.phplint.cache/
-
+# ------------------------------------------------------------------------------
