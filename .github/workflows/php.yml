@@ -8,6 +8,19 @@ on:
     branches:
       - main
       - 4.x
+    paths:
+     - '.github/workflows/php.yml'
+     - 'app/**'
+     - 'config/**'
+     - 'database/**'
+     - 'routes/**'
+     - 'storage/**'
+     - 'tests/**'
+     - '.env.actions'
+     - 'composer.json'
+     - 'composer.lock'
+     - 'phpstan.neon'
+     - 'phpunit.xml'
 
 jobs:
   install-dependencies:
