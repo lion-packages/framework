@@ -1255,29 +1255,29 @@
         },
         {
             "name": "lion/mailer",
-            "version": "v7.10.0",
+            "version": "v7.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/mailer.git",
-                "reference": "abc899560a1d1e75b94217e6ed82a36dfaa60929"
+                "reference": "d59ac0f9f4710cce177a581cee3a284a009d0dfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/mailer/zipball/abc899560a1d1e75b94217e6ed82a36dfaa60929",
-                "reference": "abc899560a1d1e75b94217e6ed82a36dfaa60929",
+                "url": "https://api.github.com/repos/lion-packages/mailer/zipball/d59ac0f9f4710cce177a581cee3a284a009d0dfb",
+                "reference": "d59ac0f9f4710cce177a581cee3a284a009d0dfb",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.4"
             },
             "require-dev": {
-                "infection/infection": "^0.29.14",
+                "infection/infection": "^0.29.14 || ^0.31.0",
                 "lion/test": "^2.0 || ^3.0",
                 "overtrue/phplint": "^9.5",
                 "phpmailer/phpmailer": "^6.9",
                 "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^12.0",
-                "squizlabs/php_codesniffer": "^3.12",
+                "squizlabs/php_codesniffer": "^3.12 || ^4.0",
                 "symfony/mailer": "^7.0",
                 "symfony/mime": "^6.3 || ^7.0",
                 "vlucas/phpdotenv": "^5.6"
@@ -1293,17 +1293,17 @@
                 "MIT"
             ],
             "description": "Library created to facilitate sending email based on different services",
-            "homepage": "https://dev.lion-packages.com/",
+            "homepage": "https://dev.lion-packages.com",
             "keywords": [
-                "bundle",
                 "lion",
-                "lion-mailer"
+                "lion-mailer",
+                "mailer"
             ],
             "support": {
                 "issues": "https://github.com/lion-packages/mailer/issues",
                 "source": "https://github.com/lion-packages/mailer"
             },
-            "time": "2025-06-28T19:07:59+00:00"
+            "time": "2025-10-01T23:47:45+00:00"
         },
         {
             "name": "lion/phroute",
