@@ -1,5 +1,3 @@
-# 🦁 Lion-Framework
-
 <p align="center">
   <a href="https://lion-client.vercel.app/" target="_blank">
     <img width="1920" height="1080" alt="presentation-lion-packages" src="https://github.com/user-attachments/assets/2e6ced92-687d-49c7-bf0e-bad214b1fd5e" />
