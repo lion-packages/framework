@@ -2,13 +2,10 @@
 
 <p align="center">
   <a href="https://lion-client.vercel.app/" target="_blank">
-    <img 
-        src="https://github.com/lion-packages/framework/assets/56183278/60871c9f-1c93-4481-8c1e-d70282b33254"
-        width="450" 
-        alt="Lion-Framework Logo"
-    >
+    <img width="1920" height="1080" alt="presentation-lion-packages" src="https://github.com/user-attachments/assets/2e6ced92-687d-49c7-bf0e-bad214b1fd5e" />
   </a>
 </p>
+
 
 <p align="center">
   <a href="https://packagist.org/packages/lion/framework">
