@@ -844,16 +844,16 @@
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v2.0.5",
+            "version": "v2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "3832547db6e0e2f8bb03d4093857b378c66eceed"
+                "reference": "038ce42edee619599a1debb7e81d7b3759492819"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/3832547db6e0e2f8bb03d4093857b378c66eceed",
-                "reference": "3832547db6e0e2f8bb03d4093857b378c66eceed",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/038ce42edee619599a1debb7e81d7b3759492819",
+                "reference": "038ce42edee619599a1debb7e81d7b3759492819",
                 "shasum": ""
             },
             "require": {
@@ -901,20 +901,20 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2025-09-22T17:29:40+00:00"
+            "time": "2025-10-09T13:42:30+00:00"
         },
         {
             "name": "lion/bundle",
-            "version": "v18.34.1",
+            "version": "v18.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "5b29955624e20bd3d468101be94785043911cc2d"
+                "reference": "324b6e1b15ea595a28f0ab80b763c727e98dd41a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/5b29955624e20bd3d468101be94785043911cc2d",
-                "reference": "5b29955624e20bd3d468101be94785043911cc2d",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/324b6e1b15ea595a28f0ab80b763c727e98dd41a",
+                "reference": "324b6e1b15ea595a28f0ab80b763c727e98dd41a",
                 "shasum": ""
             },
             "require": {
@@ -985,7 +985,7 @@
                 "issues": "https://github.com/lion-packages/bundle/issues",
                 "source": "https://github.com/lion-packages/bundle"
             },
-            "time": "2025-10-05T21:47:16+00:00"
+            "time": "2025-10-18T18:48:01+00:00"
         },
         {
             "name": "lion/command",
@@ -1033,16 +1033,16 @@
         },
         {
             "name": "lion/database",
-            "version": "v11.23.1",
+            "version": "v11.23.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/database.git",
-                "reference": "1fd1daca77a015ab2417f8015bd74c87722d5d78"
+                "reference": "7ecef69d85b212b4747680956220536868eba026"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/database/zipball/1fd1daca77a015ab2417f8015bd74c87722d5d78",
-                "reference": "1fd1daca77a015ab2417f8015bd74c87722d5d78",
+                "url": "https://api.github.com/repos/lion-packages/database/zipball/7ecef69d85b212b4747680956220536868eba026",
+                "reference": "7ecef69d85b212b4747680956220536868eba026",
                 "shasum": ""
             },
             "require": {
@@ -1079,7 +1079,7 @@
                 "issues": "https://github.com/lion-packages/database/issues",
                 "source": "https://github.com/lion-packages/database"
             },
-            "time": "2025-10-03T14:48:22+00:00"
+            "time": "2025-10-10T20:22:59+00:00"
         },
         {
             "name": "lion/dependency-injection",
