@@ -1261,16 +1261,16 @@
         },
         {
             "name": "lion/mailer",
-            "version": "v7.11.0",
+            "version": "v7.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/mailer.git",
-                "reference": "d59ac0f9f4710cce177a581cee3a284a009d0dfb"
+                "reference": "93706af54320686fb7316a4a9b40d2dab43f2908"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/mailer/zipball/d59ac0f9f4710cce177a581cee3a284a009d0dfb",
-                "reference": "d59ac0f9f4710cce177a581cee3a284a009d0dfb",
+                "url": "https://api.github.com/repos/lion-packages/mailer/zipball/93706af54320686fb7316a4a9b40d2dab43f2908",
+                "reference": "93706af54320686fb7316a4a9b40d2dab43f2908",
                 "shasum": ""
             },
             "require": {
@@ -1280,7 +1280,7 @@
                 "infection/infection": "^0.29.14 || ^0.31.0",
                 "lion/test": "^2.0 || ^3.0",
                 "overtrue/phplint": "^9.5",
-                "phpmailer/phpmailer": "^6.9",
+                "phpmailer/phpmailer": "^6.9 || ^7.0",
                 "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^12.0",
                 "squizlabs/php_codesniffer": "^3.12 || ^4.0",
@@ -1309,7 +1309,7 @@
                 "issues": "https://github.com/lion-packages/mailer/issues",
                 "source": "https://github.com/lion-packages/mailer"
             },
-            "time": "2025-10-01T23:47:45+00:00"
+            "time": "2025-11-01T14:23:01+00:00"
         },
         {
             "name": "lion/phroute",
