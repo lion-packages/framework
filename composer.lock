@@ -905,16 +905,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v18.36.0",
+            "version": "v18.36.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "324b6e1b15ea595a28f0ab80b763c727e98dd41a"
+                "reference": "edaace67d96cf0c83f08e8293b5d8e9afac25fb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/324b6e1b15ea595a28f0ab80b763c727e98dd41a",
-                "reference": "324b6e1b15ea595a28f0ab80b763c727e98dd41a",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/edaace67d96cf0c83f08e8293b5d8e9afac25fb8",
+                "reference": "edaace67d96cf0c83f08e8293b5d8e9afac25fb8",
                 "shasum": ""
             },
             "require": {
@@ -985,7 +985,7 @@
                 "issues": "https://github.com/lion-packages/bundle/issues",
                 "source": "https://github.com/lion-packages/bundle"
             },
-            "time": "2025-10-18T18:48:01+00:00"
+            "time": "2025-10-19T14:51:13+00:00"
         },
         {
             "name": "lion/command",
@@ -2964,16 +2964,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v7.3.4",
+            "version": "v7.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "2b9c5fafbac0399a20a2e82429e2bd735dcfb7db"
+                "reference": "cdb80fa5869653c83cfe1a9084a673b6daf57ea7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/2b9c5fafbac0399a20a2e82429e2bd735dcfb7db",
-                "reference": "2b9c5fafbac0399a20a2e82429e2bd735dcfb7db",
+                "url": "https://api.github.com/repos/symfony/console/zipball/cdb80fa5869653c83cfe1a9084a673b6daf57ea7",
+                "reference": "cdb80fa5869653c83cfe1a9084a673b6daf57ea7",
                 "shasum": ""
             },
             "require": {
@@ -3038,7 +3038,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v7.3.4"
+                "source": "https://github.com/symfony/console/tree/v7.3.5"
             },
             "funding": [
                 {
@@ -3058,7 +3058,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-22T15:31:00+00:00"
+            "time": "2025-10-14T15:46:26+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
