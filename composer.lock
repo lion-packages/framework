@@ -905,16 +905,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v18.36.1",
+            "version": "v18.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "edaace67d96cf0c83f08e8293b5d8e9afac25fb8"
+                "reference": "b7164ab6a404185fb5e1a0112de14c05012e5ae4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/edaace67d96cf0c83f08e8293b5d8e9afac25fb8",
-                "reference": "edaace67d96cf0c83f08e8293b5d8e9afac25fb8",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/b7164ab6a404185fb5e1a0112de14c05012e5ae4",
+                "reference": "b7164ab6a404185fb5e1a0112de14c05012e5ae4",
                 "shasum": ""
             },
             "require": {
@@ -985,7 +985,7 @@
                 "issues": "https://github.com/lion-packages/bundle/issues",
                 "source": "https://github.com/lion-packages/bundle"
             },
-            "time": "2025-10-19T14:51:13+00:00"
+            "time": "2025-11-01T14:59:06+00:00"
         },
         {
             "name": "lion/command",
@@ -1033,16 +1033,16 @@
         },
         {
             "name": "lion/database",
-            "version": "v11.23.2",
+            "version": "v11.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/database.git",
-                "reference": "7ecef69d85b212b4747680956220536868eba026"
+                "reference": "98826d46883ddea25fe68fe17577f88bd6369e47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/database/zipball/7ecef69d85b212b4747680956220536868eba026",
-                "reference": "7ecef69d85b212b4747680956220536868eba026",
+                "url": "https://api.github.com/repos/lion-packages/database/zipball/98826d46883ddea25fe68fe17577f88bd6369e47",
+                "reference": "98826d46883ddea25fe68fe17577f88bd6369e47",
                 "shasum": ""
             },
             "require": {
@@ -1079,20 +1079,20 @@
                 "issues": "https://github.com/lion-packages/database/issues",
                 "source": "https://github.com/lion-packages/database"
             },
-            "time": "2025-10-10T20:22:59+00:00"
+            "time": "2025-11-01T14:28:28+00:00"
         },
         {
             "name": "lion/dependency-injection",
-            "version": "v4.11.0",
+            "version": "v4.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/dependency-injection.git",
-                "reference": "a0e467be1d246dca9bd1a5cd0298b167da35451a"
+                "reference": "cddbc4d227e17ed892e91e8f662473a14633c0da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/dependency-injection/zipball/a0e467be1d246dca9bd1a5cd0298b167da35451a",
-                "reference": "a0e467be1d246dca9bd1a5cd0298b167da35451a",
+                "url": "https://api.github.com/repos/lion-packages/dependency-injection/zipball/cddbc4d227e17ed892e91e8f662473a14633c0da",
+                "reference": "cddbc4d227e17ed892e91e8f662473a14633c0da",
                 "shasum": ""
             },
             "require": {
@@ -1128,7 +1128,7 @@
                 "issues": "https://github.com/lion-packages/dependency-injection/issues",
                 "source": "https://github.com/lion-packages/dependency-injection"
             },
-            "time": "2025-10-01T22:14:51+00:00"
+            "time": "2025-11-01T14:21:57+00:00"
         },
         {
             "name": "lion/exceptions",
@@ -1451,16 +1451,16 @@
         },
         {
             "name": "lion/security",
-            "version": "v11.12.0",
+            "version": "v11.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/security.git",
-                "reference": "93169f3d135cf1301aef7bc4c4652dfece974d3b"
+                "reference": "c0085abb028f847675660e1228bef2221190b5e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/security/zipball/93169f3d135cf1301aef7bc4c4652dfece974d3b",
-                "reference": "93169f3d135cf1301aef7bc4c4652dfece974d3b",
+                "url": "https://api.github.com/repos/lion-packages/security/zipball/c0085abb028f847675660e1228bef2221190b5e9",
+                "reference": "c0085abb028f847675660e1228bef2221190b5e9",
                 "shasum": ""
             },
             "require": {
@@ -1499,7 +1499,7 @@
                 "issues": "https://github.com/lion-packages/security/issues",
                 "source": "https://github.com/lion-packages/security"
             },
-            "time": "2025-10-01T23:07:21+00:00"
+            "time": "2025-11-01T14:06:51+00:00"
         },
         {
             "name": "monolog/monolog",
