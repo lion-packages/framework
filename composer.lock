@@ -905,16 +905,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v18.39.0",
+            "version": "v18.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "88938938e01da57231501a0afce384ba0d82253d"
+                "reference": "8dc1de0117a5537cd68a7df6e081ad802cd6ee1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/88938938e01da57231501a0afce384ba0d82253d",
-                "reference": "88938938e01da57231501a0afce384ba0d82253d",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/8dc1de0117a5537cd68a7df6e081ad802cd6ee1a",
+                "reference": "8dc1de0117a5537cd68a7df6e081ad802cd6ee1a",
                 "shasum": ""
             },
             "require": {
@@ -985,7 +985,7 @@
                 "issues": "https://github.com/lion-packages/bundle/issues",
                 "source": "https://github.com/lion-packages/bundle"
             },
-            "time": "2025-11-10T17:12:30+00:00"
+            "time": "2025-11-15T23:41:31+00:00"
         },
         {
             "name": "lion/command",
@@ -1033,16 +1033,16 @@
         },
         {
             "name": "lion/database",
-            "version": "v11.25.0",
+            "version": "v11.25.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/database.git",
-                "reference": "af3886b1d9a0fc09fd5993d45f08cc21a30799c3"
+                "reference": "e3540c4cf717e473254c42654b4f9f3b0def2903"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/database/zipball/af3886b1d9a0fc09fd5993d45f08cc21a30799c3",
-                "reference": "af3886b1d9a0fc09fd5993d45f08cc21a30799c3",
+                "url": "https://api.github.com/repos/lion-packages/database/zipball/e3540c4cf717e473254c42654b4f9f3b0def2903",
+                "reference": "e3540c4cf717e473254c42654b4f9f3b0def2903",
                 "shasum": ""
             },
             "require": {
@@ -1079,7 +1079,7 @@
                 "issues": "https://github.com/lion-packages/database/issues",
                 "source": "https://github.com/lion-packages/database"
             },
-            "time": "2025-11-02T22:38:32+00:00"
+            "time": "2025-11-10T22:32:33+00:00"
         },
         {
             "name": "lion/dependency-injection",
@@ -3289,16 +3289,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v6.4.28",
+            "version": "v6.4.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "1ba1d5fe6465b0fa39c8627ba552b2c29301aa81"
+                "reference": "b03d11e015552a315714c127d8d1e0f9e970ec88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/1ba1d5fe6465b0fa39c8627ba552b2c29301aa81",
-                "reference": "1ba1d5fe6465b0fa39c8627ba552b2c29301aa81",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/b03d11e015552a315714c127d8d1e0f9e970ec88",
+                "reference": "b03d11e015552a315714c127d8d1e0f9e970ec88",
                 "shasum": ""
             },
             "require": {
@@ -3346,7 +3346,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v6.4.28"
+                "source": "https://github.com/symfony/http-foundation/tree/v6.4.29"
             },
             "funding": [
                 {
@@ -3366,7 +3366,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-06T10:41:18+00:00"
+            "time": "2025-11-08T16:40:12+00:00"
         },
         {
             "name": "symfony/mailer",
