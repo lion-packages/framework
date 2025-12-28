@@ -35,7 +35,7 @@
         "php": ">=8.4",
         "lion/bundle": "^18.29",
         "lion/mailer": "^7.0",
-        "symfony/mailer": "^7.2"
+        "symfony/mailer": "^8.0"
     },
     "require-dev": {
         "lion/test": "^3.3",
