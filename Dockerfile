@@ -1,4 +1,4 @@
-FROM php:8.4-apache
+FROM php:8.5-apache
 
 ARG DEBIAN_FRONTEND=noninteractive
 # ----------------------------------------------------------------------------------------------------------------------
@@ -12,17 +12,6 @@ RUN apt-get update -y \
     && apt-get install -y libpq-dev libpng-dev libzip-dev zlib1g-dev libonig-dev libevent-dev libssl-dev \
     && apt-get clean \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update -y \
-    && apt-get install -y wget lsb-release gnupg \
-    && wget https://dev.mysql.com/get/mysql-apt-config_0.8.29-1_all.deb \
-    && dpkg -i mysql-apt-config_0.8.29-1_all.deb \
-    && sed -i 's/trixie/bookworm/g' /etc/apt/sources.list.d/mysql.list \
-    && apt-get update -y \
-    && apt-get install -y mysql-client \
-    && rm -f mysql-apt-config_0.8.29-1_all.deb \
-    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 # Electron-Vite Dependencies -------------------------------------------------------------------------------------------
 # RUN apt-get update -y \
