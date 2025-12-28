@@ -1,6 +1,6 @@
 services:
-    app:
-        container_name: framework-app
+    php:
+        container_name: framework-php
         build:
             context: .
             dockerfile: Dockerfile
@@ -19,8 +19,6 @@ services:
             - ./:/var/www/html
         depends_on:
             - mysql
-            - phpmyadmin
-            # - redis
         networks:
             - lion
 
@@ -38,78 +36,8 @@ services:
         networks:
             - lion
 
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        container_name: framework-phpmyadmin
-        links:
-            - mysql:mysql
-        ports:
-            - 8080:80
-        environment:
-            PMA_HOST: mysql
-            MYSQL_USER: root
-            MYSQL_PASSWORD: lion
-            MYSQL_ROOT_PASSWORD: lion
-        networks:
-            - lion
-
-    # mailhog:
-        # image: mailhog/mailhog
-        # container_name: framework-mailhog
-        # restart: unless-stopped
-        # ports:
-            # - 8025:8025
-            # - 1025:1025
-        # networks:
-            # - lion
-
-    # redis:
-        # image: redis
-        # container_name: framework-redis
-        # restart: always
-        # ports:
-            # - 6379:6379
-        # volumes:
-            # - redis_data:/data
-        # environment:
-            # REDIS_HOST: redis
-            # REDIS_PASSWORD: lion
-            # REDIS_DATABASES: 1
-        # networks:
-            # - lion
-
-    # postgres:
-    #     image: postgres
-    #     container_name: framework-postgres
-    #     ports:
-    #         - 5432:5432
-    #     environment:
-    #         POSTGRES_DB: lion_database
-    #         POSTGRES_USER: root
-    #         POSTGRES_PASSWORD: lion
-    #     volumes:
-    #         - postgres_data:/var/lib/postgresql/data
-    #     networks:
-    #         - lion
-
-    # pgadmin:
-    #     image: dpage/pgadmin4
-    #     container_name: framework-pgadmin4
-    #     ports:
-    #         - 5050:80
-    #     environment:
-    #         PGADMIN_DEFAULT_EMAIL: root@dev.com
-    #         PGADMIN_DEFAULT_PASSWORD: lion
-    #     depends_on:
-    #         - postgres
-    #     networks:
-    #         - lion
-
 volumes:
     mysql_data:
-    postgres_data:
-    redis_data:
-        driver: local
 
 networks:
     lion:
