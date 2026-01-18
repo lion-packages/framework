@@ -18,7 +18,7 @@
             "App\\": "app/",
             "Database\\Class\\": "database/Class/",
             "Database\\Factory\\": "database/Factory/",
-            "Database\\Seed\\": "database/Seed/",
+            "Database\\Seeds\\": "database/Seeds/",
             "Database\\Migrations\\": "database/Migrations/"
         }
     },
@@ -32,7 +32,7 @@
         }
     },
     "require": {
-        "php": ">=8.4",
+        "php": ">=8.5",
         "lion/bundle": "^19.0",
         "lion/mailer": "^7.0",
         "symfony/mailer": "^8.0"
