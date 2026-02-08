@@ -34,14 +34,14 @@
     "require": {
         "php": ">=8.5",
         "lion/bundle": "^19.0",
-        "lion/mailer": "^7.0",
+        "lion/mailer": "^8.0",
         "symfony/mailer": "^8.0"
     },
     "require-dev": {
-        "lion/test": "^3.3",
+        "lion/test": "^4.1",
         "overtrue/phplint": "^9.5",
         "phpstan/phpstan": "^2.1",
-        "phpunit/phpunit": "^12.0",
+        "phpunit/phpunit": "^13.0",
         "squizlabs/php_codesniffer": "^4.0"
     },
     "scripts": {
