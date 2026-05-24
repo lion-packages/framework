@@ -79,7 +79,7 @@ SHELL ["/bin/bash", "--login", "-i", "-c"]
 # Install nvm, Node.js and npm -----------------------------------------------------------------------------------------
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
     && source /home/lion/.bashrc \
-    && nvm install 20 \
+    && nvm install 24 \
     && npm install -g npm
 
 # Install OhMyZsh ------------------------------------------------------------------------------------------------------
