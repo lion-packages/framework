@@ -1,17 +1,17 @@
 services:
-    php:
+    ####################################################################################################################
+    #### Local development environment #################################################################################
+    ####################################################################################################################
+    php-local:
+        profiles: [ "local" ]
         container_name: framework-php
         build:
             context: .
-            dockerfile: Dockerfile
-        extra_hosts:
-            - host.docker.internal:host-gateway
+            dockerfile: config/docker/php/local/Dockerfile
         ports:
-            - 80:80
-            - 443:443
-            - 5173:5173
-            - 5174:5174
-            - 4321:4321
+            - "5173:5173"
+            - "4321:4321"
+            - "4173:4173"
         environment:
             - XDEBUG_PORT=9000
             - XDEBUG_CLIENT_HOST=host.docker.internal
@@ -19,14 +19,36 @@ services:
             - ./:/var/www/html
         depends_on:
             - mysql
+            - redis
         networks:
             - lion
 
+    nginx-local:
+        profiles: [ "local" ]
+        container_name: framework-nginx
+        build:
+            context: .
+            dockerfile: config/docker/nginx/local/Dockerfile
+        ports:
+            - "8000:443"
+        depends_on:
+            - php-local
+        volumes:
+            - ./:/var/www/html
+        networks:
+            - lion
+
+    ####################################################################################################################
+    #### System services ###############################################################################################
+    ####################################################################################################################
+
     mysql:
-        image: mysql
+        # t4g.micro
+        profiles: [ "local" ]
+        image: mysql:8.4
         container_name: framework-mysql
         ports:
-            - 3306:3306
+            - "3306:3306"
         environment:
             MYSQL_DATABASE: lion_database
             MYSQL_PASSWORD: lion
@@ -35,10 +57,38 @@ services:
             - mysql_data:/var/lib/mysql
         networks:
             - lion
+        cpuset: "0-1"
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.5"
+                    memory: 1G
+
+    redis:
+        # t4g.nano
+        profiles: [ "local" ]
+        image: redis:latest
+        container_name: framework-redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+        networks:
+            - lion
+        cpuset: "0-1"
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.25"
+                    memory: 512M
 
 volumes:
     mysql_data:
+        driver: local
+    redis_data:
+        driver: local
 
 networks:
     lion:
         driver: bridge
+        name: lion-framework-network
