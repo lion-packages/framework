@@ -914,16 +914,16 @@
         },
         {
             "name": "lion/bundle",
-            "version": "v19.2.8",
+            "version": "v19.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lion-packages/bundle.git",
-                "reference": "0549671d675f00d5a4e64d32f32920487fc78004"
+                "reference": "988e176dc36dd975468825c8fc79438409703e78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/0549671d675f00d5a4e64d32f32920487fc78004",
-                "reference": "0549671d675f00d5a4e64d32f32920487fc78004",
+                "url": "https://api.github.com/repos/lion-packages/bundle/zipball/988e176dc36dd975468825c8fc79438409703e78",
+                "reference": "988e176dc36dd975468825c8fc79438409703e78",
                 "shasum": ""
             },
             "require": {
@@ -942,10 +942,10 @@
                 "lion/command": "^5.1 || ^6.0",
                 "lion/database": "^11.11 || ^12.0",
                 "lion/dependency-injection": "^4.2 || ^5.0",
-                "lion/exceptions": "^2.0 || ^3.0",
+                "lion/exceptions": "^3.0",
                 "lion/files": "^8.1 || ^9.0",
                 "lion/helpers": "^5.2 || ^6.0",
-                "lion/request": "^7.2 || ^8.0",
+                "lion/request": "^8.1",
                 "lion/route": "^12.3 || ^13.0",
                 "lion/security": "^12.0",
                 "monolog/monolog": "^3.3",
@@ -993,7 +993,7 @@
                 "issues": "https://github.com/lion-packages/bundle/issues",
                 "source": "https://github.com/lion-packages/bundle"
             },
-            "time": "2026-07-08T16:04:14+00:00"
+            "time": "2026-09-09T17:02:36+00:00"
         },
         {
             "name": "lion/command",
